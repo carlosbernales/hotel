@@ -1,0 +1,2851 @@
+<?php
+require_once 'includes/init.php';
+
+// Debug output
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    error_log('Form submitted: ' . print_r($_POST, true));
+    error_log('Files: ' . print_r($_FILES, true));
+}
+
+// Handle form submission for adding/editing/deleting rooms
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['action'])) {
+        $response = ['success' => false, 'message' => ''];
+        
+        // Handle add room submission (combining room type and room number)
+        if ($_POST['action'] === 'add_room') {
+            try {
+                $con->begin_transaction();
+                
+                // Get room details from form
+                $room_number = $con->real_escape_string(trim($_POST['room_number']));
+                $price = (float)$_POST['price'];
+                $capacity = (int)$_POST['capacity'];
+                $beds = $con->real_escape_string(trim($_POST['beds']));
+                $description = $con->real_escape_string(trim($_POST['description'] ?? ''));
+                $discount_percent = !empty($_POST['discount_percent']) ? (float)$_POST['discount_percent'] : 0;
+                $status = in_array($_POST['status'], ['active', 'inactive', 'maintenance']) ? $_POST['status'] : 'active';
+                
+                // Handle 'Other' room type
+                $room_type_id = $_POST['room_type_id'];
+                $room_type_name = '';
+                
+                if ($room_type_id === 'other') {
+                    // Create a new room type
+                    if (empty(trim($_POST['other_room_type']))) {
+                        throw new Exception('Please specify a room type');
+                    }
+                    
+                    $room_type_name = $con->real_escape_string(trim($_POST['other_room_type']));
+                    
+                    // Check if room type already exists
+                    $check_query = "SELECT room_type_id FROM room_types WHERE LOWER(room_type) = LOWER(?)";
+                    $stmt = $con->prepare($check_query);
+                    $stmt->bind_param("s", $room_type_name);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    
+                    if ($result->num_rows > 0) {
+                        // Use existing room type
+                        $row = $result->fetch_assoc();
+                        $room_type_id = $row['room_type_id'];
+                    } else {
+                        // Create new room type
+                        $insert_query = "INSERT INTO room_types (room_type, price, capacity, beds, description, status, created_at) 
+                                       VALUES (?, ?, ?, ?, ?, 'active', NOW())";
+                        $stmt = $con->prepare($insert_query);
+                        $stmt->bind_param("sdiss", $room_type_name, $price, $capacity, $beds, $description);
+                        $stmt->execute();
+                        $room_type_id = $con->insert_id;
+                    }
+                } else {
+                    // Get existing room type
+                    $room_type_id = (int)$room_type_id;
+                    $room_type_query = "SELECT room_type FROM room_types WHERE room_type_id = ?";
+                    $stmt = $con->prepare($room_type_query);
+                    $stmt->bind_param("i", $room_type_id);
+                    $stmt->execute();
+                    $room_type_result = $stmt->get_result();
+                    
+                    if ($room_type_row = $room_type_result->fetch_assoc()) {
+                        $room_type_name = $room_type_row['room_type'];
+                    } else {
+                        throw new Exception('Selected room type not found');
+                    }
+                }
+                
+                // Handle file uploads
+                $upload_dir = 'C:/xampp/htdocs/Admin/aa/uploads/rooms/';
+                if (!file_exists($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                $image_path = '';
+                $image2_path = null;
+                $image3_path = null;
+                
+                // Process main image
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                    $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+                    $file_name = uniqid('room_') . '.' . $file_extension;
+                    $file_path = $upload_dir . $file_name;
+                    
+                    if (move_uploaded_file($_FILES['image']['tmp_name'], $file_path)) {
+                        $image_path = 'aa/uploads/rooms/' . $file_name;
+                    }
+                }
+                
+                // Process additional images if they exist
+                foreach (['image2', 'image3'] as $img) {
+                    if (isset($_FILES[$img]) && $_FILES[$img]['error'] === 0) {
+                        $file_extension = strtolower(pathinfo($_FILES[$img]['name'], PATHINFO_EXTENSION));
+                        $file_name = uniqid('room_') . '.' . $file_extension;
+                        $file_path = $upload_dir . $file_name;
+                        
+                        if (move_uploaded_file($_FILES[$img]['tmp_name'], $file_path)) {
+                            ${$img . '_path'} = 'aa/uploads/rooms/' . $file_name;
+                        }
+                    }
+                }
+                
+                // Check if room type with this ID exists, if not create it
+                $check_query = "SELECT room_type_id FROM room_types WHERE room_type_id = ?";
+                $stmt = $con->prepare($check_query);
+                $stmt->bind_param("i", $room_type_id);
+                $stmt->execute();
+                $exists = $stmt->get_result()->num_rows > 0;
+                
+                if (!$exists) {
+                    // Insert new room type if it doesn't exist
+                    $query = "INSERT INTO room_types (
+                        room_type_id, room_type, price, capacity, beds, description, 
+                        image, image2, image3, discount_percent, status, created_at
+                    ) VALUES (
+                        ?, ?, ?, ?, ?, ?, 
+                        ?, " . 
+                        ($image2_path ? "?" : "NULL") . ", " . 
+                        ($image3_path ? "?" : "NULL") . ", 
+                        ?, ?, NOW()
+                    )";
+                    
+                    $stmt = $con->prepare($query);
+                    $params = [
+                        $room_type_id,
+                        $room_type_name,
+                        $price,
+                        $capacity,
+                        $beds,
+                        $description,
+                        $image_path
+                    ];
+                    
+                    // Add image paths if they exist
+                    $types = "isiss";
+                    if ($image2_path) {
+                        $params[] = $image2_path;
+                        $types .= "s";
+                    }
+                    if ($image3_path) {
+                        $params[] = $image3_path;
+                        $types .= "s";
+                    }
+                    
+                    // Add remaining parameters
+                    $params[] = $discount_percent;
+                    $params[] = $status;
+                    $types .= "ds";
+                    
+                    $stmt->bind_param($types, ...$params);
+                    
+                    if (!$stmt->execute()) {
+                        throw new Exception('Failed to insert room type: ' . $stmt->error);
+                    }
+                }
+                
+                // Insert room number
+                $query = "INSERT INTO room_numbers (room_type_id, room_number, status, created_at) 
+                         VALUES ($room_type_id, '$room_number', '$status', NOW())";
+                
+                if (!$con->query($query)) {
+                    throw new Exception('Failed to insert room number: ' . $con->error);
+                }
+                
+                $con->commit();
+                
+                $response = [
+                    'success' => true,
+                    'message' => 'Room added successfully!',
+                    'room_id' => $room_type_id
+                ];
+                
+                // If a new room type was added, include it in the response
+                if ($room_type_id === 'other' && !empty($room_type_name)) {
+                    // Get the newly created room type ID
+                    $new_type_query = $con->query("SELECT room_type_id FROM room_types WHERE room_type = '" . $con->real_escape_string($room_type_name) . "'");
+                    if ($new_type = $new_type_query->fetch_assoc()) {
+                        $response['new_room_type_id'] = $new_type['room_type_id'];
+                        $response['new_room_type_name'] = $room_type_name;
+                    }
+                }
+                
+            } catch (Exception $e) {
+                $con->rollback();
+                $response = [
+                    'success' => false,
+                    'message' => 'Error: ' . $e->getMessage()
+                ];
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode($response);
+            exit;
+        }
+        
+        switch($_POST['action']) {
+            case 'add_room_type':
+                try {
+                    $room_type = $_POST['room_type'];
+                    $price = (float)$_POST['price'];
+                    $capacity = (int)$_POST['capacity'];
+                    $description = $_POST['description'];
+                    $beds = $_POST['beds'];
+                    $rating = (float)$_POST['rating'];
+                    $discount_percent = isset($_POST['discount_percent']) ? (int)$_POST['discount_percent'] : 0;
+                    $discount_valid_until = !empty($_POST['discount_valid_until']) ? $_POST['discount_valid_until'] : null;
+
+                    // Handle main image upload
+                    $image_path = '';
+                    $image2_path = null;
+                    $image3_path = null;
+
+                    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                        // Update upload directory path
+                        $upload_dir = 'C:/xampp/htdocs/Admin/aa/uploads/rooms/';
+                        if (!file_exists($upload_dir)) {
+                            mkdir($upload_dir, 0777, true);
+                        }
+
+                        // Generate unique filename for main image
+                        $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+                        $file_name = uniqid('room_type_') . '.' . $file_extension;
+                        $file_system_path = $upload_dir . $file_name;
+                        $image_path = '../aa/uploads/rooms/' . $file_name;
+
+                        // Validate file type
+                        $allowed_types = ['jpg', 'jpeg', 'png'];
+                        if (!in_array($file_extension, $allowed_types)) {
+                            throw new Exception('Invalid file type. Only JPG and PNG files are allowed.');
+                        }
+
+                        // Move uploaded main image
+                        if (!move_uploaded_file($_FILES['image']['tmp_name'], $file_system_path)) {
+                            throw new Exception('Error uploading main image file.');
+                        }
+
+                        // Handle additional image 1
+                        if (isset($_FILES['image2']) && $_FILES['image2']['error'] === 0) {
+                            $file_extension = strtolower(pathinfo($_FILES['image2']['name'], PATHINFO_EXTENSION));
+                            if (in_array($file_extension, $allowed_types)) {
+                                $file_name = uniqid('room_type_') . '_2.' . $file_extension;
+                                $file_system_path = $upload_dir . $file_name;
+                                $image2_path = '../aa/uploads/rooms/' . $file_name;
+                                move_uploaded_file($_FILES['image2']['tmp_name'], $file_system_path);
+                            }
+                        }
+
+                        // Handle additional image 2
+                        if (isset($_FILES['image3']) && $_FILES['image3']['error'] === 0) {
+                            $file_extension = strtolower(pathinfo($_FILES['image3']['name'], PATHINFO_EXTENSION));
+                            if (in_array($file_extension, $allowed_types)) {
+                                $file_name = uniqid('room_type_') . '_3.' . $file_extension;
+                                $file_system_path = $upload_dir . $file_name;
+                                $image3_path = '../aa/uploads/rooms/' . $file_name;
+                                move_uploaded_file($_FILES['image3']['tmp_name'], $file_system_path);
+                            }
+                        }
+
+                        $sql = "INSERT INTO room_types (room_type, price, capacity, description, beds, rating, image, image2, image3, discount_percent, discount_valid_until) 
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                        $stmt = $con->prepare($sql);
+                        $stmt->bind_param("sdissdsssis", 
+                            $room_type,
+                            $price,
+                            $capacity,
+                            $description,
+                            $beds,
+                            $rating,
+                            $image_path,
+                            $image2_path,
+                            $image3_path,
+                            $discount_percent,
+                            $discount_valid_until
+                        );
+                        
+                        if ($stmt->execute()) {
+                            $response['success'] = true;
+                            $response['message'] = 'Room type added successfully!';
+                        } else {
+                            // If insert fails, delete uploaded images
+                            if (file_exists($image_path)) {
+                                unlink($image_path);
+                            }
+                            if ($image2_path && file_exists($image2_path)) {
+                                unlink($image2_path);
+                            }
+                            if ($image3_path && file_exists($image3_path)) {
+                                unlink($image3_path);
+                            }
+                            throw new Exception($con->error);
+                        }
+                    } else {
+                        throw new Exception('Main image file is required.');
+                    }
+                } catch (Exception $e) {
+                    $response['message'] = 'Error adding room type: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'add_room':
+                try {
+                    $room_type_id = (int)$_POST['room_type_id'];
+                    $room_number = $con->real_escape_string(trim($_POST['room_number']));
+                    $total_rooms = 1; // Since we're adding one room at a time
+                    $available_rooms = 1; // New room is available by default
+                    $status = 'Available'; // Default status
+                    
+                    // Insert into rooms table with the correct columns
+                    $sql = "INSERT INTO rooms (room_type_id, total_rooms, available_rooms, status) 
+                            VALUES (?, ?, ?, ?)";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("iiis", 
+                        $room_type_id,
+                        $total_rooms,
+                        $available_rooms,
+                        $status
+                    );
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Room added successfully!';
+                    } else {
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    $response['message'] = 'Error adding room: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'update_room':
+                try {
+                    $room_id = $_POST['room_id'];
+                    $room_type_id = $_POST['room_type_id'];
+                    $capacity = (int)$_POST['capacity'];
+
+                    // Update the room details
+                    $sql = "UPDATE rooms SET 
+                            room_type_id = ?, 
+                            total_rooms = ?,
+                            available_rooms = ?
+                            WHERE id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("iiii", 
+                        $room_type_id, 
+                        $capacity, 
+                        $capacity,  // Set available rooms to match capacity
+                        $room_id
+                    );
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Room updated successfully!';
+                    } else {
+                        $response['success'] = false;
+                        $response['message'] = 'Error updating room: ' . $con->error;
+                    }
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error updating room: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'delete_room':
+                try {
+                    $room_id = $_POST['room_id'];
+                    
+                    // Delete the room
+                    $sql = "DELETE FROM rooms WHERE id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("i", $room_id);
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Room deleted successfully!';
+                    } else {
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error deleting room: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'delete_room_type':
+                try {
+                    $room_type_id = $_POST['room_type_id'];
+                    $result = softDeleteRoomType($room_type_id);
+                    
+                    $response['success'] = $result['success'];
+                    $response['message'] = $result['message'];
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error processing request: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'edit_room_type':
+                try {
+                    $room_type_id = $_POST['room_type_id'];
+                    $room_type = $_POST['room_type'];
+                    $price = (float)$_POST['price'];
+                    $capacity = (int)$_POST['capacity'];
+                    $beds = $_POST['beds'];
+                    $description = $_POST['description'];
+                    $rating = (float)$_POST['rating'];
+                    
+                    // First get the current image path
+                    $sql = "SELECT image FROM room_types WHERE room_type_id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("i", $room_type_id);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    $current_image = '';
+                    if ($row = $result->fetch_assoc()) {
+                        $current_image = $row['image'];
+                    }
+                    
+                    // Handle image upload if a new image is provided
+                    $image_path = $current_image; // Default to current image
+                    if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
+                        $upload_dir = 'C:/xampp/htdocs/Admin/aa/uploads/rooms/';
+                        if (!file_exists($upload_dir)) {
+                            mkdir($upload_dir, 0777, true);
+                        }
+
+                        $file_extension = strtolower(pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION));
+                        $file_name = uniqid('room_type_') . '.' . $file_extension;
+                        $file_system_path = $upload_dir . $file_name;
+                        $new_image_path = '../aa/uploads/rooms/' . $file_name;
+                        
+                        // Validate file type
+                        $allowed_types = ['jpg', 'jpeg', 'png'];
+                        if (!in_array($file_extension, $allowed_types)) {
+                            throw new Exception('Invalid file type. Only JPG and PNG files are allowed.');
+                        }
+
+                        // Move uploaded file using file system path
+                        if (move_uploaded_file($_FILES['image']['tmp_name'], $file_system_path)) {
+                            // Delete old image if exists and different from default
+                            if (!empty($current_image) && file_exists($current_image) && $current_image != '../aa/uploads/rooms/default.jpg') {
+                                unlink($current_image);
+                            }
+                            $image_path = $new_image_path;
+                        } else {
+                            throw new Exception('Error uploading new image file.');
+                        }
+                    }
+
+                    // Update the room type in database
+                    $sql = "UPDATE room_types SET 
+                            room_type = ?, 
+                            price = ?, 
+                            capacity = ?, 
+                            beds = ?, 
+                            description = ?, 
+                            rating = ?, 
+                            image = ? 
+                            WHERE room_type_id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("sdissdsi", 
+                        $room_type, 
+                        $price, 
+                        $capacity, 
+                        $beds, 
+                        $description, 
+                        $rating, 
+                        $image_path, 
+                        $room_type_id
+                    );
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Room type updated successfully!';
+                    } else {
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error updating room type: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'edit_room':
+                try {
+                    $room_id = $_POST['room_id'];
+                    $room_type_id = $_POST['room_type_id'];
+                    $capacity = (int)$_POST['capacity'];
+                    
+                    // Begin transaction
+                    $con->begin_transaction();
+
+                    // Update the room details
+                    $sql = "UPDATE rooms SET 
+                            room_type_id = ?, 
+                            total_rooms = ?, 
+                            available_rooms = ?,
+                            status = 'Available'
+                            WHERE id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("iiii", 
+                        $room_type_id, 
+                        $capacity, 
+                        $capacity,
+                        $room_id
+                    );
+                    
+                    if ($stmt->execute()) {
+                        // Verify the update
+                        $verify_sql = "SELECT * FROM rooms WHERE id = ?";
+                        $verify_stmt = $con->prepare($verify_sql);
+                        $verify_stmt->bind_param("i", $room_id);
+                        $verify_stmt->execute();
+                        $updated = $verify_stmt->get_result()->fetch_assoc();
+
+                        // If verification successful, commit transaction
+                        $con->commit();
+
+                        $response['success'] = true;
+                        $response['message'] = 'Room updated successfully!';
+                        $response['debug'] = [
+                            'updated_data' => $updated,
+                            'params' => [
+                                'room_id' => $room_id,
+                                'room_type_id' => $room_type_id,
+                                'capacity' => $capacity,
+                                'available_rooms' => $capacity
+                            ]
+                        ];
+                    } else {
+                        // Rollback on error
+                        $con->rollback();
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    // Ensure rollback on any error
+                    if ($con->connect_errno != 0) {
+                        $con->rollback();
+                    }
+                    $response['success'] = false;
+                    $response['message'] = 'Error updating room: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'update_room_amenities':
+                try {
+                    $room_type_id = isset($_POST['room_type_id']) ? (int)$_POST['room_type_id'] : 0;
+                    $amenities = isset($_POST['amenities']) ? $_POST['amenities'] : [];
+                    
+                    if ($room_type_id <= 0) {
+                        throw new Exception('Invalid room type ID');
+                    }
+                    
+                    // First delete existing amenities
+                    $deleteSQL = "DELETE FROM room_type_amenities WHERE room_type_id = ?";
+                    $deleteStmt = $con->prepare($deleteSQL);
+                    $deleteStmt->bind_param("i", $room_type_id);
+                    $deleteStmt->execute();
+                    
+                    // Then insert new amenities if any were selected
+                    if (!empty($amenities)) {
+                        $insertSQL = "INSERT INTO room_type_amenities (room_type_id, amenity_id) VALUES (?, ?)";
+                        $insertStmt = $con->prepare($insertSQL);
+                        
+                        foreach ($amenities as $amenity_id) {
+                            $amenity_id = (int)$amenity_id; // Ensure it's an integer
+                            $insertStmt->bind_param("ii", $room_type_id, $amenity_id);
+                            $insertStmt->execute();
+                        }
+                    }
+                    
+                    $response['success'] = true;
+                    $response['message'] = 'Room amenities updated successfully!';
+                
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error updating amenities: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'add_amenity':
+                try {
+                    $name = $_POST['amenity_name'];
+                    $icon = $_POST['amenity_icon'] ?? '';
+                    
+                    // Ensure icon has proper format (starts with fa/fas/far)
+                    if ($icon && !preg_match('/^(fa|fas|far|fab|fal|fad)\s/i', $icon)) {
+                        $icon = 'fas ' . $icon;
+                    }
+                    
+                    $sql = "INSERT INTO amenities (name, icon) VALUES (?, ?)";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("ss", $name, $icon);
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Amenity added successfully!';
+                        $response['amenity_id'] = $con->insert_id;
+                    } else {
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error adding amenity: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'edit_amenity':
+                try {
+                    $amenity_id = (int)$_POST['amenity_id'];
+                    $name = $_POST['amenity_name'];
+                    $icon = $_POST['amenity_icon'] ?? '';
+                    
+                    // Ensure icon has proper format (starts with fa/fas/far)
+                    if ($icon && !preg_match('/^(fa|fas|far|fab|fal|fad)\s/i', $icon)) {
+                        $icon = 'fas ' . $icon;
+                    }
+                    
+                    $sql = "UPDATE amenities SET name = ?, icon = ? WHERE amenity_id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("ssi", $name, $icon, $amenity_id);
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Amenity updated successfully!';
+                    } else {
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error updating amenity: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+                
+            case 'delete_amenity':
+                try {
+                    $amenity_id = (int)$_POST['amenity_id'];
+                    
+                    // First delete from room_type_amenities
+                    $sql = "DELETE FROM room_type_amenities WHERE amenity_id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("i", $amenity_id);
+                    $stmt->execute();
+                    
+                    // Then delete from amenities
+                    $sql = "DELETE FROM amenities WHERE amenity_id = ?";
+                    $stmt = $con->prepare($sql);
+                    $stmt->bind_param("i", $amenity_id);
+                    
+                    if ($stmt->execute()) {
+                        $response['success'] = true;
+                        $response['message'] = 'Amenity deleted successfully!';
+                    } else {
+                        throw new Exception($con->error);
+                    }
+                } catch (Exception $e) {
+                    $response['success'] = false;
+                    $response['message'] = 'Error deleting amenity: ' . $e->getMessage();
+                }
+                echo json_encode($response);
+                exit;
+        }
+        redirect('room_management.php');
+    }
+}
+
+// Get existing rooms with room type information
+$rooms = [];
+$result = $con->query("SELECT 
+    r.id,
+    r.room_type_id,
+    r.total_rooms,
+    r.available_rooms,
+    r.status,
+    rt.room_type,
+    rt.capacity,
+    rt.description,
+    rt.beds,
+    rt.price
+FROM rooms r
+LEFT JOIN room_types rt ON r.room_type_id = rt.room_type_id
+WHERE r.status != 'deleted'
+ORDER BY r.id ASC");
+
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        // Ensure the status reflects the actual availability
+        if ($row['available_rooms'] > 0) {
+            $row['status'] = 'Available';
+        } else if ($row['available_rooms'] == 0) {
+            $row['status'] = 'Occupied';
+        }
+        $rooms[] = $row;
+    }
+}
+
+// Get room types
+$room_types = [];
+$result = $con->query("SELECT * FROM room_types WHERE status = 'active' OR status IS NULL ORDER BY room_type_id");
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $room_types[] = $row;
+    }
+}
+
+// Now we can include the header and sidebar
+include 'header.php';
+include 'sidebar.php';
+
+function getRoomTypes() {
+    global $conn;
+    
+    $query = "SELECT rt.*, GROUP_CONCAT(a.name) as amenities 
+              FROM room_types rt 
+              LEFT JOIN room_type_amenities rta ON rt.room_type_id = rta.room_type_id
+              LEFT JOIN amenities a ON rta.amenity_id = a.amenity_id
+              GROUP BY rt.room_type_id";
+              
+    $result = mysqli_query($conn, $query);
+    $rooms = array();
+    
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $rooms[] = array(
+                'id' => $row['room_type_id'],
+                'room_type' => $row['room_type'],
+                'price' => $row['price'],
+                'capacity' => $row['capacity'],
+                'description' => $row['description'],
+                'beds' => $row['beds'],
+                'rating' => $row['rating'],
+                'image' => $row['image'],
+                'discount_percent' => $row['discount_percent'],
+                'discount_valid_until' => $row['discount_valid_until'],
+                'amenities' => explode(',', $row['amenities'])
+            );
+        }
+    }
+    
+    return $rooms;
+}
+
+// Function to update room details
+function updateRoom($roomTypeId, $data) {
+    global $conn;
+    
+    $query = "UPDATE room_types SET 
+              room_type = ?,
+              price = ?,
+              capacity = ?,
+              description = ?,
+              beds = ?,
+              rating = ?,
+              image = ?,
+              discount_percent = ?,
+              discount_valid_until = ?
+              WHERE room_type_id = ?";
+              
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 'sdissdsdss', 
+        $data['room_type'],
+        $data['price'],
+        $data['capacity'],
+        $data['description'],
+        $data['beds'],
+        $data['rating'],
+        $data['image'],
+        $data['discount_percent'],
+        $data['discount_valid_until'],
+        $roomTypeId
+    );
+    
+    return mysqli_stmt_execute($stmt);
+}
+
+// Function to update room amenities
+function updateRoomAmenities($roomTypeId, $amenities) {
+    global $conn;
+    
+    // First delete existing amenities for this room
+    mysqli_query($conn, "DELETE FROM room_type_amenities WHERE room_type_id = $roomTypeId");
+    
+    // Insert new amenities
+    foreach ($amenities as $amenityId) {
+        $query = "INSERT INTO room_type_amenities (room_type_id, amenity_id) VALUES (?, ?)";
+        $stmt = mysqli_prepare($conn, $query);
+        mysqli_stmt_bind_param($stmt, 'ii', $roomTypeId, $amenityId);
+        mysqli_stmt_execute($stmt);
+    }
+}
+
+// Get all amenities for dropdown
+function getAllAmenities() {
+    global $conn;
+    
+    $query = "SELECT * FROM amenities";
+    $result = mysqli_query($conn, $query);
+    $amenities = array();
+    
+    if ($result) {
+        while ($row = mysqli_fetch_assoc($result)) {
+            $amenities[] = $row;
+        }
+    }
+    
+    return $amenities;
+}
+
+// Add this function to get room details for editing
+function getRoomById($id) {
+    global $con;
+    $sql = "SELECT * FROM rooms WHERE id = ?";
+    $stmt = $con->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->fetch_assoc();
+}
+
+function deleteRoomType($roomTypeId) {
+    global $con;
+    
+    try {
+        // Start transaction
+        $con->begin_transaction();
+        
+        // Check for existing bookings
+        $check_bookings = "SELECT COUNT(*) as booking_count FROM bookings WHERE room_type_id = ?";
+        $stmt = $con->prepare($check_bookings);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        
+        if ($row['booking_count'] > 0) {
+            throw new Exception("Cannot delete room type: There are existing bookings for this room type. Please handle the bookings first.");
+        }
+        
+        // Delete from featured_rooms first (due to foreign key)
+        $delete_featured = "DELETE FROM featured_rooms WHERE room_type_id = ?";
+        $stmt = $con->prepare($delete_featured);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        
+        // Delete from seasonal_discounts (if exists)
+        $delete_discounts = "DELETE FROM seasonal_discounts WHERE room_type_id = ?";
+        $stmt = $con->prepare($delete_discounts);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        
+        // Finally delete the room type
+        $delete_room = "DELETE FROM room_types WHERE room_type_id = ?";
+        $stmt = $con->prepare($delete_room);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        
+        // Commit transaction
+        $con->commit();
+        return ["success" => true, "message" => "Room type deleted successfully"];
+        
+    } catch (Exception $e) {
+        // Rollback on error
+        $con->rollback();
+        return ["success" => false, "message" => $e->getMessage()];
+    }
+}
+
+// Function to soft delete a room type
+function softDeleteRoomType($roomTypeId) {
+    global $con;
+    
+    try {
+        // Start transaction
+        $con->begin_transaction();
+        
+        // First check if the status column exists, if not create it
+        $check_column = "SHOW COLUMNS FROM room_types LIKE 'status'";
+        $result = $con->query($check_column);
+        if ($result->num_rows === 0) {
+            // Add status column if it doesn't exist
+            $add_column = "ALTER TABLE room_types ADD COLUMN status ENUM('active', 'inactive') NOT NULL DEFAULT 'active'";
+            $con->query($add_column);
+        }
+        
+        // Update room type status to inactive
+        $update_status = "UPDATE room_types SET status = 'inactive' WHERE room_type_id = ?";
+        $stmt = $con->prepare($update_status);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        
+        // Remove from featured rooms
+        $delete_featured = "DELETE FROM featured_rooms WHERE room_type_id = ?";
+        $stmt = $con->prepare($delete_featured);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        
+        // Remove from seasonal discounts
+        $delete_discounts = "DELETE FROM seasonal_discounts WHERE room_type_id = ?";
+        $stmt = $con->prepare($delete_discounts);
+        $stmt->bind_param("i", $roomTypeId);
+        $stmt->execute();
+        
+        // Commit transaction
+        $con->commit();
+        return ["success" => true, "message" => "Room type has been deactivated successfully. Existing bookings are preserved."];
+        
+    } catch (Exception $e) {
+        // Rollback on error
+        $con->rollback();
+        return ["success" => false, "message" => "Error deactivating room type: " . $e->getMessage()];
+    }
+}
+
+// Function to ensure default room types exist in database
+function ensureDefaultRoomTypes() {
+    global $con;
+    
+    $default_room_types = [
+        ['id' => 1, 'name' => 'Standard Double Room', 'price' => 100, 'capacity' => 2],
+        ['id' => 2, 'name' => 'Deluxe Room', 'price' => 150, 'capacity' => 2],
+        ['id' => 3, 'name' => 'Family Room', 'price' => 200, 'capacity' => 4]
+    ];
+    
+    foreach ($default_room_types as $type) {
+        // Check if room type exists
+        $check = $con->prepare("SELECT room_type_id FROM room_types WHERE room_type_id = ?");
+        $check->bind_param("i", $type['id']);
+        $check->execute();
+        $result = $check->get_result();
+        
+        if ($result->num_rows === 0) {
+            // Room type doesn't exist, insert it
+            $insert = $con->prepare("INSERT INTO room_types (room_type_id, room_type, price, capacity, status, created_at) VALUES (?, ?, ?, ?, 'active', NOW())");
+            $insert->bind_param("isdi", $type['id'], $type['name'], $type['price'], $type['capacity']);
+            $insert->execute();
+        }
+    }
+}
+
+// Ensure default room types exist
+ensureDefaultRoomTypes();
+
+// ... existing code ...
+
+// Handle room type deletion
+if (isset($_GET['delete_room'])) {
+    $roomTypeId = $_GET['delete_room'];
+    $result = deleteRoomType($roomTypeId);
+    
+    if ($result['success']) {
+        $_SESSION['success'] = $result['message'];
+    } else {
+        $_SESSION['error'] = $result['message'];
+    }
+    
+    header("Location: index.php?room_management");
+    exit();
+}
+
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Room Management</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+    <style>
+        .modal {
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .modal-backdrop {
+            display: none;
+        }
+        .modal-dialog {
+            margin: 1.75rem auto;
+            max-width: 500px;
+        }
+        
+        /* Add styles for main content area */
+        .main-content {
+            margin-left: 250px; /* Width of the sidebar */
+            padding: 20px;
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: #fff;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+            white-space: nowrap;
+        }
+
+        .table td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 14px;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .room-type-table th {
+            background-color: #f8f9fa;
+            color: #333;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .room-type-table td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .room-type-table .price {
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .room-type-table .capacity {
+            color: #666;
+        }
+
+        .room-type-table .rating {
+            color: #ffc107;
+        }
+
+        .room-type-table .discount {
+            color: #dc3545;
+        }
+
+        .badge {
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: #000;
+        }
+
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 5px;
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .room-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            object-fit: cover;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Add these modal styles */
+        .modal-content {
+            border-radius: 0.3rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        }
+
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .modal-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            border-radius: 0.25rem;
+        }
+
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+
+        .modal-dialog {
+            max-width: 500px;
+        }
+
+        /* Add these to your existing styles */
+        .img-thumbnail {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #imagePreview {
+            text-align: center;
+        }
+
+        .form-control-file {
+            border: 1px solid #ced4da;
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.25rem;
+            background-color: #fff;
+        }
+        
+        .modal-backdrop {
+            z-index: 1040 !important;
+        }
+        .modal {
+            z-index: 1050 !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Wrap all content in main-content div -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">Room Management</h2>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addRoomModal">
+                    <i class="fas fa-plus"></i> Add room
+                </button>
+            </div>
+
+            <?php if (isset($_SESSION['success_message'])): ?>
+                <div class="alert alert-success">
+                    <?php 
+                    echo $_SESSION['success_message']; 
+                    unset($_SESSION['success_message']);
+                    ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if (isset($_SESSION['error_message'])): ?>
+                <div class="alert alert-danger">
+                    <?php 
+                    echo $_SESSION['error_message']; 
+                    unset($_SESSION['error_message']);
+                    ?>
+                </div>
+            <?php endif; ?>
+            
+            <div class="card">
+                <div class="card-body">
+                    <!-- Room Type Header -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0"></h4>
+                        <span class="badge bg-primary">Total Rooms: <?php 
+                            $count_query = "SELECT COUNT(*) as total FROM room_numbers rn 
+                                         JOIN room_types rt ON rn.room_type_id = rt.room_type_id 
+                                         WHERE rt.room_type = 'Standard Double Room'";
+                            $count_result = $con->query($count_query);
+                            $total_rooms = $count_result ? $count_result->fetch_assoc()['total'] : 0;
+                            echo $total_rooms;
+                        ?></span>
+                    </div>
+                    
+                    <!-- Room Types Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Room Number</th>
+                                    <th>Room Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                // Query to get room numbers with room types
+                                $room_query = "SELECT rn.room_number_id, rn.room_number, rn.status, rt.room_type 
+                                             FROM room_numbers rn
+                                             JOIN room_types rt ON rn.room_type_id = rt.room_type_id
+                                             ORDER BY rt.room_type, rn.room_number ASC";
+                                $room_result = $con->query($room_query);
+
+                                if ($room_result && $room_result->num_rows > 0) {
+                                    while ($room = $room_result->fetch_assoc()) {
+                                        $status_class = '';
+                                        $status_text = ucfirst($room['status']);
+                                        
+                                        // Set status badge class based on status
+                                        switch(strtolower($room['status'])) {
+                                            case 'available':
+                                                $status_class = 'success';
+                                                break;
+                                            case 'occupied':
+                                                $status_class = 'danger';
+                                                break;
+                                            case 'maintenance':
+                                                $status_class = 'warning';
+                                                $status_text = 'Under Maintenance';
+                                                break;
+                                            case 'reserved':
+                                                $status_class = 'info';
+                                                break;
+                                            default:
+                                                $status_class = 'secondary';
+                                        }
+                                        
+                                        echo "<tr>";
+                                        echo "<td>" . htmlspecialchars($room['room_number']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($room['room_type']) . "</td>";
+                                        echo "<td><span class='badge bg-{$status_class}'>{$status_text}</span></td>";
+                                        echo "<td>";
+                                        echo "<button class='btn btn-sm btn-outline-primary me-1'><i class='fas fa-edit'></i></button>";
+                                        echo "<button class='btn btn-sm btn-outline-danger'><i class='fas fa-trash'></i></button>";
+                                        echo "</td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr>";
+                                    echo "<td colspan='3' class='text-center text-muted py-4'>";
+                                    echo "<i class='fas fa-hotel fa-4x mb-3 d-block'></i>";
+                                    echo "<h4>No rooms found</h4>";
+                                    echo "<p>No Standard Double Rooms found in the database</p>";
+                                    echo "</td>";
+                                    echo "</tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Room Management Modal -->
+    <div class="modal fade" id="roomManagementModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roomManagementModalLabel">Manage Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="roomManagementForm" enctype="multipart/form-data">
+                    <input type="hidden" name="action" id="formAction" value="add">
+                    <input type="hidden" name="room_id" id="roomId">
+                    <input type="hidden" name="room_type_id" id="roomTypeId">
+                    
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs" id="roomTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="details-tab" data-toggle="tab" href="#details" role="tab">Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="images-tab" data-toggle="tab" href="#images" role="tab">Images</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="amenities-tab" data-toggle="tab" href="#amenities" role="tab">Amenities</a>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content p-3" id="roomTabsContent">
+                            <div class="tab-pane fade show active" id="details" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="room_type">Room Type *</label>
+                                    <select class="form-control" id="room_type" name="room_type_id" required onchange="toggleOtherRoomType()">
+                                        <option value="">-- Select Room Type --</option>
+                                        <?php
+                                        $room_types = $con->query("SELECT room_type_id, room_type FROM room_types WHERE room_type_id IN (1, 2, 3) AND status = 'active' ORDER BY room_type");
+                                        while ($type = $room_types->fetch_assoc()) {
+                                            echo "<option value='" . $type['room_type_id'] . "'>" . htmlspecialchars($type['room_type']) . "</option>";
+                                        }
+                                        ?>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Add this new div for custom room type input -->
+                                <div class="form-group" id="otherRoomTypeContainer" style="display: none;">
+                                    <label for="other_room_type">Specify Room Type *</label>
+                                    <input type="text" class="form-control" id="other_room_type" name="other_room_type" placeholder="Enter custom room type">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="price">Price per Night</label>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text">₱</span>
+                                                </div>
+                                                <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="capacity">Capacity</label>
+                                            <input type="number" class="form-control" id="capacity" name="capacity" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="beds">Beds</label>
+                                    <input type="text" class="form-control" id="beds" name="beds" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="images" role="tabpanel">
+                                <div class="form-group">
+                                    <label>Main Image</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image" name="image" accept="image/*">
+                                        <label class="custom-file-label" for="image">Choose file</label>
+                                    </div>
+                                    <div class="mt-2" id="mainImagePreview"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Additional Image 1</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image2" name="image2" accept="image/*">
+                                        <label class="custom-file-label" for="image2">Choose file</label>
+                                    </div>
+                                    <div class="mt-2" id="image2Preview"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Additional Image 2</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image3" name="image3" accept="image/*">
+                                        <label class="custom-file-label" for="image3">Choose file</label>
+                                    </div>
+                                    <div class="mt-2" id="image3Preview"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="amenities" role="tabpanel">
+                                <div class="row" id="amenitiesContainer">
+                                    <!-- Amenities will be loaded here via AJAX -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger mr-auto" id="deleteRoomBtn" style="display: none;">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveRoomBtn">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Room Type Modal (old) -->
+    <div class="modal fade" id="addRoomTypeModal" tabindex="-1" role="dialog" aria-labelledby="addRoomTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRoomTypeModalLabel">Add New Room Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="addRoomTypeForm" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="add_room_type">
+                        
+                        <div class="form-group">
+                            <label for="room_type">Room Type Name</label>
+                            <input type="text" class="form-control" id="room_type" name="room_type" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="price">Price per Night (₱)</label>
+                            <input type="number" class="form-control" id="price" name="price" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="capacity">Capacity (Persons)</label>
+                            <input type="number" class="form-control" id="capacity" name="capacity" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="beds">Beds Configuration</label>
+                            <input type="text" class="form-control" id="beds" name="beds" 
+                                   placeholder="e.g., 1 Queen Bed, 2 Single Beds" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="rating">Rating (0-5)</label>
+                            <input type="number" class="form-control" id="rating" name="rating" 
+                                   step="0.1" min="0" max="5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image">Room Main Image</label>
+                            <input type="file" class="form-control-file" id="image" name="image" 
+                                   accept="image/*" required>
+                            <small class="form-text text-muted">Upload the main image of the room (JPG, PNG formats)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image2">Additional Image 1</label>
+                            <input type="file" class="form-control-file" id="image2" name="image2" 
+                                   accept="image/*">
+                            <small class="form-text text-muted">Upload an additional image for the room carousel (Optional)</small>
+                            <div id="image2Preview" class="mt-2"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="image3">Additional Image 2</label>
+                            <input type="file" class="form-control-file" id="image3" name="image3" 
+                                   accept="image/*">
+                            <small class="form-text text-muted">Upload another additional image for the room carousel (Optional)</small>
+                            <div id="image3Preview" class="mt-2"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discount_percent">Discount Percentage (%)</label>
+                            <input type="number" class="form-control" id="discount_percent" 
+                                   name="discount_percent" min="0" max="100">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="discount_valid_until">Discount Valid Until</label>
+                            <input type="date" class="form-control" id="discount_valid_until" 
+                                   name="discount_valid_until">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add Room Type</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Room Modal -->
+    <div class="modal fade" id="addRoomModal" tabindex="-1" role="dialog" aria-labelledby="addRoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addRoomModalLabel">Add New Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="saveRoomForm" method="POST" action="room_management.php" enctype="multipart/form-data">
+                    <input type="hidden" name="action" value="add_room">
+                    
+                    <div class="modal-body">
+                        <ul class="nav nav-tabs" id="roomTabs" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="details-tab" data-toggle="tab" href="#roomDetails" role="tab">Room Details</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="images-tab" data-toggle="tab" href="#roomImages" role="tab">Images</a>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content p-3" id="roomTabsContent">
+                            <!-- Room Details Tab -->
+                            <div class="tab-pane fade show active" id="roomDetails" role="tabpanel">
+                                <div class="form-group">
+                                    <label for="add_room_room_type">Room Type *</label>
+                                    <select class="form-control" id="add_room_room_type" name="room_type_id" required onchange="toggleOtherRoomType()">
+                                        <option value="">-- Select Room Type --</option>
+                                        <?php
+                                        $room_types = $con->query("SELECT room_type_id, room_type FROM room_types WHERE room_type_id IN (1, 2, 3) AND status = 'active' ORDER BY room_type");
+                                        while ($type = $room_types->fetch_assoc()) {
+                                            echo "<option value='" . $type['room_type_id'] . "'>" . htmlspecialchars($type['room_type']) . "</option>";
+                                        }
+                                        ?>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- Add this new div for custom room type input -->
+                                <div class="form-group" id="add_room_other_room_type_container" style="display: none;">
+                                    <label for="add_room_other_room_type">Specify Room Type *</label>
+                                    <input type="text" class="form-control" id="add_room_other_room_type" name="other_room_type" placeholder="Enter custom room type">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="room_number">Room Number *</label>
+                                            <input type="text" class="form-control" id="room_number" name="room_number" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="price">Price per Night (₱) *</label>
+                                            <input type="number" class="form-control" id="price" name="price" step="0.01" min="0" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="capacity">Capacity *</label>
+                                            <input type="number" class="form-control" id="capacity" name="capacity" min="1" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="beds">Beds *</label>
+                                    <input type="text" class="form-control" id="beds" name="beds" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="description">Description</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="discount_percent">Discount Percent (%)</label>
+                                            <input type="number" class="form-control" id="discount_percent" name="discount_percent" min="0" max="100" value="0">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="status">Status *</label>
+                                            <select class="form-control" id="status" name="status" required>
+                                                <option value="active">Active</option>
+                                                <option value="inactive">Inactive</option>
+                                                <option value="maintenance">Maintenance</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Images Tab -->
+                            <div class="tab-pane fade" id="roomImages" role="tabpanel">
+                                <div class="form-group">
+                                    <label>Main Image *</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image" name="image" accept="image/*" required>
+                                        <label class="custom-file-label" for="image">Choose file</label>
+                                    </div>
+                                    <small class="form-text text-muted">This will be the primary image for the room.</small>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Additional Image 1</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image2" name="image2" accept="image/*">
+                                        <label class="custom-file-label" for="image2">Choose file</label>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Additional Image 2</label>
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image3" name="image3" accept="image/*">
+                                        <label class="custom-file-label" for="image3">Choose file</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="saveRoomBtn" onclick="event.preventDefault(); document.getElementById('saveRoomForm').submit();">Save Room</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Room Type Modal -->
+    <div class="modal fade" id="editRoomTypeModal" tabindex="-1" role="dialog" aria-labelledby="editRoomTypeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRoomTypeModalLabel">Edit Room Type</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editRoomTypeForm" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="edit_room_type">
+                        <input type="hidden" id="edit_room_type_id" name="room_type_id">
+                        
+                        <div class="form-group">
+                            <label for="edit_room_type">Room Type Name</label>
+                            <input type="text" class="form-control" id="edit_room_type" name="room_type" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_price">Price per Night (₱)</label>
+                            <input type="number" class="form-control" id="edit_price" name="price" step="0.01" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_capacity">Capacity (persons)</label>
+                            <input type="number" class="form-control" id="edit_capacity" name="capacity" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_beds">Bed Configuration</label>
+                            <input type="text" class="form-control" id="edit_beds" name="beds" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_description">Description</label>
+                            <textarea class="form-control" id="edit_description" name="description" rows="3" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_rating">Rating (0-5)</label>
+                            <input type="number" class="form-control" id="edit_rating" name="rating" step="0.1" min="0" max="5" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Current Image</label>
+                            <div id="current_image_preview" class="mb-2">
+                                <img src="" alt="Current room image" style="max-width: 200px; display: none;">
+                            </div>
+                            <label for="edit_image">Change Room Image</label>
+                            <input type="file" class="form-control-file" id="edit_image" name="image" accept="image/*">
+                            <small class="text-muted">Leave empty to keep current image</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Room Modal -->
+    <div class="modal fade" id="editRoomModal" tabindex="-1" role="dialog" aria-labelledby="editRoomModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRoomModalLabel">Edit Room</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editRoomForm" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="edit_room">
+                        <input type="hidden" id="edit_room_id" name="room_id">
+                        
+                        <div class="form-group">
+                            <label for="edit_room_type_select">Room Type</label>
+                            <select class="form-control" id="edit_room_type_select" name="room_type_id" required>
+                                <?php foreach ($room_types as $type): ?>
+                                <option value="<?php echo $type['room_type_id']; ?>">
+                                    <?php echo htmlspecialchars($type['room_type']); ?>
+                                </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_room_capacity">Number of Rooms</label>
+                            <input type="number" class="form-control" id="edit_room_capacity" name="capacity" min="1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit_room_status">Status</label>
+                            <select class="form-control" id="edit_room_status" name="status" required>
+                                <option value="Available">Available</option>
+                                <option value="Occupied">Occupied</option>
+                                <option value="Maintenance">Maintenance</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Amenities Modal -->
+    <div class="modal fade" id="editAmenitiesModal" tabindex="-1" role="dialog" aria-labelledby="editAmenitiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editAmenitiesModalLabel">Edit Room Amenities</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="editAmenitiesForm" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="action" value="update_room_amenities">
+                        <input type="hidden" id="amenities_room_type_id" name="room_type_id">
+                        
+                        <div class="room-type-name mb-3">
+                            <h5 id="amenities_room_type_name"></h5>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Amenities</label>
+                            <div id="amenities_container" class="d-flex flex-wrap">
+                                <!-- Amenities will be loaded here via JavaScript -->
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Amenities</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manage Amenities Modal -->
+    <div class="modal fade" id="manageAmenitiesModal" tabindex="-1" role="dialog" aria-labelledby="manageAmenitiesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manageAmenitiesModalLabel">Manage Amenities</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <h6>Available Amenities</h6>
+                        <button type="button" class="btn btn-sm btn-success" id="addNewAmenityBtn">
+                            <i class="fas fa-plus"></i> Add New Amenity
+                        </button>
+                    </div>
+                    
+                    <div id="amenitiesList" class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Icon</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Amenities will be loaded here -->
+                                <tr>
+                                    <td colspan="4" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Add/Edit Amenity Form (hidden by default) -->
+                    <div id="amenityForm" style="display: none;">
+                        <hr>
+                        <h6 id="amenityFormTitle">Add New Amenity</h6>
+                        <form id="addEditAmenityForm">
+                            <input type="hidden" id="amenity_id" name="amenity_id" value="0">
+                            <input type="hidden" id="amenity_action" name="action" value="add_amenity">
+                            
+                            <div class="form-group">
+                                <label for="amenity_name">Amenity Name</label>
+                                <input type="text" class="form-control" id="amenity_name" name="amenity_name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="amenity_icon">Icon Class (FontAwesome)</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i id="iconPreview" class="fas fa-check"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" id="amenity_icon" name="amenity_icon" 
+                                           placeholder="e.g., fas fa-wifi" onkeyup="updateIconPreview()">
+                                </div>
+                                <small class="form-text text-muted">
+                                    Enter a FontAwesome icon class. You can find icons at <a href="https://fontawesome.com/icons" target="_blank">fontawesome.com</a>
+                                </small>
+                            </div>
+                            
+                            <div class="form-group text-right">
+                                <button type="button" class="btn btn-secondary" onclick="cancelAmenityForm()">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Amenity</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Initialize the room management modal
+            const roomModal = $('#roomManagementModal');
+            
+            // Handle manage room button click
+            $(document).on('click', '#manageRoomBtn', function() {
+                const action = $(this).data('action');
+                const roomId = $(this).data('id');
+                const roomTypeId = $(this).data('room-type-id');
+                
+                // Reset form
+                $('#roomManagementForm')[0].reset();
+                $('.image-preview').html('');
+                
+                // Set form action and title
+                $('#formAction').val(action);
+                $('#roomId').val(roomId || '');
+                $('#roomTypeId').val(roomTypeId || '');
+                
+                // Update modal title and buttons based on action
+                if (action === 'add') {
+                    $('#roomManagementModalLabel').text('Add New Room');
+                    $('#saveRoomBtn').text('Add Room');
+                    $('#deleteRoomBtn').hide();
+                } else {
+                    $('#roomManagementModalLabel').text('Edit Room');
+                    $('#saveRoomBtn').text('Update Room');
+                    $('#deleteRoomBtn').show();
+                    
+                    // Load room data via AJAX
+                    $.get('get_room.php', { id: roomId }, function(data) {
+                        if (data.success) {
+                            const room = data.room;
+                            $('#room_type').val(room.room_type);
+                            $('#price').val(room.price);
+                            $('#capacity').val(room.capacity);
+                            $('#beds').val(room.beds);
+                            $('#description').val(room.description);
+                            
+                            // Show image previews if they exist
+                            if (room.image) {
+                                $('#mainImagePreview').html(`<img src="${room.image}" class="img-thumbnail" style="max-height: 100px;">`);
+                            }
+                            if (room.image2) {
+                                $('#image2Preview').html(`<img src="${room.image2}" class="img-thumbnail" style="max-height: 100px;">`);
+                            }
+                            if (room.image3) {
+                                $('#image3Preview').html(`<img src="${room.image3}" class="img-thumbnail" style="max-height: 100px;">`);
+                            }
+                            
+                            // Load amenities
+                            loadAmenities(room.room_type_id);
+                        }
+                    }, 'json');
+                }
+                
+                // Show the modal
+                roomModal.modal('show');
+            });
+            
+            // Handle form submission
+            $('#roomManagementForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                const action = $('#formAction').val();
+                
+                $.ajax({
+                    url: 'process_room.php',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (result.success) {
+                            showAlert('success', result.message);
+                            roomModal.modal('hide');
+                            // Refresh the room list
+                            setTimeout(() => window.location.reload(), 1000);
+                        } else {
+                            showAlert('danger', result.message || 'An error occurred');
+                        }
+                    },
+                    error: function() {
+                        showAlert('danger', 'An error occurred while processing your request');
+                    }
+                });
+            });
+            
+            // Handle delete button click
+            $('#deleteRoomBtn').on('click', function() {
+                if (confirm('Are you sure you want to delete this room? This action cannot be undone.')) {
+                    const roomId = $('#roomId').val();
+                    
+                    $.post('delete_room.php', { 
+                        id: roomId,
+                        _token: '<?php echo $_SESSION['csrf_token'] ?? ''; ?>' 
+                    }, function(response) {
+                        const result = typeof response === 'string' ? JSON.parse(response) : response;
+                        if (result.success) {
+                            showAlert('success', result.message);
+                            roomModal.modal('hide');
+                            // Refresh the room list
+                            setTimeout(() => window.location.reload(), 1000);
+                        } else {
+                            showAlert('danger', result.message || 'An error occurred');
+                        }
+                    });
+                }
+            });
+            
+            // Load amenities for the room type
+            function loadAmenities(roomTypeId) {
+                $.get('get_amenities.php', { room_type_id: roomTypeId }, function(data) {
+                    const container = $('#amenitiesContainer');
+                    container.empty();
+                    
+                    if (data.length > 0) {
+                        data.forEach(amenity => {
+                            container.append(`
+                                <div class="col-md-6">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="amenity_${amenity.id}" 
+                                               name="amenities[]" value="${amenity.id}" ${amenity.selected ? 'checked' : ''}>
+                                        <label class="custom-control-label" for="amenity_${amenity.id}">
+                                            <i class="${amenity.icon}"></i> ${amenity.name}
+                                        </label>
+                                    </div>
+                                </div>
+                            `);
+                        });
+                    } else {
+                        container.html('<div class="col-12">No amenities found.</div>');
+                    }
+                }, 'json');
+            }
+            
+            // Show alert message
+            function showAlert(type, message) {
+                const alert = $(`
+                    <div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                `);
+                
+                $('.main-content').prepend(alert);
+                
+                // Auto-dismiss after 5 seconds
+                setTimeout(() => {
+                    alert.alert('close');
+                }, 5000);
+            }
+            
+            // Update file input labels
+            $('.custom-file-input').on('change', function() {
+                const fileName = $(this).val().split('\\').pop();
+                $(this).next('.custom-file-label').addClass('selected').html(fileName);
+                
+                // Show image preview
+                const previewId = $(this).attr('id') + 'Preview';
+                const preview = $('#' + previewId);
+                
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        preview.html(`<img src="${e.target.result}" class="img-thumbnail mt-2" style="max-height: 100px;">`);
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+            
+            console.log('jQuery is working');
+            // Test button click
+            $('#addRoomTypeBtn').on('click', function() {
+                console.log('Button clicked');
+                $('#addRoomTypeModal').modal('show');
+            });
+
+            // Add Room button click handler
+            $('#addRoomBtn').on('click', function() {
+                $('#addRoomModal').modal('show');
+            });
+
+            // Form submission handlers
+            $('#addRoomTypeForm').submit(function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: 'room_management.php',
+                    type: 'POST',
+                    data: new FormData(this),
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert(result.message);
+                                $('#addRoomTypeModal').modal('hide');
+                                location.reload();
+                            } else {
+                                alert(result.message || 'Error adding room type');
+                            }
+                        } catch (e) {
+                            alert('Error processing response');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        alert('Error adding room type: ' + error);
+                    }
+                });
+            });
+
+
+            // Clear form when modal is closed
+            $('#addRoomTypeModal, #addRoomModal').on('hidden.bs.modal', function () {
+                $(this).find('form')[0].reset();
+            });
+
+            // Image preview
+            $('#image, #image2, #image3').change(function() {
+                const file = this.files[0];
+                const previewId = this.id + 'Preview';
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        if (!$('#' + previewId).length) {
+                            $('<div id="' + previewId + '" class="mt-2">' +
+                              '<img src="' + e.target.result + '" class="img-thumbnail" style="max-height: 200px">' +
+                              '</div>').insertAfter('#' + this.id);
+                        } else {
+                            $('#' + previewId + ' img').attr('src', e.target.result);
+                        }
+                    }.bind(this);
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Clear image previews when modal is closed
+            $('#addRoomTypeModal').on('hidden.bs.modal', function() {
+                $('#imagePreview, #image2Preview, #image3Preview').remove();
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            // Initialize tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // Handle edit room type button click
+            $('.edit-room-type').on('click', function(e) {
+                e.preventDefault();
+                const roomTypeId = $(this).data('id');
+                
+                // Fetch room type details
+                $.ajax({
+                    url: 'get_room_type.php',
+                    method: 'GET',
+                    data: { id: roomTypeId },
+                    success: function(response) {
+                        try {
+                            const roomType = JSON.parse(response);
+                            
+                            // Populate the edit modal
+                            $('#edit_room_type_id').val(roomType.room_type_id);
+                            $('#edit_room_type').val(roomType.room_type);
+                            $('#edit_price').val(roomType.price);
+                            $('#edit_capacity').val(roomType.capacity);
+                            $('#edit_beds').val(roomType.beds);
+                            $('#edit_description').val(roomType.description);
+                            $('#edit_rating').val(roomType.rating);
+                            
+                            // Update image preview
+                            if (roomType.image) {
+                                const $preview = $('#current_image_preview img');
+                                $preview.attr('src', roomType.image).show();
+                            } else {
+                                $('#current_image_preview img').hide();
+                            }
+                            
+                            // Show the modal
+                            $('#editRoomTypeModal').modal('show');
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            console.log('Response:', response);
+                            alert('Error loading room type details');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        console.log('Status:', status);
+                        console.log('Response:', xhr.responseText);
+                        alert('Error fetching room type details: ' + error);
+                    }
+                });
+            });
+
+            // Preview new image when selected
+            $('#edit_image').on('change', function() {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#current_image_preview img').attr('src', e.target.result).show();
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Handle room type form submission
+            $('#editRoomTypeForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(this);
+                
+                // Show loading state
+                const submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+                
+                $.ajax({
+                    url: 'room_management.php',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert('Room type updated successfully!');
+                                location.reload();
+                            } else {
+                                alert('Error updating room type: ' + result.message);
+                                submitBtn.prop('disabled', false).text('Save Changes');
+                            }
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            alert('Error updating room type. Please try again.');
+                            submitBtn.prop('disabled', false).text('Save Changes');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        alert('Error updating room type: ' + error);
+                        submitBtn.prop('disabled', false).text('Save Changes');
+                    }
+                });
+            });
+
+            // Handle edit room button click
+            $('.edit-room').on('click', function(e) {
+                e.preventDefault();
+                const roomId = $(this).data('id');
+                console.log('Opening edit modal for room:', roomId);
+                
+                // Fetch room details
+                $.ajax({
+                    url: 'get_room.php',
+                    method: 'GET',
+                    data: { id: roomId },
+                    success: function(response) {
+                        try {
+                            const room = typeof response === 'string' ? JSON.parse(response) : response;
+                            console.log('Room data loaded:', room);
+                            
+                            // Populate the edit modal
+                            $('#edit_room_id').val(roomId);
+                            $('#edit_room_type_select').val(room.room_type_id);
+                            $('#edit_room_capacity').val(room.total_rooms);
+                            
+                            // Show the modal
+                            $('#editRoomModal').modal('show');
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            alert('Error loading room details');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        alert('Error fetching room details: ' + error);
+                    }
+                });
+            });
+
+            // Handle room form submission
+            $('#editRoomForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                const roomId = $('#edit_room_id').val();
+                const roomTypeId = $('#edit_room_type_select').val();
+                const capacity = $('#edit_room_capacity').val();
+                
+                console.log('Form values:', {
+                    roomId: roomId,
+                    roomTypeId: roomTypeId,
+                    capacity: capacity
+                });
+
+                if (!roomId) {
+                    alert('Error: Room ID is missing');
+                    return;
+                }
+
+                // Show loading state
+                const submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+
+                $.ajax({
+                    url: 'update_room.php',
+                    method: 'POST',
+                    data: {
+                        room_id: roomId,
+                        room_type_id: roomTypeId,
+                        capacity: capacity
+                    },
+                    success: function(response) {
+                        console.log('Server response:', response);
+                        try {
+                            const result = typeof response === 'string' ? JSON.parse(response) : response;
+                            if (result.success) {
+                                alert('Room updated successfully!');
+                                window.location.reload(true);
+                            } else {
+                                alert(result.message);
+                                console.error('Update failed:', result);
+                            }
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            alert('Error updating room. Please try again.');
+                        }
+                        submitBtn.prop('disabled', false).text('Save Changes');
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', {xhr, status, error});
+                        alert('Error updating room: ' + error);
+                        submitBtn.prop('disabled', false).text('Save Changes');
+                    }
+                });
+            });
+
+            // Add hidden input for room ID to the edit form if it doesn't exist
+            if ($('#edit_room_id').length === 0) {
+                $('#editRoomForm').prepend('<input type="hidden" id="edit_room_id" name="room_id">');
+            }
+
+            // Handle delete room type with confirmation
+            $('.delete-room-type').click(function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to delete this room type? This will also delete all associated rooms.')) {
+                    const roomTypeId = $(this).data('id');
+                    
+                    $.ajax({
+                        url: 'room_management.php',
+                        method: 'POST',
+                        data: {
+                            action: 'delete_room_type',
+                            room_type_id: roomTypeId
+                        },
+                        success: function(response) {
+                            try {
+                                const result = JSON.parse(response);
+                                if (result.success) {
+                                    alert('Room type deleted successfully!');
+                                    location.reload();
+                                } else {
+                                    alert(result.message || 'Error deleting room type');
+                                }
+                            } catch (e) {
+                                console.error('Error parsing response:', e);
+                                alert('Error deleting room type');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            alert('Error deleting room type: ' + error);
+                        }
+                    });
+                }
+            });
+
+            // Handle delete room with confirmation
+            $('.delete-room').click(function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to delete this room?')) {
+                    const roomId = $(this).data('id');
+                    
+                    $.ajax({
+                        url: 'room_management.php',
+                        method: 'POST',
+                        data: {
+                            action: 'delete_room',
+                            room_id: roomId
+                        },
+                        success: function(response) {
+                            try {
+                                const result = JSON.parse(response);
+                                if (result.success) {
+                                    alert('Room deleted successfully!');
+                                    location.reload();
+                                } else {
+                                    alert(result.message || 'Error deleting room');
+                                }
+                            } catch (e) {
+                                console.error('Error parsing response:', e);
+                                alert('Error deleting room');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error('AJAX Error:', error);
+                            alert('Error deleting room: ' + error);
+                        }
+                    });
+                }
+            });
+            
+            // Handle edit amenities button click
+            $('.edit-amenities').on('click', function(e) {
+                e.preventDefault();
+                const roomTypeId = $(this).data('id');
+                const roomTypeName = $(this).data('name');
+                
+                // Set room type ID and name in the modal
+                $('#amenities_room_type_id').val(roomTypeId);
+                $('#amenities_room_type_name').text('Amenities for: ' + roomTypeName);
+                
+                // Clear previous amenities
+                $('#amenities_container').html('<div class="spinner-border text-primary" role="status"><span class="sr-only">Loading...</span></div>');
+                
+                // Load all available amenities
+                $.ajax({
+                    url: 'get_amenities.php',
+                    method: 'GET',
+                    success: function(response) {
+                        const allAmenities = JSON.parse(response);
+                        
+                        // Get the current room type with its amenities
+                        $.ajax({
+                            url: 'get_room_type.php',
+                            method: 'GET',
+                            data: { id: roomTypeId },
+                            success: function(roomResponse) {
+                                const roomData = JSON.parse(roomResponse);
+                                const roomAmenities = roomData.amenities || [];
+                                
+                                // Create amenity checkboxes
+                                let amenitiesHtml = '';
+                                
+                                allAmenities.forEach(function(amenity) {
+                                    // Check if this amenity is assigned to the room
+                                    const isChecked = roomAmenities.some(a => parseInt(a.amenity_id) === parseInt(amenity.amenity_id));
+                                    
+                                    amenitiesHtml += `
+                                        <div class="custom-control custom-checkbox m-2" style="width: 45%;">
+                                            <input type="checkbox" class="custom-control-input" 
+                                                id="amenity_${amenity.amenity_id}" 
+                                                name="amenities[]" 
+                                                value="${amenity.amenity_id}" 
+                                                ${isChecked ? 'checked' : ''}>
+                                            <label class="custom-control-label" for="amenity_${amenity.amenity_id}">
+                                                ${amenity.name} ${amenity.icon ? `<i class="${amenity.icon}"></i>` : ''}
+                                            </label>
+                                        </div>
+                                    `;
+                                });
+                                
+                                // Update the container with the checkboxes
+                                $('#amenities_container').html(amenitiesHtml);
+                                
+                                // Show the modal if it wasn't already shown
+                                if (!$('#editAmenitiesModal').hasClass('show')) {
+                                    $('#editAmenitiesModal').modal('show');
+                                }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error fetching room type amenities:', error);
+                                alert('Error loading room amenities. Please try again.');
+                                $('#amenities_container').html('<div class="alert alert-danger">Error loading amenities</div>');
+                            }
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching amenities:', error);
+                        alert('Error loading amenities. Please try again.');
+                        $('#amenities_container').html('<div class="alert alert-danger">Error loading amenities</div>');
+                    }
+                });
+            });
+            
+            // Handle amenities form submission
+            $('#editAmenitiesForm').on('submit', function(e) {
+                e.preventDefault();
+                const formData = $(this).serialize();
+                
+                // Show loading state
+                const submitBtn = $(this).find('button[type="submit"]');
+                submitBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...');
+                
+                $.ajax({
+                    url: 'room_management.php',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert('Room amenities updated successfully!');
+                                $('#editAmenitiesModal').modal('hide');
+                                // Reload the page to update the amenities display in the table
+                                location.reload();
+                            } else {
+                                alert('Error updating amenities: ' + result.message);
+                                submitBtn.prop('disabled', false).text('Save Amenities');
+                            }
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            alert('Error updating amenities. Please try again.');
+                            submitBtn.prop('disabled', false).text('Save Amenities');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        alert('Error updating amenities: ' + error);
+                        submitBtn.prop('disabled', false).text('Save Amenities');
+                    }
+                });
+            });
+
+            // Handle manage amenities button
+            $('#manageAmenitiesBtn').on('click', function() {
+                loadAllAmenities();
+            });
+            
+            // Load all amenities
+            function loadAllAmenities() {
+                $.ajax({
+                    url: 'get_amenities.php',
+                    method: 'GET',
+                    success: function(response) {
+                        try {
+                            const amenities = JSON.parse(response);
+                            let tableRows = '';
+                            
+                            if (amenities.length === 0) {
+                                tableRows = '<tr><td colspan="4" class="text-center">No amenities found</td></tr>';
+                            } else {
+                                amenities.forEach(function(amenity) {
+                                    tableRows += `
+                                        <tr>
+                                            <td>${amenity.amenity_id}</td>
+                                            <td>${amenity.name}</td>
+                                            <td>
+                                                ${amenity.icon ? `<i class="${amenity.icon}"></i> ${amenity.icon}` : 'None'}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary edit-amenity" 
+                                                        data-id="${amenity.amenity_id}" 
+                                                        data-name="${amenity.name}" 
+                                                        data-icon="${amenity.icon || ''}">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-danger delete-amenity" 
+                                                        data-id="${amenity.amenity_id}" 
+                                                        data-name="${amenity.name}">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    `;
+                                });
+                            }
+                            
+                            $('#amenitiesList tbody').html(tableRows);
+                            
+                            // Set up event handlers for edit/delete buttons
+                            $('.edit-amenity').on('click', function() {
+                                const id = $(this).data('id');
+                                const name = $(this).data('name');
+                                const icon = $(this).data('icon');
+                                
+                                // Fill the form
+                                $('#amenity_id').val(id);
+                                $('#amenity_name').val(name);
+                                $('#amenity_icon').val(icon);
+                                
+                                // Update the icon preview
+                                if (icon) {
+                                    $('#iconPreview').attr('class', icon);
+                                } else {
+                                    $('#iconPreview').attr('class', 'fas fa-check');
+                                }
+                                
+                                $('#amenity_action').val('edit_amenity');
+                                $('#amenityFormTitle').text('Edit Amenity');
+                                
+                                // Show the form
+                                $('#amenityForm').show();
+                            });
+                            
+                            $('.delete-amenity').on('click', function() {
+                                const id = $(this).data('id');
+                                const name = $(this).data('name');
+                                
+                                if (confirm(`Are you sure you want to delete the amenity "${name}"? This will remove it from all rooms.`)) {
+                                    deleteAmenity(id);
+                                }
+                            });
+                            
+                        } catch (e) {
+                            console.error('Error parsing amenities:', e);
+                            $('#amenitiesList tbody').html('<tr><td colspan="4" class="text-center text-danger">Error loading amenities</td></tr>');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        $('#amenitiesList tbody').html('<tr><td colspan="4" class="text-center text-danger">Error loading amenities</td></tr>');
+                    }
+                });
+            }
+            
+            // Simple test function to check if jQuery is working
+            console.log('jQuery version:', $.fn.jquery);
+            
+            // Test click handler for the save button
+            $(document).on('click', '#saveRoomBtn', function(e) {
+                console.log('Save button clicked!');
+                e.preventDefault();
+                
+                // Simple validation
+                // let isValid = true;
+                // $('#saveRoomForm [required]').each(function() {
+                //     if (!$(this).val()) {
+                //         console.log('Missing field:', $(this).attr('name'));
+                //         isValid = false;
+                //     }
+                // });
+                
+                // if (!isValid) {
+                //     alert('Please fill in all required fields!');
+                //     return false;
+                // }
+                
+                console.log('Form is valid, preparing to submit...');
+                
+                // Show loading state
+                const submitBtn = $(this);
+                const originalText = submitBtn.html();
+                submitBtn.html('<span class="spinner-border spinner-border-sm"></span> Saving...').prop('disabled', true);
+                
+                // Submit form the traditional way for now
+                $('#saveRoomForm').off('submit').submit();
+                
+                // Re-enable button after 3 seconds if still there
+                setTimeout(() => {
+                    submitBtn.html(originalText).prop('disabled', false);
+                }, 3000);
+            });
+            
+            // Also handle form submission directly
+            // $('#saveRoomForm').on('submit', function(e) {
+            //     console.log('Form submit event triggered');
+            //     return true; // Allow form to submit normally
+            // });
+            
+            // Handle save room form submission via AJAX
+            $('#saveRoomForm').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+                console.log('Save Room form submission intercepted');
+                
+                const form = this;
+                const formData = new FormData(form);
+                const submitBtn = $(form).find('button[type="submit"]');
+                const originalText = submitBtn.html();
+
+                // Simple client-side validation
+                let isValid = true;
+                $(form).find('[required]').each(function() {
+                    if (!$(this).val()) {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+
+                if (!isValid) {
+                    showAlert('warning', 'Please fill in all required fields!');
+                    return false;
+                }
+
+                // Show loading state
+                submitBtn.html('<span class="spinner-border spinner-border-sm"></span> Saving...').prop('disabled', true);
+                
+                $.ajax({
+                    url: 'room_management.php',
+                    method: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        console.log('AJAX success response:', response);
+                        if (response.success) {
+                            // If a new room type was added, update the dropdown
+                            if (response.new_room_type_id && response.new_room_type_name) {
+                                // Add the new room type to the dropdown
+                                const newOption = new Option(response.new_room_type_name, response.new_room_type_id);
+                                const otherOption = $('#add_room_room_type option[value="other"]');
+                                $(newOption).insertBefore(otherOption);
+                                // Select the newly added room type
+                                $('#add_room_room_type').val(response.new_room_type_id);
+                            }
+                            
+                            // Hide the add room modal
+                            $('#addRoomModal').modal('hide');
+                            // Reset the form
+                            form.reset();
+                            // Show success modal
+                            $('#successModal').modal('show');
+                            // Refresh the page after a delay to show updated room list
+                            setTimeout(function() {
+                                location.reload();
+                            }, 2000);
+                        } else {
+                            showAlert('danger', response.message || 'Failed to save room. Please try again.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX error:', xhr.responseText, status, error);
+                        showAlert('danger', 'An error occurred while saving the room. Please try again.');
+                    },
+                    complete: function() {
+                        // Re-enable the button
+                        submitBtn.html(originalText).prop('disabled', false);
+                    }
+                });
+                
+                return false; // Prevent form from submitting normally
+            });
+            });
+
+            
+            // Helper function to show alerts
+            function showAlert(type, message) {
+                const alertHtml = `
+                        console.error('AJAX Error:', error);
+                        alert('Error saving amenity: ' + error);
+                    }
+                });
+            });
+            
+            // Function to delete an amenity
+            function deleteAmenity(amenityId) {
+                $.ajax({
+                    url: 'room_management.php',
+                    method: 'POST',
+                    data: {
+                        action: 'delete_amenity',
+                        amenity_id: amenityId
+                    },
+                    success: function(response) {
+                        try {
+                            const result = JSON.parse(response);
+                            if (result.success) {
+                                alert(result.message);
+                                loadAllAmenities();
+                                // Reload the page after a short delay to update amenities in room table
+                                setTimeout(function() {
+                                    location.reload();
+                                }, 1000);
+                            } else {
+                                alert('Error: ' + result.message);
+                            }
+                        } catch (e) {
+                            console.error('Error parsing response:', e);
+                            alert('Error deleting amenity. Please try again.');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('AJAX Error:', error);
+                        alert('Error deleting amenity: ' + error);
+                    }
+                });
+            }
+            
+            // Function to update icon preview
+            window.updateIconPreview = function() {
+                const iconClass = $('#amenity_icon').val();
+                if (iconClass) {
+                    // Ensure proper format for preview
+                    let previewClass = iconClass;
+                    if (!previewClass.match(/^(fa|fas|far|fab|fal|fad)\s/i)) {
+                        previewClass = 'fas ' + previewClass;
+                    }
+                    $('#iconPreview').attr('class', previewClass);
+                } else {
+                    $('#iconPreview').attr('class', 'fas fa-check');
+                }
+            };
+            
+            // Function to cancel amenity form
+            window.cancelAmenityForm = function() {
+                $('#amenityForm').hide();
+            };
+        });
+    </script>
+    
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Success!</h5>
+                    <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle fa-4x text-success"></i>
+                    </div>
+                    <h4>Room Added Successfully!</h4>
+                    <p class="mb-0">The new room has been added to the system.</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" data-dismiss="modal">
+                        <i class="fas fa-check mr-1"></i> OK
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    // Move the function outside of document.ready to make it globally accessible
+    function toggleOtherRoomType() {
+        console.log('toggleOtherRoomType function called');
+        const roomTypeSelect = document.getElementById('add_room_room_type'); // Updated ID
+        const otherContainer = document.getElementById('add_room_other_room_type_container'); // Updated ID
+        const otherInput = document.getElementById('add_room_other_room_type'); // Updated ID
+        
+        console.log('Selected value:', roomTypeSelect ? roomTypeSelect.value : 'Element not found');
+        
+        if (roomTypeSelect && roomTypeSelect.value === 'other') {
+            console.log('Showing other room type input');
+            otherContainer.style.display = 'block';
+            otherInput.required = true;
+        } else if (otherContainer) { // Added check for container existence
+            console.log('Hiding other room type input');
+            otherContainer.style.display = 'none';
+            otherInput.required = false;
+        }
+    }
+
+    $(document).ready(function() {
+        console.log('Document ready');
+        
+        // Initialize the other room type container on modal open
+        $('#addRoomModal').on('shown.bs.modal', function () { // Changed event to 'shown.bs.modal'
+            console.log('Add Room Modal shown');
+            toggleOtherRoomType();
+        });
+
+        // Add event listener to the room type select within the modal
+        $('#addRoomModal').on('change', '#add_room_room_type', function() { // Updated selector
+            console.log('Room type changed in Add Room Modal');
+            toggleOtherRoomType();
+        });
+        
+        // ... rest of your existing code ...
+    });
+    </script>
+</body>
+</html>
+

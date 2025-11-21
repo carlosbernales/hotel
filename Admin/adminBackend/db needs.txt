@@ -1,0 +1,15 @@
+db_connect
+db_con
+db
+
+room_numbers
+room_types
+table_packages
+menu_categories
+menu_items
+menu_items_addons
+
+event_packages
+package_max_guests
+package_durations
+package_menu_items

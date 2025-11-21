@@ -1,0 +1,111 @@
+[18-Feb-2025 06:01:35 Asia/Manila] Processing rejection - Booking ID: 125, Reason: Room Unavailable
+[18-Feb-2025 06:01:37 Asia/Manila] PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\download\htdocs\casaAdmin\process_booking_rejection.php on line 106
+[18-Feb-2025 06:01:37 Asia/Manila] Failed to send email to: alfredaceveda.3@gmail.com
+[18-Feb-2025 06:03:47 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 126
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 06:03:47 Asia/Manila] Processing rejection - Booking ID: 126, Reason: Room Unavailable
+[18-Feb-2025 06:03:47 Asia/Manila] Database connection successful
+[18-Feb-2025 06:03:47 Asia/Manila] Update affected rows: 1
+[18-Feb-2025 06:03:47 Asia/Manila] Sending success response: {"success":true,"message":"Booking rejected successfully"}
+[18-Feb-2025 06:12:58 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 127
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 06:12:58 Asia/Manila] Processing rejection - Booking ID: 127, Reason: Room Unavailable
+[18-Feb-2025 06:12:58 Asia/Manila] Database connection successful
+[18-Feb-2025 06:13:00 Asia/Manila] Rejection Error: SMTP Error: Could not authenticate.
+[18-Feb-2025 06:15:12 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 128
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 06:15:12 Asia/Manila] Processing rejection - Booking ID: 128, Reason: Room Unavailable
+[18-Feb-2025 06:15:12 Asia/Manila] Database connection successful
+[18-Feb-2025 06:15:14 Asia/Manila] Rejection Error: SMTP Error: Could not authenticate.
+[18-Feb-2025 06:16:52 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 129
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 06:16:52 Asia/Manila] Processing rejection - Booking ID: 129, Reason: Room Unavailable
+[18-Feb-2025 06:16:52 Asia/Manila] Database connection successful
+[18-Feb-2025 06:16:54 Asia/Manila] Mail Error: SMTP Error: Could not authenticate.
+[18-Feb-2025 06:20:02 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 130
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 06:20:02 Asia/Manila] Processing rejection - Booking ID: 130, Reason: Room Unavailable
+[18-Feb-2025 06:20:02 Asia/Manila] Database connection successful
+[18-Feb-2025 06:20:04 Asia/Manila] Mail Error: SMTP Error: Could not authenticate.
+[18-Feb-2025 06:26:04 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 131
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 06:26:04 Asia/Manila] Processing rejection - Booking ID: 131, Reason: Room Unavailable
+[18-Feb-2025 06:26:04 Asia/Manila] Database connection successful
+[18-Feb-2025 06:28:12 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 132
+    [rejection_reason] => kupal ka kasi
+)
+
+[18-Feb-2025 06:28:12 Asia/Manila] Processing rejection - Booking ID: 132, Reason: kupal ka kasi
+[18-Feb-2025 06:28:12 Asia/Manila] Database connection successful
+[18-Feb-2025 06:30:54 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 133
+    [rejection_reason] => Kupal kasi ikaw
+)
+
+[18-Feb-2025 06:30:54 Asia/Manila] Processing rejection - Booking ID: 133, Reason: Kupal kasi ikaw
+[18-Feb-2025 06:30:54 Asia/Manila] Database connection successful
+[18-Feb-2025 07:27:53 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 73
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 07:27:53 Asia/Manila] Processing rejection - Booking ID: 73, Reason: Room Unavailable
+[18-Feb-2025 07:27:53 Asia/Manila] Database connection successful
+[18-Feb-2025 07:27:53 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'rejection_reason' in 'field list' in C:\newww\htdocs\casaAdmin\process_booking_rejection.php:55
+Stack trace:
+#0 C:\newww\htdocs\casaAdmin\process_booking_rejection.php(55): mysqli->prepare('UPDATE bookings...')
+#1 {main}
+  thrown in C:\newww\htdocs\casaAdmin\process_booking_rejection.php on line 55
+[18-Feb-2025 07:32:41 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 72
+    [rejection_reason] => Duplicate Booking
+)
+
+[18-Feb-2025 07:32:41 Asia/Manila] Processing rejection - Booking ID: 72, Reason: Duplicate Booking
+[18-Feb-2025 07:32:41 Asia/Manila] Database connection successful
+[18-Feb-2025 13:33:48 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 99
+    [rejection_reason] => Room Unavailable
+)
+
+[18-Feb-2025 13:33:48 Asia/Manila] Processing rejection - Booking ID: 99, Reason: Room Unavailable
+[18-Feb-2025 13:33:48 Asia/Manila] Database connection successful
+[27-Mar-2025 16:47:41 Asia/Manila] POST data received: Array
+(
+    [booking_id] => 130
+    [rejection_reason] => Room Unavailable
+)
+
+[27-Mar-2025 16:47:41 Asia/Manila] Processing rejection - Booking ID: 130, Reason: Room Unavailable
+[27-Mar-2025 16:47:41 Asia/Manila] Database connection successful
+[27-Mar-2025 16:47:44 Asia/Manila] Mail Error: SMTP Error: Could not authenticate.

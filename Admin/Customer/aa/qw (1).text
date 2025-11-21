@@ -1,0 +1,139 @@
+    
+        <?php
+// Initialize variables with default values
+$room_name = "Standard Double Room";
+$price = 3600;  // Base price for 1 night
+$checkin= isset($_POST['checkins']) ? $_POST['checkins'] : '';
+$checkout = isset($_POST['checkouts']) ? $_POST['checkouts'] : '';
+$message = isset($_POST['message']) ? $_POST['message'] : '';
+$meal = isset($_POST['meal']) ? $_POST['meal'] : '';
+
+// Since the meal is free, we don't need to adjust the total price
+$meal_price = 0;
+
+
+// Calculate total price
+$days_stay = (strtotime($checkout) - strtotime($checkin)) / (60 * 60 * 24);
+$room_total_price = $price * $days_stay;
+$total_price = $room_total_price + $meal_price; // No extra charge for meals
+
+// Handle the form submission and display booking details
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Assign POST values to PHP variables
+    $room_name = "Standard Double Room";
+    $price = 3600;
+    $checkin = $_POST['checkins'];
+    $checkout = $_POST['checkouts'];
+    $message = $_POST['message'];
+    $meal = $_POST['meal'];
+    $total_price = $room_total_price + $meal_price; // No extra charge for meals
+}
+?>
+
+<!-- Booking Details -->
+<div class="details-section">
+    <p class="section-title">Your Booking Details:</p>
+    <p class="room-details">
+        <strong><?= htmlspecialchars($room_name); ?></strong><br>
+        Check-In: <strong><?= htmlspecialchars($checkin); ?></strong><br>
+        Check-Out: <strong><?= htmlspecialchars($checkout); ?></strong><br>
+        <i class="icon bi bi-egg"></i> Meal Option: <?= htmlspecialchars($meal); ?> (Free)<br>
+        <p><i class="icon bi bi-chat-text"></i> Special Request: <?= htmlspecialchars($message); ?></p>
+    </p>
+    <hr>
+    <p class="price-details">
+        Price: <span>₱ <?= htmlspecialchars($price); ?> per night</span><br>
+        Total Price for <?= $days_stay ?> night(s): <span>₱ <?= htmlspecialchars($room_total_price); ?></span><br>
+        Meal: <span>Free</span><br>
+        <strong>Total Price: <span>₱ <?= htmlspecialchars($total_price); ?></span></strong>
+    </p>
+    <hr>
+    <div class="mb-3">
+        <label for="timeArrival" class="form-label">Add Your Estimated Time of Arrival</label>
+        <input type="time" id="timeArrival" name="timeArrival" class="form-control" required>
+    </div>
+</div>
+        <!-- Proceed to Payment Button -->
+        <button class="btn btn-warning mt-2" data-bs-toggle="modal" data-bs-target="#paymentModal">
+            Proceed to Payment
+        </button>
+         
+        <!-- modal here -->
+         <!-- Modal -->
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="paymentModalLabel">Payment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Paste your payment form here -->
+                <div class="container">
+                    <div class="card shadow p-4">
+                        <div class="titles">
+                            <h1 class="title">CASA ESTELA</h1>
+                            <h2 class="subtitle">BOUTIQUE HOTEL & CAFE</h2>
+                        </div>
+                        <h4 class="text-center">Payment Details</h4>
+                        <p class="text-center">How would you like to pay?</p>
+
+                        <div class="d-flex justify-content-center mb-4">
+                            <button class="btn btn-warning me-2" id="mayaButton">
+                                <img src="images/maya.jpg" alt="Maya Logo">
+                            </button>
+                            <button class="btn btn-outline-secondary" id="gcashButton">
+                                <img src="images/gcach.jpg" alt="GCash Logo">
+                            </button>
+                            
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                            <label class="form-check-label" for="flexRadioDefault1">
+                               Downpayment 1500
+                            </label>
+                            </div>
+                            <div class="form-check">
+                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+                            <label class="form-check-label" for="flexRadioDefault2">
+                                Fully Paid
+                            </label>
+                        </div>
+                        <!-- Maya Payment Form -->
+                        <form id="mayaForm">
+                            <div class="mb-3">
+                                <label for="mayaNumber" class="form-label">Maya Number</label>
+                                <input type="number" class="form-control" id="mayaNumber" placeholder="09XXXXXXXXX" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="mayaReceipt" class="form-label">Upload Receipt (Optional)</label>
+                                <input type="file" class="form-control" id="mayaReceipt" accept=".jpg,.jpeg,.png,.pdf">
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">Pay with Maya</button>
+                        </form>
+
+                        <form id="gcashForm" class="d-none">
+                            <div class="mb-3">
+                                <label for="gcashNumber" class="form-label">G-Cash Number</label>
+                                <input type="text" class="form-control" id="gcashNumber" placeholder="09XXXXXXXXX" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="gcashReceipt" class="form-label">Upload Receipt (Optional)</label>
+                                <input type="file" class="form-control" id="gcashReceipt" accept=".jpg,.jpeg,.png,.pdf">
+                            </div>
+                            <button type="submit" class="btn btn-warning w-100">Pay with G-Cash</button>
+                        </form>
+
+                        <p class="text-center mt-3">
+                            <a href="#" class="text-decoration-none">Terms & Conditions</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                
+                <button type="submit" class="btn btn-warning" id="confirmButton" name="insertBooking">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,912 @@
+<?php require 'db_con.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Estela - Rooms</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body{
+            font-family: "Poppins", serif;
+            font-weight: 700;
+            font-style: normal;
+        }
+        .form-inline{
+            margin-top: 50px;
+        }
+   
+        .form-inline .form-control {
+            width: 200px;
+        }
+        form{
+            margin-top: 20px;
+            right: -20px
+        }
+        .card{
+            top: 80px;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+
+        .card-text {
+            font-size: 1.2em;
+            color: #333;
+        }
+       
+
+        .text-danger {
+            font-weight: bold;
+            color: red;
+        }
+        .modal-body .row {
+    gap: 20px; /* Adds space between carousel and form */
+            }
+        .modal-body {
+            width: 100%;
+            left: 0px; /* Adjust left as needed */
+            padding-top: 10px; /* Adds padding at the top of the modal content */
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-body, .form-content {
+            margin-bottom: 5px; /* Shifts the image inside the carousel 5px to the left */
+        }
+        .contents{
+            left: 320px;
+            top: -280px;
+            margin-left: 20px; 
+        }
+        .form-content{
+            width:280px;
+            right: 320px;
+            margin-top: -470px;
+            padding-left: 30px;
+        }
+
+        #message{
+            height: 40px;
+            width: 100%;
+        }
+        .btn{
+            margin: 10px;
+            right: 5px
+            
+        }
+        /* Make sure this CSS is added to align the total price in the right-bottom corner */
+        #cartModal .modal-body {
+            position: relative;
+        }
+
+        .totalprice {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #000;
+        }
+
+        /* Sidebar cart icon */
+        #cartSidebar {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Animation when an item is added to the cart */
+        .cart-animation {
+            animation: bounce 0.5s;
+        }
+        .badge-danger {
+            color: red;
+            background: none;
+        }
+        .translate-middle {
+            transform: translate(-50%, -50%);
+        }
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: none; /* Hidden by default */
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        /* Loading text */
+        .loading-text {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        /* Dot animation */
+        .dots::after {
+            content: "";
+            display: inline-block;
+            animation: dots 1s steps(3, end) infinite;
+        }
+        
+        /* Make sure the modal content fits within the available space */
+.modal-dialog {
+    max-width: 80%;
+    width: auto;
+}
+
+/* Ensure input fields and labels are aligned properly */
+.form-group {
+    margin-bottom: 5px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    width: 100%;
+    padding: 5px;
+}
+
+/* Reduce the size of guest name fields for multiple guests */
+#guestNameFields .form-group input {
+    width: 100%;
+    margin-bottom: 0.25rem;
+}
+
+/* Cart items should be aligned properly with a maximum width */
+#cartItems {
+    max-height: 200px;
+    overflow-y: auto; /* Adds scrolling if items exceed the modal height */
+}
+
+/* Ensure that room list and total price are always at the bottom */
+.totalprice {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1px 30px;
+    text-align: right;
+    font-weight: bold;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}
+
+/* Adjust modal footer to prevent overlap with total price */
+.modal-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.modal-body {
+    padding-bottom: 50px; /* Ensure enough space for the total and button */
+}
+
+
+        @keyframes dots {
+            0% {
+                content: "";
+            }
+            33% {
+                content: ".";
+            }
+            66% {
+                content: "..";
+            }
+            100% {
+                content: "...";
+            }
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        
+            @media (max-width: 567px) {
+        
+        .form-wrapper {
+            flex-direction: column;
+        }
+        
+
+       
+        .form-inline{
+            padding:    0px 10px 0px 10px;
+            justify-content: space-between ;
+        }
+        .form-control{
+            margin: 10px;
+            padding: 5px;
+        }
+        input , .form-control{
+            padding: 8px;
+        }
+        input, .form-inline{
+            margin: 5px;
+        }
+        .modal-body{
+            width: 100%;
+            left: 0px
+        }
+        .contents{
+            left: -20px;
+            top: -20px;
+            margin-left: 20px; 
+        }
+        .form-content{
+            width:100%;
+            right: 320px;
+            margin-top: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: -5 px;
+        }
+        .btn{
+            margin: 10px;
+            right: 5px
+            
+        }
+        #btnsearch {
+            margin: 10px;
+        }
+  
+        #reservation-section {
+            order: 1;
+        }
+
+        #message-section {
+            order: 2;
+            margin-top: 20px; 
+        }
+    }    
+    @media (max-width: 700px) {
+        
+        .form-wrapper {
+            flex-direction: column;
+        }
+        
+
+      
+        .form-inline{
+            padding:    0px 10px 0px 10px;
+            justify-content: space-between ;
+        }
+        .form-control{
+            margin: 10px;
+            padding: 5px;
+        }
+        input , .form-control{
+            padding: 8px;
+        }
+        input, .form-inline{
+            margin: 5px;
+        }
+        .modal-body{
+            width: 100%;
+            left: 0px
+        }
+        .contents{
+            left: -20px;
+            top: -20px;
+            margin-left: 20px; 
+        }
+        .form-content{
+            width:100%;
+            right: 320px;
+            margin-top: 0px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 0px;
+        }
+        .btn{
+            margin: 10px;
+            right: 5px
+            
+        }
+        #btnsearch {
+            margin: 10px;
+        }
+  
+        #reservation-section {
+            order: 1;
+        }
+
+        #message-section {
+            order: 2;
+            margin-top: 20px; 
+        }
+    }   
+</style>
+
+    </style>
+</head>
+<body>
+ <!-- Navigation Bar -->
+ <?php include('nav.php'); ?>
+ <div class="container">
+    <div class="row">
+      <!-- Standard Double Room -->
+<div class="col-md-4 mb-4">
+    <div class="card">
+        <img src="images/double.jpg" class="card-img-top" alt="Standard Double Room">
+        <div class="card-body">
+            <h5 class="card-title" name="room_name">Standard Double Room</h5>
+            <p class="card-text" name="room_price">₱3,200 per night</p>
+            <p name="room_availability">Only 3 rooms left</p>
+            <p name="status">Available</p>
+            <p name="room_capacity">Max capacity: 2 guests</p>
+            <!-- Hidden Room Number -->
+            <input type="hidden" name="room_number" value="101">
+            <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#roomModal">View</button>
+            <button class="btn btn-warning mt-2" onclick="addToCart('Standard Double Room', 3200, 101)">Add to List</button>
+        </div>
+    </div>
+</div>
+
+<!-- Family Room -->
+<div class="col-md-4 mb-4">
+    <div class="card">
+        <img src="images/4.jpg" class="card-img-top" alt="Family Room">
+        <div class="card-body">
+            <h5 class="card-title" name="room_name">Family Room</h5>
+            <p class="card-text" name="room_price">₱4,200 per night</p>
+            <p name="room_availability">Only 1 room left</p>
+            <p name="room_capacity">Max capacity: 4 guests</p>
+            <!-- Hidden Room Number -->
+            <input type="hidden" name="room_number" value="102">
+            <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#roomModal2">View</button>
+            <button class="btn btn-warning mt-2" onclick="addToCart('Family Room', 4200, 102)">Add to List</button>
+        </div>
+    </div>
+</div>
+
+<!-- Deluxe Family Room -->
+<div class="col-md-4 mb-4">
+    <div class="card">
+        <img src="images/3.jpg" class="card-img-top" alt="Deluxe Family Room">
+        <div class="card-body">
+            <h5 class="card-title" name="room_name">Deluxe Family Room</h5>
+            <p class="card-text" name="room_price">₱5,100 per night</p>
+            <p class="text-danger" name="room_availability">NOT AVAILABLE</p>
+            <p name="room_capacity">Max capacity: 5 guests</p>
+            <!-- Hidden Room Number -->
+            <input type="hidden" name="room_number" value="103">
+            <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#roomModal3">View</button>
+            <button class="btn btn-warning mt-2" onclick="addToCart('Deluxe Family Room', 5100, 103)">Add to List</button>
+        </div>
+    </div>
+</div>
+
+<!-- First Modal -->
+<form action="roompayment.php" method="post">
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Your Room List</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="customerInfoForm" class="p-3">
+                        <div class="row">
+                            <!-- Left Column -->
+                            <div class="col-md-6">
+                                <!-- Form fields for name, contact, address, etc. -->
+                                <div class="form-group">
+                                    <label for="customerName">Name</label>
+                                    <input type="text" class="form-control" id="customerName" name="name" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="contactNumber">Contact Number</label>
+                                    <input type="tel" class="form-control" id="contactNumber" name="contact_number" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="address" name="address" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="numberOfGuests">Number of Guests</label>
+                                    <input 
+                                        type="number" 
+                                        class="form-control" 
+                                        id="numberOfGuests" 
+                                        name="number_of_guests" 
+                                        min="1" 
+                                        onchange="generateGuestNameFields(this.value)" 
+                                        required>
+                                </div>
+                                <div id="guestNameFields"></div> <!-- Guest names will be added here -->
+                            </div>
+                            <!-- Right Column -->
+                            <div class="col-md-6 row">
+                                <div class="form-group">
+                                    <label for="checkInDate">Check-In</label>
+                                    <input type="date" class="form-control" id="checkInDate" name="check_in" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="checkOutDate">Check-Out</label>
+                                    <input type="date" class="form-control" id="checkOutDate" name="check_out" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="arrivalTime">Arrival Time</label>
+                                    <input type="time" class="form-control" id="arrivalTime" name="arrival_time" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentOption">Payment Option</label>
+                                    <select class="form-control" id="paymentOption" name="payment_option" required onchange="updateTotalPrice()">
+                                        <option value="none">Select Payment</option>
+                                        <option value="downpayment">Downpayment</option>
+                                        <option value="fullypaid">Fully Paid</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentMethod">Payment Method</label>
+                                    <select class="form-control" id="paymentMethod" name="payment_method" required>
+                                        <option value="cash">Select</option>
+                                        <option value="credit_card">Gcash</option>
+                                        <option value="online_transfer">Maya</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Room details and price at the bottom -->
+                        <div class="mt-4">
+                            <!-- Display the room details -->
+                            <div id="cartItems" class="mb-3"></div>
+                            
+                            <div class="totalprice">
+                                <p><strong>Total: ₱<span id="totalPrice">0</span></strong></p>
+                                <!-- Display downpayment value when selected -->
+                                <p id="downpaymentDisplay" style="display:none;">
+                                    Downpayment (50%): ₱<span id="downpaymentAmount">0</span>
+                                </p>
+                            </div>
+                            <!-- Hidden input fields to submit room data -->
+                            <div id="hiddenInputs"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button 
+                        type="button" 
+                        class="btn btn-primary" 
+                        id="proceedButton" 
+                        onclick="handleProceedToCheckout(this);">
+                        Proceed to Checkout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    // Update the total price and show downpayment if selected
+    function updateTotalPrice() {
+        var totalPrice = parseFloat(document.getElementById('totalPrice').textContent.replace('₱', '').trim());
+        var paymentOption = document.getElementById('paymentOption').value;
+
+        // If Downpayment is selected, calculate 50%
+        if (paymentOption === "downpayment") {
+            var downpayment = totalPrice / 2;
+            document.getElementById('downpaymentDisplay').style.display = 'block';
+            document.getElementById('downpaymentAmount').textContent = downpayment.toFixed(2);
+        } else {
+            document.getElementById('downpaymentDisplay').style.display = 'none';
+        }
+    }
+</script>
+
+<!-- Cart Icon (Sidebar) -->
+<div id="cartSidebar" class="cart-animation">
+<i class="fas fa-bed" data-toggle="modal" data-target="#cartModal"></i>
+    <span id="cartCount" class="badge badge-danger position-absolute top-0 start-100 translate-middle-x">0</span>
+</div>
+
+<!-- Room Details Modal (Standard Double Room) -->
+<div class="modal fade" id="roomModal" tabindex="-1" aria-labelledby="roomModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="roomModalLabel">Standard Double Room</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <!-- Left column for image carousel -->
+                    <div class="col-md-5">
+                        <div id="roomCarousel" class="carousel slide mb-3" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="images/double.jpg" class="d-block w-100" alt="Room Image 1">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="images/3.jpg" class="d-block w-100" alt="Room Image 2">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="images/4.jpg" class="d-block w-100" alt="Room Image 3">
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#roomCarousel" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#roomCarousel" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>                        
+                    </div>
+
+                    <!-- Right column with room details -->
+                    <div class="col-md-7">
+                        <h3 name="room_name">Standard Double Room</h3>
+                        <p>2 Single Beds</p>
+                        <div class="mb-3">
+                            <p name="price"><strong>₱ 3,600 for 1 night</strong></p>
+                        </div>
+                        <div class="mb-2">
+                            <span class="badge bg-primary">Air Conditioning</span>
+                            <span class="badge bg-success">Private Bathroom</span>
+                            <span class="badge bg-warning">Flat-screen TV</span>
+                            <span class="badge bg-info">Free Wi-Fi</span>
+                            <span class="badge bg-danger">No Smoking</span>
+                        </div>
+                        <p>
+                            The double room features air conditioning, tumble dryer, a private bathroom, a shower, and a bidet. This room has tiled floors and a flat-screen TV.
+                        </p>
+                        <ul>
+                            <li>Shower</li>
+                            <li>Toilet</li>
+                            <li>Desk</li>
+                            <li>Flat-screen TV</li>
+                            <li>Tile/marble floor</li>
+                            <li>Air conditioning</li>
+                            <li>Free bottled water</li>
+                        </ul> 
+
+                        <!-- Add to Cart Button -->
+                        <button type="button" class="btn btn-primary" onclick="addToCart('Standard Double Room', 3600)">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to handle cart and form submission -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    
+    // Array to hold the rooms added to the cart
+    let cart = [];
+
+    // Add a room to the cart
+    function addToCart(roomName, price) {
+        let existingRoom = cart.find(item => item.name === roomName);
+
+        if (existingRoom) {
+            existingRoom.quantity += 1; // Increment quantity if room already exists
+        } else {
+            cart.push({ name: roomName, price: price, quantity: 1 }); // Add new room if it doesn't exist
+        }
+        
+        updateCart(); // Update the cart display
+    }
+
+    // Update the cart modal and hidden inputs
+    function updateCart() {
+        const cartItems = document.getElementById('cartItems');
+        const hiddenInputs = document.getElementById('hiddenInputs');
+        let totalPrice = 0;
+
+        const checkInDate = document.getElementById("checkInDate").value;
+        const checkOutDate = document.getElementById("checkOutDate").value;
+
+        if (checkInDate && checkOutDate) {
+            const checkIn = new Date(checkInDate);
+            const checkOut = new Date(checkOutDate);
+
+            const timeDifference = checkOut - checkIn;
+            const numberOfDays = timeDifference / (1000 * 3600 * 24); // Convert milliseconds to days
+
+            if (numberOfDays > 0) {
+                cartItems.innerHTML = '';
+                hiddenInputs.innerHTML = '';
+
+                cart.forEach((item, index) => {
+                    cartItems.innerHTML += `
+                        <div class="cart-item">
+                            <p>${item.name} - ₱${item.price} x ${item.quantity} x ${numberOfDays} day(s)</p>
+                            <button class="btn btn-danger btn-sm" onclick="removeFromCart(${index})">Remove</button>
+                        </div>
+                    `;
+
+                    hiddenInputs.innerHTML += `
+                        <input type="hidden" name="room_name[]" value="${item.name}">
+                        <input type="hidden" name="room_price[]" value="${item.price}">
+                        <input type="hidden" name="room_quantity[]" value="${item.quantity}">
+                    `;
+
+                    totalPrice += item.price * item.quantity * numberOfDays;
+                });
+
+                document.getElementById('totalPrice').textContent = totalPrice.toFixed(2);
+            } else {
+                alert("Check-Out date must be after Check-In date.");
+                document.getElementById('totalPrice').textContent = "0.00";
+            }
+        }
+
+        const cartCount = document.getElementById('cartCount');
+        if (cartCount) {
+            cartCount.textContent = cart.length;
+        }
+    }
+
+    // Remove a room from the cart
+    function removeFromCart(index) {
+        cart.splice(index, 1); // Remove the selected item
+        updateCart(); // Update the cart display
+    }
+
+    // Generic function to show loading animation and transition modals
+    function showLoadingAnimationAndTransition(button, modalIdToHide, modalIdToShow) {
+        const originalText = button.innerHTML;
+
+        button.disabled = true; // Prevent multiple clicks
+        button.innerHTML = 'Please wait<span id="dots"></span>';
+
+        let dotCount = 0;
+        const interval = setInterval(() => {
+            dotCount = (dotCount + 1) % 4;
+            document.getElementById('dots').innerHTML = '.'.repeat(dotCount);
+        }, 500);
+
+        setTimeout(() => {
+            clearInterval(interval);
+            button.innerHTML = originalText;
+            button.disabled = false;
+
+            if (modalIdToHide) {
+                $(`#${modalIdToHide}`).modal('hide');
+            }
+
+            if (modalIdToShow) {
+                $(`#${modalIdToShow}`).modal('show');
+            }
+        }, 2000);
+    }
+    function handleProceedToCheckout(button) {
+    console.log("Proceed to Checkout button clicked.");
+
+    // Show a loading animation
+    showLoadingAnimationAndTransition(button, 'cartModal', null);
+
+    // Simulate a delay for processing
+    setTimeout(() => {
+        console.log("Simulated processing started...");
+
+        // Validate cart data
+        if (cart.length === 0) {
+            alert("❌ Error: Your cart is empty. Please add items to proceed.");
+            console.error("Cart is empty.");
+            return;
+        }
+
+        console.log("Cart data:", cart);
+
+        // Validate check-in and check-out dates
+        const checkInDate = document.getElementById("checkInDate").value;
+        const checkOutDate = document.getElementById("checkOutDate").value;
+
+        if (!checkInDate || !checkOutDate) {
+            alert("❌ Error: Please provide valid check-in and check-out dates.");
+            console.error("Missing check-in or check-out date.");
+            return;
+        }
+
+        console.log("Dates provided:", { checkInDate, checkOutDate });
+
+        // Gather customer information
+        const name = document.getElementById("customerName").value;
+        const contactNumber = document.getElementById("contactNumber").value;
+        const address = document.getElementById("address").value;
+        const numberOfGuests = document.getElementById("numberOfGuests").value;
+        const guestsNames = Array.from(document.getElementsByName("guest_names[]")).map(input => input.value);
+        const arrivalTime = document.getElementById("arrivalTime").value;
+        const paymentOption = document.getElementById("paymentOption").value;
+        const paymentMethod = document.getElementById("paymentMethod").value;
+
+        console.log("Form Data:", { name, contactNumber, address, numberOfGuests, guestsNames, arrivalTime, paymentOption, paymentMethod });
+
+        // Create a form to submit all the data
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = 'roompayment.php'; // PHP script to handle the data
+
+        // Append cart data to the form
+        cart.forEach((item) => {
+            form.innerHTML += `
+                <input type="hidden" name="room_name[]" value="${item.name}">
+                <input type="hidden" name="room_price[]" value="${item.price}">
+                <input type="hidden" name="room_quantity[]" value="${item.quantity}">
+            `;
+        });
+
+        // Append check-in, check-out, and additional booking details
+        form.innerHTML += `
+            <input type="hidden" name="check_in" value="${checkInDate}">
+            <input type="hidden" name="check_out" value="${checkOutDate}">
+            <input type="hidden" name="name" value="${name}">
+            <input type="hidden" name="contact_number" value="${contactNumber}">
+            <input type="hidden" name="address" value="${address}">
+            <input type="hidden" name="number_of_guests" value="${numberOfGuests}">
+            <input type="hidden" name="guest_names[]" value="${guestsNames.join(",")}">
+            <input type="hidden" name="arrival_time" value="${arrivalTime}">
+            <input type="hidden" name="payment_option" value="${paymentOption}">
+            <input type="hidden" name="payment_method" value="${paymentMethod}">
+            <input type="hidden" name="total_price" value="${document.getElementById('totalPrice').innerText}">
+        `;
+
+        document.body.appendChild(form);
+
+        // Simulate success or failure
+        const isSuccess = Math.random() > 0.2; // 80% chance of success
+
+        if (isSuccess) {
+            alert("✅ Success: Your booking has been processed!");
+            console.log("Form data submitted successfully.");
+            form.submit(); // Submit the form if successful
+        } else {
+            alert("❌ Error: Something went wrong. Please try again.");
+            console.error("Simulated failure during form submission.");
+            document.body.removeChild(form); // Remove the form on failure
+        }
+    }, 2000); // Simulated delay of 2 seconds
+}
+
+    // Dynamically generates input fields for guest names
+    function generateGuestNameFields(guestCount) {
+        const guestNameFields = document.getElementById('guestNameFields');
+        guestNameFields.innerHTML = '';
+
+        if (guestCount > 0) {
+            for (let i = 1; i <= guestCount; i++) {
+                const formGroup = document.createElement('div');
+                formGroup.classList.add('form-group');
+                formGroup.innerHTML = `
+                    <label for="guestName${i}">Guest Name ${i}</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="guestName${i}" 
+                        name="guest_names[]" 
+                        placeholder="Enter Guest ${i} Name" 
+                        required>
+                `;
+                guestNameFields.appendChild(formGroup);
+            }
+        }
+    }
+// Listen to changes in check-in and check-out dates
+document.getElementById("checkInDate").addEventListener("change", updateCart);
+document.getElementById("checkOutDate").addEventListener("change", updateCart);
+function updateRooms() {
+        // Fetch room data via AJAX
+        $.post('get_rooms.php', function(response) {
+            const rooms = JSON.parse(response);
+
+            rooms.forEach(room => {
+                // Find the room card based on the hidden room number input
+                const roomCard = $(`input[name="room_number"][value="${room.room_number}"]`).closest('.col-md-4');
+
+                if (roomCard.length > 0) {
+                    // Update existing room card
+                    roomCard.find('[name="room_name"]').text(room.room_name);
+                    roomCard.find('[name="room_price"]').text(`₱${room.room_price} per night`);
+                    roomCard.find('[name="room_availability"]').text(
+                        room.room_availability > 0 
+                            ? `${room.room_availability} rooms left` 
+                            : 'NOT AVAILABLE'
+                    );
+                    roomCard.find('[name="status"]').text(
+                        room.room_availability > 0 
+                            ? 'Available' 
+                            : 'Not Available'
+                    );
+                    roomCard.find('[name="room_availability"]').toggleClass('text-danger', room.room_availability === 0);
+                    roomCard.find('[name="room_capacity"]').text(`Max capacity: ${room.room_capacity} guests`);
+                } else {
+                    // Add new room card if it doesn't already exist
+                    $('.row').append(`
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="${room.image_url}" class="card-img-top" alt="${room.room_name}">
+                                <div class="card-body">
+                                    <h5 class="card-title" name="room_name">${room.room_name}</h5>
+                                    <p class="card-text" name="room_price">₱${room.room_price} per night</p>
+                                    <p name="room_availability" class="${room.room_availability > 0 ? '' : 'text-danger'}">
+                                        ${room.room_availability > 0 
+                                            ? `${room.room_availability} rooms left` 
+                                            : 'NOT AVAILABLE'}
+                                    </p>
+                                    <p name="status">${room.room_availability > 0 ? 'Available' : 'Not Available'}</p>
+                                    <p name="room_capacity">Max capacity: ${room.room_capacity} guests</p>
+                                    <input type="hidden" name="room_number" value="${room.room_number}">
+                                    <button class="btn btn-warning mt-2" data-toggle="modal" data-target="#roomModal${room.room_number}">View</button>
+                                    <button 
+                                        class="btn btn-warning mt-2" 
+                                        onclick="addToCart('${room.room_name}', ${room.room_price}, ${room.room_number})" 
+                                        ${room.room_availability > 0 ? '' : 'disabled'}>
+                                        Add to List
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                }
+            });
+        }).fail(function() {
+            console.error('Error fetching room data');
+        });
+    }
+
+    // Fetch rooms data every 10 seconds
+    setInterval(updateRooms, 10000);
+
+    // Initial fetch on page load
+    $(document).ready(updateRooms);
+
+</script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <!-- Include Bootstrap JS (for modals and components) -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</head>
+    
+</body>
+</html>

@@ -1,0 +1,302 @@
+<?php
+require_once 'db.php';
+include 'header.php';
+include 'sidebar.php';
+?>
+
+<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+    <div class="row">
+        <ol class="breadcrumb">
+            <li><a href="#"><img src="img/house.png" alt="Home Icon" style="width: 20px; height: 20px;"></a></li>
+            <li class="active">Dashboard</li>
+        </ol>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Dashboard</h1>
+        </div>
+    </div>
+
+    <!-- Main Statistics -->
+    <div class="panel panel-container">
+        <div class="row">
+            <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                <div class="panel panel-widget border-right clickable-panel" onclick="window.location='index.php?booking_status'">
+                    <div class="row no-padding">
+                        <img src="img/reserved.png" alt="Reservation Icon" class="panel-icon">
+                        <div class="large"><?php include 'counters/reserve-count.php'?></div>
+                        <div class="text-muted">Active Reservations</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                <div class="panel panel-widget border-right clickable-panel" onclick="window.location='index.php?room_types'">
+                    <div class="row no-padding">
+                        <img src="img/available.png" alt="Available Rooms Icon" class="panel-icon">
+                        <div class="large"><?php include 'counters/avrooms-count.php'?></div>
+                        <div class="text-muted">Available Rooms</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                <div class="panel panel-widget border-right clickable-panel" onclick="window.location='index.php?checkins'">
+                    <div class="row no-padding">
+                        <img src="img/61e7cd50c8a56a9b30e57c94_self-check-in.png" alt="Checked In Icon" class="panel-icon">
+                        <div class="large"><?php include 'counters/checkedin-count.php'?></div>
+                        <div class="text-muted">Current Check-ins</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-6 col-md-3 col-lg-3 no-padding">
+                <div class="panel panel-widget clickable-panel" onclick="window.location='index.php?staff_mang'">
+                    <div class="row no-padding">
+                        <img src="img/grouping.png" alt="Staff Icon" class="panel-icon">
+                        <div class="large"><?php include 'counters/staff-count.php'?></div>
+                        <div class="text-muted">Active Staff</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="chart-container">
+                <canvas id="monthlyReservationsChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="chart-container">
+                <canvas id="monthlyCheckInsChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Expected Arrivals/Departures -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="status-section">
+                <h3>Expected Arrivals Today</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Guest Name</th>
+                                <th>Room Type</th>
+                                <th>Check-in Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $today = date('Y-m-d');
+                            $query = "SELECT * FROM booking WHERE checkin = '$today' AND status = 'reserved'";
+                            $result = mysqli_query($con, $query);
+                            if ($result) {
+                                while($row = mysqli_fetch_array($result)) {
+                                    echo "<tr>";
+                                    echo "<td>".$row['name']."</td>";
+                                    echo "<td>".$row['room_type']."</td>";
+                                    echo "<td>".$row['check_in_time']."</td>";
+                                    echo "<td><button class='btn btn-primary btn-sm' onclick='advanceCheckIn(".$row['booking_id'].")'>Advance Check-in</button></td>";
+                                    echo "</tr>";
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="status-section">
+                <h3>Expected Departures Today</h3>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Guest Name</th>
+                                <th>Room Type</th>
+                                <th>Check-out Time</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            $query = "SELECT * FROM booking WHERE checkout = '$today' AND status = 'checked_in'";
+                            $result = mysqli_query($con, $query);
+                            if ($result) {
+                                while($row = mysqli_fetch_array($result)) {
+                                    echo "<tr>";
+                                    echo "<td>".$row['name']."</td>";
+                                    echo "<td>".$row['room_type']."</td>";
+                                    echo "<td>".$row['check_out_time']."</td>";
+                                    echo "<td><button class='btn btn-warning btn-sm' onclick='advanceCheckOut(".$row['booking_id'].")'>Advance Check-out</button></td>";
+                                    echo "</tr>";
+                                }
+                            }
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .clickable-panel {
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    .clickable-panel:hover {
+        transform: scale(1.02);
+    }
+    .status-section {
+        margin-top: 20px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 4px;
+        box-shadow: 0 1px 1px rgba(0,0,0,.05);
+    }
+    .chart-container {
+        margin-top: 20px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 4px;
+        height: 300px;
+    }
+    /* Panel Styles */
+    .panel-widget {
+        background-color: transparent;
+        border-radius: 10px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        text-align: center;
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    .panel-widget .panel-icon {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease-in-out;
+    }
+    .panel-widget:hover .panel-icon {
+        transform: scale(1.1);
+    }
+    .panel-widget .large {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+    }
+    .panel-widget .text-muted {
+        color: #555;
+        font-size: 14px;
+    }
+    .panel-widget:hover {
+        box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.3);
+    }
+    @media (max-width: 768px) {
+        .panel-widget .panel-icon {
+            width: 80px;
+            height: 80px;
+        }
+        .panel-widget .large {
+            font-size: 18px;
+        }
+    }
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Monthly Reservations Chart
+    fetch('get_monthly_stats.php?type=reservations')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('monthlyReservationsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Monthly Reservations',
+                        data: data.values,
+                        borderColor: '#DAA520',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+
+    // Monthly Check-ins Chart
+    fetch('get_monthly_stats.php?type=checkins')
+        .then(response => response.json())
+        .then(data => {
+            const ctx = document.getElementById('monthlyCheckInsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Monthly Check-ins',
+                        data: data.values,
+                        borderColor: '#28a745',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+
+    function advanceCheckIn(bookingId) {
+        if(confirm('Proceed with advance check-in?')) {
+            fetch('process_checkin.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'booking_id=' + bookingId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Check-in processed successfully');
+                    location.reload();
+                } else {
+                    alert('Error processing check-in');
+                }
+            });
+        }
+    }
+
+    function advanceCheckOut(bookingId) {
+        if(confirm('Proceed with advance check-out?')) {
+            fetch('process_checkout.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'booking_id=' + bookingId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.success) {
+                    alert('Check-out processed successfully');
+                    location.reload();
+                } else {
+                    alert('Error processing check-out');
+                }
+            });
+        }
+    }
+</script>

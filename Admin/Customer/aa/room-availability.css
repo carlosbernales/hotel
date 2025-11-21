@@ -1,0 +1,65 @@
+.availability-search {
+    background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9));
+    padding: 2rem 0;
+}
+
+.availability-search .card {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.availability-search .card:hover {
+    transform: translateY(-5px);
+}
+
+.availability-search .form-control {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    font-size: 1rem;
+}
+
+.availability-search .btn-warning {
+    padding: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge {
+    font-size: 0.875rem;
+    padding: 0.5em 1em;
+    margin-bottom: 1rem;
+}
+
+.badge.bg-success {
+    background-color: #28a745 !important;
+}
+
+.badge.bg-danger {
+    background-color: #dc3545 !important;
+}
+
+.room-card {
+    transition: opacity 0.3s ease;
+}
+
+.room-card.unavailable {
+    opacity: 0.7;
+}
+
+/* Date picker customization */
+.flatpickr-calendar {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: none;
+}
+
+.flatpickr-day.selected {
+    background: #ffc107;
+    border-color: #ffc107;
+}
+
+.flatpickr-day.selected:hover {
+    background: #ffb300;
+    border-color: #ffb300;
+}

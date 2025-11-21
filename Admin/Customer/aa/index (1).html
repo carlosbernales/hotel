@@ -1,0 +1,420 @@
+<?php 
+require 'db_con.php';
+
+$userid = $_SESSION['userid'] ?? 1; 
+try {
+    $sql = "SELECT profile_photo FROM users WHERE userid = :userid";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $profilePhoto = $user && !empty($user['profile_photo']) ? $user['profile_photo'] : 'images/default.jpg';
+} catch (PDOException $e) {
+    $profilePhoto = 'images/default.jpg';
+}
+
+// Fetch best offers
+$bestOffers = [
+    [
+        'title' => 'Weekend Getaway',
+        'image' => 'images/family.jpg',
+        'discount' => '20% OFF',
+        'description' => 'Perfect weekend escape with breakfast included'
+    ],
+    [
+        'title' => 'Family Package',
+        'image' => 'images/couple.jpg',
+        'discount' => '15% OFF',
+        'description' => 'Special rate for family stays with complimentary activities'
+    ],
+    [
+        'title' => 'Extended Stay',
+        'image' => 'images/4.jpg',
+        'discount' => '25% OFF',
+        'description' => 'Stay longer, save more with our weekly rates'
+    ]
+];
+
+// Fetch featured rooms
+$featuredRooms = [
+    [
+        'name' => 'Deluxe Suite',
+        'image' => 'images/5.jpg',
+        'price' => '5,100',
+        'capacity' => '5 Guests',
+        'features' => ['King Bed', 'Ocean View', 'Private Balcony', 'Mini Bar']
+    ],
+    [
+        'name' => 'Family Room',
+        'image' => 'images/3.jpg',
+        'price' => '4,200',
+        'capacity' => '4 Guests',
+        'features' => ['2 Queen Beds', 'City View', 'Living Area', 'Kitchenette']
+    ],
+    [
+        'name' => 'Standard Double',
+        'image' => 'images/double.jpg',
+        'price' => '3,200',
+        'capacity' => '2 Guests',
+        'features' => ['Queen Bed', 'Garden View', 'Work Desk', 'En-suite Bath']
+    ]
+];
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Estela - Your Home Away From Home</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="room-availability.css">
+    <style>
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('assets/images/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            padding: 40px;
+        }
+
+        .hero-title {
+            font-size: 50px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+
+        .btn-custom {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background-color: #d4af37;
+            border: 2px solid #d4af37;
+            color: white;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 1s backwards;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .btn-custom:hover {
+            background-color: transparent;
+            color: #d4af37;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+            .hero-content {
+                padding: 30px;
+                margin: 0 20px;
+            }
+        }
+
+        /* Button size adjustments */
+        .btn {
+            padding: 6px 15px !important;
+            font-size: 0.9rem !important;
+        }
+
+        .btn-lg {
+            padding: 8px 20px !important;
+            font-size: 1rem !important;
+        }
+
+        .btn-custom {
+            padding: 8px 20px !important;
+            font-size: 0.95rem !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .btn-custom.btn-lg {
+            padding: 10px 25px !important;
+            font-size: 1rem !important;
+        }
+
+        .btn i {
+            font-size: 0.9rem !important;
+        }
+
+        /* Keep hero section button slightly larger but still reduced */
+        .hero-section .btn-custom {
+            padding: 10px 30px !important;
+            font-size: 1.1rem !important;
+        }
+
+        /* Adjust other section buttons */
+        .best-offers .btn-custom,
+        .featured-rooms .btn-custom,
+        .events-tables .btn-custom {
+            padding: 6px 15px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Search section button */
+        #check-availability .btn-custom {
+            padding: 6px 15px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Maintain proper spacing */
+        .btn + .btn {
+            margin-left: 5px !important;
+        }
+    </style>
+</head>
+<body>
+    <?php include('nav.php'); ?>
+
+    <!-- Welcome Alert -->
+    <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true): ?>
+    <div id="welcomeAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>! You are now logged in to CASA ESTELA.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Casa Estela</h1>
+                <p class="hero-subtitle">Experience luxury and comfort in the heart of the city</p>
+                <a href="#check-availability" class="btn btn-custom btn-lg">Book Your Stay</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Best Offers Section -->
+    <section class="best-offers">
+        <div class="container">
+            <h2 class="section-title">Best Offers</h2>
+            <div class="row">
+                <?php foreach ($bestOffers as $offer): ?>
+                <div class="col-md-4">
+                    <div class="offer-card card">
+                        <img src="<?php echo htmlspecialchars($offer['image']); ?>" class="offer-img card-img-top" alt="<?php echo htmlspecialchars($offer['title']); ?>">
+                        <div class="offer-badge"><?php echo htmlspecialchars($offer['discount']); ?></div>
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo htmlspecialchars($offer['title']); ?></h5>
+                            <p class="card-text"><?php echo htmlspecialchars($offer['description']); ?></p>
+                            <a href="roomss.php" class="btn btn-custom">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Room Availability Search -->
+    <section id="check-availability" class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h3 class="text-center mb-4">Check Room Availability</h3>
+                            <form action="rooms.php" method="GET" class="row g-3">
+                                <div class="col-md-5">
+                                    <label for="checkin" class="form-label">Check-in Date</label>
+                                    <input type="date" class="form-control" id="checkin" name="checkin" required>
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="checkout" class="form-label">Check-out Date</label>
+                                    <input type="date" class="form-control" id="checkout" name="checkout" required>
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-custom w-100">Search</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Rooms -->
+    <section class="featured-rooms">
+        <div class="container">
+            <h2 class="section-title">Featured Rooms</h2>
+            <div class="row">
+                <?php foreach ($featuredRooms as $room): ?>
+                <div class="col-md-4">
+                    <div class="room-card card">
+                        <img src="<?php echo htmlspecialchars($room['image']); ?>" class="room-img card-img-top" alt="<?php echo htmlspecialchars($room['name']); ?>">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo htmlspecialchars($room['name']); ?></h5>
+                            <p class="room-price">₱<?php echo htmlspecialchars($room['price']); ?> / night</p>
+                            <p class="text-muted"><i class="fas fa-users"></i> <?php echo htmlspecialchars($room['capacity']); ?></p>
+                            <ul class="room-features">
+                                <?php foreach ($room['features'] as $feature): ?>
+                                <li><i class="fas fa-check"></i> <?php echo htmlspecialchars($feature); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <a href="roomss.php" class="btn btn-custom w-100">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="container section-box">
+        <h3 class="section-title text-center">Casa Estela Boutique Hotel and Café Facilities</h3>
+        <div class="row">
+            <div class="col-md-4">
+                <h5 class="facility-category">Parking</h5>
+                <ul class="facilities-list">
+                    <li>Free private parking spaces</li>
+                    <li>Valet parking</li>
+                    <li>Parking garage</li>
+                    <li>Accessible parking</li>
+                </ul>
+                <h5 class="facility-category">Bathroom</h5>
+                <ul class="facilities-list">
+                    <li>Toilet paper</li>
+                    <li>Bidet</li>
+                    <li>Slippers</li>
+                    <li>Private bathroom</li>
+                    <li>Toilet</li>
+                    <li>Hairdryer</li>
+                    <li>Shower</li>
+                </ul>
+            </div>
+            
+            <div class="col-md-4">
+                <h5 class="facility-category">Safety & Security</h5>
+                <ul class="facilities-list">
+                    <li>Fire extinguishers</li>
+                    <li>CCTV</li>
+                    <li>Smoke alarms</li>
+                    <li>Security alarm</li>
+                    <li>Key card access</li>
+                    <li>24-hour security</li>
+                </ul>
+                <h5 class="facility-category">Languages Spoken</h5>
+                <ul class="facilities-list">
+                    <li>English</li>
+                    <li>Filipino</li>
+                </ul>
+            </div>
+            
+            <div class="col-md-4">
+                <h5 class="facility-category">Food & Drink</h5>
+                <ul class="facilities-list">
+                    <li>Coffee house</li>
+                    <li>Snack bar</li>
+                    <li>Restaurant</li>
+                </ul>
+                <h5 class="facility-category">Reception Services</h5>
+                <ul class="facilities-list">
+                    <li>Private check-in/check-out</li>
+                    <li>Luggage storage</li>
+                    <li>24-hour front desk</li>
+                </ul>
+                <h5 class="facility-category">Internet</h5>
+                <ul class="facilities-list">
+                    <li>Free Wi-Fi</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events & Tables Preview -->
+    <section class="events-tables">
+        <div class="container">
+            <h2 class="section-title">Special Events & Dining</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="preview-card">
+                        <div class="preview-icon">
+                            <i class="fas fa-glass-cheers"></i>
+                        </div>
+                        <h3>Event Venues</h3>
+                        <p>Perfect spaces for weddings, conferences, and special celebrations</p>
+                        <a href="events.php" class="btn btn-custom">View Events</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="preview-card">
+                        <div class="preview-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3>Restaurant & Dining</h3>
+                        <p>Experience exquisite dining with our world-class cuisine</p>
+                        <a href="tables.php" class="btn btn-custom">Reserve a Table</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+       
+    </script>
+</body>
+</html>

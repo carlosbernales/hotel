@@ -1,0 +1,1 @@
+<!-- Modal template completely removed -->

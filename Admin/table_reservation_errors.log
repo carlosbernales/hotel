@@ -1,0 +1,8 @@
+2025-03-14 17:35:30 - Error in table reservation
+Error details: Unknown column 'reservation_date' in 'where clause'
+2025-03-14 17:35:46 - Error in table reservation
+Error details: Unknown column 'reservation_date' in 'where clause'
+2025-04-04 15:03:35 - Error in table reservation
+Error details: Prepare statement failed: Unknown column 'reservation_date' in 'where clause'
+2025-04-04 16:00:29 - Error in table reservation
+Error details: Prepare statement failed: Unknown column 'reservation_date' in 'where clause'

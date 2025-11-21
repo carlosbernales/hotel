@@ -1,0 +1,12 @@
+**Database Name: hotelms**
+
+
+
+**Login Details**
+
+username: Kristine
+password: 201452064
+
+
+Username: alfred
+Password : 201452030

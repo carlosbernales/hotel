@@ -1,0 +1,21 @@
+CREATE TABLE IF NOT EXISTS event_bookings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    booking_id VARCHAR(20) UNIQUE NOT NULL,
+    customer_name VARCHAR(100) NOT NULL,
+    contact_number VARCHAR(20) NOT NULL,
+    email_address VARCHAR(100) NOT NULL,
+    event_type VARCHAR(50) NOT NULL,
+    event_date DATE NOT NULL,
+    event_time VARCHAR(50) NOT NULL,
+    num_guests INT NOT NULL,
+    special_requests TEXT,
+    additional_services TEXT,
+    package_type VARCHAR(50) NOT NULL,
+    payment_method VARCHAR(20) NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    amount_paid DECIMAL(10,2) DEFAULT 0.00,
+    change_amount DECIMAL(10,2) DEFAULT 0.00,
+    payment_status VARCHAR(20) DEFAULT 'Pending',
+    status VARCHAR(20) DEFAULT 'Pending',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

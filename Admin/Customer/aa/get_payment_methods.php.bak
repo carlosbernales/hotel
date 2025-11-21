@@ -1,0 +1,35 @@
+<?php
+session_start();
+require 'db_con.php';
+
+// Set content type to JSON
+header('Content-Type: application/json');
+
+// Initialize response
+$response = [
+    'success' => false,
+    'message' => '',
+    'methods' => []
+];
+
+try {
+    // Prepare and execute query to get payment methods
+    $stmt = $pdo->prepare("SELECT id, name, display_name, qr_code_image, account_name, account_number, is_active FROM payment_methods ORDER BY display_name");
+    $stmt->execute();
+    
+    // Fetch all payment methods
+    $methods = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Update response
+    $response['success'] = true;
+    $response['methods'] = $methods;
+    
+} catch (PDOException $e) {
+    $response['message'] = 'Database error: ' . $e->getMessage();
+    error_log('Error fetching payment methods: ' . $e->getMessage());
+}
+
+// Return JSON response
+echo json_encode($response);
+exit;
+?> 

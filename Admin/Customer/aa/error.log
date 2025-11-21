@@ -1,0 +1,2153 @@
+[13-Feb-2025 10:58:19 Europe/Berlin] Starting booking process...
+[13-Feb-2025 10:58:19 Europe/Berlin] POST data: Array
+(
+    [first_name] => Chano
+    [last_name] => Pogi
+    [contact_number] => 9876543200
+    [email] => GFD@gmail.com
+    [check_in] => 2025-02-13
+    [check_out] => 2025-02-14
+    [arrival_time] => 17:57
+    [number_of_guests] => 1
+    [payment_option] => full
+    [payment_method] => cash
+    [booking_type] => Online
+    [userid] => 1
+    [status] => pending
+    [total_amount] => 2500
+    [number_of_days] => 1
+    [guest_names] => Array
+        (
+            [0] => Chano
+        )
+
+    [room_name] => Array
+        (
+            [0] => Family Room
+        )
+
+    [room_price] => Array
+        (
+            [0] => 2500
+        )
+
+    [room_quantity] => Array
+        (
+            [0] => 1
+        )
+
+    [room_type_id] => Array
+        (
+            [0] => 3
+        )
+
+)
+
+[13-Feb-2025 10:58:19 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to private Database::__construct() from global scope in C:\newww\htdocs\Capstone\booking_room_summary.php:21
+Stack trace:
+#0 {main}
+  thrown in C:\newww\htdocs\Capstone\booking_room_summary.php on line 21
+[13-Feb-2025 10:59:16 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to private Database::__construct() from global scope in C:\newww\htdocs\Capstone\booking_room_summary.php:18
+Stack trace:
+#0 {main}
+  thrown in C:\newww\htdocs\Capstone\booking_room_summary.php on line 18
+[13-Feb-2025 10:59:36 Europe/Berlin] PHP Fatal error:  Uncaught Error: Call to private Database::__construct() from global scope in C:\newww\htdocs\Capstone\booking_room_summary.php:18
+Stack trace:
+#0 {main}
+  thrown in C:\newww\htdocs\Capstone\booking_room_summary.php on line 18
+[27-Apr-2025 11:53:13 Europe/Berlin] Order processing started
+[27-Apr-2025 11:53:13 Europe/Berlin] Received order data: {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+[27-Apr-2025 11:53:13 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 11:53:13 Europe/Berlin] Created booking with ID: 13
+[27-Apr-2025 11:53:13 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 11:53:13 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 11:53:13 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(336): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 11:56:03 Europe/Berlin] Order processing started
+[27-Apr-2025 11:56:03 Europe/Berlin] Received order data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 1234567687
+)
+
+[27-Apr-2025 11:56:03 Europe/Berlin] Cleaned order data string: {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+[27-Apr-2025 11:56:03 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 11:56:03 Europe/Berlin] Created booking with ID: 14
+[27-Apr-2025 11:56:03 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 11:56:03 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 11:56:03 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(354): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 12:06:37 Europe/Berlin] Order processing started
+[27-Apr-2025 12:06:37 Europe/Berlin] POST data received: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 1234567687
+)
+
+[27-Apr-2025 12:06:37 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 12:06:37 Europe/Berlin] Created booking with ID: 15
+[27-Apr-2025 12:06:37 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 12:06:37 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 12:06:37 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(367): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 12:11:37 Europe/Berlin] Order processing started
+[27-Apr-2025 12:11:37 Europe/Berlin] POST data received: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 1234567687
+)
+
+[27-Apr-2025 12:11:37 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 12:11:37 Europe/Berlin] Created booking with ID: 16
+[27-Apr-2025 12:11:37 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 12:11:37 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 12:11:37 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(367): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 12:11:41 Europe/Berlin] Order processing started
+[27-Apr-2025 12:11:41 Europe/Berlin] POST data received: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 1234567687
+)
+
+[27-Apr-2025 12:11:41 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 12:11:41 Europe/Berlin] Created booking with ID: 17
+[27-Apr-2025 12:11:41 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 12:11:41 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 12:11:41 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(367): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 12:12:28 Europe/Berlin] Order processing started
+[27-Apr-2025 12:12:28 Europe/Berlin] POST data received: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 1234567687
+)
+
+[27-Apr-2025 12:12:28 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 12:12:28 Europe/Berlin] Created booking with ID: 18
+[27-Apr-2025 12:12:28 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 12:12:28 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 12:12:28 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(376): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 12:15:27 Europe/Berlin] Order processing started
+[27-Apr-2025 12:15:27 Europe/Berlin] POST data received: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 1234567687
+)
+
+[27-Apr-2025 12:15:27 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Spaghetti maccaroni
+                    [price] => 270
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 270
+    [extra_fee] => 0
+    [final_total] => 270
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 12:15:27 Europe/Berlin] Created booking with ID: 19
+[27-Apr-2025 12:15:27 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 12:15:27 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 12:15:27 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(376): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 13:33:52 Europe/Berlin] Order processing started
+[27-Apr-2025 13:33:52 Europe/Berlin] Received order data: {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+[27-Apr-2025 13:33:52 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 180
+    [extra_fee] => 0
+    [final_total] => 180
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 13:33:52 Europe/Berlin] Created booking with ID: 30
+[27-Apr-2025 13:33:52 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 13:33:52 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 13:33:52 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(330): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 13:37:13 Europe/Berlin] Raw POST data: 
+[27-Apr-2025 13:37:13 Europe/Berlin] POST array: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 5434535
+)
+
+[27-Apr-2025 13:37:13 Europe/Berlin] Raw order data before decode: {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+[27-Apr-2025 13:37:13 Europe/Berlin] Order processing started
+[27-Apr-2025 13:37:13 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 180
+    [extra_fee] => 0
+    [final_total] => 180
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 13:37:13 Europe/Berlin] Created booking with ID: 31
+[27-Apr-2025 13:37:13 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 13:37:13 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 13:37:13 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(344): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 13:40:53 Europe/Berlin] Raw POST data: 
+[27-Apr-2025 13:40:53 Europe/Berlin] POST array: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 5434535
+)
+
+[27-Apr-2025 13:40:53 Europe/Berlin] Raw order data before decode: {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+[27-Apr-2025 13:40:53 Europe/Berlin] Order processing started
+[27-Apr-2025 13:40:53 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 180
+    [extra_fee] => 0
+    [final_total] => 180
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 13:40:53 Europe/Berlin] Created booking with ID: 32
+[27-Apr-2025 13:40:53 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 13:40:53 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 13:40:53 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(384): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 13:42:26 Europe/Berlin] Raw POST data: 
+[27-Apr-2025 13:42:26 Europe/Berlin] POST array: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+    [reference_number] => 5434535
+)
+
+[27-Apr-2025 13:42:26 Europe/Berlin] Raw order data before decode: {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-04-27","time":"10:22","duration":"","guest_count":""}}
+[27-Apr-2025 13:42:26 Europe/Berlin] Order processing started
+[27-Apr-2025 13:42:26 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 180
+    [extra_fee] => 0
+    [final_total] => 180
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 13:42:26 Europe/Berlin] Created booking with ID: 33
+[27-Apr-2025 13:42:26 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 13:42:26 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 13:42:26 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(344): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 13:44:54 Europe/Berlin] Raw input: 
+[27-Apr-2025 13:44:54 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 180
+    [extra_fee] => 0
+    [final_total] => 180
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 13:44:54 Europe/Berlin] Order processing started
+[27-Apr-2025 13:44:54 Europe/Berlin] Received order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 180
+    [extra_fee] => 0
+    [final_total] => 180
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 3
+            [package_name] => Family
+            [date] => 2025-04-27
+            [time] => 10:22
+            [duration] => 
+            [guest_count] => 
+        )
+
+)
+
+[27-Apr-2025 13:44:54 Europe/Berlin] Created booking with ID: 34
+[27-Apr-2025 13:44:54 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 13:44:54 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 13:44:54 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(357): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 14:37:38 Europe/Berlin] Order processing started
+[27-Apr-2025 14:37:38 Europe/Berlin] Received order data: {"items":[{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":120,"extra_fee":0,"final_total":120,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-04-30","time":"13:09","duration":"","guests":"6"}}
+[27-Apr-2025 14:37:38 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 120
+    [extra_fee] => 0
+    [final_total] => 120
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-04-30
+            [time] => 13:09
+            [duration] => 
+            [guests] => 6
+        )
+
+)
+
+[27-Apr-2025 14:37:38 Europe/Berlin] PHP Warning:  Undefined array key "phone" in D:\casaaa\htdocs\Admin\Customer\aa\process_order.php on line 185
+[27-Apr-2025 14:37:38 Europe/Berlin] PHP Warning:  Undefined array key "guest_count" in D:\casaaa\htdocs\Admin\Customer\aa\process_order.php on line 189
+[27-Apr-2025 14:37:38 Europe/Berlin] Booking insertion error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contact_number' cannot be null
+[27-Apr-2025 14:37:38 Europe/Berlin] Database error in transaction: Failed to create booking: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contact_number' cannot be null
+[27-Apr-2025 14:37:38 Europe/Berlin] Order processing error: Failed to create booking: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contact_number' cannot be null
+[27-Apr-2025 14:45:39 Europe/Berlin] Order processing started
+[27-Apr-2025 14:45:39 Europe/Berlin] Received order data: {"items":[{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":120,"extra_fee":0,"final_total":120,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-04-30","time":"13:09","duration":"","guests":"6"}}
+[27-Apr-2025 14:45:39 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 120
+    [extra_fee] => 0
+    [final_total] => 120
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-04-30
+            [time] => 13:09
+            [duration] => 
+            [guests] => 6
+        )
+
+)
+
+[27-Apr-2025 14:45:39 Europe/Berlin] Created booking with ID: 35
+[27-Apr-2025 14:45:39 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 14:45:39 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 14:45:39 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(336): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 14:50:17 Europe/Berlin] Order processing started
+[27-Apr-2025 14:50:17 Europe/Berlin] Received order data: {"items":[{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":120,"extra_fee":0,"final_total":120,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-04-30","time":"13:09","duration":"","guests":"6"}}
+[27-Apr-2025 14:50:17 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 120
+    [extra_fee] => 0
+    [final_total] => 120
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-04-30
+            [time] => 13:09
+            [duration] => 
+            [guests] => 6
+        )
+
+)
+
+[27-Apr-2025 14:50:17 Europe/Berlin] Created booking with ID: 36
+[27-Apr-2025 14:50:17 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 14:50:17 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 14:50:17 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(336): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[27-Apr-2025 15:16:04 Europe/Berlin] Order processing started
+[27-Apr-2025 15:16:04 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 120
+    [extra_fee] => 0
+    [final_total] => 120
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-04-30
+            [time] => 13:09
+            [duration] => 
+            [guests] => 6
+        )
+
+)
+
+[27-Apr-2025 15:16:04 Europe/Berlin] PHP Warning:  Undefined array key "phone" in D:\casaaa\htdocs\Admin\Customer\aa\process_order.php on line 175
+[27-Apr-2025 15:16:04 Europe/Berlin] PHP Warning:  Undefined array key "guest_count" in D:\casaaa\htdocs\Admin\Customer\aa\process_order.php on line 179
+[27-Apr-2025 15:16:04 Europe/Berlin] Booking insertion error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contact_number' cannot be null
+[27-Apr-2025 15:16:04 Europe/Berlin] Database error in transaction: Failed to create booking: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contact_number' cannot be null
+[27-Apr-2025 15:16:04 Europe/Berlin] Order processing error: Failed to create booking: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'contact_number' cannot be null
+[27-Apr-2025 15:18:58 Europe/Berlin] Order processing started
+[27-Apr-2025 15:18:58 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 120
+    [extra_fee] => 0
+    [final_total] => 120
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-04-30
+            [time] => 13:09
+            [duration] => 
+            [guests] => 6
+        )
+
+)
+
+[27-Apr-2025 15:18:58 Europe/Berlin] Created booking with ID: 37
+[27-Apr-2025 15:18:58 Europe/Berlin] Created order with ID: 0
+[27-Apr-2025 15:18:58 Europe/Berlin] Attempting to send order confirmation email to: chanomabalo@gmail.com
+[27-Apr-2025 15:18:58 Europe/Berlin] PHP Fatal error:  Uncaught Error: Undefined constant "SMTP_USERNAME" in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php:227
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(331): Mailer->sendOrderConfirmation(Array, 'chanomabalo@gma...', 'Christian Reali...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\includes\Mailer.php on line 227
+[08-May-2025 07:48:15 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Hand-cut Potato Fries","price":160,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":160,"extra_fee":0,"final_total":160,"order_type":"regular","special_requests":"","table_details":null}
+    [reference_number] => 22222222222222
+)
+
+[08-May-2025 07:48:15 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 07:48:15 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Hand-cut Potato Fries
+                    [price] => 160
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 160
+    [extra_fee] => 0
+    [final_total] => 160
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+)
+
+[08-May-2025 07:48:15 Europe/Berlin] Order parameters: Array
+(
+    [:user_id] => 38
+    [:table_id] => 
+    [:customer_name] => Christian Realisan
+    [:contact_number] => 09123456789
+    [:nickname] => Christian
+    [:total_amount] => 160
+    [:amount_paid] => 80
+    [:change_amount] => 80
+    [:extra_fee] => 0
+    [:order_type] => regular
+    [:payment_method] => gcash
+    [:payment_reference] => 22222222222222
+    [:payment_status] => Partially Paid
+    [:status] => Pending
+    [:final_total] => 160
+    [:payment_proof] => payment_1746683295_681c459fbecd7.jpeg
+    [:id_number] => ORD681c459fc0387
+    [:pickup_notes] => 
+)
+
+[08-May-2025 07:48:15 Europe/Berlin] Transaction rolled back due to error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:48:15 Europe/Berlin] Deleted uploaded file: payment_1746683295_681c459fbecd7.jpeg
+[08-May-2025 07:48:15 Europe/Berlin] Order processing error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:48:15 Europe/Berlin] Stack trace: #0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(205): PDOStatement->execute(Array)
+#1 {main}
+[08-May-2025 07:48:52 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Hand-cut Potato Fries","price":160,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":160,"extra_fee":0,"final_total":160,"order_type":"regular","special_requests":"","table_details":null}
+    [reference_number] => 22222222222222
+)
+
+[08-May-2025 07:48:52 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 07:48:52 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Hand-cut Potato Fries
+                    [price] => 160
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 160
+    [extra_fee] => 0
+    [final_total] => 160
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+)
+
+[08-May-2025 07:48:52 Europe/Berlin] Order parameters: Array
+(
+    [:user_id] => 38
+    [:table_id] => 
+    [:customer_name] => Christian Realisan
+    [:contact_number] => 09123456789
+    [:nickname] => Christian
+    [:total_amount] => 160
+    [:amount_paid] => 80
+    [:change_amount] => 80
+    [:extra_fee] => 0
+    [:order_type] => regular
+    [:payment_method] => gcash
+    [:payment_reference] => 22222222222222
+    [:payment_status] => Partially Paid
+    [:status] => Pending
+    [:final_total] => 160
+    [:payment_proof] => payment_1746683332_681c45c4b7461.jpeg
+    [:id_number] => ORD681c45c4b872b
+    [:pickup_notes] => 
+)
+
+[08-May-2025 07:48:52 Europe/Berlin] Transaction rolled back due to error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:48:52 Europe/Berlin] Deleted uploaded file: payment_1746683332_681c45c4b7461.jpeg
+[08-May-2025 07:48:52 Europe/Berlin] Order processing error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:48:52 Europe/Berlin] Stack trace: #0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(205): PDOStatement->execute(Array)
+#1 {main}
+[08-May-2025 07:51:36 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Hand-cut Potato Fries","price":160,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":160,"extra_fee":0,"final_total":160,"order_type":"regular","special_requests":"","table_details":null}
+    [reference_number] => 22222222222222
+)
+
+[08-May-2025 07:51:36 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 07:51:36 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Hand-cut Potato Fries
+                    [price] => 160
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 160
+    [extra_fee] => 0
+    [final_total] => 160
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+)
+
+[08-May-2025 07:51:36 Europe/Berlin] Order parameters: Array
+(
+    [:user_id] => 38
+    [:table_id] => 
+    [:customer_name] => Christian Realisan
+    [:contact_number] => 09123456789
+    [:nickname] => Christian
+    [:total_amount] => 160
+    [:amount_paid] => 80
+    [:change_amount] => 80
+    [:extra_fee] => 0
+    [:order_type] => regular
+    [:payment_method] => gcash
+    [:payment_reference] => 22222222222222
+    [:payment_status] => Partially Paid
+    [:status] => Pending
+    [:final_total] => 160
+    [:payment_proof] => payment_1746683496_681c4668ac410.jpeg
+    [:id_number] => ORD681c4668acf08
+    [:pickup_notes] => 
+)
+
+[08-May-2025 07:51:36 Europe/Berlin] Transaction rolled back due to error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:51:36 Europe/Berlin] Deleted uploaded file: payment_1746683496_681c4668ac410.jpeg
+[08-May-2025 07:51:36 Europe/Berlin] Order processing error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:51:36 Europe/Berlin] Stack trace: #0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(205): PDOStatement->execute(Array)
+#1 {main}
+[08-May-2025 07:51:57 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Hand-cut Potato Fries","price":160,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":160,"extra_fee":0,"final_total":160,"order_type":"regular","special_requests":"","table_details":null}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 07:51:57 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 07:51:57 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Hand-cut Potato Fries
+                    [price] => 160
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 160
+    [extra_fee] => 0
+    [final_total] => 160
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+)
+
+[08-May-2025 07:51:57 Europe/Berlin] Order parameters: Array
+(
+    [:user_id] => 38
+    [:table_id] => 
+    [:customer_name] => Christian Realisan
+    [:contact_number] => 09123456789
+    [:nickname] => Christian
+    [:total_amount] => 160
+    [:amount_paid] => 80
+    [:change_amount] => 80
+    [:extra_fee] => 0
+    [:order_type] => regular
+    [:payment_method] => gcash
+    [:payment_reference] => 11111111111111111111111
+    [:payment_status] => Partially Paid
+    [:status] => Pending
+    [:final_total] => 160
+    [:payment_proof] => payment_1746683517_681c467dac9a4.jpeg
+    [:id_number] => ORD681c467dace4c
+    [:pickup_notes] => 
+)
+
+[08-May-2025 07:51:57 Europe/Berlin] Transaction rolled back due to error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:51:57 Europe/Berlin] Deleted uploaded file: payment_1746683517_681c467dac9a4.jpeg
+[08-May-2025 07:51:57 Europe/Berlin] Order processing error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_id' cannot be null
+[08-May-2025 07:51:57 Europe/Berlin] Stack trace: #0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(205): PDOStatement->execute(Array)
+#1 {main}
+[08-May-2025 07:55:01 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Hand-cut Potato Fries","price":160,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":160,"extra_fee":0,"final_total":160,"order_type":"regular","special_requests":"","table_details":null}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 07:55:01 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 07:55:01 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Hand-cut Potato Fries
+                    [price] => 160
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 160
+    [extra_fee] => 0
+    [final_total] => 160
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+)
+
+[08-May-2025 07:55:01 Europe/Berlin] Order parameters: Array
+(
+    [:user_id] => 38
+    [:customer_name] => Christian Realisan
+    [:contact_number] => 09123456789
+    [:nickname] => Christian
+    [:total_amount] => 160
+    [:amount_paid] => 80
+    [:change_amount] => 80
+    [:extra_fee] => 0
+    [:order_type] => regular
+    [:payment_method] => gcash
+    [:payment_reference] => 11111111111111111111111
+    [:payment_status] => Partially Paid
+    [:status] => Pending
+    [:final_total] => 160
+    [:payment_proof] => payment_1746683701_681c47357a394.jpeg
+    [:id_number] => ORD681c47357a8ff
+    [:pickup_notes] => 
+)
+
+[08-May-2025 07:55:01 Europe/Berlin] Order SQL: INSERT INTO orders (
+            user_id, customer_name, contact_number, nickname,
+            total_amount, amount_paid, change_amount, extra_fee,
+            order_type, payment_method, payment_reference,
+            payment_status, status, final_total, order_date,
+            payment_proof, id_number, pickup_notes) VALUES (
+            :user_id, :customer_name, :contact_number, :nickname,
+            :total_amount, :amount_paid, :change_amount, :extra_fee,
+            :order_type, :payment_method, :payment_reference,
+            :payment_status, :status, :final_total, NOW(),
+            :payment_proof, :id_number, :pickup_notes)
+[08-May-2025 07:55:01 Europe/Berlin] Created order with ID: 24
+[08-May-2025 07:55:01 Europe/Berlin] Created order item with ID: 34
+[08-May-2025 07:55:01 Europe/Berlin] Transaction committed successfully
+[08-May-2025 07:56:25 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":5,"addons":[{"name":"Buffalo Sauce","price":25}]}],"payment_option":"partial","payment_method":"gcash","total_amount":1025,"extra_fee":0,"final_total":1025,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-08","time":"18:55","duration":null,"guest_count":null,"base_price":null,"total":"NaN"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 07:56:25 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 07:56:25 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 5
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => Buffalo Sauce
+                                    [price] => 25
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 1025
+    [extra_fee] => 0
+    [final_total] => 1025
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-05-08
+            [time] => 18:55
+            [duration] => 
+            [guest_count] => 
+            [base_price] => 
+            [total] => NaN
+        )
+
+)
+
+[08-May-2025 07:56:25 Europe/Berlin] Transaction rolled back due to error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'num_guests' cannot be null
+[08-May-2025 07:56:26 Europe/Berlin] Deleted uploaded file: payment_1746683785_681c4789dba40.jpeg
+[08-May-2025 07:56:26 Europe/Berlin] Order processing error: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'num_guests' cannot be null
+[08-May-2025 07:56:26 Europe/Berlin] Stack trace: #0 D:\casaaa\htdocs\Admin\Customer\aa\process_order.php(156): PDOStatement->execute(Array)
+#1 {main}
+[08-May-2025 08:00:07 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":5,"addons":[{"name":"Buffalo Sauce","price":25}]}],"payment_option":"partial","payment_method":"gcash","total_amount":1025,"extra_fee":0,"final_total":1025,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-08","time":"18:55","duration":null,"guest_count":null,"base_price":null,"total":"NaN"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 08:00:07 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 08:00:07 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 5
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => Buffalo Sauce
+                                    [price] => 25
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 1025
+    [extra_fee] => 0
+    [final_total] => 1025
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-05-08
+            [time] => 18:55
+            [duration] => 
+            [guest_count] => 
+            [base_price] => 
+            [total] => NaN
+        )
+
+)
+
+[08-May-2025 08:00:07 Europe/Berlin] Transaction rolled back due to error: Invalid number of guests
+[08-May-2025 08:00:07 Europe/Berlin] Deleted uploaded file: payment_1746684007_681c4867b3b7f.jpeg
+[08-May-2025 08:00:07 Europe/Berlin] Order processing error: Invalid number of guests
+[08-May-2025 08:00:07 Europe/Berlin] Stack trace: #0 {main}
+[08-May-2025 08:03:11 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":5,"addons":[{"name":"Buffalo Sauce","price":25}]}],"payment_option":"partial","payment_method":"gcash","total_amount":1025,"extra_fee":0,"final_total":1025,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-08","time":"18:55","duration":null,"guest_count":null,"base_price":null,"total":"NaN"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 08:03:11 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 08:03:11 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 5
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => Buffalo Sauce
+                                    [price] => 25
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 1025
+    [extra_fee] => 0
+    [final_total] => 1025
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-05-08
+            [time] => 18:55
+            [duration] => 
+            [guest_count] => 
+            [base_price] => 
+            [total] => NaN
+        )
+
+)
+
+[08-May-2025 08:03:11 Europe/Berlin] Table details: Array
+(
+    [package_id] => 2
+    [package_name] => Friends
+    [date] => 2025-05-08
+    [time] => 18:55
+    [duration] => 
+    [guest_count] => 
+    [base_price] => 
+    [total] => NaN
+)
+
+[08-May-2025 08:03:11 Europe/Berlin] Transaction rolled back due to error: Guest count is required for table bookings
+[08-May-2025 08:03:11 Europe/Berlin] Deleted uploaded file: payment_1746684191_681c491f3d91d.jpeg
+[08-May-2025 08:03:11 Europe/Berlin] Order processing error: Guest count is required for table bookings
+[08-May-2025 08:03:11 Europe/Berlin] Stack trace: #0 {main}
+[08-May-2025 08:07:05 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":5,"addons":[{"name":"Buffalo Sauce","price":25}]}],"payment_option":"partial","payment_method":"gcash","total_amount":1025,"extra_fee":0,"final_total":1025,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-08","time":"18:55","duration":null,"guest_count":null,"base_price":null,"total":"NaN"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 08:07:05 Europe/Berlin] User data: Array
+(
+    [id] => 38
+    [first_name] => Christian
+    [last_name] => Realisan
+    [email] => chanomabalo@gmail.com
+    [contact_number] => 09123456789
+    [address] => 
+    [password] => $2y$10$UORIr/bhK5hrlY2eXYNYPeLtwTCJBt3GvMkuHJO2jevagYp1iLXEi
+    [actual_password] => 
+    [profile_photo] => 6809f5f0d803a.jpg
+    [user_type] => customer
+    [name] => 
+    [verification_code] => 062cb0
+    [verification_expiry] => 2025-04-24 11:47:35
+    [is_verified] => 1
+    [reset_token] => 2ef72fca7f640f61fdea89bacd1d892e8e6b69cc421226ad8b65233be7b59e41
+    [reset_token_expires] => 2025-05-02 02:01:52
+)
+
+[08-May-2025 08:07:05 Europe/Berlin] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 5
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => Buffalo Sauce
+                                    [price] => 25
+                                )
+
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => gcash
+    [total_amount] => 1025
+    [extra_fee] => 0
+    [final_total] => 1025
+    [order_type] => advance
+    [special_requests] => 
+    [table_details] => Array
+        (
+            [package_id] => 2
+            [package_name] => Friends
+            [date] => 2025-05-08
+            [time] => 18:55
+            [duration] => 
+            [guest_count] => 
+            [base_price] => 
+            [total] => NaN
+        )
+
+)
+
+[08-May-2025 08:07:05 Europe/Berlin] Table details: Array
+(
+    [package_id] => 2
+    [package_name] => Friends
+    [date] => 2025-05-08
+    [time] => 18:55
+    [duration] => 
+    [guest_count] => 
+    [base_price] => 
+    [total] => NaN
+)
+
+[08-May-2025 08:07:05 Europe/Berlin] Transaction rolled back due to error: Guest count is required for table bookings
+[08-May-2025 08:07:05 Europe/Berlin] Deleted uploaded file: payment_1746684425_681c4a096852e.jpeg
+[08-May-2025 08:07:05 Europe/Berlin] Order processing error: Guest count is required for table bookings
+[08-May-2025 08:07:05 Europe/Berlin] Stack trace: #0 {main}
+[08-May-2025 08:18:03 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-08","time":"07:14","duration":"","guests":"5"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 08:18:03 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 1744481242100 (1).jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php22BF.tmp
+            [error] => 0
+            [size] => 371056
+        )
+
+)
+
+[08-May-2025 08:18:03 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[08-May-2025 10:36:26 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"full","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-08","time":"09:35","duration":"","guests":"5"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[08-May-2025 10:36:26 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 8039688C-85E9-43CC-9CCF-E1717EBC57F2.jpeg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpD41A.tmp
+            [error] => 0
+            [size] => 610533
+        )
+
+)
+
+[08-May-2025 10:36:26 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:29:35 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"full","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"3","package_name":"Family","date":"2025-05-09","time":"14:28","duration":"","guests":"4"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:29:35 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 8039688C-85E9-43CC-9CCF-E1717EBC57F2.jpeg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php61E4.tmp
+            [error] => 0
+            [size] => 610533
+        )
+
+)
+
+[09-May-2025 03:29:35 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:34:23 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 03:34:23 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 462546683_576270851601596_642576809074630877_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpC997.tmp
+            [error] => 0
+            [size] => 122730
+        )
+
+)
+
+[09-May-2025 03:34:23 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:38:49 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Matcha","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 03:38:49 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 8039688C-85E9-43CC-9CCF-E1717EBC57F2.jpeg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpD934.tmp
+            [error] => 0
+            [size] => 610533
+        )
+
+)
+
+[09-May-2025 03:38:50 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:39:51 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":120,"extra_fee":0,"final_total":120,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:39:51 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 31247.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpC8A6.tmp
+            [error] => 0
+            [size] => 500202
+        )
+
+)
+
+[09-May-2025 03:39:51 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:40:42 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":120,"extra_fee":0,"final_total":120,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:40:42 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 462581939_419655627664189_693708474121564184_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php90F8.tmp
+            [error] => 0
+            [size] => 80375
+        )
+
+)
+
+[09-May-2025 03:40:42 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:46:03 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Hand-cut Potato Fries","price":160,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":160,"extra_fee":0,"final_total":160,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 03:46:03 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 1744481242100 (1).jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php777E.tmp
+            [error] => 0
+            [size] => 371056
+        )
+
+)
+
+[09-May-2025 03:46:03 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:47:16 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Mozzarella Stick","price":150,"quantity":1,"addons":[]}],"payment_option":"full","payment_method":"gcash","total_amount":150,"extra_fee":0,"final_total":150,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:47:16 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 462546766_947381667204231_4236594197428484571_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php9331.tmp
+            [error] => 0
+            [size] => 357761
+        )
+
+)
+
+[09-May-2025 03:47:16 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:49:33 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:49:33 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 462571817_1105425791007346_8847180137122129928_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpAB34.tmp
+            [error] => 0
+            [size] => 74201
+        )
+
+)
+
+[09-May-2025 03:49:33 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:50:40 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Mozzarella Stick","price":150,"quantity":1,"addons":[{"name":"Extra Rice","price":25}]}],"payment_option":"partial","payment_method":"gcash","total_amount":175,"extra_fee":0,"final_total":175,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 03:50:40 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => F_202302061616238wMYCC.JPG
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpB1C8.tmp
+            [error] => 0
+            [size] => 1970848
+        )
+
+)
+
+[09-May-2025 03:50:40 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:51:08 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Mozzarella Stick","price":150,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":150,"extra_fee":0,"final_total":150,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:51:08 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 8039688C-85E9-43CC-9CCF-E1717EBC57F2.jpeg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php1EDB.tmp
+            [error] => 0
+            [size] => 610533
+        )
+
+)
+
+[09-May-2025 03:51:08 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:51:41 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 03:51:41 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => F_202302061616238wMYCC.JPG
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php9FB4.tmp
+            [error] => 0
+            [size] => 1970848
+        )
+
+)
+
+[09-May-2025 03:51:41 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:52:30 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:52:30 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 462571817_1105425791007346_8847180137122129928_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php5CAC.tmp
+            [error] => 0
+            [size] => 74201
+        )
+
+)
+
+[09-May-2025 03:52:30 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 03:58:59 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"14:33","duration":"","guests":"10"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 03:58:59 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 462571817_1105425791007346_8847180137122129928_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php4E1C.tmp
+            [error] => 0
+            [size] => 74201
+        )
+
+)
+
+[09-May-2025 03:58:59 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 12:45:31 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":120,"extra_fee":0,"final_total":120,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"11:45","duration":"","guests":"4"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 12:45:31 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => IMG_4284.jpeg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php9CBD.tmp
+            [error] => 0
+            [size] => 72286
+        )
+
+)
+
+[09-May-2025 12:45:31 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 12:49:05 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"11:45","duration":"","guests":"4"}}
+    [reference_number] => 22222222222222
+)
+
+[09-May-2025 12:49:05 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 31255.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpDEAA.tmp
+            [error] => 0
+            [size] => 1520671
+        )
+
+)
+
+[09-May-2025 12:49:05 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[09-May-2025 12:55:22 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Spaghetti maccaroni","price":270,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":270,"extra_fee":0,"final_total":270,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-09","time":"11:45","duration":"","guests":"4"}}
+    [reference_number] => 11111111111111111111111
+)
+
+[09-May-2025 12:55:22 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 8039688C-85E9-43CC-9CCF-E1717EBC57F2.jpeg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\phpA138.tmp
+            [error] => 0
+            [size] => 610533
+        )
+
+)
+
+[09-May-2025 12:55:22 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[22-May-2025 18:34:27 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-23","time":"12:35","duration":"","guests":"10"}}
+    [reference_number] => ww3333333333333
+)
+
+[22-May-2025 18:34:27 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => payment_6829de199db6b.jpg
+            [full_path] => payment_6829de199db6b.jpg
+            [type] => image/jpeg
+            [tmp_name] => C:\xampp\tmp\php5B94.tmp
+            [error] => 0
+            [size] => 47147
+        )
+
+)
+
+[22-May-2025 18:34:27 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[26-May-2025 18:11:36 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"2","package_name":"Friends","date":"2025-05-27","time":"12:11","duration":"","guests":"6"}}
+    [reference_number] => 5434535
+)
+
+[26-May-2025 18:11:36 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => profile_10_1746273116.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php3728.tmp
+            [error] => 0
+            [size] => 62973
+        )
+
+)
+
+[26-May-2025 18:11:36 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[28-May-2025 19:54:22 Europe/Berlin] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":180,"extra_fee":0,"final_total":180,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-29","time":"13:53","duration":"","guests":"2"}}
+    [reference_number] => 5434535
+)
+
+[28-May-2025 19:54:22 Europe/Berlin] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => profile_10_1746273116.jpg
+            [type] => image/jpeg
+            [tmp_name] => D:\casaaa\tmp\php3D63.tmp
+            [error] => 0
+            [size] => 62973
+        )
+
+)
+
+[28-May-2025 19:54:22 Europe/Berlin] Success in process_order.php: Order placed successfully!
+[31-May-2025 07:09:43 UTC] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"HOUSE FRIED CHICKEN (3 PCS)","price":395,"quantity":1,"addons":[]},{"name":"USDA PRIME BEEF SALPICAO","price":753,"quantity":1,"addons":[]},{"name":"MATCHA","price":160,"quantity":1,"addons":[]},{"name":"COOKIES & CREAM","price":195,"quantity":2,"addons":[]}],"payment_option":"partial","payment_method":"gcash","total_amount":1698,"extra_fee":0,"final_total":1698,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-05-31","time":"17:08","duration":"","guests":"2"}}
+    [reference_number] => 4015841898432
+)
+
+[31-May-2025 07:09:43 UTC] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 899c453d-efed-4917-8290-0360f6cac384.jpg
+            [full_path] => 899c453d-efed-4917-8290-0360f6cac384.jpg
+            [type] => image/jpeg
+            [tmp_name] => /tmp/phpcwTKVa
+            [error] => 0
+            [size] => 58564
+        )
+
+)
+
+[31-May-2025 07:09:43 UTC] Success in process_order.php: Order placed successfully!
+[02-Jun-2025 06:55:34 UTC] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"FRIED CALAMARI","price":242,"quantity":1,"addons":[]}],"payment_option":"full","payment_method":"gcash","total_amount":242,"extra_fee":0,"final_total":242,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-06-11","time":"16:51","duration":"","guests":"2"}}
+    [reference_number] => 2929839292
+)
+
+[02-Jun-2025 06:55:34 UTC] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => mayapay.jpg
+            [full_path] => mayapay.jpg
+            [type] => image/jpeg
+            [tmp_name] => /tmp/php3ShoMu
+            [error] => 0
+            [size] => 62973
+        )
+
+)
+
+[02-Jun-2025 06:55:34 UTC] Success in process_order.php: Order placed successfully!
+[02-Jun-2025 07:49:47 UTC] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"GAMBAS AND CHORIZO","price":368,"quantity":1,"addons":[{"name":"Extra Rice","price":25}]}],"payment_option":"partial","payment_method":"gcash","total_amount":393,"extra_fee":0,"final_total":393,"order_type":"advance","special_requests":"","table_details":{"package_id":"1","package_name":"Couples","date":"2025-06-02","time":"15:49","duration":"","guests":"2"}}
+    [reference_number] => 17273732871
+)
+
+[02-Jun-2025 07:49:47 UTC] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => received_2396363520722995.jpeg
+            [full_path] => received_2396363520722995.jpeg
+            [type] => image/jpeg
+            [tmp_name] => /tmp/phpMxfAuI
+            [error] => 0
+            [size] => 27421
+        )
+
+)
+
+[02-Jun-2025 07:49:47 UTC] Success in process_order.php: Order placed successfully!
+[02-Jun-2025 07:52:03 UTC] Received POST data: Array
+(
+    [order_data] => {"items":[{"name":"FRIED CALAMARI","price":242,"quantity":1,"addons":[]},{"name":"GAMBAS AND CHORIZO","price":368,"quantity":1,"addons":[]},{"name":"HAND - CUT POTATO FRIES","price":195,"quantity":1,"addons":[]}],"payment_option":"full","payment_method":"gcash","total_amount":805,"extra_fee":0,"final_total":805,"order_type":"advance","special_requests":"","table_details":{"package_id":"7","package_name":"Friends","date":"2025-06-02","time":"15:51","duration":"","guests":"3"}}
+    [reference_number] => 4027464293841
+)
+
+[02-Jun-2025 07:52:03 UTC] Received FILES data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => 491218643_9561686467269320_1439116683979383137_n.jpg
+            [full_path] => 491218643_9561686467269320_1439116683979383137_n.jpg
+            [type] => image/jpeg
+            [tmp_name] => /tmp/phpV1SYPd
+            [error] => 0
+            [size] => 72042
+        )
+
+)
+
+[02-Jun-2025 07:52:03 UTC] Success in process_order.php: Order placed successfully!

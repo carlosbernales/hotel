@@ -1,0 +1,27 @@
+Array
+(
+    [POST] => Array
+        (
+            [firstName] => Alleah
+            [lastName] => Ylagan
+            [contact] => 999999999
+            [email] => aizzyvillanueva43@gmail.com
+            [checkIn] => 2025-04-15
+            [checkOut] => 2025-05-05
+            [discountType] => 
+            [paymentMethod] => Cash
+            [paymentOption] => downpayment
+            [guest_names_0] => Array
+                (
+                    [0] => a
+                )
+
+            [rooms] => [{"id":10,"type":"Deluxe Family Room","price":4200,"capacity":"1 Single Bed, 1 Queen bed/3 Single Bed","image":"../aa/uploads/rooms/room_type_67fa0b2be9294.jpg","addedAt":"2025-04-12T18:18:51.710Z","guestCount":1,"guestNames":["a"],"nights":20,"totalPrice":84000,"room_type_id":10}]
+        )
+
+    [GET] => Array
+        (
+        )
+
+    [RAW] => 
+)

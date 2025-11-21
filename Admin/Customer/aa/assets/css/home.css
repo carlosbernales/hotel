@@ -1,0 +1,277 @@
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-title {
+    font-size: 4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    animation: fadeInDown 1s ease;
+}
+
+.hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2rem;
+    animation: fadeInUp 1s ease;
+}
+
+/* Best Offers Section */
+.best-offers {
+    padding: 5rem 0;
+    background-color: #f8f9fa;
+}
+
+.section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 50px;
+    height: 3px;
+    background-color: #d4af37;
+    margin: 1rem auto;
+}
+
+.offer-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 2rem;
+}
+
+.offer-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.offer-img {
+    height: 250px;
+    object-fit: cover;
+}
+
+.offer-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #d4af37;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-weight: 600;
+}
+
+/* Featured Rooms */
+.featured-rooms {
+    padding: 5rem 0;
+}
+
+.room-card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+}
+
+.room-img {
+    height: 300px;
+    object-fit: cover;
+}
+
+.room-price {
+    font-size: 1.5rem;
+    color: #d4af37;
+    font-weight: 700;
+}
+
+.room-features {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0;
+}
+
+.room-features li {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.room-features i {
+    color: #d4af37;
+    margin-right: 0.5rem;
+}
+
+/* Services Section */
+.services {
+    padding: 5rem 0;
+    background-color: #f8f9fa;
+}
+
+.service-icon {
+    font-size: 3rem;
+    color: #d4af37;
+    margin-bottom: 1rem;
+}
+
+/* Events & Tables Preview */
+.events-tables {
+    padding: 5rem 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('../images/events-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+}
+
+.preview-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.preview-card:hover {
+    transform: translateY(-10px);
+}
+
+.preview-icon {
+    font-size: 3rem;
+    color: #d4af37;
+    margin-bottom: 1rem;
+}
+
+/* Facilities Section */
+.section-box {
+    padding: 4rem 0;
+    background-color: #fff;
+}
+
+.facility-category {
+    color: #d4af37;
+    font-weight: 600;
+    margin: 1.5rem 0 1rem;
+    font-size: 1.2rem;
+}
+
+.facility-category:first-child {
+    margin-top: 0;
+}
+
+.facilities-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.facilities-list li {
+    padding: 0.5rem 0;
+    color: #555;
+    position: relative;
+    padding-left: 1.8rem;
+    font-size: 0.95rem;
+}
+
+.facilities-list li:before {
+    content: "\f00c";
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    position: absolute;
+    left: 0;
+    color: #d4af37;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+    .section-box {
+        padding: 2rem 0;
+    }
+    
+    .facility-category {
+        margin: 1rem 0 0.5rem;
+        font-size: 1.1rem;
+    }
+    
+    .facilities-list li {
+        font-size: 0.9rem;
+    }
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    .offer-img, .room-img {
+        height: 200px;
+    }
+}
+
+/* Custom Button Styles */
+.btn-custom {
+    background-color: #d4af37;
+    color: white;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-custom:hover {
+    background-color: #b69121;
+    color: white;
+    transform: translateY(-2px);
+}

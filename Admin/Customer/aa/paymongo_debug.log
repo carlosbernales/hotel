@@ -1,0 +1,979 @@
+[2025-06-05 14:54:04] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 14:54:04] Autoloader included successfully
+[2025-06-05 14:54:04] Attempting direct cURL method for PayMongo checkout
+[2025-06-05 15:02:13] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:02:13] Autoloader included successfully
+[2025-06-05 15:02:13] Attempting direct cURL method for PayMongo checkout
+[2025-06-05 15:08:34] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:08:34] Autoloader included successfully
+[2025-06-05 15:08:34] Attempting direct cURL method for PayMongo checkout
+[2025-06-05 15:08:48] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:08:48] Autoloader included successfully
+[2025-06-05 15:08:48] Attempting direct cURL method for PayMongo checkout
+[2025-06-05 15:11:59] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:11:59] Autoloader included successfully
+[2025-06-05 15:11:59] Attempting direct cURL method for PayMongo checkout
+[2025-06-05 16:22:51] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:22:51] Autoloader included successfully
+[2025-06-05 16:22:51] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:23:55] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:23:55] Autoloader included successfully
+[2025-06-05 16:23:55] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:35:01] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:35:01] Autoloader included successfully
+[2025-06-05 16:35:01] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:38:24] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:38:24] Autoloader included successfully
+[2025-06-05 16:38:24] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:51:12] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:51:12] Autoloader included successfully
+[2025-06-05 16:51:12] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:53:57] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:53:58] Autoloader included successfully
+[2025-06-05 16:53:58] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:54:02] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_HjSwsWJAHuEFKEJFryFSYXa9_client_G5Aoq2TnreCV6pjy2EHUhmQ9#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 05:04:01] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 05:04:01] Autoloader included successfully
+[2025-06-05 05:04:01] Creating PayMongo checkout with direct cURL method
+[2025-06-05 05:04:05] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_1bHSViezyQi6h8WJwBUvYWbh_client_snRutLXDkJkFVrVo3iCwMYBb#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 05:11:49] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 05:11:49] Autoloader included successfully
+[2025-06-05 05:11:49] Creating PayMongo checkout with direct cURL method
+[2025-06-05 05:11:53] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_7PbhkZ7bNXrcFF6PzVERNFNS_client_MWePaH5s2aA1b3fb6nNJYtBP#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 05:20:43] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 05:20:43] Autoloader included successfully
+[2025-06-05 05:20:43] Creating PayMongo checkout with direct cURL method
+[2025-06-05 05:20:47] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_GpPrQPrVgeaLR9eVD7NDYLQv_client_o9GcQ3LDprSc5VqArV7aqHj8#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 05:26:26] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 05:26:26] Autoloader included successfully
+[2025-06-05 05:26:26] Creating PayMongo checkout with direct cURL method
+[2025-06-05 05:26:29] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_KXqKdMikBSKbZbaGSrUVEZeZ_client_cSR5cskFXpzGHkgKi81coa4d#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 05:50:29] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 05:50:29] Autoloader included successfully
+[2025-06-05 05:50:29] Creating PayMongo checkout with direct cURL method
+[2025-06-05 05:50:34] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_1GeHdi2rUo8kbFYQzdCb5ubr_client_DXTB8KWFqmsQEEp8HJPzsTXW#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 06:41:22] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 06:41:22] Autoloader included successfully
+[2025-06-05 06:41:22] Creating PayMongo checkout with direct cURL method
+[2025-06-05 06:41:24] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_u1twq7wNx9qWxZD9mbAYBBRD_client_5yxZQYtferiFRmEh8Fy8SU41#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 06:51:39] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 06:51:39] Autoloader included successfully
+[2025-06-05 06:51:39] Creating PayMongo checkout with direct cURL method
+[2025-06-05 06:51:41] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_i3U2S4FGtbyJtDsZ1U4u8YR1_client_9BWhG6aPtvj1X8cqG7yEs8ZB#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 06:56:57] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 06:56:57] Autoloader included successfully
+[2025-06-05 06:56:57] Creating PayMongo checkout with direct cURL method
+[2025-06-05 06:57:00] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_zv6LzfuiVzLXc36p5wpZqteR_client_jAwYpmMv94JMMj7S9Wy21oAo#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 06:58:18] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 06:58:18] Autoloader included successfully
+[2025-06-05 06:58:18] Creating PayMongo checkout with direct cURL method
+[2025-06-05 06:58:21] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_SCKCd4s9zBnHKqdWWu5ca94s_client_pBawkc3stHywQFLi56GX63Mq#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 07:02:37] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 07:02:37] Autoloader included successfully
+[2025-06-05 07:02:37] Creating PayMongo checkout with direct cURL method
+[2025-06-05 07:02:41] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_qfwwkWHFi9o5MEz7qcYX4BTi_client_Z3iHgwnoVcsDAVKrETfTH6AJ#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 07:07:01] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 07:07:01] Autoloader included successfully
+[2025-06-05 07:07:01] Creating PayMongo checkout with direct cURL method
+[2025-06-05 07:07:05] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_f7iQqEbXG78uPaH91gB8pfiK_client_6tLdWHhwiDkNowhNJMcYcnYQ#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 07:13:16] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 07:13:16] Autoloader included successfully
+[2025-06-05 07:13:16] Creating PayMongo checkout with direct cURL method
+[2025-06-05 07:13:18] Checkout result
+Data: Array
+(
+    [status] => success
+    [checkout_url] => https://checkout.paymongo.com/cs_DYAZ67TuoD5Fh6tEWXzqs64D_client_qRptbKmSH64YZM7fh3aEYf7o#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+)
+
+[2025-06-05 12:36:14] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:36:14] Autoloader included successfully
+[2025-06-05 12:36:14] Creating PayMongo checkout with direct cURL method
+[2025-06-05 12:39:42] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:39:42] Autoloader included successfully
+[2025-06-05 12:39:42] Creating PayMongo checkout with direct cURL method
+[2025-06-05 12:39:53] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:39:53] Autoloader included successfully
+[2025-06-05 12:39:53] Creating PayMongo checkout with direct cURL method
+[2025-06-05 12:41:45] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:41:45] Autoloader included successfully
+[2025-06-05 12:41:45] Creating PayMongo checkout with direct cURL method
+[2025-06-05 12:45:29] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:45:29] Autoloader included successfully
+[2025-06-05 12:45:29] Creating PayMongo checkout with direct cURL method
+[2025-06-05 12:52:17] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:52:17] Autoloader included successfully
+[2025-06-05 12:52:17] Creating PayMongo checkout with direct cURL method
+[2025-06-05 12:56:31] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 12:56:31] Autoloader included successfully
+[2025-06-05 12:56:31] Creating PayMongo checkout with direct cURL method
+[2025-06-05 13:16:05] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 13:16:05] Autoloader included successfully
+[2025-06-05 13:16:05] Creating PayMongo checkout with direct cURL method
+[2025-06-05 13:16:54] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 13:16:54] Autoloader included successfully
+[2025-06-05 13:16:54] Creating PayMongo checkout with direct cURL method
+[2025-06-05 13:24:44] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 13:24:44] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 13:24:44] Autoloader included successfully
+[2025-06-05 13:24:44] Creating PayMongo checkout with direct cURL method
+[2025-06-05 13:24:44] Autoloader included successfully
+[2025-06-05 13:24:44] Creating PayMongo checkout with direct cURL method
+[2025-06-05 13:38:26] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 13:38:26] Autoloader included successfully
+[2025-06-05 13:38:26] Creating PayMongo checkout with direct cURL method
+[2025-06-05 13:48:43] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 13:48:43] Autoloader included successfully
+[2025-06-05 13:48:43] Creating PayMongo checkout with direct cURL method
+[2025-06-05 14:00:07] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 14:00:07] Autoloader included successfully
+[2025-06-05 14:00:07] Creating PayMongo checkout with direct cURL method
+[2025-06-05 14:08:00] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 14:08:00] Autoloader included successfully
+[2025-06-05 14:08:00] Creating PayMongo checkout with direct cURL method
+[2025-06-05 14:20:56] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 14:20:56] Autoloader included successfully
+[2025-06-05 14:20:56] Creating PayMongo checkout with direct cURL method
+[2025-06-05 14:30:33] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 14:30:33] Autoloader included successfully
+[2025-06-05 14:30:33] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:06:26] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:06:26] Autoloader included successfully
+[2025-06-05 15:06:26] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:07:41] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:07:41] Autoloader included successfully
+[2025-06-05 15:07:41] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:10:05] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:10:05] Autoloader included successfully
+[2025-06-05 15:10:05] Processing payment
+Data: Array
+(
+    [reference] => ORD-6841972dcafb6
+    [amount] => 6000
+    [description] => Payment for Order #1749129005820
+    [total_amount] => 120
+    [is_partial] => 1
+)
+
+[2025-06-05 15:10:05] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:10:08] Checkout URL generated
+Data: Array
+(
+    [checkout_url] => https://checkout.paymongo.com/cs_AU7MZ2HHBr4vscdMf3fQ2feT_client_UtWeoABHeswxJ7AdXKVnjM2V#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+    [message] => Redirecting to payment gateway...
+)
+
+[2025-06-05 15:10:21] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:10:21] Autoloader included successfully
+[2025-06-05 15:10:21] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:18:29] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:18:29] Autoloader included successfully
+[2025-06-05 15:18:29] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:20:05] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:20:05] Autoloader included successfully
+[2025-06-05 15:20:05] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:23:59] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:23:59] Autoloader included successfully
+[2025-06-05 15:23:59] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:26:46] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:26:46] Autoloader included successfully
+[2025-06-05 15:26:46] Processing payment
+Data: Array
+(
+    [reference] => ORD-68419b168a7a1
+    [amount_received] => 60
+    [amount_in_centavos] => 6000
+    [description] => Payment for Order #1749130006555
+)
+
+[2025-06-05 15:26:46] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:29:15] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:29:15] Autoloader included successfully
+[2025-06-05 15:29:15] Processing payment
+Data: Array
+(
+    [reference] => ORD-68419bab3e6e7
+    [amount_received] => 60
+    [amount_in_centavos] => 6000
+    [description] => Payment for Order #ORD-1749130155243-474
+)
+
+[2025-06-05 15:29:15] Creating PayMongo checkout with direct cURL method
+[2025-06-05 15:35:48] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 15:35:48] Autoloader included successfully
+[2025-06-05 15:35:48] Processing payment
+Data: Array
+(
+    [reference] => ORD-68419d3409d22
+    [amount_received] => 60
+    [amount_in_centavos] => 6000
+    [description] => Payment for Order #1749130548029
+)
+
+[2025-06-05 15:35:48] Creating PayMongo checkout with direct cURL method
+[2025-06-05 16:04:50] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-05 16:04:50] Autoloader included successfully
+[2025-06-05 16:04:50] Processing payment
+Data: Array
+(
+    [reference] => ORD-6841a40276c48
+    [amount_received] => 60
+    [amount_in_centavos] => 6000
+    [description] => Payment for Order #1749132290477
+)
+
+[2025-06-05 16:04:50] Creating PayMongo checkout with direct cURL method
+[2025-06-06 02:17:24] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-06 02:17:24] Autoloader included successfully
+[2025-06-06 02:17:24] Processing payment
+Data: Array
+(
+    [reference] => ORD-684233944cf26
+    [amount_received] => 90
+    [amount_in_centavos] => 9000
+    [description] => Payment for Order #1749169044266
+)
+
+[2025-06-06 02:17:24] Creating PayMongo checkout with direct cURL method
+[2025-06-06 02:23:48] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-06 02:23:48] Autoloader included successfully
+[2025-06-06 02:23:48] Processing payment
+Data: Array
+(
+    [reference] => ORD-684235141765f
+    [amount_received] => 60
+    [amount_in_centavos] => 6000
+    [description] => Payment for Order #1749169428082
+)
+
+[2025-06-06 02:23:48] Creating PayMongo checkout with direct cURL method
+[2025-06-09 05:23:29] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admined\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-09 05:23:29] Autoloader included successfully
+[2025-06-09 05:23:29] Processing payment
+Data: Array
+(
+    [reference] => ORD-684653b1b1021
+    [amount_received] => 102.5
+    [amount_in_centavos] => 10250
+    [description] => Payment for Order #1749439409660
+)
+
+[2025-06-09 05:23:29] Creating PayMongo checkout with direct cURL method
+[2025-06-09 06:55:28] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admined\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-09 06:55:29] Autoloader included successfully
+[2025-06-09 06:55:29] Processing payment
+Data: Array
+(
+    [reference] => ORD-6846694130153
+    [amount_received] => 102.5
+    [amount_in_centavos] => 10250
+    [description] => Payment for Order #1749444928926
+)
+
+[2025-06-09 06:55:29] Creating PayMongo checkout with direct cURL method
+[2025-06-10 01:31:46] Checkout created for reference #EVT-1749511901-3558. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_hiskFskERppyySLRu37Tqy82_client_zd3uwynsKxkZ1vhxELpdbxq7#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 01:42:09] Checkout created for reference #EVT-1749512524-3538. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_k37Js54LNh6CGinXgPcAr6eE_client_CvsswnJGobsaBLJAtx1hhuLZ#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:08:35] Paymongo Error: The value for amount cannot be less than 2000.
+[2025-06-10 02:08:45] Checkout created for reference #EVT-1749514118-5844. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_Yervb8e4ySA7sXgcF53W6kGN_client_iGDxXdSyfnwXjTxXDD22kkFW#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:15:35] Checkout created for reference #EVT-1749514368-1405. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_PXEtrunj84UYgGYUSo6S3AAq_client_gT3HnKBRBLGbZxmhWv1beGUq#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:22:02] Checkout created for reference #EVT-1749514917-9599. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_Zob3H7LnCj8RwYtd4JNWNHXT_client_z4mR4XdHouQwevKS1TiCtvi9#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:26:56] Checkout created for reference #EVT-1749515213-6776. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_qiZRw7oJvJh6UCEgR5TbX8B6_client_aMkNTgLbRSaZ85ra2JfvSQa8#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:29:39] Checkout created for reference #EVT-1749515375-2686. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_DBKZ5mFgLgmPsJdN7q6PDGWE_client_6eSnc6DaLR2tH2aMcprUiz5A#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:32:40] Checkout created for reference #EVT-1749515557-6471. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_Utzx8CobP3tD3BpMoGXfXeYD_client_6iQ6W591TrnMCqiTncW5eTDF#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:36:48] Checkout created for reference #EVT-1749515803-9878. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_Qc6mxSPsDunFVRWaA7SmuuX4_client_LXEwwiEpujC7gvrB9ogsAYX2#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:51:03] Checkout created for reference #EVT-1749516658-1899. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_csdvhSLnSrnKk5WAk3ZaGxJs_client_eJZSUG7UXoTrHGM2Fg2zDT6Z#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 02:57:06] Checkout created for reference #EVT-1749517021-6505. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_1XkYe8anuJQ49D2SbqPuH6F4_client_4vcemknxZR45TRzahq9XBiLS#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 03:00:17] Checkout created for reference #EVT-1749517213-8416. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_CkRfafxnZtgRH8YczK7BmXM7_client_ik3bX8muMRXn87qh6GfZrDZP#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 03:01:43] Checkout created for reference #EVT-1749517299-1993. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_JNFBwVzjMh4zvLFwFq7SDnge_client_oSNpqmRKzSEHMnGvGdwPMYhd#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 03:02:20] Checkout created for reference #EVT-1749517338-1542. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_xobuwRB3V7cgKgS17HbyxJ4Z_client_asEEGG77k47i5zNwwiZ9nYaX#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 03:07:44] Checkout created for reference #EVT-1749517661-6110. Amount: 84000 PHP. Checkout URL: https://checkout.paymongo.com/cs_XcbgjWh7xKPBwNtfy8vU4cps_client_wuuY9aGFBJKedmndTGS94b46#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 03:12:46] Paymongo Error: The value for amount cannot be less than 2000.
+[2025-06-10 03:36:35] Checkout created for reference #EVT-1749519372-7393. Amount: 39000 PHP. Checkout URL: https://checkout.paymongo.com/cs_uqXxzJCgDLrmTnjd7HUkNeCL_client_4cUZNaM6ypSXCKbvWXCyUm71#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-10 03:43:53] Checkout created for reference #EVT-1749519829-7347. Amount: 39000 PHP. Checkout URL: https://checkout.paymongo.com/cs_yHhRbj78EUED7mSviuMtLBHR_client_sT3ETKBdTVxbCqHd5bABLBEw#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+[2025-06-12 09:02:51] Including autoloader
+Data: Array
+(
+    [path] => D:\casaaa\htdocs\Admin\Customed\aa/vendor/autoload.php
+)
+
+[2025-06-12 09:02:52] Autoloader included successfully
+[2025-06-12 09:02:52] Processing payment
+Data: Array
+(
+    [reference] => ORD-684a7b9c144ec
+    [amount_received] => 330
+    [amount_in_centavos] => 33000
+    [description] => Payment for Order #1749711771866
+)
+
+[2025-06-12 09:02:52] Creating PayMongo checkout with direct cURL method
+[2025-06-12 12:43:49] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-12 12:43:49] Autoloader included successfully
+[2025-06-12 12:43:49] Processing payment
+Data: Array
+(
+    [reference] => ORD-684acb85ee8db
+    [amount_received] => 248.5
+    [amount_in_centavos] => 24850
+    [description] => Payment for Order #1749732228196
+)
+
+[2025-06-12 12:43:49] Creating PayMongo checkout with direct cURL method
+[2025-06-12 13:01:18] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-12 13:01:18] Autoloader included successfully
+[2025-06-12 13:01:18] Processing payment
+Data: Array
+(
+    [reference] => ORD-684acf9e1da61
+    [amount_received] => 194
+    [amount_in_centavos] => 19400
+    [description] => Payment for Order #1749733277553
+)
+
+[2025-06-12 13:01:18] Creating PayMongo checkout with direct cURL method
+[2025-06-12 13:04:39] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-12 13:04:39] Autoloader included successfully
+[2025-06-12 13:04:39] Processing payment
+Data: Array
+(
+    [reference] => ORD-684ad06715c4d
+    [amount_received] => 60
+    [amount_in_centavos] => 6000
+    [description] => Payment for Order #1749733439144
+)
+
+[2025-06-12 13:04:39] Creating PayMongo checkout with direct cURL method
+[2025-06-12 22:50:52] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-12 22:50:52] Autoloader included successfully
+[2025-06-12 22:50:52] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b59cc35c55
+    [amount_received] => 242
+    [amount_in_centavos] => 24200
+    [description] => Payment for Order #1749768651590
+)
+
+[2025-06-12 22:50:52] Creating PayMongo checkout with direct cURL method
+[2025-06-13 00:53:01] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 00:53:01] Autoloader included successfully
+[2025-06-13 00:53:01] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b766d974f4
+    [amount_received] => 184
+    [amount_in_centavos] => 18400
+    [description] => Payment for Order #1749775941845
+)
+
+[2025-06-13 00:53:01] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:00:09] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:00:09] Autoloader included successfully
+[2025-06-13 01:00:09] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b78199a7a0
+    [amount_received] => 305
+    [amount_in_centavos] => 30500
+    [description] => Payment for Order #1749776409512
+)
+
+[2025-06-13 01:00:09] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:03:05] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:03:05] Autoloader included successfully
+[2025-06-13 01:03:05] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b78c98c786
+    [amount_received] => 368
+    [amount_in_centavos] => 36800
+    [description] => Payment for Order #1749776585457
+)
+
+[2025-06-13 01:03:05] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:11:54] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:11:54] Autoloader included successfully
+[2025-06-13 01:11:54] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b7ada42195
+    [amount_received] => 184
+    [amount_in_centavos] => 18400
+    [description] => Payment for Order #1749777074526
+)
+
+[2025-06-13 01:11:54] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:17:33] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:17:33] Autoloader included successfully
+[2025-06-13 01:17:33] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b7c2d22a89
+    [amount_received] => 185
+    [amount_in_centavos] => 18500
+    [description] => Payment for Order #1749777452919
+)
+
+[2025-06-13 01:17:33] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:20:21] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:20:21] Autoloader included successfully
+[2025-06-13 01:20:21] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b7cd59f8e5
+    [amount_received] => 184
+    [amount_in_centavos] => 18400
+    [description] => Payment for Order #1749777582058
+)
+
+[2025-06-13 01:20:21] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:33:17] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:33:17] Autoloader included successfully
+[2025-06-13 01:33:17] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b7fdd41b96
+    [amount_received] => 145
+    [amount_in_centavos] => 14500
+    [description] => Payment for Order #1749778357702
+)
+
+[2025-06-13 01:33:17] Creating PayMongo checkout with direct cURL method
+[2025-06-13 01:38:58] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 01:38:58] Autoloader included successfully
+[2025-06-13 01:38:58] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b81325f344
+    [amount_received] => 121
+    [amount_in_centavos] => 12100
+    [description] => Payment for Order #1749778698832
+)
+
+[2025-06-13 01:38:58] Creating PayMongo checkout with direct cURL method
+[2025-06-13 03:12:43] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 03:12:43] Autoloader included successfully
+[2025-06-13 03:12:43] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b972b2093e
+    [amount_received] => 242
+    [amount_in_centavos] => 24200
+    [description] => Payment for Order #1749784362504
+)
+
+[2025-06-13 03:12:43] Creating PayMongo checkout with direct cURL method
+[2025-06-13 03:32:16] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 03:32:16] Autoloader included successfully
+[2025-06-13 03:32:16] Processing payment
+Data: Array
+(
+    [reference] => ORD-684b9bc00f7b2
+    [amount_received] => 647
+    [amount_in_centavos] => 64700
+    [description] => Payment for Order #1749785535603
+)
+
+[2025-06-13 03:32:16] Creating PayMongo checkout with direct cURL method
+[2025-06-13 04:07:32] Including autoloader
+Data: Array
+(
+    [path] => /home/u429956055/domains/e-akomoda.site/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-06-13 04:07:32] Autoloader included successfully
+[2025-06-13 04:07:32] Processing payment
+Data: Array
+(
+    [reference] => ORD-684ba4041ff97
+    [amount_received] => 213.5
+    [amount_in_centavos] => 21350
+    [description] => Payment for Order #1749787652099
+)
+
+[2025-06-13 04:07:32] Creating PayMongo checkout with direct cURL method
+[2025-10-22 06:46:48] Including autoloader
+Data: Array
+(
+    [path] => C:\Users\Win11\Music\Windsurf\XAMMP\htdocs\Admin\Customer\aa/vendor/autoload.php
+)
+
+[2025-10-22 06:46:48] Autoloader included successfully
+[2025-10-22 06:46:48] Processing payment
+Data: Array
+(
+    [reference] => ORD-68f861b85bf94
+    [amount_received] => 300
+    [amount_in_centavos] => 30000
+    [description] => Payment for Order #1761108408367
+)
+
+[2025-10-22 06:46:48] Creating PayMongo checkout with direct cURL method
+[2025-10-23 05:55:44] Including autoloader
+Data: Array
+(
+    [path] => C:\Users\Win11\Music\Windsurf\XAMMP\htdocs\Admin\Customer\aa/vendor/autoload.php
+)
+
+[2025-10-23 05:55:44] Autoloader included successfully
+[2025-10-23 05:55:44] Processing payment
+Data: Array
+(
+    [reference] => ORD-68f9a740908dd
+    [amount_received] => 195
+    [amount_in_centavos] => 19500
+    [description] => Payment for Order #1761191744580
+)
+
+[2025-10-23 05:55:44] Creating PayMongo checkout with direct cURL method
+[2025-11-06 02:03:04] Including autoloader
+Data: Array
+(
+    [path] => /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-11-06 02:03:04] Autoloader included successfully
+[2025-11-06 02:03:04] Processing payment
+Data: Array
+(
+    [reference] => ORD-690c01d8c6bef
+    [amount_received] => 1100
+    [amount_in_centavos] => 110000
+    [description] => Payment for Order #1762394335294
+)
+
+[2025-11-06 02:03:04] Creating PayMongo checkout with direct cURL method
+[2025-11-06 02:06:27] Including autoloader
+Data: Array
+(
+    [path] => /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Customer/aa/vendor/autoload.php
+)
+
+[2025-11-06 02:06:27] Autoloader included successfully
+[2025-11-06 02:06:27] Processing payment
+Data: Array
+(
+    [reference] => ORD-690c02a3851fd
+    [amount_received] => 240
+    [amount_in_centavos] => 24000
+    [description] => Payment for Order #1762394537971
+)
+
+[2025-11-06 02:06:27] Creating PayMongo checkout with direct cURL method

@@ -1,0 +1,221 @@
+<?php
+require_once 'db.php';
+session_start();
+
+// Set the content type to JSON
+header('Content-Type: application/json');
+
+// Enable error logging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Debug log function
+function debug_log($message, $data = null) {
+    error_log(date('Y-m-d H:i:s') . " - " . $message);
+    if ($data !== null) {
+        error_log(print_r($data, true));
+    }
+}
+
+// Function to check if a table exists
+function tableExists($con, $tableName) {
+    $result = mysqli_query($con, "SHOW TABLES LIKE '$tableName'");
+    return mysqli_num_rows($result) > 0;
+}
+
+// Check request method
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+    exit;
+}
+
+// Log incoming data
+debug_log('POST data received:', $_POST);
+
+try {
+    // Validate required fields
+    $required_fields = ['booking_id', 'new_room_id', 'transfer_reason', 'current_room_id', 'price_difference'];
+    foreach ($required_fields as $field) {
+        if (!isset($_POST[$field]) || trim($_POST[$field]) === '') {
+            throw new Exception("Missing required field: $field");
+        }
+    }
+    
+    // Get POST data
+    $booking_id = $_POST['booking_id'];
+    $new_room_id = $_POST['new_room_id'];
+    $current_room_id = $_POST['current_room_id'];
+    $transfer_reason = $_POST['transfer_reason'];
+    $price_difference = floatval($_POST['price_difference']);
+    $payment_method = isset($_POST['payment_method']) ? $_POST['payment_method'] : null;
+    $cash_amount = isset($_POST['cash_amount']) ? floatval($_POST['cash_amount']) : 0;
+
+    // Validate if payment method is required
+    if ($price_difference > 0 && empty($payment_method)) {
+        throw new Exception("Payment method is required for additional charges");
+    }
+
+    // Check if rooms exist
+    $room_check = mysqli_query($con, "SELECT room_type_id, room_type, price FROM room_types WHERE room_type_id IN ('$current_room_id', '$new_room_id')");
+    if (mysqli_num_rows($room_check) < 2) {
+        throw new Exception("One or both room types do not exist");
+    }
+
+    // Check booking exists and is in checked in status
+    $booking_check = mysqli_query($con, "SELECT status FROM bookings WHERE booking_id = '$booking_id'");
+    if (mysqli_num_rows($booking_check) === 0) {
+        throw new Exception("Booking not found");
+    }
+    
+    $booking_status = mysqli_fetch_assoc($booking_check)['status'];
+    if ($booking_status !== 'Checked in' && $booking_status !== 'Extended') {
+        throw new Exception("Booking must be in 'Checked in' or 'Extended' status to transfer room, current status: $booking_status");
+    }
+
+    // Start transaction
+    debug_log("Starting transaction for booking transfer");
+    mysqli_begin_transaction($con);
+
+    // 1. Update the booking with new room type
+    $update_booking = "UPDATE bookings 
+                      SET room_type_id = ?, 
+                          total_amount = total_amount + ?,
+                          last_modified = NOW()
+                      WHERE booking_id = ?";
+    
+    $stmt = mysqli_prepare($con, $update_booking);
+    if (!$stmt) {
+        throw new Exception("Failed to prepare update statement: " . mysqli_error($con));
+    }
+    
+    mysqli_stmt_bind_param($stmt, "ids", $new_room_id, $price_difference, $booking_id);
+    
+    if (!mysqli_stmt_execute($stmt)) {
+        throw new Exception("Failed to update booking: " . mysqli_stmt_error($stmt));
+    }
+    
+    $affected_rows = mysqli_stmt_affected_rows($stmt);
+    debug_log("Updated booking, affected rows: $affected_rows");
+    
+    if ($affected_rows === 0) {
+        throw new Exception("No changes made to booking");
+    }
+
+    // 2. Create a transfer record if the table exists
+    if (tableExists($con, 'room_transfers')) {
+        debug_log("room_transfers table exists, creating transfer record");
+        
+        $create_transfer = "INSERT INTO room_transfers 
+                           (booking_id, old_room_type_id, new_room_type_id, 
+                            transfer_reason, price_difference, transfer_date) 
+                           VALUES (?, ?, ?, ?, ?, NOW())";
+        
+        $stmt = mysqli_prepare($con, $create_transfer);
+        if (!$stmt) {
+            throw new Exception("Failed to prepare transfer statement: " . mysqli_error($con));
+        }
+        
+        mysqli_stmt_bind_param($stmt, "ssssd", 
+            $booking_id, 
+            $current_room_id,
+            $new_room_id, 
+            $transfer_reason,
+            $price_difference
+        );
+        
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception("Failed to create transfer record: " . mysqli_stmt_error($stmt));
+        }
+        
+        debug_log("Created transfer record successfully");
+    } else {
+        debug_log("room_transfers table doesn't exist, skipping transfer record");
+    }
+
+    // 3. Create a payment record if there's a price difference and payments table exists
+    if ($price_difference > 0 && $payment_method && tableExists($con, 'payments')) {
+        debug_log("Creating payment record for price difference");
+        
+        $create_payment = "INSERT INTO payments 
+                          (booking_id, amount, payment_method, payment_date, payment_type) 
+                          VALUES (?, ?, ?, NOW(), 'room_transfer')";
+        
+        $stmt = mysqli_prepare($con, $create_payment);
+        if (!$stmt) {
+            throw new Exception("Failed to prepare payment statement: " . mysqli_error($con));
+        }
+        
+        mysqli_stmt_bind_param($stmt, "sds", $booking_id, $price_difference, $payment_method);
+        
+        if (!mysqli_stmt_execute($stmt)) {
+            throw new Exception("Failed to create payment record: " . mysqli_stmt_error($stmt));
+        }
+        
+        debug_log("Created payment record successfully");
+    } else {
+        debug_log("Skipping payment record creation");
+    }
+
+    // 4. Create notification if notifications table exists
+    if (tableExists($con, 'notifications')) {
+        debug_log("Creating notification for room transfer");
+        
+        $notification_message = "Room transfer processed for booking #$booking_id. Transferred to new room type.";
+        $create_notification = "INSERT INTO notifications 
+                              (reference_id, message, type, created_at) 
+                              VALUES (?, ?, 'room_transfer', NOW())";
+        
+        $stmt = mysqli_prepare($con, $create_notification);
+        if (!$stmt) {
+            throw new Exception("Failed to prepare notification statement: " . mysqli_error($con));
+        }
+        
+        mysqli_stmt_bind_param($stmt, "ss", $booking_id, $notification_message);
+        
+        if (!mysqli_stmt_execute($stmt)) {
+            // Don't throw exception for notification failure
+            debug_log("Failed to create notification: " . mysqli_stmt_error($stmt));
+        } else {
+            debug_log("Created notification successfully");
+        }
+    } else {
+        debug_log("notifications table doesn't exist, skipping notification");
+    }
+
+    // Commit transaction
+    mysqli_commit($con);
+    debug_log("Transaction committed successfully");
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Room transfer processed successfully',
+        'data' => [
+            'booking_id' => $booking_id,
+            'new_room_id' => $new_room_id,
+            'price_difference' => $price_difference
+        ]
+    ]);
+
+} catch (Exception $e) {
+    // Rollback transaction on error
+    if (isset($con) && mysqli_ping($con)) {
+        mysqli_rollback($con);
+        debug_log("Transaction rolled back due to error");
+    }
+    
+    debug_log("Error occurred: " . $e->getMessage());
+    debug_log("Stack trace: " . $e->getTraceAsString());
+    
+    echo json_encode([
+        'success' => false,
+        'message' => $e->getMessage(),
+        'details' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS)
+    ]);
+}
+
+// Close connection
+if (isset($con) && mysqli_ping($con)) {
+    mysqli_close($con);
+    debug_log("Database connection closed");
+}
+?> 

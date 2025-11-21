@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu Fix (Static HTML)</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+        .code { background: #f5f5f5; padding: 15px; border-radius: 5px; font-family: monospace; margin: 15px 0; white-space: pre-wrap; overflow: auto; max-height: 400px; }
+        h1 { color: #333; }
+        .btn { display: inline-block; padding: 10px 20px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+        .copy-btn { background: #007bff; padding: 5px 10px; color: white; border: none; border-radius: 3px; cursor: pointer; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Static HTML Menu Fix</h1>
+    <p>This is a completely static HTML page (no PHP) with the menu fix.</p>
+    
+    <div style="margin: 20px 0;">
+        <a href="index.php?table_packages" target="_blank" class="btn">Open Table Packages</a>
+    </div>
+    
+    <h2>Instructions:</h2>
+    <ol>
+        <li>Click the green button above to open Table Packages in a new tab</li>
+        <li>On the Table Packages page, press F12 to open developer tools</li>
+        <li>Click on the "Console" tab at the top of developer tools</li>
+        <li>Copy the script below (click the "Copy Script" button)</li>
+        <li>Paste it into the console and press Enter</li>
+        <li>Click "Make Advance Order" to open the modal</li>
+        <li>You should now see menu items when clicking on categories</li>
+    </ol>
+    
+    <button class="copy-btn" onclick="copyScript()">Copy Script</button>
+    
+    <div class="code" id="scriptCode">// Menu Fix Script (Static HTML Version)
+$(document).ready(function() {
+    console.log("Menu fix loaded from static HTML");
+    
+    // When modal is shown
+    $(document).on('shown.bs.modal', '#advanceOrderModal', function() {
+        console.log("Modal opened - applying fix");
+        
+        // Menu items data
+        var menuItems = [
+            { id: 1, category_id: 1, name: 'Hand-cut Potato Fries', price: 160.00 },
+            { id: 2, category_id: 1, name: 'Mozzarella Stick', price: 150.00 },
+            { id: 3, category_id: 1, name: 'Chicken Wings', price: 180.00 },
+            { id: 4, category_id: 1, name: 'Spaghetti maccaroni', price: 270.00 },
+            { id: 5, category_id: 1, name: 'Carbonara', price: 120.00 },
+            { id: 6, category_id: 2, name: 'Salad', price: 200.00 },
+            { id: 7, category_id: 2, name: 'Coconut Salad', price: 200.00 },
+            { id: 8, category_id: 3, name: 'Spaghetti', price: 300.00 },
+            { id: 9, category_id: 4, name: 'Egg Sandwich', price: 500.00 },
+            { id: 10, category_id: 5, name: 'Coffee', price: 180.00 }
+        ];
+        
+        // Create menu container if it doesn't exist
+        if ($('#menuItems').length === 0) {
+            $('#menuCategories').after('<div id="menuItems" class="row mt-3"></div>');
+        }
+        
+        // Function to display items
+        function displayItems(categoryId) {
+            console.log("Showing items for category", categoryId);
+            
+            // Filter items by category
+            var items = menuItems.filter(function(item) {
+                return item.category_id == categoryId;
+            });
+            
+            // Clear and update container
+            var container = $('#menuItems');
+            container.empty();
+            
+            if (items.length > 0) {
+                // Build HTML for items
+                var html = '';
+                items.forEach(function(item) {
+                    html += '<div class="col-md-4 mb-3">' +
+                           '<div class="card">' +
+                           '<div class="card-body">' +
+                           '<h5 class="card-title">' + item.name + '</h5>' +
+                           '<p class="card-text text-primary">₱' + item.price.toFixed(2) + '</p>' +
+                           '<button type="button" class="btn btn-warning add-to-cart" ' +
+                           'data-id="' + item.id + '" ' +
+                           'data-name="' + item.name + '" ' +
+                           'data-price="' + item.price + '">' +
+                           'Add to Cart</button>' +
+                           '</div></div></div>';
+                });
+                container.html(html);
+                
+                // Add cart functionality
+                container.find('.add-to-cart').on('click', function() {
+                    var id = $(this).data('id');
+                    var name = $(this).data('name');
+                    var price = $(this).data('price');
+                    
+                    // Try to use existing function
+                    if (typeof window.addToCart === 'function') {
+                        window.addToCart(id, name, price);
+                    } else {
+                        console.log('Added to cart:', name, price);
+                        
+                        // Manual implementation
+                        var orderItems = $('#orderItems');
+                        if (orderItems.length > 0) {
+                            // Clear empty message if present
+                            if (orderItems.find('.text-muted').length > 0) {
+                                orderItems.empty();
+                            }
+                            
+                            // Add item row
+                            var html = '<div class="d-flex justify-content-between align-items-center mb-2">' +
+                                    '<div>' + name + ' <span class="badge badge-secondary">1</span></div>' +
+                                    '<div>₱' + price.toFixed(2) + '</div>' +
+                                    '</div>';
+                            orderItems.append(html);
+                            
+                            // Update total
+                            var totalElem = $('#orderTotal');
+                            if (totalElem.length > 0) {
+                                var currentTotal = parseFloat(totalElem.text() || '0');
+                                var newTotal = currentTotal + price;
+                                totalElem.text(newTotal.toFixed(2));
+                            }
+                        }
+                    }
+                });
+            } else {
+                container.html('<div class="alert alert-info">No items found for this category</div>');
+            }
+        }
+        
+        // Add click handlers to categories
+        $('#menuCategories .category-btn').off('click.menufix').on('click.menufix', function() {
+            // Highlight active category
+            $('#menuCategories .category-btn').removeClass('active');
+            $(this).addClass('active');
+            
+            // Get category ID
+            var categoryId = $(this).data('category-id');
+            if (!categoryId) {
+                categoryId = $(this).index() + 1;
+            }
+            
+            // Show items
+            displayItems(categoryId);
+        });
+        
+        // Show first category by default
+        setTimeout(function() {
+            var firstCategory = $('#menuCategories .category-btn').first();
+            if (firstCategory.length > 0) {
+                firstCategory.addClass('active');
+                displayItems(1);
+            }
+        }, 100);
+    });
+});</div>
+    
+    <div style="margin-top: 30px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <h3>Troubleshooting</h3>
+        <p>If you're still having issues with the Table Packages page not showing at all:</p>
+        <ol>
+            <li>Try accessing the admin area directly through <a href="index.php" target="_blank">index.php</a></li>
+            <li>Navigate to Table Packages from the menu</li>
+            <li>If that doesn't work, there might be server configuration issues that need to be addressed</li>
+        </ol>
+    </div>
+    
+    <script>
+    function copyScript() {
+        var codeElem = document.getElementById('scriptCode');
+        var range = document.createRange();
+        range.selectNode(codeElem);
+        window.getSelection().removeAllRanges();
+        window.getSelection().addRange(range);
+        document.execCommand('copy');
+        window.getSelection().removeAllRanges();
+        alert('Script copied! Now paste it into the console on the Table Packages page.');
+    }
+    </script>
+</body>
+</html> 

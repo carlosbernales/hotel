@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minimal Menu Fix</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        textarea { width: 100%; height: 120px; font-family: monospace; padding: 10px; }
+        .btn { background: #4CAF50; color: white; border: none; padding: 10px 15px; cursor: pointer; margin: 10px 0; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <h1>Minimal Menu Fix</h1>
+    <p>Copy this script, then paste it into your browser console after opening the Table Packages page.</p>
+    
+    <button onclick="copyText()" class="btn">Copy Script</button>
+    
+    <textarea id="script" readonly>
+// Direct Menu Fix - Minimal Version
+function fixMenu() {
+    // Menu items data
+    var items = [
+        { id: 1, category: 1, name: "Hand-cut Potato Fries", price: 160 },
+        { id: 2, category: 1, name: "Mozzarella Stick", price: 150 },
+        { id: 3, category: 1, name: "Chicken Wings", price: 180 },
+        { id: 4, category: 1, name: "Spaghetti", price: 270 },
+        { id: 5, category: 2, name: "Salad", price: 200 },
+        { id: 6, category: 3, name: "Pasta", price: 250 }
+    ];
+    
+    // When modal opens
+    $(document).on('shown.bs.modal', '#advanceOrderModal', function() {
+        console.log("Modal open, applying fix");
+        
+        // Create container if needed
+        if ($('#menuItems').length === 0) {
+            $('#menuCategories').after('<div id="menuItems" class="mt-3"></div>');
+        }
+        
+        // Handle category clicks
+        $('#menuCategories .category-btn').off('click').on('click', function() {
+            var catId = $(this).index() + 1;
+            showItems(catId);
+        });
+        
+        // Show items
+        function showItems(catId) {
+            var filtered = items.filter(function(i) { return i.category == catId; });
+            var html = '';
+            
+            filtered.forEach(function(item) {
+                html += '<div class="card mb-2"><div class="card-body">' +
+                       '<h5>' + item.name + '</h5>' +
+                       '<p class="text-primary">₱' + item.price.toFixed(2) + '</p>' +
+                       '<button class="btn btn-warning add-to-cart" ' +
+                       'data-id="' + item.id + '" ' +
+                       'data-name="' + item.name + '" ' +
+                       'data-price="' + item.price + '">' +
+                       'Add to Cart</button>' +
+                       '</div></div>';
+            });
+            
+            $('#menuItems').html(html);
+            
+            // Add cart functionality
+            $('.add-to-cart').click(function() {
+                var name = $(this).data('name');
+                var price = $(this).data('price');
+                
+                var orderItems = $('#orderItems');
+                if (orderItems.find('.text-muted').length > 0) {
+                    orderItems.empty();
+                }
+                
+                orderItems.append('<div class="d-flex justify-content-between mb-2">' +
+                                 '<div>' + name + ' <span class="badge badge-secondary">1</span></div>' +
+                                 '<div>₱' + price.toFixed(2) + '</div></div>');
+                
+                var total = $('#orderTotal');
+                var newTotal = parseFloat(total.text() || 0) + price;
+                total.text(newTotal.toFixed(2));
+            });
+        }
+        
+        // Trigger first category
+        setTimeout(function() {
+            $('#menuCategories .category-btn').first().addClass('active');
+            showItems(1);
+        }, 100);
+    });
+}
+
+// Run the fix
+$(document).ready(fixMenu);
+</textarea>
+    
+    <p><a href="index.php?table_packages" target="_blank" style="display: inline-block; margin-top: 20px; background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 3px;">Open Table Packages</a></p>
+    
+    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <h3>How to use:</h3>
+        <ol>
+            <li>Click "Copy Script" button above</li>
+            <li>Click "Open Table Packages" link</li>
+            <li>Press F12 to open browser console</li>
+            <li>Paste the script in the console and press Enter</li>
+            <li>Click "Make Advance Order" to open the modal</li>
+            <li>Menu items should now appear</li>
+        </ol>
+    </div>
+    
+    <script>
+    function copyText() {
+        var textarea = document.getElementById('script');
+        textarea.select();
+        document.execCommand('copy');
+        alert('Script copied! Now open Table Packages page, press F12 to open console, paste the script, and press Enter.');
+    }
+    </script>
+</body>
+</html> 

@@ -1,0 +1,36 @@
+Array
+(
+    [POST] => Array
+        (
+            [firstName] => Alfred Hendrik
+            [lastName] => Aceveda
+            [email] => alfredaceveda.3@gmail.com
+            [contact] => 
+            [checkInDate] => 2025-11-03
+            [checkOutDate] => 2025-11-11
+            [numAdults] => 1
+            [numChildren] => 0
+            [adultFirstNames] => Array
+                (
+                    [0] => Alfred Hendrik
+                )
+
+            [adultLastNames] => Array
+                (
+                    [0] => Aceveda
+                )
+
+            [extraBed] => no
+            [paymentOption] => Full Payment
+            [paymentMethod] => cash
+            [totalAmount] => 33600
+            [rooms] => [{"room_type_id":3,"type":"Triple Occupancy","price":4200,"quantity":1}]
+            [nights] => 8
+        )
+
+    [GET] => Array
+        (
+        )
+
+    [RAW] => 
+)

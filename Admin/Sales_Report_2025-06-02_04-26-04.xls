@@ -1,0 +1,6 @@
+<br />
+<b>Fatal error</b>:  Uncaught mysqli_sql_exception: Unknown column 'updated_at' in 'SELECT' in /home/u429956055/domains/e-akomoda.site/public_html/Admin/export_report.php:79
+Stack trace:
+#0 /home/u429956055/domains/e-akomoda.site/public_html/Admin/export_report.php(79): mysqli_query()
+#1 {main}
+  thrown in <b>/home/u429956055/domains/e-akomoda.site/public_html/Admin/export_report.php</b> on line <b>79</b><br />

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PayMongo Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 2rem; }
+        .btn-pay {
+            padding: 12px 30px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h2 class="mb-4">PayMongo Test</h2>
+                        <p class="mb-4">Click the button below to test the PayMongo integration</p>
+                        
+                        <button id="payButton" class="btn btn-primary btn-pay">
+                            Pay with PayMongo
+                        </button>
+                        
+                        <div id="result" class="mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.getElementById('payButton').addEventListener('click', function(e) {
+        const button = e.currentTarget;
+        const originalText = button.innerHTML;
+        
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = `
+            <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+            Processing...
+        `;
+        
+        document.getElementById('result').innerHTML = 'Processing payment...';
+        
+        // Make test payment
+        fetch('test_paymongo.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                amount: 1000, // 10.00 PHP
+                description: 'Test Payment',
+                package_name: 'Test Package',
+                event_date: '2025-06-07'
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Response:', data);
+            
+            if (data.success && data.checkout_url) {
+                document.getElementById('result').innerHTML = `
+                    <div class="alert alert-success">
+                        Success! Redirecting to PayMongo...
+                        <div class="mt-2">
+                            <a href="${data.checkout_url}" target="_blank" class="btn btn-sm btn-outline-success">
+                                Click here if not redirected
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                // Open PayMongo checkout in new tab
+                window.open(data.checkout_url, '_blank');
+            } else {
+                throw new Error(data.error || 'Unknown error occurred');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('result').innerHTML = `
+                <div class="alert alert-danger">
+                    <strong>Error:</strong> ${error.message}
+                </div>
+            `;
+        })
+        .finally(() => {
+            // Reset button state
+            button.disabled = false;
+            button.innerHTML = originalText;
+        });
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+                                    <select class="form-control" id="room_type" name="room_type_id" required onchange="toggleOtherRoomType()">
+    <option value="">-- Select Room Type --</option>
+    <?php
+    $room_types = $con->query("SELECT room_type_id, room_type FROM room_types WHERE room_type_id IN (1, 2, 3) AND status = 'active' ORDER BY room_type");
+    while ($type = $room_types->fetch_assoc()) {
+        echo "<option value='" . $type['room_type_id'] . "'>" . htmlspecialchars($type['room_type']) . "</option>";
+    }
+    ?>
+    <option value="other">Other (Specify)</option>
+</select>
+<div id="otherRoomTypeContainer" class="mt-2" style="display: none;">
+    <label for="other_room_type">Specify Room Type *</label>
+    <input type="text" class="form-control" id="other_room_type" name="other_room_type" placeholder="Enter room type">
+</div>

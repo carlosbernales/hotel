@@ -1,0 +1,81 @@
+[07-Apr-2025 15:42:54 Asia/Manila] PHP Warning:  Undefined array key "booking_type" in D:\casaaa\htdocs\Capstoned\casaAdmins\FrontDesk & Cashier\Cashier\process_order.php on line 46
+[07-Apr-2025 15:42:54 Asia/Manila] Order processing error: Column 'order_type' cannot be null
+[07-Apr-2025 15:49:15 Asia/Manila] Received data: {"user_id":3,"total_amount":920,"extra_fee":0,"order_type":"dine-in","payment_method":"gcash","payment_status":"paid","payment_proof":"","pickup_notes":"","status":"pending","final_total":920,"order_date":"2025-04-07 07:49:15","discount_type":"none","discount_id":null,"discount_amount":0,"amount_paid":6666,"change_amount":5746,"customer_name":"weddf","contact_number":"09122222222","items":[{"item_id":"1","item_name":"Hand-cut Potato Fries","quantity":1,"unit_price":120,"subtotal":120,"addons":[]},{"item_id":"2","item_name":"Mozzarella Stick","quantity":2,"unit_price":150,"subtotal":300,"addons":[]},{"item_id":"7","item_name":"Egg Sandwich","quantity":1,"unit_price":500,"subtotal":500,"addons":[]}]}
+[07-Apr-2025 15:49:15 Asia/Manila] Order processing error: Missing required fields: booking_type
+[07-Apr-2025 15:49:15 Asia/Manila] Stack trace: #0 {main}
+[12-Apr-2025 23:29:45 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:29:45 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:29:45 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:30:23 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:30:23 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:30:23 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:30:24 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:30:24 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:30:24 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:30:24 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:30:24 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:30:24 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:30:25 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:30:25 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:30:25 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:31:24 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:31:24 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:31:24 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:32:26 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:32:26 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:32:26 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:32:26 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:32:26 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:32:26 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:32:27 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:32:27 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:32:27 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:32:30 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:32:30 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:32:30 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:32:36 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 05:32:36 Asia/Manila] PHP Notice:  Undefined variable: conn in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[13-Apr-2025 05:32:36 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\xampp\htdocs\Admin\Cashier\POS.php:19
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\Cashier\POS.php on line 19
+[12-Apr-2025 23:38:32 Europe/Berlin] Database connected successfully to: hotelms
+[12-Apr-2025 23:39:58 Europe/Berlin] Database connected successfully to: hotelms
+[12-Apr-2025 23:40:00 Europe/Berlin] Database connected successfully to: hotelms
+[12-Apr-2025 23:40:01 Europe/Berlin] Database connected successfully to: hotelms
+[12-Apr-2025 23:41:46 Europe/Berlin] Database connected successfully to: hotelms
+[12-Apr-2025 23:41:57 Europe/Berlin] Database connected successfully to: hotelms
+[12-Apr-2025 23:58:10 Europe/Berlin] Database connected successfully to: hotelms
+[13-Apr-2025 06:03:32 Asia/Manila] Database connected successfully to: hotelms
+[13-Apr-2025 06:04:36 Asia/Manila] Database connected successfully to: hotelms
+[13-Apr-2025 06:05:53 Asia/Manila] Database connected successfully to: hotelms

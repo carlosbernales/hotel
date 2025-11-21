@@ -1,0 +1,24 @@
+Options -Indexes
+<FilesMatch "^.*\.php$">
+    Order Deny,Allow
+    Allow from all
+</FilesMatch>
+
+# Prevent direct access to certain file types
+<FilesMatch "\.(json|lock|config|env|ini|yml|yaml)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent access to sensitive files
+<FilesMatch "^(composer\.json|package\.json|\.env|\.gitignore)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Protect against script injection
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-XSS-Protection "1; mode=block"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule> 

@@ -1,0 +1,78 @@
+[11-Apr-2025 04:19:09 Asia/Manila] Fetching details for booking ID: 1
+[11-Apr-2025 04:19:09 Asia/Manila] SQL Query: SELECT * FROM bookings WHERE booking_id = '1'
+[11-Apr-2025 04:19:09 Asia/Manila] Fetched booking data: Array
+(
+    [booking_id] => 1
+    [booking_reference] => BK-20250410-53F159
+    [user_id] => 1
+    [first_name] => Christian
+    [last_name] => Realisan
+    [booking_type] => Online
+    [email] => christianrealisan3@gmail.com
+    [contact] => 
+    [check_in] => 2025-04-18
+    [check_out] => 2025-04-28
+    [arrival_time] => 07:14:00
+    [number_of_guests] => 1
+    [room_type_id] => 6
+    [room_quantity] => 1
+    [payment_option] => Partial Payment
+    [payment_method] => gcash
+    [total_amount] => 45000.00
+    [extra_charges] => 0.00
+    [status] => pending
+    [created_at] => 2025-04-11 04:15:02
+    [nights] => 10
+    [downpayment_amount] => 22500.00
+    [remaining_balance] => 22500.00
+    [discount_type] => 
+    [discount_amount] => 0.00
+    [discount_percentage] => 0.00
+    [payment_reference] => 1234567
+    [payment_proof] => uploads/payment_proofs/payment_1_20250410221502_67f826c6c0393.jpg
+)
+
+[11-Apr-2025 04:19:09 Asia/Manila] Original payment proof path: uploads/payment_proofs/payment_1_20250410221502_67f826c6c0393.jpg
+[11-Apr-2025 04:19:09 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to undefined function str_starts_with() in C:\xampp\htdocs\Admin\fetch_booking_details.php:82
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\fetch_booking_details.php on line 82
+[11-Apr-2025 04:20:42 Asia/Manila] Fetching details for booking ID: 1
+[11-Apr-2025 04:20:42 Asia/Manila] SQL Query: SELECT * FROM bookings WHERE booking_id = '1'
+[11-Apr-2025 04:20:42 Asia/Manila] Fetched booking data: Array
+(
+    [booking_id] => 1
+    [booking_reference] => BK-20250410-53F159
+    [user_id] => 1
+    [first_name] => Christian
+    [last_name] => Realisan
+    [booking_type] => Online
+    [email] => christianrealisan3@gmail.com
+    [contact] => 
+    [check_in] => 2025-04-18
+    [check_out] => 2025-04-28
+    [arrival_time] => 07:14:00
+    [number_of_guests] => 1
+    [room_type_id] => 6
+    [room_quantity] => 1
+    [payment_option] => Partial Payment
+    [payment_method] => gcash
+    [total_amount] => 45000.00
+    [extra_charges] => 0.00
+    [status] => pending
+    [created_at] => 2025-04-11 04:15:02
+    [nights] => 10
+    [downpayment_amount] => 22500.00
+    [remaining_balance] => 22500.00
+    [discount_type] => 
+    [discount_amount] => 0.00
+    [discount_percentage] => 0.00
+    [payment_reference] => 1234567
+    [payment_proof] => uploads/payment_proofs/payment_1_20250410221502_67f826c6c0393.jpg
+)
+
+[11-Apr-2025 04:20:42 Asia/Manila] Original payment proof path: uploads/payment_proofs/payment_1_20250410221502_67f826c6c0393.jpg
+[11-Apr-2025 04:20:42 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to undefined function str_starts_with() in C:\xampp\htdocs\Admin\fetch_booking_details.php:82
+Stack trace:
+#0 {main}
+  thrown in C:\xampp\htdocs\Admin\fetch_booking_details.php on line 82

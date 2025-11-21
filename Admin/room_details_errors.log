@@ -1,0 +1,1064 @@
+2025-06-11 21:15:47 - get_room_details_new.php started execution.
+2025-06-11 21:15:47 - Received room_id: 1
+2025-06-11 21:15:47 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:15:47 - General error in get_room_details_new.php: Table 'u429956055_Hotelms.room_amenities' doesn't exist
+2025-06-11 21:15:47 - get_room_details_new.php started execution.
+2025-06-11 21:15:47 - Received room_id: 1
+2025-06-11 21:15:47 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:15:47 - General error in get_room_details_new.php: Table 'u429956055_Hotelms.room_amenities' doesn't exist
+2025-06-11 21:21:47 - get_room_details_new.php started execution.
+2025-06-11 21:21:47 - Received room_id: 1
+2025-06-11 21:21:47 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:21:47 - General error in get_room_details_new.php: Unknown column 'a.id' in 'SELECT'
+2025-06-11 21:21:47 - get_room_details_new.php started execution.
+2025-06-11 21:21:47 - Received room_id: 1
+2025-06-11 21:21:47 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:21:47 - General error in get_room_details_new.php: Unknown column 'a.id' in 'SELECT'
+2025-06-11 21:24:43 - get_room_details_new.php started execution.
+2025-06-11 21:24:43 - Received room_id: 1
+2025-06-11 21:24:43 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:24:43 - General error in get_room_details_new.php: Unknown column 'a.icon_class' in 'SELECT'
+2025-06-11 21:24:43 - get_room_details_new.php started execution.
+2025-06-11 21:24:43 - Received room_id: 1
+2025-06-11 21:24:43 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:24:43 - General error in get_room_details_new.php: Unknown column 'a.icon_class' in 'SELECT'
+2025-06-11 21:25:07 - get_room_details_new.php started execution.
+2025-06-11 21:25:07 - Received room_id: 1
+2025-06-11 21:25:07 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:25:07 - General error in get_room_details_new.php: Unknown column 'a.description' in 'SELECT'
+2025-06-11 21:25:07 - get_room_details_new.php started execution.
+2025-06-11 21:25:07 - Received room_id: 1
+2025-06-11 21:25:07 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:25:07 - General error in get_room_details_new.php: Unknown column 'a.description' in 'SELECT'
+2025-06-11 21:26:08 - get_room_details_new.php started execution.
+2025-06-11 21:26:08 - Received room_id: 1
+2025-06-11 21:26:08 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+2025-06-11 21:26:08 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 
+            [name] => Soap
+            [icon] => 
+            [description] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 
+            [name] => bed
+            [icon] => 
+            [description] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 
+            [name] => Toothpaste
+            [icon] => 
+            [description] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 
+            [name] => Slippers
+            [icon] => 
+            [description] => 
+        )
+
+)
+
+2025-06-11 21:26:08 - General error in get_room_details_new.php: Unknown column 'image' in 'SELECT'
+2025-06-11 21:26:08 - get_room_details_new.php started execution.
+2025-06-11 21:26:08 - Received room_id: 1
+2025-06-11 21:26:08 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "id" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 100
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "icon_class" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:26:08 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 103
+2025-06-11 21:26:08 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 
+            [name] => Soap
+            [icon] => 
+            [description] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 
+            [name] => bed
+            [icon] => 
+            [description] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 
+            [name] => Toothpaste
+            [icon] => 
+            [description] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 
+            [name] => Slippers
+            [icon] => 
+            [description] => 
+        )
+
+)
+
+2025-06-11 21:26:08 - General error in get_room_details_new.php: Unknown column 'image' in 'SELECT'
+2025-06-11 21:27:02 - get_room_details_new.php started execution.
+2025-06-11 21:27:02 - Received room_id: 1
+2025-06-11 21:27:02 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:27:02 - General error in get_room_details_new.php: Unknown column 'a.description' in 'SELECT'
+2025-06-11 21:27:02 - get_room_details_new.php started execution.
+2025-06-11 21:27:02 - Received room_id: 1
+2025-06-11 21:27:02 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:27:02 - General error in get_room_details_new.php: Unknown column 'a.description' in 'SELECT'
+2025-06-11 21:28:06 - get_room_details_new.php started execution.
+2025-06-11 21:28:06 - Received room_id: 1
+2025-06-11 21:28:06 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:28:06 - General error in get_room_details_new.php: Unknown column 'a.description' in 'SELECT'
+2025-06-11 21:28:07 - get_room_details_new.php started execution.
+2025-06-11 21:28:07 - Received room_id: 1
+2025-06-11 21:28:07 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:28:07 - General error in get_room_details_new.php: Unknown column 'a.description' in 'SELECT'
+2025-06-11 21:29:18 - get_room_details_new.php started execution.
+2025-06-11 21:29:18 - Received room_id: 1
+2025-06-11 21:29:18 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+2025-06-11 21:29:18 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 7
+            [name] => Soap
+            [icon] => 
+            [description] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 8
+            [name] => bed
+            [icon] => 
+            [description] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 9
+            [name] => Toothpaste
+            [icon] => 
+            [description] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 11
+            [name] => Slippers
+            [icon] => 
+            [description] => 
+        )
+
+)
+
+2025-06-11 21:29:18 - General error in get_room_details_new.php: Unknown column 'is_primary' in 'SELECT'
+2025-06-11 21:29:18 - get_room_details_new.php started execution.
+2025-06-11 21:29:18 - Received room_id: 1
+2025-06-11 21:29:18 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:29:18 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+2025-06-11 21:29:18 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 7
+            [name] => Soap
+            [icon] => 
+            [description] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 8
+            [name] => bed
+            [icon] => 
+            [description] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 9
+            [name] => Toothpaste
+            [icon] => 
+            [description] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 11
+            [name] => Slippers
+            [icon] => 
+            [description] => 
+        )
+
+)
+
+2025-06-11 21:29:18 - General error in get_room_details_new.php: Unknown column 'is_primary' in 'SELECT'
+2025-06-11 21:31:24 - get_room_details_new.php started execution.
+2025-06-11 21:31:24 - Received room_id: 1
+2025-06-11 21:31:24 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+2025-06-11 21:31:24 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 7
+            [name] => Soap
+            [icon] => 
+            [description] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 8
+            [name] => bed
+            [icon] => 
+            [description] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 9
+            [name] => Toothpaste
+            [icon] => 
+            [description] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 11
+            [name] => Slippers
+            [icon] => 
+            [description] => 
+        )
+
+)
+
+2025-06-11 21:31:24 - Images fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/standard.jpg
+        )
+
+    [1] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/5.jpg
+        )
+
+    [2] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/5.jpg
+        )
+
+    [3] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/5.jpg
+        )
+
+)
+
+2025-06-11 21:31:24 - Sending JSON response.
+Data: Array
+(
+    [room_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200
+    [capacity] => 2
+    [available_room_numbers] => Array
+        (
+            [0] => 101
+        )
+
+    [total_available_rooms] => 1
+    [amenities] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 7
+                    [name] => Soap
+                    [icon] => 
+                    [description] => 
+                )
+
+            [1] => Array
+                (
+                    [id] => 8
+                    [name] => bed
+                    [icon] => 
+                    [description] => 
+                )
+
+            [2] => Array
+                (
+                    [id] => 9
+                    [name] => Toothpaste
+                    [icon] => 
+                    [description] => 
+                )
+
+            [3] => Array
+                (
+                    [id] => 11
+                    [name] => Slippers
+                    [icon] => 
+                    [description] => 
+                )
+
+        )
+
+    [images] => Array
+        (
+            [0] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/standard.jpg
+                )
+
+            [1] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/5.jpg
+                )
+
+            [2] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/5.jpg
+                )
+
+            [3] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/5.jpg
+                )
+
+        )
+
+    [policies] => Array
+        (
+        )
+
+    [created_at] => 
+    [updated_at] => 
+)
+
+2025-06-11 21:31:24 - get_room_details_new.php started execution.
+2025-06-11 21:31:24 - Received room_id: 1
+2025-06-11 21:31:24 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+[11-Jun-2025 21:31:24 Asia/Manila] PHP Warning:  Undefined array key "description" in /home/u429956055/domains/e-akomoda.site/public_html/Admin/get_room_details_new.php on line 102
+2025-06-11 21:31:24 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 7
+            [name] => Soap
+            [icon] => 
+            [description] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 8
+            [name] => bed
+            [icon] => 
+            [description] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 9
+            [name] => Toothpaste
+            [icon] => 
+            [description] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 11
+            [name] => Slippers
+            [icon] => 
+            [description] => 
+        )
+
+)
+
+2025-06-11 21:31:24 - Images fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/standard.jpg
+        )
+
+    [1] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/5.jpg
+        )
+
+    [2] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/5.jpg
+        )
+
+    [3] => Array
+        (
+            [path] => uploads/rooms/uploads/rooms/5.jpg
+        )
+
+)
+
+2025-06-11 21:31:24 - Sending JSON response.
+Data: Array
+(
+    [room_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200
+    [capacity] => 2
+    [available_room_numbers] => Array
+        (
+            [0] => 101
+        )
+
+    [total_available_rooms] => 1
+    [amenities] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 7
+                    [name] => Soap
+                    [icon] => 
+                    [description] => 
+                )
+
+            [1] => Array
+                (
+                    [id] => 8
+                    [name] => bed
+                    [icon] => 
+                    [description] => 
+                )
+
+            [2] => Array
+                (
+                    [id] => 9
+                    [name] => Toothpaste
+                    [icon] => 
+                    [description] => 
+                )
+
+            [3] => Array
+                (
+                    [id] => 11
+                    [name] => Slippers
+                    [icon] => 
+                    [description] => 
+                )
+
+        )
+
+    [images] => Array
+        (
+            [0] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/standard.jpg
+                )
+
+            [1] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/5.jpg
+                )
+
+            [2] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/5.jpg
+                )
+
+            [3] => Array
+                (
+                    [path] => uploads/rooms/uploads/rooms/5.jpg
+                )
+
+        )
+
+    [policies] => Array
+        (
+        )
+
+    [created_at] => 
+    [updated_at] => 
+)
+
+2025-06-11 21:34:42 - get_room_details_new.php started execution.
+2025-06-11 21:34:42 - Received room_id: 1
+2025-06-11 21:34:42 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:34:42 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 7
+            [name] => Soap
+            [icon] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 8
+            [name] => bed
+            [icon] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 9
+            [name] => Toothpaste
+            [icon] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 11
+            [name] => Slippers
+            [icon] => 
+        )
+
+)
+
+2025-06-11 21:34:42 - Images fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [path] => uploads/rooms/standard.jpg
+        )
+
+    [1] => Array
+        (
+            [path] => uploads/rooms/5.jpg
+        )
+
+    [2] => Array
+        (
+            [path] => uploads/rooms/5.jpg
+        )
+
+    [3] => Array
+        (
+            [path] => uploads/rooms/5.jpg
+        )
+
+)
+
+2025-06-11 21:34:42 - Sending JSON response.
+Data: Array
+(
+    [room_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200
+    [capacity] => 2
+    [available_room_numbers] => Array
+        (
+            [0] => 101
+        )
+
+    [total_available_rooms] => 1
+    [amenities] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 7
+                    [name] => Soap
+                    [icon] => 
+                )
+
+            [1] => Array
+                (
+                    [id] => 8
+                    [name] => bed
+                    [icon] => 
+                )
+
+            [2] => Array
+                (
+                    [id] => 9
+                    [name] => Toothpaste
+                    [icon] => 
+                )
+
+            [3] => Array
+                (
+                    [id] => 11
+                    [name] => Slippers
+                    [icon] => 
+                )
+
+        )
+
+    [images] => Array
+        (
+            [0] => Array
+                (
+                    [path] => uploads/rooms/standard.jpg
+                )
+
+            [1] => Array
+                (
+                    [path] => uploads/rooms/5.jpg
+                )
+
+            [2] => Array
+                (
+                    [path] => uploads/rooms/5.jpg
+                )
+
+            [3] => Array
+                (
+                    [path] => uploads/rooms/5.jpg
+                )
+
+        )
+
+    [policies] => Array
+        (
+        )
+
+    [created_at] => 
+    [updated_at] => 
+)
+
+2025-06-11 21:34:42 - get_room_details_new.php started execution.
+2025-06-11 21:34:42 - Received room_id: 1
+2025-06-11 21:34:42 - Main room details fetched successfully.
+Data: Array
+(
+    [room_type_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200.00
+    [capacity] => 2
+    [image] => room_6847040b435d5.jpg
+    [available_room_numbers] => 101
+    [total_available_rooms] => 1
+)
+
+2025-06-11 21:34:42 - Amenities fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [id] => 7
+            [name] => Soap
+            [icon] => 
+        )
+
+    [1] => Array
+        (
+            [id] => 8
+            [name] => bed
+            [icon] => 
+        )
+
+    [2] => Array
+        (
+            [id] => 9
+            [name] => Toothpaste
+            [icon] => 
+        )
+
+    [3] => Array
+        (
+            [id] => 11
+            [name] => Slippers
+            [icon] => 
+        )
+
+)
+
+2025-06-11 21:34:42 - Images fetched:
+Data: Array
+(
+    [0] => Array
+        (
+            [path] => uploads/rooms/standard.jpg
+        )
+
+    [1] => Array
+        (
+            [path] => uploads/rooms/5.jpg
+        )
+
+    [2] => Array
+        (
+            [path] => uploads/rooms/5.jpg
+        )
+
+    [3] => Array
+        (
+            [path] => uploads/rooms/5.jpg
+        )
+
+)
+
+2025-06-11 21:34:42 - Sending JSON response.
+Data: Array
+(
+    [room_id] => 1
+    [room_type] => Double Occupancy
+    [description] => For double person
+    [price] => 3200
+    [capacity] => 2
+    [available_room_numbers] => Array
+        (
+            [0] => 101
+        )
+
+    [total_available_rooms] => 1
+    [amenities] => Array
+        (
+            [0] => Array
+                (
+                    [id] => 7
+                    [name] => Soap
+                    [icon] => 
+                )
+
+            [1] => Array
+                (
+                    [id] => 8
+                    [name] => bed
+                    [icon] => 
+                )
+
+            [2] => Array
+                (
+                    [id] => 9
+                    [name] => Toothpaste
+                    [icon] => 
+                )
+
+            [3] => Array
+                (
+                    [id] => 11
+                    [name] => Slippers
+                    [icon] => 
+                )
+
+        )
+
+    [images] => Array
+        (
+            [0] => Array
+                (
+                    [path] => uploads/rooms/standard.jpg
+                )
+
+            [1] => Array
+                (
+                    [path] => uploads/rooms/5.jpg
+                )
+
+            [2] => Array
+                (
+                    [path] => uploads/rooms/5.jpg
+                )
+
+            [3] => Array
+                (
+                    [path] => uploads/rooms/5.jpg
+                )
+
+        )
+
+    [policies] => Array
+        (
+        )
+
+    [created_at] => 
+    [updated_at] => 
+)
+

@@ -1,0 +1,34 @@
+DirectoryIndex index.php
+Options -Indexes
+
+# Maintenance mode rules - DISABLED
+# RewriteEngine On
+# RewriteCond %{REQUEST_URI} ^/Admin/ [OR]
+# RewriteCond %{QUERY_STRING} access=admin_bypass [OR]
+# RewriteCond %{REQUEST_URI} ^/Admin/maintenance\.html$ [OR]
+# RewriteCond %{REQUEST_URI} \.(css|js|jpg|jpeg|png|gif|ico)$
+# RewriteRule ^ - [L]
+# RewriteRule ^(.*)$ /Admin/maintenance.html [R=302,L]
+
+# Regular redirection rules
+RewriteEngine On
+
+# If accessing the root URL, redirect to Customer/aa/index.php
+RewriteCond %{REQUEST_URI} ^/$
+RewriteRule ^$ Customer/aa/index.php [R=302,L]
+
+# Allow access to existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Ensure proper PHP handling
+<FilesMatch "\.php$">
+    Require all granted
+</FilesMatch> 

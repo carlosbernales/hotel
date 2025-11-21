@@ -1,0 +1,184 @@
+[2025-03-19 05:04:05] POST Data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":2,"addons":[]}],"pickup_time":"06:03 PM","pickup_notes":"","payment_method":"gcash","payment_reference":"45456765756756","total_amount":360}
+)
+
+[2025-03-19 05:04:05] FILES Data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => Screenshot (235).png
+            [type] => image/png
+            [tmp_name] => D:\casaaa\tmp\phpB9A2.tmp
+            [error] => 0
+            [size] => 550706
+        )
+
+)
+
+[2025-03-19 05:04:05] File type: image/png
+[2025-03-19 05:04:05] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 2
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [pickup_time] => 06:03 PM
+    [pickup_notes] => 
+    [payment_method] => gcash
+    [payment_reference] => 45456765756756
+    [total_amount] => 360
+)
+
+[2025-03-19 05:05:25] POST Data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":2,"addons":[]}],"pickup_time":"06:05 PM","pickup_notes":"","payment_method":"gcash","payment_reference":"45456765756756","total_amount":360}
+)
+
+[2025-03-19 05:05:25] FILES Data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => Screenshot (235).png
+            [type] => image/png
+            [tmp_name] => D:\casaaa\tmp\phpF0AC.tmp
+            [error] => 0
+            [size] => 550706
+        )
+
+)
+
+[2025-03-19 05:05:25] File type: image/png
+[2025-03-19 05:05:25] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 2
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [pickup_time] => 06:05 PM
+    [pickup_notes] => 
+    [payment_method] => gcash
+    [payment_reference] => 45456765756756
+    [total_amount] => 360
+)
+
+[2025-03-19 05:21:06] POST Data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"pickup_time":"06:21 PM","pickup_notes":"","payment_method":"gcash","payment_reference":"45456765756756","total_amount":180}
+)
+
+[2025-03-19 05:21:06] FILES Data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => Screenshot (247).png
+            [type] => image/png
+            [tmp_name] => D:\casaaa\tmp\php4DDD.tmp
+            [error] => 0
+            [size] => 177774
+        )
+
+)
+
+[2025-03-19 05:21:06] Decoded order data: Array
+(
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [pickup_time] => 06:21 PM
+    [pickup_notes] => 
+    [payment_method] => gcash
+    [payment_reference] => 45456765756756
+    [total_amount] => 180
+)
+
+[2025-03-19 05:21:06] File type detected: image/png
+[2025-03-19 05:21:06] Attempting to move file to: D:\casaaa\htdocs\Capstone/uploads/payment_proofs/payment_1742358066_67da46324ff67.png
+[2025-03-19 05:23:35] POST Data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"pickup_time":"06:23 PM","pickup_notes":"","payment_method":"gcash","payment_reference":"45456765756756","total_amount":180}
+)
+
+[2025-03-19 05:23:35] FILES Data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => Screenshot (234).png
+            [type] => image/png
+            [tmp_name] => D:\casaaa\tmp\php932A.tmp
+            [error] => 0
+            [size] => 1685227
+        )
+
+)
+
+[2025-03-19 05:26:18] POST Data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"pickup_time":"06:26 PM","pickup_notes":"","payment_method":"gcash","payment_reference":"45456765756756","total_amount":180}
+)
+
+[2025-03-19 05:26:18] FILES Data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => Screenshot (226).png
+            [type] => image/png
+            [tmp_name] => D:\casaaa\tmp\php1189.tmp
+            [error] => 0
+            [size] => 452121
+        )
+
+)
+
+[2025-03-19 05:47:37] POST Data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[]}],"pickup_time":"06:47 PM","pickup_notes":"","payment_method":"gcash","payment_reference":"45456765756756","total_amount":180}
+)
+
+[2025-03-19 05:47:37] FILES Data: Array
+(
+    [payment_proof] => Array
+        (
+            [name] => Screenshot (258).png
+            [type] => image/png
+            [tmp_name] => D:\casaaa\tmp\php96EA.tmp
+            [error] => 0
+            [size] => 598571
+        )
+
+)
+

@@ -1,0 +1,9 @@
+
+# Allow direct access to PHP files
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.+)$ $1.php [QSA,L]
+
+# PHP error reporting
+php_flag display_errors on
+php_value error_reporting E_ALL
