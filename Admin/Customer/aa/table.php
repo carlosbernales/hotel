@@ -24,7 +24,7 @@ try {
     $regularStmt = $db->prepare($regularQuery);
     $regularStmt->execute();
     $regularPackages = $regularStmt->fetchAll();
-    
+
     echo "<!-- Regular packages count: " . count($regularPackages) . " -->";
 
     // Fetch Ultimate Packages with full details
@@ -50,7 +50,7 @@ try {
     $ultimateStmt = $db->prepare($ultimateQuery);
     $ultimateStmt->execute();
     $ultimatePackages = $ultimateStmt->fetchAll();
-    
+
     echo "<!-- Ultimate packages count: " . count($ultimatePackages) . " -->";
 
     // Fetch menu items with their categories
@@ -60,7 +60,7 @@ try {
     $menuStmt = $db->prepare($menuQuery);
     $menuStmt->execute();
     $menuItems = $menuStmt->fetchAll();
-    
+
     echo "<!-- Menu items count: " . count($menuItems) . " -->";
 
     // Fetch menu item addons
@@ -68,7 +68,7 @@ try {
     $addonsStmt = $db->prepare($addonsQuery);
     $addonsStmt->execute();
     $menuAddons = $addonsStmt->fetchAll();
-    
+
     echo "<!-- Menu addons count: " . count($menuAddons) . " -->";
 
     // Fetch payment methods
@@ -114,12 +114,14 @@ if (file_exists('nav.php')) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Package Reservation</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
@@ -137,18 +139,18 @@ if (file_exists('nav.php')) {
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
-        
+
         /* Styles for package images */
         img[src*="../../uploads/table_packages"] {
             cursor: pointer;
             transition: transform 0.2s;
         }
-        
+
         img[src*="../../uploads/table_packages"]:hover {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
-        
+
         #modalImage {
             max-height: 80vh;
             object-fit: contain;
@@ -403,7 +405,8 @@ if (file_exists('nav.php')) {
                 height: 300px;
             }
 
-            .btn-warning, .btn-advanced {
+            .btn-warning,
+            .btn-advanced {
                 width: 100%;
                 margin-bottom: 1rem;
             }
@@ -412,7 +415,7 @@ if (file_exists('nav.php')) {
                 padding: 6px 14px !important;
                 font-size: 13px !important;
             }
-            
+
             .btn-primary-custom {
                 padding: 7px 18px !important;
                 font-size: 13px !important;
@@ -541,7 +544,7 @@ if (file_exists('nav.php')) {
 
         .menu-item:hover {
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .menu-item img {
@@ -583,13 +586,13 @@ if (file_exists('nav.php')) {
         }
 
         #addonsModal .card {
-            border: 1px solid rgba(0,0,0,.125);
+            border: 1px solid rgba(0, 0, 0, .125);
             transition: all 0.3s ease;
         }
 
         #addonsModal .card:hover {
             border-color: #d4af37;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         #addonsModal .card-title {
@@ -610,7 +613,7 @@ if (file_exists('nav.php')) {
             position: relative;
             overflow: hidden;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .package-details h4 {
@@ -671,16 +674,20 @@ if (file_exists('nav.php')) {
 
         /* Modal width adjustments */
         .modal-lg {
-            max-width: 800px; /* Increased from default 500px */
+            max-width: 800px;
+            /* Increased from default 500px */
         }
 
         .modal-xl {
-            max-width: 1140px; /* Increased from default 800px */
+            max-width: 1140px;
+            /* Increased from default 800px */
         }
 
         /* Responsive adjustments */
         @media (max-width: 992px) {
-            .modal-lg, .modal-xl {
+
+            .modal-lg,
+            .modal-xl {
                 max-width: 95%;
                 margin: 1rem auto;
             }
@@ -690,7 +697,7 @@ if (file_exists('nav.php')) {
         .modal-content {
             border-radius: 15px;
             border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
 
         .modal-body {
@@ -711,7 +718,7 @@ if (file_exists('nav.php')) {
 
         .addon-item .card:hover {
             border-color: #ffc107;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .addon-item .form-check-input {
@@ -966,20 +973,20 @@ if (file_exists('nav.php')) {
         #packageImageCarousel {
             background-color: #000;
         }
-        
+
         #packageImageCarousel .carousel-item {
             height: 400px;
         }
-        
+
         #packageImageCarousel .carousel-item img {
             width: 100%;
             height: 100%;
             object-fit: contain;
         }
-        
+
         #packageImageCarousel .carousel-control-prev,
         #packageImageCarousel .carousel-control-next {
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -987,11 +994,11 @@ if (file_exists('nav.php')) {
             transform: translateY(-50%);
             margin: 0 10px;
         }
-        
+
         #packageImageCarousel .carousel-indicators {
             margin-bottom: 0;
         }
-        
+
         #packageImageCarousel .carousel-indicators button {
             width: 10px;
             height: 10px;
@@ -1005,31 +1012,38 @@ if (file_exists('nav.php')) {
             right: 10px;
             z-index: 1;
         }
+
         .status-banner .badge {
             font-size: 0.9rem;
             padding: 8px 12px;
             background-color: #dc3545;
             color: white;
         }
+
         .package-image {
             height: 200px;
             object-fit: cover;
         }
+
         .alert {
             font-size: 0.9rem;
             margin-bottom: 0;
         }
+
         .package-details {
             font-size: 0.9rem;
             color: #666;
         }
+
         .card {
             position: relative;
         }
+
         <?php if ($package['status'] === 'inactive'): ?>
-        .card {
-            opacity: 0.85;
-        }
+            .card {
+                opacity: 0.85;
+            }
+
         <?php endif; ?>
 
         .login-message {
@@ -1071,133 +1085,129 @@ if (file_exists('nav.php')) {
         }
     </style>
 </head>
+
 <body>
-    <?php include 'nav.php';?>
+    <?php include 'nav.php'; ?>
     <?php include 'message_box.php'; ?>
-    
+
     <div id="alertPlaceholder" class="container mt-3"></div>
-    
+
     <div class="container">
         <!-- Table Packages Section -->
         <div class="package-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="header-title">Table Packages</h2>
+                <h2 class="header-title">Table Packagess</h2>
             </div>
-            
+
             <div class="row g-4">
                 <?php foreach ($regularPackages as $package): ?>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <?php if ($package['status'] === 'inactive'): ?>
-                        <div class="status-banner">
-                            <span class="badge badge-warning">Currently Unavailable</span>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <div class="position-relative overflow-hidden">
-                            <img src="../../uploads/table_packages/<?php echo basename($package['image_path']); ?>" 
-                                 class="card-img-top" 
-                                 alt="<?php echo htmlspecialchars($package['package_name']); ?>">
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><?php echo htmlspecialchars($package['package_name']); ?></h5>
-                            <p class="card-text">
-                                <i class="fas fa-users me-2"></i>Capacity: <?php echo htmlspecialchars($package['capacity']); ?>
-                            </p>
-                            <?php if (isset($package['price'])): ?>
-                            <p class="card-text text-warning fw-bold mb-3">
-                                <i class="fas fa-tag me-2"></i>₱<?php echo number_format((float)$package['price'], 2); ?>
-                            </p>
-                            <?php endif; ?>
-
+                    <div class="col-md-4">
+                        <div class="card h-100">
                             <?php if ($package['status'] === 'inactive'): ?>
-                            <div class="alert alert-warning mt-2 mb-3">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <strong>Notice:</strong><br>
-                                <?php echo htmlspecialchars($package['reason']); ?>
-                            </div>
+                                <div class="status-banner">
+                                    <span class="badge badge-warning">Currently Unavailable</span>
+                                </div>
                             <?php endif; ?>
 
-                            <div class="d-flex flex-column align-items-center gap-2">
-                                <button type="button" 
-                                        class="btn btn-outline-warning view-details-btn w-100"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#packageDetailsModal"
+                            <div class="position-relative overflow-hidden">
+                                <img src="../Admin/adminBackend/table_packages_image/<?php echo basename(path: $package['image_path']); ?>"
+                                    class="card-img-top" alt="<?php echo htmlspecialchars($package['package_name']); ?>">
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title"><?php echo htmlspecialchars($package['package_name']); ?></h5>
+                                <p class="card-text">
+                                    <i class="fas fa-users me-2"></i>Capacity:
+                                    <?php echo htmlspecialchars($package['capacity']); ?>
+                                </p>
+                                <?php if (isset($package['price'])): ?>
+                                    <p class="card-text text-warning fw-bold mb-3">
+                                        <i
+                                            class="fas fa-tag me-2"></i>₱<?php echo number_format((float) $package['price'], 2); ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <?php if ($package['status'] === 'inactive'): ?>
+                                    <div class="alert alert-warning mt-2 mb-3">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>Notice:</strong><br>
+                                        <?php echo htmlspecialchars($package['reason']); ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="d-flex flex-column align-items-center gap-2">
+                                    <button type="button" class="btn btn-outline-warning view-details-btn w-100"
+                                        data-bs-toggle="modal" data-bs-target="#packageDetailsModal"
                                         data-package-id="<?php echo $package['id']; ?>"
                                         data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
                                         data-package-description="<?php echo htmlspecialchars($package['description']); ?>"
                                         data-package-capacity="<?php echo $package['capacity']; ?>"
                                         data-package-image="<?php echo basename($package['image_path']); ?>">
-                                    <i class="fas fa-info-circle me-2"></i>View Details
-                                </button>
-                                <?php if ($package['status'] === 'active'): ?>
-                                <button type="button" 
-                                        class="btn btn-warning reserve-btn w-100"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#reservationModal"
-                                        data-package-id="<?php echo $package['id']; ?>"
-                                        data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
-                                        data-package-price="<?php echo $package['price']; ?>"
-                                        data-package-capacity="<?php echo $package['capacity']; ?>">
-                                    <i class="fas fa-calendar-check me-2"></i>Reserve
-                                </button>
-                                <?php else: ?>
-                                <button type="button" class="btn btn-secondary w-100" disabled>
-                                    <i class="fas fa-ban me-2"></i>Currently Unavailable
-                                </button>
-                                <?php endif; ?>
+                                        <i class="fas fa-info-circle me-2"></i>View Details
+                                    </button>
+                                    <?php if ($package['status'] === 'active'): ?>
+                                        <button type="button" class="btn btn-warning reserve-btn w-100" data-bs-toggle="modal"
+                                            data-bs-target="#reservationModal" data-package-id="<?php echo $package['id']; ?>"
+                                            data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
+                                            data-package-price="<?php echo $package['price']; ?>"
+                                            data-package-capacity="<?php echo $package['capacity']; ?>">
+                                            <i class="fas fa-calendar-check me-2"></i>Reserve
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="button" class="btn btn-secondary w-100" disabled>
+                                            <i class="fas fa-ban me-2"></i>Currently Unavailable
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
-                
+
             </div>
         </div>
-        
+
 
         <!-- Ultimate Food Package Section -->
         <div class="package-section">
             <h2 class="header-title">Intimate Food Package 30 PAX for Cafe Events </h2>
             <div class="row g-4">
                 <?php foreach ($ultimatePackages as $package): ?>
-                <div class="col-md-4">
-                    <div class="card h-100">
-                        <?php if ($package['status'] === 'inactive'): ?>
-                        <div class="status-banner">
-                            <span class="badge badge-warning">Currently Unavailable</span>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <div class="position-relative overflow-hidden">
-                            <img src="../../uploads/table_packages/<?php echo basename($package['image_path']); ?>" 
-                                 class="card-img-top" 
-                                 alt="<?php echo htmlspecialchars($package['package_name']); ?>">
-                        </div>
-                        <div class="card-body text-center">
-                            <h5 class="card-title"><?php echo htmlspecialchars($package['package_name']); ?></h5>
-                            <p class="card-text">
-                                <i class="fas fa-users me-2"></i>Capacity: Up to <?php echo htmlspecialchars($package['capacity']); ?>
-                            </p>
-                            <?php if ($package['capacity'] >= 30 && isset($package['price']) && is_numeric($package['price'])): ?>
-                            <p class="card-text text-warning fw-bold mb-3">
-                                <i class="fas fa-tag me-2"></i>₱<?php echo number_format((float)$package['price'], 2); ?>
-                            </p>
-                            <?php endif; ?>
-
+                    <div class="col-md-4">
+                        <div class="card h-100">
                             <?php if ($package['status'] === 'inactive'): ?>
-                            <div class="alert alert-warning mt-2 mb-3">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <strong>Notice:</strong><br>
-                                <?php echo htmlspecialchars($package['reason']); ?>
-                            </div>
+                                <div class="status-banner">
+                                    <span class="badge badge-warning">Currently Unavailable</span>
+                                </div>
                             <?php endif; ?>
 
-                            <div class="d-flex flex-column align-items-center gap-2">
-                                <button type="button" 
-                                        class="btn btn-outline-warning view-details-btn w-100"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#ultimatePackageModal"
+                            <div class="position-relative overflow-hidden">
+                                <img src="../../uploads/table_packages/<?php echo basename($package['image_path']); ?>"
+                                    class="card-img-top" alt="<?php echo htmlspecialchars($package['package_name']); ?>">
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="card-title"><?php echo htmlspecialchars($package['package_name']); ?></h5>
+                                <p class="card-text">
+                                    <i class="fas fa-users me-2"></i>Capacity: Up to
+                                    <?php echo htmlspecialchars($package['capacity']); ?>
+                                </p>
+                                <?php if ($package['capacity'] >= 30 && isset($package['price']) && is_numeric($package['price'])): ?>
+                                    <p class="card-text text-warning fw-bold mb-3">
+                                        <i
+                                            class="fas fa-tag me-2"></i>₱<?php echo number_format((float) $package['price'], 2); ?>
+                                    </p>
+                                <?php endif; ?>
+
+                                <?php if ($package['status'] === 'inactive'): ?>
+                                    <div class="alert alert-warning mt-2 mb-3">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <strong>Notice:</strong><br>
+                                        <?php echo htmlspecialchars($package['reason']); ?>
+                                    </div>
+                                <?php endif; ?>
+
+                                <div class="d-flex flex-column align-items-center gap-2">
+                                    <button type="button" class="btn btn-outline-warning view-details-btn w-100"
+                                        data-bs-toggle="modal" data-bs-target="#ultimatePackageModal"
                                         data-package-id="<?php echo $package['id']; ?>"
                                         data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
                                         data-package-description="<?php echo htmlspecialchars($package['description']); ?>"
@@ -1205,28 +1215,25 @@ if (file_exists('nav.php')) {
                                         data-package-image="<?php echo basename($package['image_path']); ?>"
                                         data-package-price="<?php echo $package['price']; ?>"
                                         data-package-menu-items="<?php echo htmlspecialchars($package['menu_items']); ?>">
-                                    <i class="fas fa-info-circle me-2"></i>View Details
-                                </button>
-                                <?php if ($package['status'] === 'active'): ?>
-                                <button type="button" 
-                                        class="btn btn-warning reserve-btn w-100"
-                                        data-bs-toggle="modal" 
-                                        data-bs-target="#reservationModal"
-                                        data-package-id="<?php echo $package['id']; ?>"
-                                        data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
-                                        data-package-price="<?php echo $package['price']; ?>"
-                                        data-package-capacity="<?php echo $package['capacity']; ?>">
-                                    <i class="fas fa-calendar-check me-2"></i>Reserve
-                                </button>
-                                <?php else: ?>
-                                <button type="button" class="btn btn-secondary w-100" disabled>
-                                    <i class="fas fa-ban me-2"></i>Currently Unavailable
-                                </button>
-                                <?php endif; ?>
+                                        <i class="fas fa-info-circle me-2"></i>View Details
+                                    </button>
+                                    <?php if ($package['status'] === 'active'): ?>
+                                        <button type="button" class="btn btn-warning reserve-btn w-100" data-bs-toggle="modal"
+                                            data-bs-target="#reservationModal" data-package-id="<?php echo $package['id']; ?>"
+                                            data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
+                                            data-package-price="<?php echo $package['price']; ?>"
+                                            data-package-capacity="<?php echo $package['capacity']; ?>">
+                                            <i class="fas fa-calendar-check me-2"></i>Reserve
+                                        </button>
+                                    <?php else: ?>
+                                        <button type="button" class="btn btn-secondary w-100" disabled>
+                                            <i class="fas fa-ban me-2"></i>Currently Unavailable
+                                        </button>
+                                    <?php endif; ?>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                 <?php endforeach; ?>
             </div>
 
@@ -1240,7 +1247,8 @@ if (file_exists('nav.php')) {
                 </ul>
                 <p class="text-danger mt-3">
                     <i class="fas fa-exclamation-circle me-2"></i>* This package is only available until 2:00 PM<br>
-                    <i class="fas fa-exclamation-circle me-2"></i>** Assumes 3,000g (100g per person) of Wagyu Steak will be served
+                    <i class="fas fa-exclamation-circle me-2"></i>** Assumes 3,000g (100g per person) of Wagyu Steak
+                    will be served
                 </p>
             </div>
         </div>
@@ -1261,19 +1269,24 @@ if (file_exists('nav.php')) {
                     <div class="menu-categories mb-4">
                         <h6 class="text-warning mb-3">Categories</h6>
                         <div class="btn-group mb-3" role="group">
-                            <button type="button" class="btn btn-outline-warning active" data-category="all">All</button>
-                            <button type="button" class="btn btn-outline-warning" data-category="appetizers">Appetizers</button>
-                            <button type="button" class="btn btn-outline-warning" data-category="main">Main Course</button>
-                            <button type="button" class="btn btn-outline-warning" data-category="desserts">Desserts</button>
-                            <button type="button" class="btn btn-outline-warning" data-category="beverages">Beverages</button>
-                            </div>
+                            <button type="button" class="btn btn-outline-warning active"
+                                data-category="all">All</button>
+                            <button type="button" class="btn btn-outline-warning"
+                                data-category="appetizers">Appetizers</button>
+                            <button type="button" class="btn btn-outline-warning" data-category="main">Main
+                                Course</button>
+                            <button type="button" class="btn btn-outline-warning"
+                                data-category="desserts">Desserts</button>
+                            <button type="button" class="btn btn-outline-warning"
+                                data-category="beverages">Beverages</button>
                         </div>
+                    </div>
 
                     <div class="menu-items">
                         <!-- Menu items will be loaded here -->
                         <p class="text-center text-muted">Loading menu items...</p>
-                            </div>
-                            </div>
+                    </div>
+                </div>
                 <div class="modal-footer">
                     <div class="d-flex justify-content-between w-100">
                         <div>
@@ -1283,12 +1296,12 @@ if (file_exists('nav.php')) {
                         <div>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                             <button type="button" class="btn btn-warning" id="confirmOrder">Confirm Order</button>
-                            </div>
-                            </div>
                         </div>
-                            </div>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Menu Items Modal -->
     <div class="modal fade" id="menuItemsModal" tabindex="-1">
@@ -1297,27 +1310,29 @@ if (file_exists('nav.php')) {
                 <div class="modal-header bg-warning">
                     <h5 class="modal-title text-white">Select Menu Items</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
+                </div>
                 <div class="modal-body">
                     <!-- Category Filter -->
                     <div class="category-filter mb-4">
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-warning active" data-category="all">All</button>
+                            <button type="button" class="btn btn-outline-warning active"
+                                data-category="all">All</button>
                             <?php foreach ($menuByCategory as $category => $items): ?>
-                                <button type="button" class="btn btn-outline-warning" 
-                                        data-category="<?php echo htmlspecialchars($category); ?>">
+                                <button type="button" class="btn btn-outline-warning"
+                                    data-category="<?php echo htmlspecialchars($category); ?>">
                                     <?php echo htmlspecialchars($category); ?>
                                 </button>
                             <?php endforeach; ?>
-                            </div>
                         </div>
+                    </div>
 
                     <div class="row">
                         <!-- Menu Items Section -->
                         <div class="col-md-8">
                             <div class="menu-items-container">
                                 <?php foreach ($menuByCategory as $category => $items): ?>
-                                    <div class="category-section mb-4" data-category="<?php echo htmlspecialchars($category); ?>">
+                                    <div class="category-section mb-4"
+                                        data-category="<?php echo htmlspecialchars($category); ?>">
                                         <h5 class="category-title mb-3"><?php echo htmlspecialchars($category); ?></h5>
                                         <div class="row g-3">
                                             <?php foreach ($items as $item): ?>
@@ -1325,62 +1340,66 @@ if (file_exists('nav.php')) {
                                                     <div class="card menu-item">
                                                         <div class="row g-0">
                                                             <div class="col-4">
-                                                                <img src="<?php echo htmlspecialchars($item['image_path']); ?>" 
-                                                                     class="img-fluid rounded-start" 
-                                                                     alt="<?php echo htmlspecialchars($item['name']); ?>"
-                                                                     style="height: 100px; object-fit: cover;">
+                                                                <img src="<?php echo htmlspecialchars($item['image_path']); ?>"
+                                                                    class="img-fluid rounded-start"
+                                                                    alt="<?php echo htmlspecialchars($item['name']); ?>"
+                                                                    style="height: 100px; object-fit: cover;">
                                                             </div>
                                                             <div class="col-8">
-                                    <div class="card-body">
-                                                                    <h6 class="card-title"><?php echo htmlspecialchars($item['name']); ?></h6>
-                                                                    <p class="card-text text-success mb-2">₱<?php echo number_format($item['price'], 2); ?></p>
-                                                                    <div class="d-flex justify-content-between align-items-center">
-                                                                        <button type="button" 
-                                                                                class="btn btn-warning btn-sm add-to-cart"
-                                                                                data-item-id="<?php echo $item['id']; ?>"
-                                                                                data-item-name="<?php echo htmlspecialchars($item['name']); ?>"
-                                                                                data-item-price="<?php echo $item['price']; ?>">
+                                                                <div class="card-body">
+                                                                    <h6 class="card-title">
+                                                                        <?php echo htmlspecialchars($item['name']); ?>
+                                                                    </h6>
+                                                                    <p class="card-text text-success mb-2">
+                                                                        ₱<?php echo number_format($item['price'], 2); ?></p>
+                                                                    <div
+                                                                        class="d-flex justify-content-between align-items-center">
+                                                                        <button type="button"
+                                                                            class="btn btn-warning btn-sm add-to-cart"
+                                                                            data-item-id="<?php echo $item['id']; ?>"
+                                                                            data-item-name="<?php echo htmlspecialchars($item['name']); ?>"
+                                                                            data-item-price="<?php echo $item['price']; ?>">
                                                                             <i class="fas fa-cart-plus me-1"></i> Add to Cart
                                                                         </button>
-                                                                        <button type="button" 
-                                                                                class="btn btn-outline-warning btn-sm show-addons"
-                                                                                data-item-id="<?php echo $item['id']; ?>">
+                                                                        <button type="button"
+                                                                            class="btn btn-outline-warning btn-sm show-addons"
+                                                                            data-item-id="<?php echo $item['id']; ?>">
                                                                             Add-ons
                                                                         </button>
-                                            </div>
-                                                </div>
-                                                </div>
-                                                </div>
-                                            </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             <?php endforeach; ?>
-                                                </div>
-                                            </div>
-                                <?php endforeach; ?>
-                                            </div>
                                         </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
 
                         <!-- Order Summary Section -->
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-header bg-warning text-white">
                                     <h6 class="mb-0">Order Summary</h6>
-                                    </div>
+                                </div>
                                 <div class="card-body">
                                     <div id="cartItems">
                                         <div class="text-muted text-center" id="emptyCartMessage">
                                             No items in cart
-                                </div>
-                            </div>
+                                        </div>
+                                    </div>
                                     <hr>
                                     <div class="d-flex justify-content-between fw-bold">
                                         <span>Total:</span>
                                         <span id="cartTotal">₱0.00</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                            </div>
-                            </div>
-                            </div>
-                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
@@ -1389,8 +1408,8 @@ if (file_exists('nav.php')) {
                     </button>
                 </div>
             </div>
-                            </div>
-                        </div>
+        </div>
+    </div>
 
     <!-- Update the add-ons modal -->
     <div class="modal fade" id="addonsModal" tabindex="-1">
@@ -1409,22 +1428,24 @@ if (file_exists('nav.php')) {
                                         <div class="d-flex justify-content-between align-items-center">
                                             <div class="d-flex align-items-center">
                                                 <div class="form-check mb-0">
-                                                    <input class="form-check-input addon-checkbox" 
-                                                           type="checkbox" 
-                                                           value="<?php echo $addon['id']; ?>"
-                                                           data-name="<?php echo htmlspecialchars($addon['name']); ?>"
-                                                           data-price="<?php echo $addon['price']; ?>"
-                                                           id="addon<?php echo $addon['id']; ?>">
-                                                    <label class="form-check-label ms-2" for="addon<?php echo $addon['id']; ?>">
-                                                        <span class="addon-name"><?php echo htmlspecialchars($addon['name']); ?></span>
-                                    </label>
+                                                    <input class="form-check-input addon-checkbox" type="checkbox"
+                                                        value="<?php echo $addon['id']; ?>"
+                                                        data-name="<?php echo htmlspecialchars($addon['name']); ?>"
+                                                        data-price="<?php echo $addon['price']; ?>"
+                                                        id="addon<?php echo $addon['id']; ?>">
+                                                    <label class="form-check-label ms-2"
+                                                        for="addon<?php echo $addon['id']; ?>">
+                                                        <span
+                                                            class="addon-name"><?php echo htmlspecialchars($addon['name']); ?></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <span
+                                                class="addon-price text-success fw-bold">₱<?php echo number_format($addon['price'], 2); ?></span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                                            <span class="addon-price text-success fw-bold">₱<?php echo number_format($addon['price'], 2); ?></span>
-                        </div>
-                            </div>
-                        </div>
-                </div>
                         <?php endforeach; ?>
                     </div>
                 </div>
@@ -1447,33 +1468,33 @@ if (file_exists('nav.php')) {
                 <div class="modal-body p-4">
                     <div class="package-details">
                         <!-- Package Info -->
-                            <div class="mb-4">
-                                <h4 id="detailsPackageName" class="text-warning mb-0"></h4>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <h6 class="mb-2">Capacity:</h6>
-                                <p id="detailsCapacity" class="text-muted"></p>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <h6 class="mb-2">Description:</h6>
-                                <p id="detailsDescription" class="text-muted"></p>
-                            </div>
+                        <div class="mb-4">
+                            <h4 id="detailsPackageName" class="text-warning mb-0"></h4>
                         </div>
 
+                        <div class="mb-4">
+                            <h6 class="mb-2">Capacity:</h6>
+                            <p id="detailsCapacity" class="text-muted"></p>
+                        </div>
 
+                        <div class="mb-4">
+                            <h6 class="mb-2">Description:</h6>
+                            <p id="detailsDescription" class="text-muted"></p>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-warning reserve-package-btn">
-                        <i class="fas fa-calendar-check me-2"></i>Reserve Now
-                    </button>
+
+
                 </div>
             </div>
         </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-warning reserve-package-btn">
+                <i class="fas fa-calendar-check me-2"></i>Reserve Now
+            </button>
+        </div>
+    </div>
+    </div>
     </div>
 
     <!-- Update the reservation modal content for ultimate packages -->
@@ -1492,40 +1513,35 @@ if (file_exists('nav.php')) {
                         <input type="hidden" id="basePrice" name="base_price">
                         <input type="hidden" id="isUltimatePackage" name="is_ultimate" value="0">
                         <input type="hidden" id="packageName" name="package_name">
-                        
+
                         <!-- Package Info -->
                         <div class="mb-4">
                             <h6 class="package-name mb-2"></h6>
-                    </div>
+                        </div>
 
                         <!-- Date and Guests -->
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Date</label>
-                                <input type="date" class="form-control" id="reservationDate" name="date" required 
-                                       min="<?php echo date('Y-m-d'); ?>">
-                </div>
+                                <input type="date" class="form-control" id="reservationDate" name="date" required
+                                    min="<?php echo date('Y-m-d'); ?>">
+                            </div>
                             <div class="col-md-6">
                                 <label class="form-label">Number of Guests</label>
-                                <input type="number" class="form-control" id="guestCount" name="guest_count" 
-                                       min="1" required>
+                                <input type="number" class="form-control" id="guestCount" name="guest_count" min="1"
+                                    required>
                                 <small class="text-muted">Max: <span id="maxGuests"></span></small>
-        </div>
-    </div>
+                            </div>
+                        </div>
 
                         <!-- Time Selection -->
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label class="form-label">Arrival Time</label>
-                                <input type="time" 
-                                       class="form-control" 
-                                       id="arrivalTime" 
-                                       name="arrival_time" 
-                                       min="06:30"
-                                       max="23:00"
-                                       required>
+                                <input type="time" class="form-control" id="arrivalTime" name="arrival_time" min="06:30"
+                                    max="23:00" required>
                                 <small class="text-muted">Operating hours: 6:30 AM - 11:00 PM</small>
-                </div>
+                            </div>
                             <div class="col-md-6" id="durationSection" style="display: none;">
                                 <label class="form-label">Duration</label>
                                 <select class="form-select" id="duration" name="duration">
@@ -1538,7 +1554,7 @@ if (file_exists('nav.php')) {
                         <div id="ultimatePaymentSection" style="display: none;">
                             <hr class="my-4">
                             <h6 class="mb-3">Payment Details</h6>
-                            
+
                             <!-- Payment Option -->
                             <div class="mb-3">
                                 <label class="form-label">Payment Option</label>
@@ -1555,7 +1571,9 @@ if (file_exists('nav.php')) {
                                 <select class="form-select" id="paymentMethod" name="payment_method" required>
                                     <option value="">Select Payment Method</option>
                                     <?php foreach ($paymentMethods as $method): ?>
-                                    <option value="<?php echo htmlspecialchars($method['name']); ?> "><?php echo htmlspecialchars($method['display_name']); ?></option>
+                                        <option value="<?php echo htmlspecialchars($method['name']); ?> ">
+                                            <?php echo htmlspecialchars($method['display_name']); ?>
+                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -1571,14 +1589,15 @@ if (file_exists('nav.php')) {
                             <div class="mb-3" id="paymentProofSection" style="display: none;">
                                 <label class="form-label">Payment Proof</label>
                                 <div class="input-group">
-                                    <input type="file" class="form-control" id="paymentProof" name="payment_proof" 
-                                           accept="image/*">
+                                    <input type="file" class="form-control" id="paymentProof" name="payment_proof"
+                                        accept="image/*">
                                     <label class="input-group-text" for="paymentProof">
                                         <i class="fas fa-upload"></i>
                                     </label>
                                 </div>
                                 <div id="paymentPreview" class="mt-2" style="display: none;">
-                                    <img src="" alt="Payment Proof Preview" class="img-fluid" style="max-height: 200px;">
+                                    <img src="" alt="Payment Proof Preview" class="img-fluid"
+                                        style="max-height: 200px;">
                                     <button type="button" class="btn btn-sm btn-outline-danger mt-2" id="removeProof">
                                         <i class="fas fa-times"></i> Remove
                                     </button>
@@ -1589,12 +1608,8 @@ if (file_exists('nav.php')) {
                             <!-- Payment Reference -->
                             <div class="mb-3" id="referenceNumberSection" style="display: none;">
                                 <label class="form-label">Payment Reference Number</label>
-                                <input type="text" 
-                                       class="form-control" 
-                                       id="referenceNumber" 
-                                       name="reference_number"
-                                       placeholder="Enter reference number"
-                                       >
+                                <input type="text" class="form-control" id="referenceNumber" name="reference_number"
+                                    placeholder="Enter reference number">
                                 <small class="text-muted reference-format">
                                     GCash: 13 digits | Maya: 12 characters (letters and numbers)
                                 </small>
@@ -1606,21 +1621,22 @@ if (file_exists('nav.php')) {
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="policyCheck" required>
                                 <label class="form-check-label" for="policyCheck">
-                                    I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#policyModal">Terms & Policies</a>
+                                    I agree to the <a href="#" data-bs-toggle="modal"
+                                        data-bs-target="#policyModal">Terms & Policies</a>
                                 </label>
+                            </div>
                         </div>
-                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="button" class="btn btn-warning" id="confirmReservation">
                         Confirm Reservation
                     </button>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
     <!-- First, add the advance order confirmation modal -->
     <div class="modal fade" id="advanceOrderConfirmModal" tabindex="-1">
@@ -1659,18 +1675,18 @@ if (file_exists('nav.php')) {
                         <p><strong>Time:</strong> <span id="summaryTime"></span></p>
                         <p><strong>Duration:</strong> <span id="summaryDuration"></span></p>
                         <p><strong>Number of Guests:</strong> <span id="summaryGuests"></span></p>
-                        
+
                         <hr>
                         <h6 class="mb-3">Cost Breakdown</h6>
                         <p><strong>Base Price:</strong> <span id="summaryBasePrice"></span></p>
                         <div id="summaryExtraHours" style="display: none;">
                             <p><strong>Extra Hours:</strong> <span id="summaryHoursCost"></span></p>
-                    </div>
+                        </div>
                         <div id="summaryExtraGuests" style="display: none;">
                             <p><strong>Extra Guests:</strong> <span id="summaryGuestsCost"></span></p>
                         </div>
                         <p class="fw-bold text-success">Total Amount: <span id="summaryTotal"></span></p>
-                        
+
                         <div id="summaryPayment"></div>
                     </div>
                 </div>
@@ -1714,7 +1730,7 @@ if (file_exists('nav.php')) {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Update the menu section in the ultimate package modal -->
                         <div class="mt-4">
                             <h6 class="mb-2">Menu Selection:</h6>
@@ -1772,7 +1788,7 @@ if (file_exists('nav.php')) {
             </div>
         </div>
     </div>
-    
+
     <!-- Image Modal for displaying package images in full size -->
     <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
@@ -1790,7 +1806,7 @@ if (file_exists('nav.php')) {
             </div>
         </div>
     </div>
-    
+
     <!-- Add this new modal for policies -->
     <div class="modal fade" id="policyModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -1866,27 +1882,27 @@ if (file_exists('nav.php')) {
             const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
             const modalImage = document.getElementById('modalImage');
             const modalTitle = document.getElementById('imageModalLabel');
-            
+
             // Set the image source and title
             modalImage.src = imageUrl;
             modalTitle.textContent = title;
-            
+
             // Show the modal
             imageModal.show();
         }
-        
+
         // Add click event listener to package images
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const target = event.target;
-            
+
             // Check if the clicked element is a package image
             if (target.tagName === 'IMG' && target.classList.contains('package-image')) {
                 event.preventDefault();
                 displayPackageImage(target.src, target.alt || 'Package Image');
             }
         });
-        
-        document.addEventListener('DOMContentLoaded', function() {
+
+        document.addEventListener('DOMContentLoaded', function () {
             // Update the reservation modal handler
             const reservationModal = document.getElementById('reservationModal');
             if (reservationModal) {
@@ -1896,13 +1912,13 @@ if (file_exists('nav.php')) {
                     const packageName = button.getAttribute('data-package-name');
                     const packageCapacity = button.getAttribute('data-package-capacity');
                     const packagePrice = button.getAttribute('data-package-price');
-                    
+
                     // Set form values
                     document.getElementById('packageId').value = packageId;
                     document.getElementById('packageName').value = packageName;
                     document.getElementById('basePrice').value = packagePrice;
                     document.querySelectorAll('.package-name').forEach(el => el.textContent = packageName);
-                    
+
                     // Set max guests
                     document.getElementById('maxGuests').textContent = packageCapacity;
                     document.getElementById('guestCount').max = packageCapacity;
@@ -1921,18 +1937,18 @@ if (file_exists('nav.php')) {
             }
 
             // Handle payment method change
-            document.getElementById('paymentMethod').addEventListener('change', function() {
+            document.getElementById('paymentMethod').addEventListener('change', function () {
                 const selectedOption = this.options[this.selectedIndex];
                 const paymentDetails = document.getElementById('paymentDetails');
                 const referenceSection = document.getElementById('referenceNumberSection');
                 const proofSection = document.getElementById('paymentProofSection');
-                
+
                 if (this.value) {
                     // Update payment details
                     document.getElementById('qrCode').src = selectedOption.dataset.qr;
                     document.getElementById('accountName').textContent = selectedOption.dataset.name;
                     document.getElementById('accountNumber').textContent = selectedOption.dataset.account;
-                    
+
                     // Show payment details, reference number section, and proof upload
                     paymentDetails.style.display = 'block';
                     referenceSection.style.display = 'block';
@@ -1945,12 +1961,12 @@ if (file_exists('nav.php')) {
             });
 
             // Handle payment option change
-            document.getElementById('paymentOption').addEventListener('change', function() {
+            document.getElementById('paymentOption').addEventListener('change', function () {
                 updateTotalAmount();
             });
 
             // Add duration change handler
-            document.getElementById('duration').addEventListener('change', function() {
+            document.getElementById('duration').addEventListener('change', function () {
                 updateTotalAmount();
             });
 
@@ -1960,7 +1976,7 @@ if (file_exists('nav.php')) {
                 const isUltimate = document.getElementById('isUltimatePackage').value === "1";
                 const paymentOption = document.getElementById('paymentOption').value;
                 const amountDisplay = document.getElementById('amountToPay');
-                
+
                 let totalPrice = basePrice;
                 let extraHoursCost = 0;
                 let extraGuestsCost = 0;
@@ -1980,7 +1996,7 @@ if (file_exists('nav.php')) {
 
                     totalPrice = basePrice + extraHoursCost + extraGuestsCost;
                 }
-                
+
                 if (paymentOption === 'partial') {
                     const partialAmount = totalPrice * 0.5;
                     const remainingBalance = totalPrice - partialAmount;
@@ -2006,11 +2022,11 @@ if (file_exists('nav.php')) {
             }
 
             // Update the guest count change handler
-            document.getElementById('guestCount').addEventListener('input', function() {
+            document.getElementById('guestCount').addEventListener('input', function () {
                 const capacity = parseInt(document.getElementById('maxGuests').textContent);
                 const guests = parseInt(this.value) || 0;
                 const isUltimate = document.getElementById('isUltimatePackage').value === "1";
-                
+
                 if (isUltimate && guests > capacity) {
                     // Show warning about extra charges only for ultimate packages
                     Swal.fire({
@@ -2029,7 +2045,7 @@ if (file_exists('nav.php')) {
                     });
                     this.value = capacity; // Reset to maximum capacity
                 }
-                
+
                 // Update total amount if payment option is selected
                 if (document.getElementById('paymentOption').value) {
                     updateTotalAmount();
@@ -2042,7 +2058,7 @@ if (file_exists('nav.php')) {
             const previewImage = paymentPreview.querySelector('img');
             const removeProofBtn = document.getElementById('removeProof');
 
-            paymentProof.addEventListener('change', function(e) {
+            paymentProof.addEventListener('change', function (e) {
                 if (this.files && this.files[0]) {
                     const file = this.files[0];
                     const reader = new FileReader();
@@ -2071,7 +2087,7 @@ if (file_exists('nav.php')) {
                         return;
                     }
 
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         previewImage.src = e.target.result;
                         paymentPreview.style.display = 'block';
                     };
@@ -2080,18 +2096,18 @@ if (file_exists('nav.php')) {
                 }
             });
 
-            removeProofBtn.addEventListener('click', function() {
+            removeProofBtn.addEventListener('click', function () {
                 paymentProof.value = '';
                 paymentPreview.style.display = 'none';
                 previewImage.src = '';
             });
 
             // Update the confirm reservation button click handler
-            document.getElementById('confirmReservation').addEventListener('click', function() {
+            document.getElementById('confirmReservation').addEventListener('click', function () {
                 const form = document.getElementById('reservationForm');
                 const isUltimate = document.getElementById('isUltimatePackage').value === "1";
                 const policyCheck = document.getElementById('policyCheck');
-                
+
                 // Validate policy check
                 if (!policyCheck.checked) {
                     Swal.fire({
@@ -2105,33 +2121,33 @@ if (file_exists('nav.php')) {
 
 
                 // Get all reservation details
-            const packageName = document.querySelector('.package-name').textContent;
-            const date = document.getElementById('reservationDate').value;
-            const time = document.getElementById('arrivalTime').value;
-            const duration = document.getElementById('duration').value;
-            const guests = document.getElementById('guestCount').value;
+                const packageName = document.querySelector('.package-name').textContent;
+                const date = document.getElementById('reservationDate').value;
+                const time = document.getElementById('arrivalTime').value;
+                const duration = document.getElementById('duration').value;
+                const guests = document.getElementById('guestCount').value;
                 const basePrice = parseFloat(document.getElementById('basePrice').value);
-                
+
                 // Calculate extra costs
                 const extraHours = Math.max(0, parseInt(duration) - 4);
                 const extraHoursCost = extraHours * 2000;
-                
+
                 const capacity = parseInt(document.getElementById('maxGuests').textContent);
                 const extraGuests = Math.max(0, parseInt(guests) - capacity);
                 const extraGuestsCost = extraGuests * 1000;
-                
+
                 const totalPrice = basePrice + extraHoursCost + extraGuestsCost;
-                
+
                 // Get payment details for ultimate packages
                 let paymentDetails = '';
                 if (isUltimate) {
                     const paymentOption = document.getElementById('paymentOption').value;
                     const paymentMethod = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
                     const referenceNumber = document.getElementById('referenceNumber').value;
-                    
+
                     const partialAmount = totalPrice * 0.5;
                     const remainingBalance = totalPrice - partialAmount;
-                    
+
                     paymentDetails = `
                         <hr>
                         <h6 class="mb-3">Payment Information</h6>
@@ -2150,7 +2166,7 @@ if (file_exists('nav.php')) {
                     month: 'long',
                     day: 'numeric'
                 });
-                
+
                 const formattedTime = new Date(`2000/01/01 ${time}`).toLocaleTimeString('en-US', {
                     hour: 'numeric',
                     minute: 'numeric',
@@ -2158,35 +2174,35 @@ if (file_exists('nav.php')) {
                 });
 
                 // Update summary modal content
-            document.getElementById('summaryPackage').textContent = packageName;
+                document.getElementById('summaryPackage').textContent = packageName;
                 document.getElementById('summaryDate').textContent = formattedDate;
                 document.getElementById('summaryTime').textContent = formattedTime;
                 document.getElementById('summaryDuration').textContent = `${duration} hours`;
-            document.getElementById('summaryGuests').textContent = guests;
+                document.getElementById('summaryGuests').textContent = guests;
                 document.getElementById('summaryBasePrice').textContent = `₱${formatNumber(basePrice.toFixed(2))}`;
-                
+
                 // Handle extra hours
                 const extraHoursDiv = document.getElementById('summaryExtraHours');
                 const extraHoursCostSpan = document.getElementById('summaryHoursCost');
                 if (extraHours > 0) {
                     extraHoursDiv.style.display = 'block';
                     extraHoursCostSpan.textContent = `₱${formatNumber(extraHoursCost.toFixed(2))} (${extraHours} hours)`;
-            } else {
+                } else {
                     extraHoursDiv.style.display = 'none';
                 }
-                
+
                 // Handle extra guests
                 const extraGuestsDiv = document.getElementById('summaryExtraGuests');
                 const extraGuestsCostSpan = document.getElementById('summaryGuestsCost');
                 if (extraGuests > 0) {
                     extraGuestsDiv.style.display = 'block';
                     extraGuestsCostSpan.textContent = `₱${formatNumber(extraGuestsCost.toFixed(2))} (${extraGuests} guests)`;
-            } else {
+                } else {
                     extraGuestsDiv.style.display = 'none';
                 }
-                
+
                 document.getElementById('summaryTotal').textContent = `₱${formatNumber(totalPrice.toFixed(2))}`;
-                
+
                 // Handle payment details for ultimate packages
                 const paymentSummary = document.getElementById('summaryPayment');
                 if (isUltimate) {
@@ -2195,7 +2211,7 @@ if (file_exists('nav.php')) {
                     const referenceNumber = document.getElementById('referenceNumber').value;
                     const partialAmount = totalPrice * 0.5;
                     const remainingBalance = totalPrice - partialAmount;
-                    
+
                     paymentSummary.innerHTML = `
                         <hr>
                         <h6 class="mb-3">Payment Information</h6>
@@ -2205,45 +2221,45 @@ if (file_exists('nav.php')) {
                         <p><strong>Amount Paid:</strong> ₱${formatNumber(paymentOption === 'full' ? totalPrice.toFixed(2) : partialAmount.toFixed(2))}</p>
                         ${paymentOption === 'partial' ? `<p class="text-danger"><strong>Remaining Balance:</strong> ₱${formatNumber(remainingBalance.toFixed(2))}</p>` : ''}
                     `;
-                    
+
                     // For ultimate packages, go straight to booking summary
                     closeAllModals();
                     const summaryModal = new bootstrap.Modal(document.getElementById('bookingSummaryModal'));
                     summaryModal.show();
-            } else {
+                } else {
                     paymentSummary.innerHTML = '';
 
                     // For regular packages, show advance order confirmation dialog
-                closeAllModals();
+                    closeAllModals();
 
-                // Show advance order confirmation dialog
-                Swal.fire({
-                    title: 'Advance Order',
-                    text: 'Do you want to make an advance order?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonText: 'Yes, make advance order',
-                    cancelButtonText: 'No, continue to summary',
-                    confirmButtonColor: '#b6860a',
-                    cancelButtonColor: '#6c757d'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Store booking details in session storage
-                        const bookingDetails = {
-                            packageId: document.getElementById('packageId').value,
-                            packageName: document.querySelector('.package-name').textContent,
-                            date: document.getElementById('reservationDate').value,
-                            time: document.getElementById('arrivalTime').value,
-                            duration: document.getElementById('duration').value,
-                            guests: document.getElementById('guestCount').value,
-                            isUltimate: "0",
+                    // Show advance order confirmation dialog
+                    Swal.fire({
+                        title: 'Advance Order',
+                        text: 'Do you want to make an advance order?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, make advance order',
+                        cancelButtonText: 'No, continue to summary',
+                        confirmButtonColor: '#b6860a',
+                        cancelButtonColor: '#6c757d'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Store booking details in session storage
+                            const bookingDetails = {
+                                packageId: document.getElementById('packageId').value,
+                                packageName: document.querySelector('.package-name').textContent,
+                                date: document.getElementById('reservationDate').value,
+                                time: document.getElementById('arrivalTime').value,
+                                duration: document.getElementById('duration').value,
+                                guests: document.getElementById('guestCount').value,
+                                isUltimate: "0",
                                 basePrice: document.getElementById('basePrice').value,
                                 totalAmount: totalPrice
-                        };
+                            };
 
-                        // Store booking details
-                        sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
-                        
+                            // Store booking details
+                            sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
+
                             // Redirect to cafe page with booking details in URL parameters
                             const params = new URLSearchParams({
                                 booking: 'true',
@@ -2255,43 +2271,43 @@ if (file_exists('nav.php')) {
                                 total: bookingDetails.totalAmount
                             });
                             window.location.href = 'cafes.php?' + params.toString();
-            } else {
-                        // Continue with showing booking summary
-                        closeAllModals();
+                        } else {
+                            // Continue with showing booking summary
+                            closeAllModals();
 
-                        // Show the summary modal
-                        const summaryModal = new bootstrap.Modal(document.getElementById('bookingSummaryModal'));
-                        summaryModal.show();
-                    }
-                });
+                            // Show the summary modal
+                            const summaryModal = new bootstrap.Modal(document.getElementById('bookingSummaryModal'));
+                            summaryModal.show();
+                        }
+                    });
                 }
             });
 
             // Update the policy modal link handler
-            document.querySelector('[data-bs-target="#policyModal"]').addEventListener('click', function(e) {
+            document.querySelector('[data-bs-target="#policyModal"]').addEventListener('click', function (e) {
                 e.preventDefault();
-                
+
                 // Close all modals before showing policy modal
                 closeAllModals();
-                
+
                 // Show policy modal
                 const policyModal = new bootstrap.Modal(document.getElementById('policyModal'));
                 policyModal.show();
             });
 
             // Update the policy modal's "I Understand" button
-            document.querySelector('#policyModal .btn-warning').addEventListener('click', function() {
+            document.querySelector('#policyModal .btn-warning').addEventListener('click', function () {
                 // Close policy modal
                 closeAllModals();
-                
+
                 // Reopen reservation modal
-            const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
-            reservationModal.show();
-        });
+                const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+                reservationModal.show();
+            });
 
             // Add time validation
             const arrivalTimeInput = document.getElementById('arrivalTime');
-            arrivalTimeInput.addEventListener('change', function() {
+            arrivalTimeInput.addEventListener('change', function () {
                 const selectedTime = this.value;
                 if (!selectedTime) return; // Don't validate if empty
 
@@ -2342,7 +2358,7 @@ if (file_exists('nav.php')) {
             });
 
             // Add duration change validation
-            document.getElementById('duration').addEventListener('change', function() {
+            document.getElementById('duration').addEventListener('change', function () {
                 const arrivalTime = document.getElementById('arrivalTime').value;
                 if (arrivalTime) {
                     const [hours, minutes] = arrivalTime.split(':');
@@ -2366,23 +2382,23 @@ if (file_exists('nav.php')) {
                         this.value = '4'; // Reset to standard duration
                         updateTotalAmount(); // Update the total amount
                         return;
+                    }
                 }
-            }
-        });
+            });
 
             // Update the confirm booking button handler
-            document.getElementById('confirmBookingBtn').addEventListener('click', function(e) {
+            document.getElementById('confirmBookingBtn').addEventListener('click', function (e) {
                 e.preventDefault(); // Prevent form submission
                 const form = document.getElementById('reservationForm');
                 const formData = new FormData(form);
                 const params = new URLSearchParams();
-                
+
                 // Get package name from the page
                 const packageName = document.querySelector('.package-name')?.textContent;
                 if (packageName) {
                     params.append('package_name', packageName);
                 }
-                
+
                 // Add all form data to URL parameters
                 for (let [key, value] of formData.entries()) {
                     // Skip file inputs as they can't be sent via URL
@@ -2390,7 +2406,7 @@ if (file_exists('nav.php')) {
                         params.append(encodeURIComponent(key), encodeURIComponent(value));
                     }
                 }
-                
+
                 // Validate required fields
                 const requiredFields = ['package_id', 'date', 'guest_count', 'arrival_time'];
                 const missingFields = [];
@@ -2399,7 +2415,7 @@ if (file_exists('nav.php')) {
                         missingFields.push(field.replace('_', ' '));
                     }
                 });
-                
+
                 if (missingFields.length > 0) {
                     Swal.fire({
                         icon: 'error',
@@ -2409,20 +2425,20 @@ if (file_exists('nav.php')) {
                     });
                     return;
                 }
-                
+
                 // Get the base URL and add parameters
                 const baseUrl = 'table_payment_process.php';
                 const url = `${baseUrl}?${params.toString()}`;
-                
+
                 // Redirect to payment page with URL parameters
                 window.location.href = url;
             });
 
             // Update the "Make Changes" button in booking summary
-            document.querySelector('#bookingSummaryModal .btn-secondary').addEventListener('click', function() {
+            document.querySelector('#bookingSummaryModal .btn-secondary').addEventListener('click', function () {
                 // Close summary modal
                 closeAllModals();
-                
+
                 // Reopen reservation modal
                 const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
                 reservationModal.show();
@@ -2433,7 +2449,7 @@ if (file_exists('nav.php')) {
             if (packageDetailsModal) {
                 packageDetailsModal.addEventListener('show.bs.modal', function (event) {
                     const button = event.relatedTarget;
-                    
+
                     // Get data from button attributes
                     const packageName = button.getAttribute('data-package-name');
                     const description = button.getAttribute('data-package-description');
@@ -2448,7 +2464,7 @@ if (file_exists('nav.php')) {
                     document.getElementById('detailsCapacity').textContent = `${capacity} persons`;
                     document.getElementById('detailsTables').textContent = `${tables} tables`;
                     document.getElementById('detailsDescription').textContent = description;
-                    
+
                     // Format and display price
                     const formattedPrice = new Intl.NumberFormat('en-PH', {
                         style: 'currency',
@@ -2460,10 +2476,10 @@ if (file_exists('nav.php')) {
         });
 
         // Update the ultimate reserve button handler
-        document.getElementById('ultimateReserveBtn').addEventListener('click', function() {
+        document.getElementById('ultimateReserveBtn').addEventListener('click', function () {
             // Close ultimate package modal
             closeAllModals();
-            
+
             // Show reservation modal
             const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
             reservationModal.show();
@@ -2482,10 +2498,10 @@ if (file_exists('nav.php')) {
         }
 
         // Update the payment method change handler
-        document.getElementById('paymentMethod').addEventListener('change', function() {
+        document.getElementById('paymentMethod').addEventListener('change', function () {
             const selectedMethod = this.options[this.selectedIndex].text;
             const referenceInput = document.getElementById('referenceNumber');
-            
+
             // Update placeholder and pattern based on payment method
             if (selectedMethod === 'GCash') {
                 referenceInput.placeholder = '13-digit reference number';
@@ -2499,10 +2515,10 @@ if (file_exists('nav.php')) {
         });
 
         // Add reference number input validation
-        document.getElementById('referenceNumber').addEventListener('input', function() {
+        document.getElementById('referenceNumber').addEventListener('input', function () {
             const selectedMethod = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
             const referenceNumber = this.value;
-            
+
             if (selectedMethod === 'GCash') {
                 // Only allow digits for GCash
                 this.value = this.value.replace(/[^\d]/g, '');
@@ -2513,7 +2529,7 @@ if (file_exists('nav.php')) {
         });
 
         // Update the confirm reservation button handler to include reference number validation
-        document.getElementById('confirmReservation').addEventListener('click', function() {
+        document.getElementById('confirmReservation').addEventListener('click', function () {
             // ... existing validation code ...
 
             if (isUltimate) {
@@ -2546,7 +2562,7 @@ if (file_exists('nav.php')) {
         if (ultimatePackageModal) {
             ultimatePackageModal.addEventListener('show.bs.modal', function (event) {
                 const button = event.relatedTarget;
-                
+
                 // Get data from button attributes
                 const packageName = button.getAttribute('data-package-name');
                 const description = button.getAttribute('data-package-description');
@@ -2554,18 +2570,18 @@ if (file_exists('nav.php')) {
                 const imagePath = button.getAttribute('data-package-image');
                 const price = button.getAttribute('data-package-price');
                 const menuItems = button.getAttribute('data-package-menu-items');
-                
+
                 console.log('Menu items from data attribute:', menuItems); // Debug log
-                
+
                 // Update package info
                 document.getElementById('ultimatePackageName').textContent = packageName;
                 document.getElementById('ultimateCapacity').textContent = capacity + ' persons';
-                
+
                 // Populate carousel with main image only
                 const carouselInner = document.querySelector('#packageImageCarousel .carousel-inner');
                 if (carouselInner) {
                     carouselInner.innerHTML = ''; // Clear existing items
-                    
+
                     // Add main image as the only slide
                     if (imagePath) {
                         const mainSlide = document.createElement('div');
@@ -2596,13 +2612,13 @@ if (file_exists('nav.php')) {
                                 // If not valid JSON, treat as comma-separated string
                                 menuItemsArray = menuItems.split(',').map(item => item.trim());
                             }
-                            
+
                             // Create list items
                             const menuList = menuItemsArray
                                 .filter(item => item) // Remove empty items
                                 .map(item => `<li class="menu-item"><i class="fas fa-utensils me-2"></i>${item}</li>`)
                                 .join('');
-                                
+
                             menuItemsContainer.innerHTML = menuList || '<li class="text-muted">No menu items specified for this package.</li>';
                         } catch (error) {
                             console.error('Error processing menu items:', error);
@@ -2618,7 +2634,7 @@ if (file_exists('nav.php')) {
         // Update the handleReserveClick function
         function handleReserveClick(event) {
             event.preventDefault();
-            
+
             // Make an AJAX call to check login status
             fetch('check_login.php')
                 .then(response => response.json())
@@ -2626,7 +2642,7 @@ if (file_exists('nav.php')) {
                     if (!data.loggedIn) {
                         // Store current URL in session storage to redirect back after login
                         sessionStorage.setItem('redirectAfterLogin', window.location.href);
-                        
+
                         // Show login required message
                         const loginMessage = document.createElement('div');
                         loginMessage.className = 'login-message';
@@ -2707,28 +2723,28 @@ if (file_exists('nav.php')) {
         document.head.appendChild(style);
 
         // Handle package details modal
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Add event listeners to all buttons that open the package details modal
             const detailButtons = document.querySelectorAll('[data-bs-target="#packageDetailsModal"]');
             detailButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     // Get package details from data attributes
                     const packageName = this.getAttribute('data-package-name');
                     const description = this.getAttribute('data-package-description');
                     const capacity = this.getAttribute('data-package-capacity');
-                    
+
                     // Get main image path
                     const mainImage = this.getAttribute('data-package-image');
-                    
+
                     // Update modal content
                     document.getElementById('detailsPackageName').textContent = packageName;
                     document.getElementById('detailsCapacity').textContent = capacity + ' persons';
                     document.getElementById('detailsDescription').textContent = description || 'No description available';
-                    
+
                     // Clear existing carousel items
                     const carouselInner = document.querySelector('#packageDetailsCarousel .carousel-inner');
                     carouselInner.innerHTML = '';
-                    
+
                     // Add main image to carousel
                     if (mainImage) {
                         const mainImageItem = document.createElement('div');
@@ -2736,13 +2752,13 @@ if (file_exists('nav.php')) {
                         mainImageItem.innerHTML = `<img src="../../uploads/table_packages/${mainImage}" class="d-block w-100" alt="${packageName}" style="height: 300px; object-fit: cover;">`;
                         carouselInner.appendChild(mainImageItem);
                     }
-                    
+
                     // Show the modal
                     const packageModal = new bootstrap.Modal(document.getElementById('packageDetailsModal'));
                     packageModal.show();
                 });
             });
-            
+
             // Update all reserve buttons
             const reserveButtons = document.querySelectorAll('.reserve-btn');
             reserveButtons.forEach(button => {
@@ -2758,4 +2774,5 @@ if (file_exists('nav.php')) {
         });
     </script>
 </body>
+
 </html>
