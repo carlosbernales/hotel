@@ -48058,3 +48058,476 @@ Stack trace:
 [21-Nov-2025 13:57:22 UTC] Database connected successfully to: hotelms
 [21-Nov-2025 13:57:23 UTC] Database connected successfully to: hotelms
 [21-Nov-2025 14:01:25 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 00:56:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 08:56:32 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[22-Nov-2025 08:56:32 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[22-Nov-2025 08:56:32 Asia/Manila] Index idx_messages_status already exists on table messages
+[22-Nov-2025 08:56:32 Asia/Manila] Index idx_activities_type already exists on table activities
+[22-Nov-2025 08:56:32 Asia/Manila] Index idx_customers_vip already exists on table customers
+[22-Nov-2025 08:56:32 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[22-Nov-2025 08:56:32 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[22-Nov-2025 08:56:32 Asia/Manila] Current date: 2025-11-22
+[22-Nov-2025 08:56:32 Asia/Manila] Week start: 2025-11-17
+[22-Nov-2025 08:56:32 Asia/Manila] Week end: 2025-11-23
+[22-Nov-2025 08:56:32 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[22-Nov-2025 08:56:32 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[22-Nov-2025 08:56:32 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[22-Nov-2025 08:56:32 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 2
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 0
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 1
+)
+
+[22-Nov-2025 08:56:32 Asia/Manila] Weekly labels: Array
+(
+    [0] => 16
+    [1] => 17
+    [2] => 18
+    [3] => 19
+    [4] => 20
+    [5] => 21
+    [6] => 22
+)
+
+[22-Nov-2025 08:56:32 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[22-Nov-2025 08:56:32 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[22-Nov-2025 08:56:32 Asia/Manila] Total records found: 0
+[22-Nov-2025 08:56:32 Asia/Manila] Final days array: []
+[22-Nov-2025 08:56:32 Asia/Manila] Final revenue array: []
+[22-Nov-2025 08:56:32 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[22-Nov-2025 08:56:32 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[22-Nov-2025 00:56:39 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 00:56:39 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 00:57:33 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 00:58:13 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:03:57 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:07:19 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:07:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:07:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:07:34 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:18:02 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:18:10 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:19:27 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:19:31 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:19:57 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:20:04 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:20:41 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:21:02 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:21:06 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:22:41 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:22:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:23:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:28:02 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:29:54 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:30:47 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:31:05 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:31:51 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:31:56 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:33:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:34:27 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:56:28 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 01:59:17 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:01:01 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:01:17 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:01:29 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:01:51 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:03:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:04:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:04:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:05:01 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:05:26 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:06:06 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:06:50 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:08:21 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:08:50 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:15:15 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:15:24 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:16:53 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:17:02 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:17:26 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:19:36 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:19:47 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:20:04 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:22:44 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:22:49 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:23:09 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:23:24 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:23:39 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:23:59 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:24:44 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:27:00 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:29:01 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:29:13 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:31:14 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:31:36 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:34:16 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:34:27 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:35:24 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:35:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:37:40 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:37:51 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:37:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:38:17 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:38:38 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:39:07 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:39:24 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:54:29 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:55:24 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:55:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:55:35 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:56:44 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:56:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:56:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:58:17 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:58:19 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 02:58:36 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:00:33 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:00:42 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:01:06 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:08:53 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:11:32 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:11:53 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:12:01 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:12:20 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:12:34 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:13:23 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:14:49 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:15:50 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:16:59 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:17:11 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:18:50 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 11:18:50 Asia/Manila] PHP Warning:  Undefined variable $item in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 11:18:50 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 11:18:50 Asia/Manila] PHP Warning:  Undefined variable $item in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 11:18:50 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 03:19:00 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:19:43 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 11:19:43 Asia/Manila] PHP Warning:  Undefined variable $item in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 11:19:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 11:19:43 Asia/Manila] PHP Warning:  Undefined variable $item in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 11:19:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 419
+[22-Nov-2025 03:19:56 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:23:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:25:05 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:25:29 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:25:49 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:31:52 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:32:09 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:32:23 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:32:33 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:32:54 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:33:11 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:33:20 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:33:38 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:34:11 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:34:44 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:35:11 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:36:34 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:39:43 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:40:27 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:40:40 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:40:53 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:44:53 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:46:22 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:46:23 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:46:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:47:25 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:47:55 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:48:05 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:48:21 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:48:52 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:48:59 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:49:17 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:49:23 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:49:42 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:50:12 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:50:24 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:50:33 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:55:54 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:55:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:56:07 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:56:11 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:56:13 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:56:15 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:56:50 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:58:49 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:59:02 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 03:59:23 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 504
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 505
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 510
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 513
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 526
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 526
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 534
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 540
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 540
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 549
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 549
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 555
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 564
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 570
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 571
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 579
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 580
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 587
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 587
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 593
+[22-Nov-2025 11:59:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 593
+[22-Nov-2025 03:59:28 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 504
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 505
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 510
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 513
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 526
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 526
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 534
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 540
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 540
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 549
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 549
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 555
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 564
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 570
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 571
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 579
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 580
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 587
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 587
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 593
+[22-Nov-2025 11:59:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 593
+[22-Nov-2025 03:59:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 504
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 505
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 510
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 513
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 526
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 526
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 534
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 540
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 540
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 549
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 549
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 555
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 564
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 570
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 571
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 579
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 580
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 587
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 587
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 593
+[22-Nov-2025 11:59:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 593
+[22-Nov-2025 04:00:22 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:00:29 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:00:39 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:00:42 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:01:06 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:01:09 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:01:29 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:02:14 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 12:02:14 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[22-Nov-2025 12:02:14 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[22-Nov-2025 12:02:14 Asia/Manila] Index idx_messages_status already exists on table messages
+[22-Nov-2025 12:02:14 Asia/Manila] Index idx_activities_type already exists on table activities
+[22-Nov-2025 12:02:14 Asia/Manila] Index idx_customers_vip already exists on table customers
+[22-Nov-2025 12:02:14 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[22-Nov-2025 12:02:14 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[22-Nov-2025 12:02:14 Asia/Manila] Current date: 2025-11-22
+[22-Nov-2025 12:02:14 Asia/Manila] Week start: 2025-11-17
+[22-Nov-2025 12:02:14 Asia/Manila] Week end: 2025-11-23
+[22-Nov-2025 12:02:14 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[22-Nov-2025 12:02:14 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[22-Nov-2025 12:02:14 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[22-Nov-2025 12:02:14 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 2
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 0
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 1
+)
+
+[22-Nov-2025 12:02:14 Asia/Manila] Weekly labels: Array
+(
+    [0] => 16
+    [1] => 17
+    [2] => 18
+    [3] => 19
+    [4] => 20
+    [5] => 21
+    [6] => 22
+)
+
+[22-Nov-2025 12:02:14 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[22-Nov-2025 12:02:14 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[22-Nov-2025 12:02:14 Asia/Manila] Total records found: 0
+[22-Nov-2025 12:02:14 Asia/Manila] Final days array: []
+[22-Nov-2025 12:02:14 Asia/Manila] Final revenue array: []
+[22-Nov-2025 12:02:14 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[22-Nov-2025 12:02:14 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[22-Nov-2025 04:02:14 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:02:48 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:02:49 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 04:02:50 UTC] Database connected successfully to: hotelms

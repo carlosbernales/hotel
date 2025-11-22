@@ -88,7 +88,7 @@ $result = $conn->query($query);
         --border-light: #eeeeee;
     }
 
-    /* --- General Layout and Components --- */
+    /* --- General Layout and Components (Unchanged) --- */
     .breadcrumb-custom {
         background-color: var(--background-white);
         padding: 15px 20px;
@@ -119,7 +119,7 @@ $result = $conn->query($query);
         background-color: #C39D30;
     }
 
-    /* --- General Card Styling (info-card) --- */
+    /* --- General Card Styling (info-card) (Unchanged) --- */
     .info-card {
         background-color: var(--background-white);
         padding: 20px;
@@ -131,7 +131,7 @@ $result = $conn->query($query);
         color: var(--text-dark);
     }
 
-    /* --- Table Type Grid (Container) --- */
+    /* --- Table Type Grid (Container) (Unchanged) --- */
     .table-type-grid {
         display: grid;
         /* 3 columns on typical desktop, adapting for smaller screens */
@@ -139,7 +139,7 @@ $result = $conn->query($query);
         gap: 20px;
     }
 
-    /* --- Individual Table Type Card --- */
+    /* --- Individual Table Type Card (Unchanged) --- */
     .table-type-card {
         border: 1px solid var(--border-light);
         border-radius: 8px;
@@ -164,7 +164,7 @@ $result = $conn->query($query);
         display: block;
     }
 
-    /* --- Main Status Badge (Occupied/Available) --- */
+    /* --- Main Status Badge (Occupied/Available) (Unchanged) --- */
     .table-status-badge {
         position: absolute;
         top: 10px;
@@ -188,28 +188,48 @@ $result = $conn->query($query);
         color: var(--text-dark);
     }
 
-    /* --- Card Actions --- */
+    /* --- Card Actions (REVISED) --- */
     .table-actions {
         position: absolute;
         top: 10px;
         right: 10px;
+        z-index: 10;
+        /* Ensure buttons are above carousel controls */
+        display: flex;
+        gap: 5px;
     }
 
-    .table-actions i {
+    /* Base style for action buttons (Edit icon and Delete button) */
+    .table-actions .action-btn-edit,
+    .table-actions .action-btn-delete {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         background-color: rgba(0, 0, 0, 0.6);
         color: var(--background-white);
-        padding: 8px;
+        border: none;
+        padding: 0;
         border-radius: 50%;
         cursor: pointer;
-        margin-left: 5px;
-        transition: background-color 0.2s;
+        transition: background-color 0.2s, transform 0.2s;
+        font-size: 0.8em;
     }
 
-    .table-actions i:hover {
+    .table-actions .action-btn-edit:hover,
+    .table-actions .action-btn-delete:hover {
         background-color: var(--primary-gold);
+        transform: scale(1.05);
     }
 
-    /* --- Card Body and Content --- */
+    .table-actions .action-btn-delete {
+        /* Ensure the button element looks the same as the i tag */
+        line-height: 1; 
+    }
+
+
+    /* --- Card Body and Content (Mostly Unchanged) --- */
     .table-card-body {
         padding: 15px;
     }
@@ -227,7 +247,7 @@ $result = $conn->query($query);
         margin-bottom: 10px;
     }
 
-    /* --- New Details Grid (Duration, Max Pax, Time Limit, Max Guests) --- */
+    /* --- New Details Grid (Unchanged) --- */
     .table-details-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -251,7 +271,7 @@ $result = $conn->query($query);
         margin-right: 5px;
     }
 
-    /* --- Is Available Row (0/1 Status) --- */
+    /* --- Is Available Row (0/1 Status) (Unchanged) --- */
     .is-available-row {
         font-size: 0.9em;
         margin-bottom: 10px;
@@ -280,7 +300,7 @@ $result = $conn->query($query);
         /* Light Red background */
     }
 
-    /* --- Description and Notes --- */
+    /* --- Description and Notes (Unchanged) --- */
     .table-description-area {
         padding-bottom: 10px;
     }
@@ -341,136 +361,138 @@ $result = $conn->query($query);
         <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
             <div>
                 <i class="fas fa-home"></i>
-                <span>Table Management</span>
+                <span>Event Management</span>
             </div>
             <a class="btn table-add-btn" data-bs-toggle="modal" data-bs-target="#addEvent">
-                Add Table
+                Add Event
             </a>
         </div>
 
         <div class="info-card" style="margin-bottom: 40px;">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="m-0">Table Types</h5>
+                <h5 class="m-0">Event Types</h5>
             </div>
 
             <div class="table-type-grid">
 
-                <?php while ($row = $result->fetch_assoc()): ?>
-                    <?php
-                    // Image paths setup (same as original)
-                    $img1 = "../Admin/adminBackend/event_packages_images/" . $row['image_path'];
-                    $img2 = "../Admin/adminBackend/event_packages_images/" . $row['image_path2'];
-                    $img3 = "../Admin/adminBackend/event_packages_images/" . $row['image_path3'];
+    <?php
+    // Check if the query returned any rows
+    if ($result->num_rows > 0):
+        // If rows exist, proceed with the card generation loop
+        while ($row = $result->fetch_assoc()):
+            // ... (The rest of the calculation logic remains here, like image paths, status classes, etc.) ...
+            
+            $img1 = "../Admin/adminBackend/event_packages_images/" . $row['image_path'];
+            $img2 = "../Admin/adminBackend/event_packages_images/" . $row['image_path2'];
+            $img3 = "../Admin/adminBackend/event_packages_images/" . $row['image_path3'];
 
-                    // Logic for is_available badge
-                    // Assuming 'is_available' is a column with 0/1, and 'status' is a column with 'Occupied'/'Available'
-                    $is_available_status = (intval($row['is_available']) > 0) ? 'Available' : 'Not Available';
-                    $is_available_class = (intval($row['is_available']) > 0) ? 'available' : 'unavailable';
+            $is_available_value = intval($row['is_available']);
+            $is_available_status = ($is_available_value > 0) ? 'Available' : 'Not Available';
+            $is_available_class = ($is_available_value > 0) ? 'available' : 'unavailable';
 
-                    // Logic for main status badge (Occupied/Available)
-                    $main_status_text = $row['status']; // Assuming this already holds 'Occupied' or 'Available'
-                    $main_status_class = (strtolower($main_status_text) === 'available') ? 'available' : 'occupied';
+            $main_status_text = $row['status'];
+            $main_status_lower = strtolower($main_status_text);
+            $main_status_class = ($main_status_lower === 'available') ? 'available' : 'occupied';
 
-                    // Format Duration and Time Limit for display (assuming they are in minutes or similar format)
-                    $duration_display = !empty($row['duration']) ? $row['duration'] . '' : 'N/A';
-                    $time_limit_display = !empty($row['time_limit']) ? $row['time_limit'] . '' : 'N/A';
-                    ?>
+            $duration_display = !empty($row['duration']) ? $row['duration'] . '' : 'N/A';
+            $time_limit_display = !empty($row['time_limit']) ? $row['time_limit'] . '' : 'N/A';
+            ?>
 
-                    <div class="table-type-card">
-
-                        <div id="carousel-<?php echo $row['id']; ?>" class="carousel slide table-card-header"
-                            data-bs-ride="carousel">
-                            <div class="carousel-inner">
-
-                                <div class="carousel-item active">
-                                    <img src="<?php echo $img1; ?>" class="table-type-img" alt="Image 1">
-                                </div>
-
-                                <?php if (!empty($row['image_path2'])): ?>
-                                    <div class="carousel-item">
-                                        <img src="<?php echo $img2; ?>" class="table-type-img" alt="Image 2">
-                                    </div>
-                                <?php endif; ?>
-
-                                <?php if (!empty($row['image_path3'])): ?>
-                                    <div class="carousel-item">
-                                        <img src="<?php echo $img3; ?>" class="table-type-img" alt="Image 3">
-                                    </div>
-                                <?php endif; ?>
-
-                            </div>
-
-                            <button class="carousel-control-prev" type="button"
-                                data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon"></span>
-                            </button>
-
-                            <button class="carousel-control-next" type="button"
-                                data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="next">
-                                <span class="carousel-control-next-icon"></span>
-                            </button>
-
-                            <div class="table-status-badge <?php echo $main_status_class; ?>">
-                                <?php echo $main_status_text; ?>
-                            </div>
-
-                            <div class="table-actions">
-                                <i class="fas fa-edit" data-bs-toggle="modal"
-                                    data-bs-target="#editModal<?php echo $row['id']; ?>"></i>
-
-                                <i class="fas fa-trash-alt"></i>
-                            </div>
+            <div class="table-type-card">
+                <div id="carousel-<?php echo $row['id']; ?>" class="carousel slide table-card-header">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="<?php echo $img1; ?>" class="table-type-img" alt="Image 1">
                         </div>
-
-                        <div class="table-card-body">
-                            <h6 class="table-name"><?php echo $row['name']; ?></h6>
-                            <p class="table-price">₱<?php echo number_format($row['price'], 2); ?></p>
-
-                            <div class="table-details-grid mb-3">
-                                <p class="detail-item">
-                                    <span class="detail-label">Duration:</span> <?php echo $duration_display; ?>
-                                </p>
-                                <p class="detail-item">
-                                    <span class="detail-label">Max Pax:</span> <?php echo $row['max_pax']; ?>
-                                </p>
-                                <p class="detail-item">
-                                    <span class="detail-label">Time Limit:</span> <?php echo $time_limit_display; ?>
-                                </p>
-                                <p class="detail-item">
-                                    <span class="detail-label">Max Guests:</span> <?php echo $row['max_guests']; ?>
-                                </p>
+                        <?php if (!empty($row['image_path2'])): ?>
+                            <div class="carousel-item">
+                                <img src="<?php echo $img2; ?>" class="table-type-img" alt="Image 2">
                             </div>
-
-                            <p class="is-available-row">
-                                <span class="detail-label">Availability:</span>
-                                <span class="is-available-status-text <?php echo $is_available_class; ?>">
-                                    <?php echo $is_available_status; ?>
-                                </span>
-                            </p>
-
-                            <div class="table-description-area">
-                                <p class="table-description">
-                                    <span class="detail-label">Description: </span>
-                                    <?php echo $row['description']; ?>
-                                </p>
+                        <?php endif; ?>
+                        <?php if (!empty($row['image_path3'])): ?>
+                            <div class="carousel-item">
+                                <img src="<?php echo $img3; ?>" class="table-type-img" alt="Image 3">
                             </div>
-
-                            <p class="table-notes">
-                                <span class="detail-label">Notes:</span> <?php echo $row['notes']; ?>
-                            </p>
-                        </div>
-
-
+                        <?php endif; ?>
                     </div>
 
+                    <button class="carousel-control-prev" type="button"
+                        data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button"
+                        data-bs-target="#carousel-<?php echo $row['id']; ?>" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
 
-                    <div class="modal fade" id="editModal<?php echo $row['id']; ?>" tabindex="-1"
+                    <div class="table-status-badge <?php echo $main_status_class; ?>">
+                        <?php echo $main_status_text; ?>
+                    </div>
+                    
+                    <div class="table-actions">
+                        <i class="fas fa-edit action-btn-edit" data-bs-toggle="modal"
+                            data-bs-target="#editModal<?php echo $row['id']; ?>" title="Edit Item"></i>
+
+                        <form method="POST" action="../Admin/adminBackend/event_management_delete.php?id=<?= $row['id'] ?>"
+                            style="display: inline;">
+                            <button type="submit" class="action-btn-delete"
+                                onclick="return confirm('Are you sure you want to delete this room type?')"
+                                title="Delete Item">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+                <div class="table-card-body">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <h6 class="table-name"><?php echo $row['name']; ?></h6>
+                    </div>
+                    <p class="table-price">₱<?php echo number_format($row['price'], 2); ?></p>
+
+                    <div class="table-details-grid mb-3">
+                        <p class="detail-item">
+                            <span class="detail-label">Duration:</span> <?php echo $duration_display; ?>
+                        </p>
+                        <p class="detail-item">
+                            <span class="detail-label">Max Pax:</span> <?php echo $row['max_pax']; ?>
+                        </p>
+                        <p class="detail-item">
+                            <span class="detail-label">Time Limit:</span> <?php echo $time_limit_display; ?>
+                        </p>
+                        <p class="detail-item">
+                            <span class="detail-label">Max Guests:</span> <?php echo $row['max_guests']; ?>
+                        </p>
+                    </div>
+
+                    <p class="is-available-row">
+                        <span class="detail-label">Availability:</span>
+                        <span class="is-available-status-text <?php echo $is_available_class; ?>">
+                            <?php echo $is_available_status; ?>
+                        </span>
+                    </p>
+
+                    <div class="table-description-area">
+                        <p class="table-description">
+                            <span class="detail-label">Description: </span>
+                            <?php echo $row['description']; ?>
+                        </p>
+                    </div>
+
+                    <p class="table-notes">
+                        <span class="detail-label">Notes:</span> <?php echo $row['notes']; ?>
+                    </p>
+                </div>
+
+            </div>
+            <div class="modal fade" id="editModal<?php echo $row['id']; ?>" tabindex="-1"
     aria-labelledby="editModalLabel<?php echo $row['id']; ?>" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content package-modal">
 
             <form method="POST" enctype="multipart/form-data"
-                action="../Admin/adminBackend/edit_table_package.php?id=<?php echo $row['id']; ?>">
+                action="../Admin/adminBackend/event_management_edit.php?id=<?php echo $row['id']; ?>">
 
                 <div class="modal-header package-modal-header">
                     <h5 class="modal-title fw-bold" id="editModalLabel<?php echo $row['id']; ?>">
@@ -499,7 +521,7 @@ $result = $conn->query($query);
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label package-label">Duration</label>
-                            <input type="text" name="duration" class="form-control package-input"
+                            <input type="number" name="duration" class="form-control package-input"
                                 value="<?php echo htmlspecialchars($row['duration']); ?>">
                         </div>
                     </div>
@@ -536,6 +558,14 @@ $result = $conn->query($query);
                         </div>
                     </div>
 
+                    <div class="mb-3">
+                        <label class="form-label package-label">Status</label>
+                        <select name="status" class="form-control package-input">
+                                <option value="Occupied" <?php echo ($row['status'] == 'Occupied' ? 'selected' : ''); ?>>Occupied</option>
+                                <option value="Available" <?php echo ($row['status'] ==  'Available' ? 'selected' : ''); ?>>Available</option>
+                            </select>
+                    </div>
+
                     <!-- DESCRIPTION (full row) -->
                     <div class="mb-3">
                         <label class="form-label package-label">Description</label>
@@ -551,7 +581,7 @@ $result = $conn->query($query);
                     <!-- IMAGE (ONE INPUT ONLY) -->
                     <div class="mb-3">
                         <label class="form-label package-label">Image</label>
-                        <input type="file" name="image" class="form-control package-input">
+                        <input type="file" name="image[]" class="form-control package-input" multiple accept="image/*">
                     </div>
 
                 </div>
@@ -566,11 +596,21 @@ $result = $conn->query($query);
     </div>
 </div>
 
+        <?php endwhile; // End of while loop ?>
+
+    <?php else: // If no rows were found ?>
+
+        <div class="alert alert-info text-center w-100" role="alert"
+             style="grid-column: 1 / -1; margin-top: 20px;">
+            <i class="fas fa-info-circle me-2"></i>
+            **No Event Packages found.** Please add a new package.
+        </div>
+
+    <?php endif; // End of num_rows check ?>
+
+</div>
 
 
-                <?php endwhile; ?>
-
-            </div>
         </div>
     </div>
 </div>
