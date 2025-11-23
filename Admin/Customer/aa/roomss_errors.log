@@ -70869,3 +70869,428 @@
 
 [20-Nov-2025 15:13:05 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
 [20-Nov-2025 15:13:05 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 13:29:26 UTC] Session data: Array
+(
+    [redirect_url] => http://localhost/hotel/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => c6cd1622ed669d65d4bac70a757c1d552dad732f3c7da7242200bd409b556557
+    [pending_order] => Array
+        (
+            [order_data] => Array
+                (
+                    [items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => Chicken Wings
+                                    [price] => 180
+                                    [quantity] => 1
+                                    [addons] => Array
+                                        (
+                                        )
+
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => Carbonara
+                                    [price] => 120
+                                    [quantity] => 1
+                                    [addons] => Array
+                                        (
+                                        )
+
+                                )
+
+                        )
+
+                    [payment_option] => partial
+                    [payment_method] => gcash
+                    [total_amount] => 300
+                    [extra_fee] => 0
+                    [final_total] => 300
+                    [order_type] => advance
+                    [special_requests] => 
+                    [table_details] => Array
+                        (
+                            [package_id] => 8
+                            [package_name] => 4
+                            [date] => 2025-11-28
+                            [time] => 09:23
+                            [duration] => 
+                            [guests] => 4
+                        )
+
+                )
+
+            [order_summary] => Array
+                (
+                    [subtotal] => 300
+                    [total] => 300
+                    [payment_method] => gcash
+                    [payment_option] => partial
+                    [payment_option_display] => 50% Downpayment
+                )
+
+            [timestamp] => 1763817851
+        )
+
+)
+
+[22-Nov-2025 13:29:26 UTC] POST data: Array
+(
+)
+
+[22-Nov-2025 13:29:26 UTC] Starting getRoomTypesWithNumbers function
+[22-Nov-2025 13:29:26 UTC] Using check-in: 2025-11-22, check-out: 2025-11-23
+[22-Nov-2025 13:29:26 UTC] Active room types count: 2
+[22-Nov-2025 13:29:26 UTC] Executing SQL: SELECT 
+                    rt.room_type_id, 
+                    rt.room_type as room_type, 
+                    rt.price, 
+                    rt.capacity,
+                    rt.description, 
+                    rt.beds, 
+                    rt.rating, 
+                    rt.image,
+                    rt.image2,
+                    rt.image3,
+                    rt.status as room_status,
+                    CASE 
+                        WHEN rt.discount_valid_until >= CURDATE() THEN rt.discount_percent 
+                        ELSE NULL 
+                    END as discount_percent,
+                    rt.discount_valid_until,
+                    COALESCE((
+                        SELECT COUNT(*)
+                        FROM room_numbers rn
+                        WHERE rn.room_type_id = rt.room_type_id 
+                        AND rn.status = 'active'
+                    ), 0) as total_rooms,
+                    CASE 
+                        WHEN rt.status = 'active' THEN 'Available' 
+                        ELSE 'Not Available' 
+                    END as status
+                FROM room_types rt
+                WHERE rt.status = 'active'
+                ORDER BY rt.room_type
+[22-Nov-2025 13:29:26 UTC] Found 2 active room types
+[22-Nov-2025 13:29:26 UTC] Rooms data: Array
+(
+    [0] => Array
+        (
+            [room_type_id] => 1
+            [room_type] => 2
+            [price] => 2.00
+            [capacity] => 2
+            [description] => 2
+            [beds] => 2
+            [rating] => 2.0
+            [image] => room_691fcd80884e86.97899480.jpg
+            [image2] => 
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+    [1] => Array
+        (
+            [room_type_id] => 4
+            [room_type] => asdasd
+            [price] => 5.00
+            [capacity] => 5
+            [description] => 5
+            [beds] => 5
+            [rating] => 5.0
+            [image] => room_691fd1d7513c89.67670890.jpg
+            [image2] => room_691fd1d7516e94.78651878.jpg
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+)
+
+[22-Nov-2025 13:29:26 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 13:29:26 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 13:30:04 UTC] Session data: Array
+(
+    [redirect_url] => http://localhost/hotel/Admin/Customer/aa/login.php
+    [user_id] => 42
+    [user_type] => customer
+    [email] => carlosbernales24@gmail.com
+    [csrf_token] => f044d4e874e58d08bfa6a66571432129998bc0f33504774b25ec47a30fc2cd23
+)
+
+[22-Nov-2025 13:30:04 UTC] POST data: Array
+(
+)
+
+[22-Nov-2025 13:30:04 UTC] Starting getRoomTypesWithNumbers function
+[22-Nov-2025 13:30:04 UTC] Using check-in: 2025-11-22, check-out: 2025-11-23
+[22-Nov-2025 13:30:04 UTC] Active room types count: 2
+[22-Nov-2025 13:30:04 UTC] Executing SQL: SELECT 
+                    rt.room_type_id, 
+                    rt.room_type as room_type, 
+                    rt.price, 
+                    rt.capacity,
+                    rt.description, 
+                    rt.beds, 
+                    rt.rating, 
+                    rt.image,
+                    rt.image2,
+                    rt.image3,
+                    rt.status as room_status,
+                    CASE 
+                        WHEN rt.discount_valid_until >= CURDATE() THEN rt.discount_percent 
+                        ELSE NULL 
+                    END as discount_percent,
+                    rt.discount_valid_until,
+                    COALESCE((
+                        SELECT COUNT(*)
+                        FROM room_numbers rn
+                        WHERE rn.room_type_id = rt.room_type_id 
+                        AND rn.status = 'active'
+                    ), 0) as total_rooms,
+                    CASE 
+                        WHEN rt.status = 'active' THEN 'Available' 
+                        ELSE 'Not Available' 
+                    END as status
+                FROM room_types rt
+                WHERE rt.status = 'active'
+                ORDER BY rt.room_type
+[22-Nov-2025 13:30:04 UTC] Found 2 active room types
+[22-Nov-2025 13:30:04 UTC] Rooms data: Array
+(
+    [0] => Array
+        (
+            [room_type_id] => 1
+            [room_type] => 2
+            [price] => 2.00
+            [capacity] => 2
+            [description] => 2
+            [beds] => 2
+            [rating] => 2.0
+            [image] => room_691fcd80884e86.97899480.jpg
+            [image2] => 
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+    [1] => Array
+        (
+            [room_type_id] => 4
+            [room_type] => asdasd
+            [price] => 5.00
+            [capacity] => 5
+            [description] => 5
+            [beds] => 5
+            [rating] => 5.0
+            [image] => room_691fd1d7513c89.67670890.jpg
+            [image2] => room_691fd1d7516e94.78651878.jpg
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+)
+
+[22-Nov-2025 13:30:04 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 13:30:04 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 13:44:12 UTC] Session data: Array
+(
+    [redirect_url] => http://localhost/hotel/Admin/Customer/aa/login.php
+    [user_id] => 42
+    [user_type] => customer
+    [email] => carlosbernales24@gmail.com
+    [csrf_token] => f044d4e874e58d08bfa6a66571432129998bc0f33504774b25ec47a30fc2cd23
+)
+
+[22-Nov-2025 13:44:12 UTC] POST data: Array
+(
+)
+
+[22-Nov-2025 13:44:12 UTC] Starting getRoomTypesWithNumbers function
+[22-Nov-2025 13:44:12 UTC] Using check-in: 2025-11-22, check-out: 2025-11-23
+[22-Nov-2025 13:44:12 UTC] Active room types count: 2
+[22-Nov-2025 13:44:12 UTC] Executing SQL: SELECT 
+                    rt.room_type_id, 
+                    rt.room_type as room_type, 
+                    rt.price, 
+                    rt.capacity,
+                    rt.description, 
+                    rt.beds, 
+                    rt.rating, 
+                    rt.image,
+                    rt.image2,
+                    rt.image3,
+                    rt.status as room_status,
+                    CASE 
+                        WHEN rt.discount_valid_until >= CURDATE() THEN rt.discount_percent 
+                        ELSE NULL 
+                    END as discount_percent,
+                    rt.discount_valid_until,
+                    COALESCE((
+                        SELECT COUNT(*)
+                        FROM room_numbers rn
+                        WHERE rn.room_type_id = rt.room_type_id 
+                        AND rn.status = 'active'
+                    ), 0) as total_rooms,
+                    CASE 
+                        WHEN rt.status = 'active' THEN 'Available' 
+                        ELSE 'Not Available' 
+                    END as status
+                FROM room_types rt
+                WHERE rt.status = 'active'
+                ORDER BY rt.room_type
+[22-Nov-2025 13:44:12 UTC] Found 2 active room types
+[22-Nov-2025 13:44:12 UTC] Rooms data: Array
+(
+    [0] => Array
+        (
+            [room_type_id] => 1
+            [room_type] => 2
+            [price] => 2.00
+            [capacity] => 2
+            [description] => 2
+            [beds] => 2
+            [rating] => 2.0
+            [image] => room_691fcd80884e86.97899480.jpg
+            [image2] => 
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+    [1] => Array
+        (
+            [room_type_id] => 4
+            [room_type] => asdasd
+            [price] => 5.00
+            [capacity] => 5
+            [description] => 5
+            [beds] => 5
+            [rating] => 5.0
+            [image] => room_691fd1d7513c89.67670890.jpg
+            [image2] => room_691fd1d7516e94.78651878.jpg
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+)
+
+[22-Nov-2025 13:44:12 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 13:44:12 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 14:18:31 UTC] Session data: Array
+(
+    [redirect_url] => http://localhost/hotel/Admin/Customer/aa/login.php
+    [user_id] => 42
+    [user_type] => customer
+    [email] => carlosbernales24@gmail.com
+    [csrf_token] => f044d4e874e58d08bfa6a66571432129998bc0f33504774b25ec47a30fc2cd23
+)
+
+[22-Nov-2025 14:18:31 UTC] POST data: Array
+(
+)
+
+[22-Nov-2025 14:18:31 UTC] Starting getRoomTypesWithNumbers function
+[22-Nov-2025 14:18:31 UTC] Using check-in: 2025-11-22, check-out: 2025-11-23
+[22-Nov-2025 14:18:31 UTC] Active room types count: 2
+[22-Nov-2025 14:18:31 UTC] Executing SQL: SELECT 
+                    rt.room_type_id, 
+                    rt.room_type as room_type, 
+                    rt.price, 
+                    rt.capacity,
+                    rt.description, 
+                    rt.beds, 
+                    rt.rating, 
+                    rt.image,
+                    rt.image2,
+                    rt.image3,
+                    rt.status as room_status,
+                    CASE 
+                        WHEN rt.discount_valid_until >= CURDATE() THEN rt.discount_percent 
+                        ELSE NULL 
+                    END as discount_percent,
+                    rt.discount_valid_until,
+                    COALESCE((
+                        SELECT COUNT(*)
+                        FROM room_numbers rn
+                        WHERE rn.room_type_id = rt.room_type_id 
+                        AND rn.status = 'active'
+                    ), 0) as total_rooms,
+                    CASE 
+                        WHEN rt.status = 'active' THEN 'Available' 
+                        ELSE 'Not Available' 
+                    END as status
+                FROM room_types rt
+                WHERE rt.status = 'active'
+                ORDER BY rt.room_type
+[22-Nov-2025 14:18:31 UTC] Found 2 active room types
+[22-Nov-2025 14:18:31 UTC] Rooms data: Array
+(
+    [0] => Array
+        (
+            [room_type_id] => 1
+            [room_type] => 2
+            [price] => 2.00
+            [capacity] => 2
+            [description] => 2
+            [beds] => 2
+            [rating] => 2.0
+            [image] => room_691fcd80884e86.97899480.jpg
+            [image2] => 
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+    [1] => Array
+        (
+            [room_type_id] => 4
+            [room_type] => asdasd
+            [price] => 5.00
+            [capacity] => 5
+            [description] => 5
+            [beds] => 5
+            [rating] => 5.0
+            [image] => room_691fd1d7513c89.67670890.jpg
+            [image2] => room_691fd1d7516e94.78651878.jpg
+            [image3] => 
+            [room_status] => active
+            [discount_percent] => 
+            [discount_valid_until] => 
+            [total_rooms] => 0
+            [status] => Available
+        )
+
+)
+
+[22-Nov-2025 14:18:31 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'
+[22-Nov-2025 14:18:31 UTC] Error fetching discount types: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'status' in 'where clause'

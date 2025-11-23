@@ -977,3 +977,20 @@ Data: Array
 )
 
 [2025-11-06 02:06:27] Creating PayMongo checkout with direct cURL method
+[2025-11-22 13:24:13] Including autoloader
+Data: Array
+(
+    [path] => C:\laragon\www\hotel\Admin\Customer\aa/vendor/autoload.php
+)
+
+[2025-11-22 13:24:13] Autoloader included successfully
+[2025-11-22 13:24:13] Processing payment
+Data: Array
+(
+    [reference] => ORD-6921b97dc9b0b
+    [amount_received] => 150
+    [amount_in_centavos] => 15000
+    [description] => Payment for Order #1763817853818
+)
+
+[2025-11-22 13:24:13] Creating PayMongo checkout with direct cURL method
