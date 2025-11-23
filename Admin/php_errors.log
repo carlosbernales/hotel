@@ -48058,6 +48058,7 @@ Stack trace:
 [21-Nov-2025 13:57:22 UTC] Database connected successfully to: hotelms
 [21-Nov-2025 13:57:23 UTC] Database connected successfully to: hotelms
 [21-Nov-2025 14:01:25 UTC] Database connected successfully to: hotelms
+<<<<<<< HEAD
 [22-Nov-2025 00:56:32 UTC] Database connected successfully to: hotelms
 [22-Nov-2025 08:56:32 Asia/Manila] Index idx_bookings_dates already exists on table bookings
 [22-Nov-2025 08:56:32 Asia/Manila] Index idx_bookings_status already exists on table bookings
@@ -48546,3 +48547,30 @@ Stack trace:
 [22-Nov-2025 06:25:12 UTC] Database connected successfully to: hotelms
 [22-Nov-2025 06:25:13 UTC] Database connected successfully to: hotelms
 [22-Nov-2025 06:25:14 UTC] Database connected successfully to: hotelms
+=======
+[22-Nov-2025 13:29:41 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:29:43 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:29:47 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:29:47 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:35:44 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:35:46 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:35:50 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:36:35 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:36:42 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:36:47 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:36:48 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:39:41 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:39:43 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:39:56 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:39:57 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:39:58 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:41:09 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:41:43 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:41:56 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:41:59 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:42:04 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 13:42:08 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 14:06:12 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 14:07:54 UTC] Database connected successfully to: hotelms
+[22-Nov-2025 14:07:56 UTC] Database connected successfully to: hotelms
+>>>>>>> fb4c4a9cbaa68e24478185180b0d323a30a9b469
