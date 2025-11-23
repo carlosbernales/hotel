@@ -4,10 +4,12 @@ db
 
 room_numbers
 room_types
+amenities - not done
 table_packages
 menu_categories
 menu_items
 menu_items_addons
+
 
 event_packages
 package_max_guests
@@ -15,4 +17,14 @@ package_durations
 package_menu_items
 
 
+<<<<<<< HEAD
+order_items
+orders
+
+cafe - cashier
+event, rooms, table - admin
+table with advance order - cashier
+
+=======
+>>>>>>> 435e5c661d91c5e78a9ac6926a6fd8aae77b367f
 
