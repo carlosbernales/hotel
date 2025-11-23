@@ -48574,3 +48574,255 @@ Stack trace:
 [22-Nov-2025 14:07:54 UTC] Database connected successfully to: hotelms
 [22-Nov-2025 14:07:56 UTC] Database connected successfully to: hotelms
 >>>>>>> fb4c4a9cbaa68e24478185180b0d323a30a9b469
+[23-Nov-2025 03:17:35 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 11:17:36 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[23-Nov-2025 11:17:36 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[23-Nov-2025 11:17:36 Asia/Manila] Index idx_messages_status already exists on table messages
+[23-Nov-2025 11:17:36 Asia/Manila] Index idx_activities_type already exists on table activities
+[23-Nov-2025 11:17:36 Asia/Manila] Index idx_customers_vip already exists on table customers
+[23-Nov-2025 11:17:36 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[23-Nov-2025 11:17:36 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[23-Nov-2025 11:17:36 Asia/Manila] Current date: 2025-11-23
+[23-Nov-2025 11:17:36 Asia/Manila] Week start: 2025-11-17
+[23-Nov-2025 11:17:36 Asia/Manila] Week end: 2025-11-23
+[23-Nov-2025 11:17:36 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[23-Nov-2025 11:17:36 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[23-Nov-2025 11:17:36 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[23-Nov-2025 11:17:36 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 2
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 0
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 1
+)
+
+[23-Nov-2025 11:17:36 Asia/Manila] Weekly labels: Array
+(
+    [0] => 17
+    [1] => 18
+    [2] => 19
+    [3] => 20
+    [4] => 21
+    [5] => 22
+    [6] => 23
+)
+
+[23-Nov-2025 11:17:36 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[23-Nov-2025 11:17:36 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[23-Nov-2025 11:17:36 Asia/Manila] Total records found: 0
+[23-Nov-2025 11:17:36 Asia/Manila] Final days array: []
+[23-Nov-2025 11:17:36 Asia/Manila] Final revenue array: []
+[23-Nov-2025 11:17:36 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[23-Nov-2025 11:17:36 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[23-Nov-2025 03:17:36 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 03:17:43 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 03:17:44 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 03:17:46 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 03:17:46 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:06:50 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 15:06:50 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[23-Nov-2025 15:06:50 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[23-Nov-2025 15:06:50 Asia/Manila] Index idx_messages_status already exists on table messages
+[23-Nov-2025 15:06:50 Asia/Manila] Index idx_activities_type already exists on table activities
+[23-Nov-2025 15:06:50 Asia/Manila] Index idx_customers_vip already exists on table customers
+[23-Nov-2025 15:06:50 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[23-Nov-2025 15:06:50 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[23-Nov-2025 15:06:50 Asia/Manila] Current date: 2025-11-23
+[23-Nov-2025 15:06:50 Asia/Manila] Week start: 2025-11-17
+[23-Nov-2025 15:06:50 Asia/Manila] Week end: 2025-11-23
+[23-Nov-2025 15:06:50 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[23-Nov-2025 15:06:50 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[23-Nov-2025 15:06:50 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[23-Nov-2025 15:06:50 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 2
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 0
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 1
+)
+
+[23-Nov-2025 15:06:50 Asia/Manila] Weekly labels: Array
+(
+    [0] => 17
+    [1] => 18
+    [2] => 19
+    [3] => 20
+    [4] => 21
+    [5] => 22
+    [6] => 23
+)
+
+[23-Nov-2025 15:06:50 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[23-Nov-2025 15:06:50 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[23-Nov-2025 15:06:50 Asia/Manila] Total records found: 0
+[23-Nov-2025 15:06:50 Asia/Manila] Final days array: []
+[23-Nov-2025 15:06:50 Asia/Manila] Final revenue array: []
+[23-Nov-2025 15:06:50 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[23-Nov-2025 15:06:50 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[23-Nov-2025 07:06:51 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:07:10 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:07:19 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:07:36 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:07:49 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:07:54 UTC] Database connected successfully to: hotelms
+[23-Nov-2025 07:08:17 UTC] Database connected successfully to: hotelms

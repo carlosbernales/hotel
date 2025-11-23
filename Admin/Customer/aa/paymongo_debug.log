@@ -994,3 +994,37 @@ Data: Array
 )
 
 [2025-11-22 13:24:13] Creating PayMongo checkout with direct cURL method
+[2025-11-23 00:48:27] Including autoloader
+Data: Array
+(
+    [path] => C:\laragon\www\hotel\Admin\Customer\aa/vendor/autoload.php
+)
+
+[2025-11-23 00:48:27] Autoloader included successfully
+[2025-11-23 00:48:27] Processing payment
+Data: Array
+(
+    [reference] => ORD-692259db24013
+    [amount_received] => 135
+    [amount_in_centavos] => 13500
+    [description] => Payment for Order #1763858907108
+)
+
+[2025-11-23 00:48:27] Creating PayMongo checkout with direct cURL method
+[2025-11-23 01:26:29] Including autoloader
+Data: Array
+(
+    [path] => C:\laragon\www\hotel\Admin\Customer\aa/vendor/autoload.php
+)
+
+[2025-11-23 01:26:29] Autoloader included successfully
+[2025-11-23 01:26:29] Processing payment
+Data: Array
+(
+    [reference] => ORD-692262c5779a9
+    [amount_received] => 135
+    [amount_in_centavos] => 13500
+    [description] => Payment for Order #1763861189484
+)
+
+[2025-11-23 01:26:29] Creating PayMongo checkout with direct cURL method
