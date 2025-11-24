@@ -48826,3 +48826,695 @@ Stack trace:
 [23-Nov-2025 07:07:49 UTC] Database connected successfully to: hotelms
 [23-Nov-2025 07:07:54 UTC] Database connected successfully to: hotelms
 [23-Nov-2025 07:08:17 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:14:20 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:14:20 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[24-Nov-2025 09:14:20 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[24-Nov-2025 09:14:20 Asia/Manila] Index idx_messages_status already exists on table messages
+[24-Nov-2025 09:14:20 Asia/Manila] Index idx_activities_type already exists on table activities
+[24-Nov-2025 09:14:20 Asia/Manila] Index idx_customers_vip already exists on table customers
+[24-Nov-2025 09:14:20 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[24-Nov-2025 09:14:20 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[24-Nov-2025 09:14:20 Asia/Manila] Current date: 2025-11-24
+[24-Nov-2025 09:14:20 Asia/Manila] Week start: 2025-11-24
+[24-Nov-2025 09:14:20 Asia/Manila] Week end: 2025-11-30
+[24-Nov-2025 09:14:20 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[24-Nov-2025 09:14:20 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[24-Nov-2025 09:14:20 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 2
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[24-Nov-2025 09:14:20 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 1
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 2
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[24-Nov-2025 09:14:20 Asia/Manila] Weekly labels: Array
+(
+    [0] => 18
+    [1] => 19
+    [2] => 20
+    [3] => 21
+    [4] => 22
+    [5] => 23
+    [6] => 24
+)
+
+[24-Nov-2025 09:14:20 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 150.00
+    [5] => 150.00
+    [6] => 0.00
+)
+
+[24-Nov-2025 09:14:20 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[24-Nov-2025 09:14:20 Asia/Manila] Total records found: 0
+[24-Nov-2025 09:14:20 Asia/Manila] Final days array: []
+[24-Nov-2025 09:14:20 Asia/Manila] Final revenue array: []
+[24-Nov-2025 09:14:20 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[24-Nov-2025 09:14:20 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[24-Nov-2025 01:14:20 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:14:28 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:14:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 473
+[24-Nov-2025 01:15:17 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:15:18 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 473
+[24-Nov-2025 01:21:50 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:21:53 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:21:56 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:21:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:21:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:21:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:21:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 01:22:26 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:22:26 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\room_booking.php on line 173
+[24-Nov-2025 09:22:26 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\room_booking.php on line 173
+[24-Nov-2025 09:22:26 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\room_booking.php on line 173
+[24-Nov-2025 01:22:26 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:22:31 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:22:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:22:41 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:22:46 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:22:51 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:22:55 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:22:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:22:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:22:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:22:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 01:22:58 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:22:58 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\room_booking.php on line 173
+[24-Nov-2025 09:22:58 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\room_booking.php on line 173
+[24-Nov-2025 09:22:58 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\room_booking.php on line 173
+[24-Nov-2025 01:22:58 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:23:00 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:23:00 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:23:00 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:23:00 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:23:00 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 01:23:54 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:23:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:23:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:23:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 09:23:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[24-Nov-2025 01:23:57 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:23:57 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 548
+[24-Nov-2025 09:23:57 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 548
+[24-Nov-2025 09:23:57 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 548
+[24-Nov-2025 09:23:57 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 548
+[24-Nov-2025 01:24:58 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:25:41 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:25:42 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:26:19 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:26:49 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:27:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:28:04 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:28:16 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:28:31 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 01:33:38 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:33:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 01:41:27 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:41:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 473
+[24-Nov-2025 01:41:47 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:41:47 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:41:47 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:41:47 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:41:47 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 09:41:47 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 09:41:47 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 01:43:52 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 495
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 509
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 510
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 495
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 509
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 510
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 495
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 509
+[24-Nov-2025 09:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 510
+[24-Nov-2025 01:44:13 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 495
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 509
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 510
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 495
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 509
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 510
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 495
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 509
+[24-Nov-2025 09:44:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 510
+[24-Nov-2025 01:45:02 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:45:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 505
+[24-Nov-2025 09:45:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 506
+[24-Nov-2025 09:45:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 505
+[24-Nov-2025 09:45:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 506
+[24-Nov-2025 09:45:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 505
+[24-Nov-2025 09:45:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 506
+[24-Nov-2025 01:45:08 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:45:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 505
+[24-Nov-2025 09:45:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 506
+[24-Nov-2025 09:45:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 505
+[24-Nov-2025 09:45:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 506
+[24-Nov-2025 09:45:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 505
+[24-Nov-2025 09:45:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 506
+[24-Nov-2025 01:47:23 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 578
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Warning:  Undefined array key "display_name" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 09:47:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 579
+[24-Nov-2025 01:53:22 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:53:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 513
+[24-Nov-2025 09:53:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 514
+[24-Nov-2025 09:53:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 513
+[24-Nov-2025 09:53:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 514
+[24-Nov-2025 09:53:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 513
+[24-Nov-2025 09:53:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 514
+[24-Nov-2025 02:05:34 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:05:34 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:05:34 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 10:05:34 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:05:34 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 10:05:34 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:05:34 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 02:05:51 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:05:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 10:05:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 10:05:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 10:05:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 10:05:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 10:05:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 02:06:38 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:06:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 10:06:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 10:06:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 10:06:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 10:06:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 311
+[24-Nov-2025 10:06:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 346
+[24-Nov-2025 02:06:46 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:06:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:06:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 10:06:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:06:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 10:06:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:06:46 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 02:11:16 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 10:11:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 03:06:52 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
+[24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568

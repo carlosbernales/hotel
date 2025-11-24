@@ -85,6 +85,9 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['event_management'])) {
     $page = "adminFrontend/event_management.php";
 
+} elseif (isset($_GET['room_booking'])) {
+    $page = "adminFrontend/room_booking.php";
+
 
 } elseif (isset($_GET['advance_checkin'])) {
     include 'advance_checkin_page.php';

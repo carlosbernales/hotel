@@ -360,6 +360,11 @@ $currentPage = basename($page);
                 <i class="fas fa-users"></i> Customer Info
             </a>
 
+            <a href="index.php?room_booking"
+                class="<?php echo ($currentPage == 'room_booking.php') ? 'active' : ''; ?>">
+                <i class="fas fa-users"></i> Room Booking
+            </a>
+
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['room_types.php', 'room_number.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
