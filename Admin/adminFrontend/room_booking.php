@@ -2,690 +2,777 @@
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
-// FETCH ROOM TYPES
-$room_types = [];
-$result = $conn->query("SELECT * FROM room_types ORDER BY room_type_id ASC");
+$sql = "SELECT first_name, last_name, email, contact_number, is_verified FROM userss";
+$result = $conn->query($sql);
 
-if ($result->num_rows > 0) {
+$users = [];
+if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $room_types[] = $row;
+        $users[] = $row;
     }
 }
 
+$conn->close();
 ?>
-
 <style>
-    :root {
-        --gold: #D4AF37;
-        --dark-content: #2c2c2c;
-        --light-bg: #f8f9fa;
-        --card-bg: white;
-        --text-muted: #666;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-
     body {
+        background-color: #f5f5f5;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: var(--light-bg);
-        color: var(--dark-content);
-    }
-
-    /* Breadcrumb Styling */
-    .breadcrumb-custom {
-        background: var(--card-bg);
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-bottom: 25px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    }
-
-    .breadcrumb-custom i {
-        color: var(--gold);
-        margin-right: 8px;
-    }
-
-    .breadcrumb-custom span {
-        color: var(--dark-content);
-        font-weight: 500;
-    }
-
-    .table-add-btn {
-        /* Base styling for the add buttons in the breadcrumb */
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    /* Category Tabs/Filter Styling */
-    .category-tabs {
-        background: var(--card-bg);
         padding: 20px;
-        border-radius: 8px;
-        margin-bottom: 30px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
-    .category-tabs h5 {
-        color: var(--dark-content);
-        margin-bottom: 15px;
-        font-size: 18px;
-        font-weight: 600;
-    }
-
-    .category-tabs h5 i {
-        color: var(--gold);
-        margin-right: 10px;
-    }
-
-    .category-buttons {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    .category-btn {
-        padding: 10px 24px;
-        border: 2px solid var(--gold);
-        background: var(--card-bg);
-        color: var(--gold);
-        border-radius: 25px;
-        cursor: pointer;
-        font-size: 14px;
-        font-weight: 500;
-        transition: all 0.3s ease;
-        white-space: nowrap;
-        /* Prevent button text wrapping */
-    }
-
-    .category-btn:hover {
-        background: rgba(212, 175, 55, 0.1);
-        transform: translateY(-2px);
-    }
-
-    .category-btn.active {
-        background: var(--gold);
-        color: #fff;
-        /* Changed to white for better contrast on gold */
-    }
-
-    /* Products Grid Layout */
-    .products-grid {
-        display: grid;
-        /* Adjusted minmax for slightly smaller cards on large screens */
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 20px;
-        margin-top: 20px;
-    }
-
-    /* Product Card Styling */
-    .product-card {
-        background: var(--card-bg);
-        border-radius: 8px;
-        padding: 0;
-        /* Removed padding to let image fill top */
+    .info-card {
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
         overflow: hidden;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        transition: all 0.3s ease;
-        display: none;
-        /* Controlled by JS show class */
-    }
-
-    .product-card.show {
-        display: block;
-        animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .product-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transform: translateY(-4px);
-    }
-
-    /* Image Styling */
-    .product-image-container {
-        width: 100%;
-        height: 200px;
-        /* Fixed height for consistency */
-        overflow: hidden;
-        border-top-left-radius: 8px;
-        border-top-right-radius: 8px;
-    }
-
-    .product-image {
-        width: 100%;
+        position: relative;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .product-card:hover .product-image {
-        transform: scale(1.05);
-        /* Slight zoom on hover */
-    }
-
-    /* Content Area Padding */
-    .product-content {
-        padding: 20px;
-    }
-
-    /* Header (Name & Price) */
-    .product-header {
         display: flex;
-        justify-content: space-between;
-        align-items: start;
-        margin-bottom: 10px;
+        flex-direction: column;
     }
 
-    .product-info {
-        flex: 1;
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
     }
 
-    .product-name {
-        font-size: 20px;
-        font-weight: 600;
-        color: var(--dark-content);
-        margin-bottom: 8px;
-    }
-
-    .product-price {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--gold);
-    }
-
-    /* Description Styling */
-    .product-description {
-        color: var(--text-muted);
-        font-size: 14px;
-        line-height: 1.6;
-        margin-bottom: 15px;
-        max-height: 60px;
-        /* Limit description height */
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        /* Limit to 3 lines */
-        -webkit-box-orient: vertical;
-    }
-
-    /* Footer (Status & Actions) */
-    .product-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding-top: 15px;
-        border-top: 1px solid #eee;
-        padding: 15px 20px 20px 20px;
-        /* Match content padding */
-    }
-
-    .status-badge {
-        padding: 6px 14px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .status-badge.available {
-        background: #d4edda;
-        /* Light Green */
-        color: #155724;
-        /* Dark Green */
-    }
-
-    .status-badge.unavailable {
-        background: #f8d7da;
-        /* Light Red */
-        color: #721c24;
-        /* Dark Red */
-    }
-
-    /* Action Buttons */
-    .product-actions {
-        display: flex;
-        gap: 8px;
-    }
-
-    .action-btn {
-        width: 36px;
-        height: 36px;
-        border: none;
+    /* Fixed Cart Button */
+    .btn-cart-toggle {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
         border-radius: 50%;
+        background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
         cursor: pointer;
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cart-toggle:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+    }
+
+    .cart-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #dc3545;
+        color: white;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.3s ease;
-        font-size: 14px;
+        font-size: 0.75rem;
+        font-weight: 700;
     }
 
-    .edit-btn {
-        background: #e3f2fd;
-        /* Light Blue */
-        color: #1976d2;
-        /* Medium Blue */
+    .carousel-container {
+        position: relative;
+        height: 200px;
+        overflow: hidden;
     }
 
-    .edit-btn:hover {
-        background: #1976d2;
-        color: #fff;
+    .carousel-inner img {
+        height: 200px;
+        object-fit: cover;
     }
 
-    .delete-btn {
-        background: #ffebee;
-        /* Light Red */
-        color: #c62828;
-        /* Dark Red */
+    .status-badge {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        z-index: 10;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
-    .delete-btn:hover {
-        background: #c62828;
-        color: #fff;
+    .status-available {
+        background: #28a745;
+        color: white;
     }
 
-    .view-btn {
-        background: #f3e5f5;
-        /* Light Purple */
-        color: #7b1fa2;
-        /* Dark Purple */
+    .status-occupied {
+        background: #dc3545;
+        color: white;
     }
 
-    .view-btn:hover {
-        background: #7b1fa2;
-        color: #fff;
+    .status-maintenance {
+        background: #ffc107;
+        color: #333;
     }
 
-    /* No Items Message */
-    .no-items {
-        text-align: center;
-        padding: 60px 20px;
-        color: #999;
-        grid-column: 1 / -1;
-        /* Span across all columns in the grid */
+    .room-details {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
-    .no-items i {
-        font-size: 64px;
-        margin-bottom: 20px;
-        color: #ddd;
+    .room-type {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 8px;
     }
 
-    .no-items h3 {
-        color: #999;
+    .price-tag {
+        font-size: 1.2rem;
+        color: #d4af37;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+
+    .price-tag small {
+        font-size: 0.8rem;
+        color: #6c757d;
         font-weight: 400;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        .products-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .category-buttons {
-            justify-content: center;
-        }
-
-        .breadcrumb-custom {
-            flex-direction: column;
-            align-items: flex-start !important;
-        }
-
-        .breadcrumb-custom>div:last-child {
-            margin-top: 10px;
-            width: 100%;
-            display: flex;
-            justify-content: space-around;
-        }
+    .room-meta {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 12px;
+        flex-wrap: wrap;
     }
 
-    /* Package Modal Styling */
-    .package-modal {
-        border: none;
-        border-radius: 8px;
+    .meta-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        color: #555;
+        font-size: 0.85rem;
     }
 
-    .package-modal-header {
-        background-color: #C9A961;
-        color: #2d2d2d;
-        border-bottom: 2px solid #B8964F;
+    .meta-item i {
+        color: #d4af37;
+        font-size: 1rem;
     }
 
-    .package-modal-close {
-        filter: brightness(0.3);
+    .room-description {
+        color: #666;
+        line-height: 1.5;
+        margin-bottom: 12px;
+        font-size: 0.85rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
 
-    .package-modal-body {
-        background-color: #f8f9fa;
-        padding: 2rem;
+    .bed-info {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 12px;
     }
 
-    .package-label {
+    .bed-info h6 {
+        color: #2c3e50;
         font-weight: 600;
-        color: #2d2d2d;
+        margin-bottom: 5px;
+        font-size: 0.8rem;
+        text-transform: uppercase;
     }
 
-    .package-input {
-        border: 1px solid #C9A961;
-        border-radius: 4px;
-        padding: 0.6rem;
+    .bed-info p {
+        margin: 0;
+        color: #555;
+        font-size: 0.85rem;
     }
 
-    .package-input:focus {
-        border-color: #B8964F;
-        box-shadow: 0 0 0 0.2rem rgba(201, 169, 97, 0.25);
+    .room-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 12px;
+        border-top: 1px solid #e9ecef;
+        margin-top: auto;
     }
 
-    .package-help-text {
+    .location-info {
         color: #6c757d;
+        font-size: 0.8rem;
     }
 
-    .package-btn-cancel {
-        background-color: #6c757d;
+    .location-info i {
+        color: #d4af37;
+        margin-right: 5px;
+    }
+
+    .btn-add-to-list {
+        background: linear-gradient(135deg, #d4af37 0%, #b8941f 100%);
         color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-    }
-
-    .package-btn-cancel:hover {
-        background-color: #5a6268;
-        color: white;
-    }
-
-    .package-btn-save {
-        background-color: #28a745;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-        font-weight: 500;
-    }
-
-    .package-btn-save:hover {
-        background-color: #218838;
-        color: white;
-    }
-
-    /* Add Table Button */
-    .table-add-btn {
-        background-color: #C9A961;
-        color: #2d2d2d;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-        font-weight: 500;
         border: none;
+        padding: 8px 20px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .btn-add-to-list:hover {
+        background: linear-gradient(135deg, #b8941f 0%, #9a7a19 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    }
+
+    /* Sidebar Styles */
+    .sidebar-cart {
+        position: fixed;
+        right: -400px;
+        top: 0;
+        width: 400px;
+        height: 100vh;
+        background: white;
+        box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+        transition: right 0.4s ease;
+        z-index: 1050;
+        overflow-y: auto;
+    }
+
+    .sidebar-cart.active {
+        right: 0;
+    }
+
+    .sidebar-header {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: white;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .sidebar-header h4 {
+        margin: 0;
+        font-weight: 700;
+    }
+
+    .close-sidebar {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .close-sidebar:hover {
+        transform: rotate(90deg);
+    }
+
+    .sidebar-content {
+        padding: 20px;
+    }
+
+    .cart-item {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        gap: 15px;
+    }
+
+    .cart-item-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 6px;
+    }
+
+    .cart-item-details {
+        flex: 1;
+    }
+
+    .cart-item-title {
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .cart-item-price {
+        color: #d4af37;
+        font-weight: 700;
+    }
+
+    .remove-item {
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+
+    .cart-total {
+        background: #2c3e50;
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .cart-total h5 {
+        margin: 0 0 10px 0;
+    }
+
+    .total-amount {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #d4af37;
+    }
+
+    .btn-checkout {
+        width: 100%;
+        background: #d4af37;
+        color: white;
+        border: none;
+        padding: 15px;
+        border-radius: 8px;
+        font-weight: 600;
+        margin-top: 15px;
         transition: all 0.3s ease;
     }
 
-    .table-add-btn:hover {
-        background-color: #B8964F;
-        color: #2d2d2d;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    .btn-checkout:hover {
+        background: #b8941f;
     }
 
-    .table-add-btn i {
-        font-size: 1.1rem;
+    .overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1040;
+        display: none;
     }
 
-    /* Adds On modal */
-
-    :root {
-        --theme-gold: #c69c3a;
-        --theme-dark: #343a40;
+    .overlay.active {
+        display: block;
     }
 
-    .modal-header.theme-bg-dark {
-        background-color: var(--theme-dark);
-        border-bottom: 1px solid var(--theme-gold);
+    .empty-cart {
+        text-align: center;
+        padding: 40px 20px;
+        color: #6c757d;
     }
 
-    .text-theme-gold {
-        color: var(--theme-gold) !important;
+    .empty-cart i {
+        font-size: 4rem;
+        margin-bottom: 15px;
+        opacity: 0.3;
     }
 
-    .delete-btn {
-        transition: background-color 0.2s;
+    /* Carousel Controls Custom Style */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 35px;
+        height: 35px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0;
+        transition: opacity 0.3s;
     }
 
-    .addon-item:hover {
-        background-color: #f8f9fa;
-        border-color: var(--theme-gold) !important;
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 15px;
+        height: 15px;
     }
 
-    .btn-close-white {
-        filter: invert(1) grayscale(100%) brightness(200%);
-        opacity: 0.8;
-    }
-
-    .btn-close-white:hover {
+    .carousel-container:hover .carousel-control-prev,
+    .carousel-container:hover .carousel-control-next {
         opacity: 1;
     }
 
-    .package-modal-body {
-        max-height: 70vh;
-        overflow-y: auto;
+    .carousel-control-prev {
+        left: 10px;
+    }
+
+    .carousel-control-next {
+        right: 10px;
+    }
+
+    @media (max-width: 768px) {
+        .btn-cart-toggle {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            bottom: 20px;
+            right: 20px;
+        }
     }
 </style>
-
 <div class="main-content" id="mainContent">
-    <div class="breadcrumb-custom d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <i class="fas fa-home"></i>
-            <span class="ms-2">Cafe Management</span>
+    <div class="breadcrumb-custom">
+        <i class="fas fa-home"></i>
+        <span>User Information</span>
+    </div>
+
+    <button class="btn-cart-toggle" onclick="openSidebar()">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartBadge">0</span>
+    </button>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="info-card">
+                <!-- Image Carousel -->
+                <div class="carousel-container">
+                    <span class="status-badge status-available">Available</span>
+                    <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="0"
+                                class="active"></button>
+                            <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="1"></button>
+                            <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="2"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800"
+                                    class="d-block w-100" alt="Room View 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800"
+                                    class="d-block w-100" alt="Room View 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800"
+                                    class="d-block w-100" alt="Room View 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Room Details -->
+                <div class="room-details">
+                    <h2 class="room-type">Deluxe Suite</h2>
+                    <div class="price-tag">
+                        ₱5,500.00 <small>/ night</small>
+                    </div>
+
+                    <div class="room-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span><strong>Capacity:</strong> 4 Guests</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span><strong>Size:</strong> 45 m²</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-wifi"></i>
+                            <span>Free WiFi</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Air Conditioning</span>
+                        </div>
+                    </div>
+
+                    <p class="room-description">
+                        Experience luxury and comfort in our spacious Deluxe Suite. Featuring modern amenities,
+                        elegant furnishings, and stunning views. Perfect for families or groups seeking a premium
+                        accommodation experience with all the conveniences of home and the luxury of a boutique
+                        hotel.
+                    </p>
+
+                    <div class="bed-info">
+                        <h6><i class="fas fa-bed"></i> Bed Configuration</h6>
+                        <p>1 King Size Bed + 1 Queen Size Bed</p>
+                    </div>
+
+                    <div class="room-footer">
+                        <div class="location-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Room 205</strong> | 2nd Floor
+                        </div>
+                        <button class="btn-add-to-list" onclick="addToCart()">
+                            <i class="fas fa-cart-plus"></i>
+                            Add to List
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="info-card">
+                <div class="carousel-container">
+                    <span class="status-badge status-occupied">Occupied</span>
+                    <div id="roomCarousel2" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
+                                    class="d-block w-100" alt="Room View 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800"
+                                    class="d-block w-100" alt="Room View 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1629140727571-9b5c6f6267b4?w=800"
+                                    class="d-block w-100" alt="Room View 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel2"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel2"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="room-details">
+                    <h2 class="room-type">Executive Room</h2>
+                    <div class="price-tag">
+                        ₱4,200.00 <small>/ night</small>
+                    </div>
+
+                    <div class="room-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>2 Guests</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>32 m²</span>
+                        </div>
+                    </div>
+
+                    <p class="room-description">
+                        Perfect for business travelers. This executive room features a work desk, ergonomic chair,
+                        and high-speed internet access. Includes premium amenities and complimentary breakfast.
+                    </p>
+
+                    <div class="bed-info">
+                        <h6><i class="fas fa-bed"></i> Bed Configuration</h6>
+                        <p>1 Queen Size Bed</p>
+                    </div>
+
+                    <div class="room-footer">
+                        <div class="location-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Room 310</strong> | 3rd Floor
+                        </div>
+                        <button class="btn-add-to-list" disabled style="opacity: 0.5; cursor: not-allowed;">
+                            <i class="fas fa-ban"></i>
+                            Occupied
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="info-card">
+                <div class="carousel-container">
+                    <span class="status-badge status-available">Available</span>
+                    <div id="roomCarousel3" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800"
+                                    class="d-block w-100" alt="Room View 1">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800"
+                                    class="d-block w-100" alt="Room View 2">
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://images.unsplash.com/photo-1590073844006-33379778ae09?w=800"
+                                    class="d-block w-100" alt="Room View 3">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel3"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel3"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="room-details">
+                    <h2 class="room-type">Standard Room</h2>
+                    <div class="price-tag">
+                        ₱2,800.00 <small>/ night</small>
+                    </div>
+
+                    <div class="room-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <span>2 Guests</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-ruler-combined"></i>
+                            <span>25 m²</span>
+                        </div>
+                    </div>
+
+                    <p class="room-description">
+                        Comfortable and affordable accommodation with all essential amenities.
+                        Perfect for couples or solo travelers looking for quality stay at great value.
+                    </p>
+
+                    <div class="bed-info">
+                        <h6><i class="fas fa-bed"></i> Bed Configuration</h6>
+                        <p>2 Single Beds</p>
+                    </div>
+
+                    <div class="room-footer">
+                        <div class="location-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <strong>Room 108</strong> | 1st Floor
+                        </div>
+                        <button class="btn-add-to-list"
+                            onclick="addToCart('Standard Room', 2800, '108', '1st Floor', 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=200')">
+                            <i class="fas fa-cart-plus"></i>
+                            Add to List
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <div class="products-grid" id="productsGrid">
+    <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-<?php foreach ($room_types as $room): ?>
-
-    <?php
-    // Check availability of rooms under this room_type
-    $rtid = $room['room_type_id'];
-    $roomCheck = $conn->query("
-        SELECT COUNT(*) AS available_rooms 
-        FROM room_numbers 
-        WHERE room_type_id = '$rtid' AND status = 1
-    ");
-    $hasAvailableRoom = $roomCheck->fetch_assoc()['available_rooms'] > 0;
-
-    // Determine if add button should be disabled
-    $disabled = ($room['status'] !== 'active' || !$hasAvailableRoom) ? 'disabled' : '';
-    ?>
-
-    <div class="product-card show">
-
-        <!-- IMAGE CAROUSEL -->
-        <div id="carousel<?= $room['room_type_id'] ?>" class="carousel slide product-image-container" data-bs-ride="carousel">
-
-            <div class="carousel-inner">
-
-                <!-- Image 1 -->
-                <div class="carousel-item active">
-                    <img src="../Admin/adminBackend/room_type_images/<?= htmlspecialchars($room['image'] ?? 'default.jpg') ?>"
-                         class="d-block w-100 product-image"
-                         alt="<?= htmlspecialchars($room['room_type']) ?>">
-                </div>
-
-                <!-- Image 2 -->
-                <?php if (!empty($room['image2'])): ?>
-                <div class="carousel-item">
-                    <img src="../Admin/adminBackend/room_type_images/<?= htmlspecialchars($room['image2']) ?>"
-                         class="d-block w-100 product-image">
-                </div>
-                <?php endif; ?>
-
-                <!-- Image 3 -->
-                <?php if (!empty($room['image3'])): ?>
-                <div class="carousel-item">
-                    <img src="../Admin/adminBackend/room_type_images/<?= htmlspecialchars($room['image3']) ?>"
-                         class="d-block w-100 product-image">
-                </div>
-                <?php endif; ?>
-
-            </div>
-
-            <!-- Carousel controls -->
-            <button class="carousel-control-prev" type="button"
-                    data-bs-target="#carousel<?= $room['room_type_id'] ?>" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
+    <!-- Sidebar Cart -->
+    <div class="sidebar-cart" id="sidebarCart">
+        <div class="sidebar-header">
+            <h4><i class="fas fa-shopping-cart"></i> Booking List</h4>
+            <button class="close-sidebar" onclick="closeSidebar()">
+                <i class="fas fa-times"></i>
             </button>
-
-            <button class="carousel-control-next" type="button"
-                    data-bs-target="#carousel<?= $room['room_type_id'] ?>" data-bs-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </button>
-
         </div>
-
-
-        <div class="product-content">
-            <div class="product-header">
-                <div class="product-info">
-                    <div class="product-name"><?= htmlspecialchars($room['room_type']) ?></div>
-                    <div class="product-price">₱<?= number_format($room['price'], 2) ?></div>
-                </div>
-            </div>
-
-            <div class="product-description">
-                <strong>Capacity:</strong> <?= htmlspecialchars($room['capacity']) ?><br>
-                <strong>Beds:</strong> <?= htmlspecialchars($room['beds']) ?><br>
-                <?= htmlspecialchars($room['description']) ?>
-            </div>
-        </div>
-
-        <div class="product-footer">
-            <span class="status-badge <?= $room['status'] === 'active' ? 'available' : 'unavailable' ?>">
-                <?= $room['status'] === 'active' ? 'Active' : 'Inactive' ?>
-            </span>
-
-            <div class="product-actions">
-
-                <!-- VIEW ROOMS BUTTON -->
-                <button class="action-btn view-btn" data-bs-toggle="modal"
-                        data-bs-target="#viewRooms<?= $room['room_type_id'] ?>" title="View Rooms">
-                    <i class="fas fa-eye"></i>
-                </button>
-
-                <!-- DELETE BUTTON -->
-                <form method="POST" action="../Admin/adminBackend/room_type_delete.php?id=<?= $room['room_type_id'] ?>">
-                    <button type="submit" class="action-btn delete-btn"
-                            onclick="return confirm('Delete this room type?')">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </form>
-
+        <div class="sidebar-content" id="cartContent">
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your booking list is empty</p>
             </div>
         </div>
     </div>
-
-
-    <!-- =========================== -->
-    <!-- VIEW ROOM NUMBERS MODAL -->
-    <!-- =========================== -->
-    <?php
-    $rooms_query = $conn->query("
-        SELECT * FROM room_numbers 
-        WHERE room_type_id = '$rtid'
-        ORDER BY room_number ASC
-    ");
-    ?>
-
-    <div class="modal fade" id="viewRooms<?= $room['room_type_id'] ?>" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content package-modal">
-
-                <div class="modal-header package-modal-header">
-                    <h5 class="modal-title fw-bold">Room Numbers - <?= htmlspecialchars($room['room_type']) ?></h5>
-                    <button type="button" class="btn-close package-modal-close" data-bs-dismiss="modal"></button>
-                </div>
-
-                <div class="modal-body package-modal-body">
-
-                    <?php if ($rooms_query->num_rows > 0): ?>
-                        <table class="table table-bordered">
-                            <thead>
-    <tr>
-        <th>Room #</th>
-        <th>Floor</th>
-        <th>Status</th>
-        <th>Action</th>
-    </tr>
-</thead>
-
-                            <tbody>
-<?php while ($rn = $rooms_query->fetch_assoc()): ?>
-
-    <?php
-        // Disable button if room is not available OR room type itself is inactive
-        $disableBook = ($rn['status'] != 1 || $room['status'] !== 'active') ? 'disabled' : '';
-    ?>
-
-    <tr>
-        <td><?= htmlspecialchars($rn['room_number']) ?></td>
-        <td><?= htmlspecialchars($rn['floor_number']) ?></td>
-        <td>
-            <?php 
-                if ($rn['status'] == 1) echo "Available";
-                elseif ($rn['status'] == 2) echo "Occupied";
-                else echo "Maintenance";
-            ?>
-        </td>
-        <td>
-            <form action="book_room.php" method="POST">
-                <input type="hidden" name="room_number_id" value="<?= $rn['id'] ?>">
-                <button type="submit" class="btn btn-primary btn-sm" <?= $disableBook ?>>
-                    Book
-                </button>
-            </form>
-        </td>
-    </tr>
-
-<?php endwhile; ?>
-</tbody>
-
-                        </table>
-                    <?php else: ?>
-                        <p class="text-center text-muted">No rooms assigned to this room type.</p>
-                    <?php endif; ?>
-
-                </div>
-
-                <div class="modal-footer">
-
-                    <!-- ADD BUTTON (DISABLED IF INACTIVE OR NO AVAILABLE ROOMS) -->
-                    <button type="button" class="btn btn-primary" <?= $disabled ?>>
-                        Add
-                    </button>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-<?php endforeach; ?>
-
 </div>
-
-
-
-</div>
-
 
 <?php include 'adminFrontend/footer.php'; ?>
+
+<script>
+    let cartItems = [];
+
+    function addToCart() {
+        const room = {
+            id: Date.now(),
+            name: 'Deluxe Suite',
+            price: 5500,
+            room_number: '205',
+            floor: '2nd Floor',
+            image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200'
+        };
+
+        cartItems.push(room);
+        updateCart();
+        openSidebar();
+    }
+
+    function removeFromCart(id) {
+        cartItems = cartItems.filter(item => item.id !== id);
+        updateCart();
+    }
+
+    function updateCart() {
+        const cartContent = document.getElementById('cartContent');
+
+        if (cartItems.length === 0) {
+            cartContent.innerHTML = `
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your booking list is empty</p>
+                    </div>
+                `;
+            return;
+        }
+
+        const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+
+        cartContent.innerHTML = `
+                ${cartItems.map(item => `
+                    <div class="cart-item">
+                        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
+                        <div class="cart-item-details">
+                            <div class="cart-item-title">${item.name}</div>
+                            <div class="cart-item-price">₱${item.price.toLocaleString()}</div>
+                            <small>Room ${item.room_number} - ${item.floor}</small>
+                            <div class="mt-2">
+                                <button class="remove-item" onclick="removeFromCart(${item.id})">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+                
+                <div class="cart-total">
+                    <h5>Total Amount</h5>
+                    <div class="total-amount">₱${total.toLocaleString()}</div>
+                    <button class="btn-checkout" onclick="checkout()">
+                        <i class="fas fa-check-circle"></i> Proceed to Checkout
+                    </button>
+                </div>
+            `;
+    }
+
+    function openSidebar() {
+        document.getElementById('sidebarCart').classList.add('active');
+        document.getElementById('overlay').classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebarCart').classList.remove('active');
+        document.getElementById('overlay').classList.remove('active');
+        document.body.style.overflow = 'auto';
+    }
+
+    function checkout() {
+        alert('Proceeding to checkout with ' + cartItems.length + ' room(s)');
+    }
+</script>

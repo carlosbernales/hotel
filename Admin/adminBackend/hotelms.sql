@@ -2,10 +2,10 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Nov 21, 2025 at 01:54 PM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Host: 127.0.0.1:3306
+-- Generation Time: Nov 24, 2025 at 12:34 PM
+-- Server version: 11.8.3-MariaDB-log
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hotelms`
+-- Database: `u763377220_hotelms`
 --
 
 -- --------------------------------------------------------
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `about_content` (
-  `id` int NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'About Casa Estela',
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT 'About Casa Estela',
+  `description` text NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -48,12 +48,12 @@ INSERT INTO `about_content` (`id`, `title`, `description`, `last_updated`) VALUE
 --
 
 CREATE TABLE `about_slideshow` (
-  `id` int NOT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `alt_text` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `display_order` int NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `alt_text` varchar(255) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -76,11 +76,11 @@ INSERT INTO `about_slideshow` (`id`, `image_path`, `alt_text`, `display_order`, 
 --
 
 CREATE TABLE `activities` (
-  `activity_id` int NOT NULL,
-  `activity_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `reference_id` int DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `activity_id` int(11) NOT NULL,
+  `activity_type` varchar(50) NOT NULL,
+  `description` text DEFAULT NULL,
+  `reference_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -90,19 +90,19 @@ CREATE TABLE `activities` (
 --
 
 CREATE TABLE `admin` (
-  `id` int NOT NULL,
-  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `middle_initial` varchar(1) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `age` int DEFAULT NULL,
-  `address` text COLLATE utf8mb4_general_ci,
-  `position` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contact` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `profile_image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `middle_initial` varchar(1) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `position` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `profile_image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -122,10 +122,10 @@ INSERT INTO `admin` (`id`, `username`, `password`, `first_name`, `middle_initial
 --
 
 CREATE TABLE `admin_sessions` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `session_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_activity` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `session_id` varchar(255) NOT NULL,
+  `last_activity` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -135,10 +135,10 @@ CREATE TABLE `admin_sessions` (
 --
 
 CREATE TABLE `admin_status` (
-  `id` int NOT NULL,
-  `admin_id` int NOT NULL,
-  `last_active` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_online` tinyint(1) DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `last_active` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_online` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -156,12 +156,12 @@ INSERT INTO `admin_status` (`id`, `admin_id`, `last_active`, `is_online`) VALUES
 --
 
 CREATE TABLE `advance_orders` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `quantity` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -209,9 +209,9 @@ INSERT INTO `advance_orders` (`id`, `booking_id`, `menu_item_id`, `quantity`, `p
 --
 
 CREATE TABLE `advance_order_addons` (
-  `id` int NOT NULL,
-  `advance_order_id` int NOT NULL,
-  `addon_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `advance_order_id` int(11) NOT NULL,
+  `addon_id` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -222,9 +222,9 @@ CREATE TABLE `advance_order_addons` (
 --
 
 CREATE TABLE `amenities` (
-  `amenity_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `amenity_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `icon` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -245,10 +245,10 @@ INSERT INTO `amenities` (`amenity_id`, `name`, `icon`) VALUES
 --
 
 CREATE TABLE `announcements` (
-  `id` int NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `type` enum('gcash','maya','general') COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` enum('gcash','maya','general') NOT NULL,
   `created_at` datetime NOT NULL,
   `valid_until` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -267,12 +267,12 @@ INSERT INTO `announcements` (`id`, `title`, `message`, `type`, `created_at`, `va
 --
 
 CREATE TABLE `beds` (
-  `id` int NOT NULL,
-  `item_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `available_quantity` int NOT NULL DEFAULT '0',
-  `total_quantity` int NOT NULL DEFAULT '0',
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `price` decimal(10,2) NOT NULL DEFAULT '0.00'
+  `id` int(11) NOT NULL,
+  `item_type` varchar(50) NOT NULL,
+  `available_quantity` int(11) NOT NULL DEFAULT 0,
+  `total_quantity` int(11) NOT NULL DEFAULT 0,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -290,33 +290,33 @@ INSERT INTO `beds` (`id`, `item_type`, `available_quantity`, `total_quantity`, `
 --
 
 CREATE TABLE `bookings` (
-  `booking_id` int NOT NULL,
-  `booking_reference` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `user_id` int UNSIGNED DEFAULT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contact` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `booking_type` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `booking_id` int(11) NOT NULL,
+  `booking_reference` varchar(255) NOT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `booking_type` varchar(255) DEFAULT NULL,
   `check_in` date DEFAULT NULL,
   `check_out` date DEFAULT NULL,
   `arrival_time` time DEFAULT NULL,
-  `number_of_guests` int DEFAULT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `room_quantity` int DEFAULT NULL,
-  `payment_option` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `number_of_guests` int(11) DEFAULT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `room_quantity` int(11) DEFAULT NULL,
+  `payment_option` varchar(50) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
-  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `nights` int NOT NULL,
+  `status` varchar(50) DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nights` int(11) NOT NULL,
   `downpayment_amount` decimal(10,2) DEFAULT NULL,
   `remaining_balance` decimal(10,2) DEFAULT NULL,
-  `user_types` enum('admin','frontdesk') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'frontdesk',
-  `num_adults` int DEFAULT '0',
-  `num_children` int DEFAULT '0',
-  `extra_bed` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `discount_type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_types` enum('admin','frontdesk') NOT NULL DEFAULT 'frontdesk',
+  `num_adults` int(11) DEFAULT 0,
+  `num_children` int(11) DEFAULT 0,
+  `extra_bed` varchar(50) DEFAULT NULL,
+  `discount_type` varchar(50) DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
   `discount_amount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -326,7 +326,10 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `status`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`) VALUES
-(1, 'BK-6916B3D7569A2', NULL, 'aa', 'aa', 'aa@gmail.com', '9323333333', 'Online', '2025-11-14', '2025-11-15', NULL, 1, 8, 1, 'Partial Payment', 'gcash', 5100.00, 'accepted', '2025-11-14 04:45:11', 1, 1500.00, 3600.00, 'frontdesk', 1, 0, '', NULL, 0.00, 0.00);
+(1, 'BK-6916B3D7569A2', NULL, 'aa', 'aa', 'aa@gmail.com', '9323333333', 'Online', '2025-11-24', '2025-11-25', NULL, 1, 8, 1, 'Partial Payment', 'gcash', 5100.00, 'accepted', '2025-11-14 04:45:11', 1, 1500.00, 3600.00, 'frontdesk', 1, 0, '', NULL, 0.00, 0.00),
+(7, 'BK-692445945EC5B', 44, 'Henz', 'Ollywod', 'ollywodhenz@gmail.com', '09267615921', 'Online', '2025-11-24', '2025-11-25', NULL, 1, 2, 1, 'Partial Payment', 'gcash', 150.00, 'pending', '2025-11-24 11:46:28', 1, 1500.00, -1350.00, 'frontdesk', 1, 0, '', NULL, 0.00, 0.00),
+(9, 'BK-69244A1D70011', 44, 'Henz', 'Ollywod', 'ollywodhenz@gmail.com', '09267615921', 'Online', '2025-11-25', '2025-11-29', NULL, 1, 2, 1, 'Partial Payment', 'gcash', 600.00, 'pending', '2025-11-24 12:05:49', 4, 1500.00, -900.00, 'frontdesk', 1, 0, '', NULL, 0.00, 0.00),
+(10, 'BK-69244A2B5DBB2', 45, 'Carlos ', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', 'Online', '2025-11-26', '2025-11-27', NULL, 1, 2, 1, 'Partial Payment', 'gcash', 150.00, 'pending', '2025-11-24 12:06:03', 1, 1500.00, -1350.00, 'frontdesk', 1, 0, '', NULL, 0.00, 0.00);
 
 -- --------------------------------------------------------
 
@@ -335,10 +338,10 @@ INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_nam
 --
 
 CREATE TABLE `booking_cancellations` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `reason` text COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reason` text NOT NULL,
   `cancelled_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -363,14 +366,14 @@ INSERT INTO `booking_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `c
 --
 
 CREATE TABLE `booking_display_settings` (
-  `id` int NOT NULL,
-  `booking_type` enum('room','table','event') COLLATE utf8mb4_general_ci NOT NULL,
-  `display_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `image_settings` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `layout_order` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ;
+  `id` int(11) NOT NULL,
+  `booking_type` enum('room','table','event') NOT NULL,
+  `display_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`display_fields`)),
+  `image_settings` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`image_settings`)),
+  `layout_order` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `booking_display_settings`
@@ -391,14 +394,14 @@ INSERT INTO `booking_display_settings` (`id`, `booking_type`, `display_fields`, 
 --
 
 CREATE TABLE `booking_extensions` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
   `original_checkout` date NOT NULL,
   `new_checkout` date NOT NULL,
-  `days_extended` int NOT NULL,
+  `days_extended` int(11) NOT NULL,
   `additional_cost` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `extension_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `payment_method` varchar(50) NOT NULL,
+  `extension_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -413,14 +416,36 @@ INSERT INTO `booking_extensions` (`id`, `booking_id`, `original_checkout`, `new_
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `booking_history`
+--
+
+CREATE TABLE `booking_history` (
+  `id` int(11) NOT NULL,
+  `booking_id` varchar(50) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `details` text DEFAULT NULL,
+  `performed_by` varchar(50) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `booking_history`
+--
+
+INSERT INTO `booking_history` (`id`, `booking_id`, `action`, `details`, `performed_by`, `created_at`) VALUES
+(1, '1', 'reschedule', 'Booking rescheduled from 2025-11-14 - 2025-11-15 to 2025-11-24 - 2025-11-25', 'Admin', '2025-11-20 11:32:30');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `booking_list`
 --
 
 CREATE TABLE `booking_list` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `room_type_id` int NOT NULL,
-  `added_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `added_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -430,11 +455,11 @@ CREATE TABLE `booking_list` (
 --
 
 CREATE TABLE `cashier` (
-  `id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -444,13 +469,13 @@ CREATE TABLE `cashier` (
 --
 
 CREATE TABLE `chat_messages` (
-  `id` int NOT NULL,
-  `user_id` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `sender_type` enum('user','admin','system') COLLATE utf8mb4_general_ci NOT NULL,
-  `read_status` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `reply_to_id` int DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `sender_type` enum('user','admin','system') NOT NULL,
+  `read_status` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `reply_to_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -504,22 +529,22 @@ INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `sender_type`, `read_st
 --
 
 CREATE TABLE `checked_in` (
-  `id` int NOT NULL,
-  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `room_type_id` int NOT NULL,
-  `room_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `contact_number` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_type` varchar(50) NOT NULL,
   `check_in_date` date NOT NULL,
   `check_out_date` date NOT NULL,
-  `nights_staying` int NOT NULL,
-  `number_of_guests` int NOT NULL,
-  `special_requests` text COLLATE utf8mb4_general_ci,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `nights_staying` int(11) NOT NULL,
+  `number_of_guests` int(11) NOT NULL,
+  `special_requests` text DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` varchar(20) DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -544,22 +569,22 @@ INSERT INTO `checked_in` (`id`, `first_name`, `last_name`, `contact_number`, `em
 --
 
 CREATE TABLE `checked_out` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `room_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `room_type` varchar(50) NOT NULL,
   `check_in` date NOT NULL,
   `check_out` date NOT NULL,
-  `checkout_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `nights` int NOT NULL,
-  `number_of_guests` int NOT NULL,
+  `checkout_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nights` int(11) NOT NULL,
+  `number_of_guests` int(11) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Checked Out',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `payment_method` varchar(50) NOT NULL,
+  `status` varchar(20) DEFAULT 'Checked Out',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -569,13 +594,13 @@ CREATE TABLE `checked_out` (
 --
 
 CREATE TABLE `contact_info` (
-  `id` int NOT NULL,
-  `icon_class` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `display_text` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `link` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `is_external` tinyint(1) DEFAULT '1',
-  `display_order` int DEFAULT '0',
-  `active` tinyint(1) DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `icon_class` varchar(50) NOT NULL,
+  `display_text` varchar(255) NOT NULL,
+  `link` varchar(255) NOT NULL,
+  `is_external` tinyint(1) DEFAULT 1,
+  `display_order` int(11) DEFAULT 0,
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -597,14 +622,14 @@ INSERT INTO `contact_info` (`id`, `icon_class`, `display_text`, `link`, `is_exte
 --
 
 CREATE TABLE `contact_messages` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('new','read','replied') COLLATE utf8mb4_general_ci DEFAULT 'new',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('new','read','replied') DEFAULT 'new',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -630,14 +655,14 @@ INSERT INTO `contact_messages` (`id`, `first_name`, `last_name`, `email`, `messa
 --
 
 CREATE TABLE `customer` (
-  `customer_id` int NOT NULL,
+  `customer_id` int(10) NOT NULL,
   `customer_name` varchar(100) NOT NULL,
-  `contact_no` bigint NOT NULL,
+  `contact_no` bigint(20) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `id_card_type_id` int NOT NULL,
+  `id_card_type_id` int(10) NOT NULL,
   `id_card_no` varchar(20) NOT NULL,
   `address` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `customer`
@@ -660,12 +685,12 @@ INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_no`, `email`, `
 --
 
 CREATE TABLE `customers` (
-  `customer_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_vip` tinyint(1) DEFAULT '0'
+  `customer_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_vip` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -687,9 +712,9 @@ INSERT INTO `customers` (`customer_id`, `name`, `email`, `phone`, `created_at`, 
 
 CREATE TABLE `daily_occupancy` (
   `date` date NOT NULL,
-  `total_rooms` int NOT NULL,
-  `occupied_rooms` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `total_rooms` int(11) NOT NULL,
+  `occupied_rooms` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -714,8 +739,8 @@ INSERT INTO `daily_occupancy` (`date`, `total_rooms`, `occupied_rooms`, `created
 CREATE TABLE `daily_revenue` (
   `date` date NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `booking_count` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `booking_count` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -738,16 +763,16 @@ INSERT INTO `daily_revenue` (`date`, `total_amount`, `booking_count`, `created_a
 --
 
 CREATE TABLE `dining_tables` (
-  `id` int NOT NULL,
-  `table_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `table_type` enum('Couple','Friends','Family','Package A','Package B','Package C') COLLATE utf8mb4_general_ci NOT NULL,
-  `category` enum('regular','ultimate') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'regular',
-  `capacity` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `table_name` varchar(100) NOT NULL,
+  `table_type` enum('Couple','Friends','Family','Package A','Package B','Package C') NOT NULL,
+  `category` enum('regular','ultimate') NOT NULL DEFAULT 'regular',
+  `capacity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `status` enum('available','occupied') COLLATE utf8mb4_general_ci DEFAULT 'available',
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `status` enum('available','occupied') DEFAULT 'available',
+  `image_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -766,10 +791,10 @@ INSERT INTO `dining_tables` (`id`, `table_name`, `table_type`, `category`, `capa
 --
 
 CREATE TABLE `disable_reasons` (
-  `id` int NOT NULL,
-  `reason` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -790,12 +815,12 @@ INSERT INTO `disable_reasons` (`id`, `reason`, `is_active`, `created_at`) VALUES
 --
 
 CREATE TABLE `discount_types` (
-  `id` int NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `percentage` decimal(5,2) NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -814,13 +839,13 @@ INSERT INTO `discount_types` (`id`, `name`, `percentage`, `description`, `is_act
 --
 
 CREATE TABLE `emp_history` (
-  `id` int NOT NULL,
-  `emp_id` int NOT NULL,
-  `shift_id` int NOT NULL,
-  `from_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `emp_id` int(11) NOT NULL,
+  `shift_id` int(11) NOT NULL,
+  `from_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `to_date` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `emp_history`
@@ -845,11 +870,11 @@ INSERT INTO `emp_history` (`id`, `emp_id`, `shift_id`, `from_date`, `to_date`, `
 --
 
 CREATE TABLE `events` (
-  `event_id` int NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `event_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
   `event_date` date NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -859,32 +884,32 @@ CREATE TABLE `events` (
 --
 
 CREATE TABLE `event_bookings` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `customer_name` int NOT NULL,
-  `package_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `customer_name` int(255) NOT NULL,
+  `package_name` varchar(100) NOT NULL,
   `package_price` decimal(10,2) NOT NULL,
   `base_price` decimal(10,2) NOT NULL,
-  `overtime_hours` int DEFAULT '0',
-  `overtime_charge` decimal(10,2) DEFAULT '0.00',
-  `extra_guests` int DEFAULT '0',
-  `extra_guest_charge` decimal(10,2) DEFAULT '0.00',
+  `overtime_hours` int(11) DEFAULT 0,
+  `overtime_charge` decimal(10,2) DEFAULT 0.00,
+  `extra_guests` int(11) DEFAULT 0,
+  `extra_guest_charge` decimal(10,2) DEFAULT 0.00,
   `total_amount` decimal(10,2) NOT NULL,
   `paid_amount` decimal(10,2) NOT NULL,
   `remaining_balance` decimal(10,2) NOT NULL,
   `reservation_date` date NOT NULL,
-  `event_type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `event_type` varchar(50) DEFAULT NULL,
   `event_date` date NOT NULL,
   `start_time` time NOT NULL,
   `end_time` time NOT NULL,
-  `number_of_guests` int NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `booking_status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `reserve_type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'Regular',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `booking_source` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'Regular Booking'
+  `number_of_guests` int(11) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `payment_type` varchar(50) NOT NULL,
+  `booking_status` varchar(20) DEFAULT 'pending',
+  `reserve_type` varchar(50) DEFAULT 'Regular',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `booking_source` varchar(50) DEFAULT 'Regular Booking'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -894,7 +919,7 @@ CREATE TABLE `event_bookings` (
 INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, `package_price`, `base_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `reservation_date`, `event_type`, `event_date`, `start_time`, `end_time`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`, `created_at`, `updated_at`, `booking_source`) VALUES
 (1, 40, 0, 'Package A', 58500.00, 47500.00, 0, 6000.00, 0, 0.00, 58500.00, 29250.00, 29250.00, '2025-06-13', 'Birthday', '2025-06-25', '10:37:00', '18:37:00', 55, 'gcash', 'downpayment', 'pending', 'Regular', '2025-06-13 02:38:35', '2025-06-13 02:38:35', 'Website Booking'),
 (2, 5, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-06', 'Birthday', '2025-11-14', '09:00:00', '13:00:00', 50, 'gcash', 'full', 'pending', 'Regular', '2025-11-06 02:16:25', '2025-11-06 02:16:25', 'Website Booking'),
-(3, 5, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-06', 'Birthday', '2025-11-14', '12:00:00', '15:00:00', 50, 'gcash', 'full', 'pending', 'Regular', '2025-11-06 02:20:32', '2025-11-06 02:20:32', 'Website Booking'),
+(3, 5, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-06', 'Birthday', '2025-11-14', '12:00:00', '15:00:00', 50, 'gcash', 'full', 'confirmed', 'Regular', '2025-11-06 02:20:32', '2025-11-20 11:26:08', 'Website Booking'),
 (4, 3, 0, 'Package A', 49500.00, 47500.00, 0, 2000.00, 0, 0.00, 49500.00, 49500.00, 0.00, '2025-11-12', 'Corporate', '2025-11-14', '16:16:00', '22:16:00', 50, 'gcash', 'full', 'pending', 'Regular', '2025-11-12 08:18:06', '2025-11-12 08:18:06', 'Website Booking'),
 (5, 42, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-13', 'Birthday', '2025-11-14', '15:13:00', '18:13:00', 5, 'gcash', 'full', 'pending', 'Regular', '2025-11-13 07:14:57', '2025-11-13 07:14:57', 'Website Booking');
 
@@ -905,12 +930,12 @@ INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, 
 --
 
 CREATE TABLE `event_images` (
-  `id` int NOT NULL,
-  `package_id` int DEFAULT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `caption` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `is_featured` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `package_id` int(11) DEFAULT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `caption` varchar(255) DEFAULT NULL,
+  `is_featured` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -932,22 +957,22 @@ INSERT INTO `event_images` (`id`, `package_id`, `image_path`, `caption`, `is_fea
 --
 
 CREATE TABLE `event_packages` (
-  `id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image_path2` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image_path3` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `max_guests` int NOT NULL DEFAULT '30',
-  `duration` int NOT NULL DEFAULT '5' COMMENT 'Duration in hours',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_available` tinyint(1) DEFAULT '1',
-  `menu_items` text COLLATE utf8mb4_general_ci,
-  `max_pax` int DEFAULT '50',
-  `time_limit` varchar(50) COLLATE utf8mb4_general_ci DEFAULT '5 hours',
-  `notes` text COLLATE utf8mb4_general_ci,
-  `status` enum('Available','Occupied') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Available'
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `image_path2` varchar(255) DEFAULT NULL,
+  `image_path3` varchar(255) DEFAULT NULL,
+  `max_guests` int(11) NOT NULL DEFAULT 30,
+  `duration` int(11) NOT NULL DEFAULT 5 COMMENT 'Duration in hours',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_available` tinyint(1) DEFAULT 1,
+  `menu_items` text DEFAULT NULL,
+  `max_pax` int(11) DEFAULT 50,
+  `time_limit` varchar(50) DEFAULT '5 hours',
+  `notes` text DEFAULT NULL,
+  `status` enum('Available','Occupied') NOT NULL DEFAULT 'Available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -955,7 +980,11 @@ CREATE TABLE `event_packages` (
 --
 
 INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`, `image_path2`, `image_path3`, `max_guests`, `duration`, `created_at`, `is_available`, `menu_items`, `max_pax`, `time_limit`, `notes`, `status`) VALUES
-(1, 'sadasd', 1.00, 'asdas', '1b60f9e7c43dbd2a80c0ae19.jpg', '9e81e6f339c53c48bd366e18.jpg', NULL, 1, 1, '2025-11-21 09:24:10', 1, NULL, 1, 'dasdas', 'asdasd', 'Occupied');
+(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, NULL, 50, '5 hours', NULL, 'Available'),
+(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers, 2 Pasta, 2 Mains, Salad Bar, Rice , Drinks', 50, '5 hours', NULL, 'Available'),
+(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, ' 2 Appetizers, 2 Pasta, 3 Mains, Salad Bar, Rice, 1 Dessert,  Drinks ', 50, '5 hours', '**Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'Available'),
+(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'Available'),
+(5, 'Package F', 50000.00, '<br />\r\n<b>Deprecated</b>:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in <b>/home/u429956055/domains/e-akomoda.site/public_html/Admin/edit_event_package.php</b> on line <b>215</b><br />\r\n', 'uploads/event_packages/682692cbc2261.jpg', NULL, NULL, 50, 5, '2025-04-17 06:57:47', 0, NULL, 50, '5 hours', NULL, 'Available');
 
 -- --------------------------------------------------------
 
@@ -964,14 +993,14 @@ INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`
 --
 
 CREATE TABLE `facilities` (
-  `id` int NOT NULL,
-  `category_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'check',
-  `display_order` int NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `icon` varchar(50) DEFAULT 'check',
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1015,12 +1044,12 @@ INSERT INTO `facilities` (`id`, `category_id`, `name`, `icon`, `display_order`, 
 --
 
 CREATE TABLE `facility_categories` (
-  `id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `display_order` int NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1044,12 +1073,12 @@ INSERT INTO `facility_categories` (`id`, `name`, `display_order`, `active`, `cre
 --
 
 CREATE TABLE `featured_rooms` (
-  `id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1066,16 +1095,16 @@ INSERT INTO `featured_rooms` (`id`, `room_type_id`, `start_date`, `end_date`, `c
 --
 
 CREATE TABLE `feedback` (
-  `id` int NOT NULL,
-  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('pending','read','resolved') COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('pending','read','resolved') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `resolved_at` timestamp NULL DEFAULT NULL,
-  `admin_response` text COLLATE utf8mb4_general_ci,
-  `resolve_status` tinyint(1) DEFAULT '0'
+  `admin_response` text DEFAULT NULL,
+  `resolve_status` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1085,9 +1114,9 @@ CREATE TABLE `feedback` (
 --
 
 CREATE TABLE `fix_booking_ids_log` (
-  `id` int NOT NULL,
-  `message` text COLLATE utf8mb4_unicode_ci,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `message` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1110,11 +1139,11 @@ INSERT INTO `fix_booking_ids_log` (`id`, `message`, `created_at`) VALUES
 --
 
 CREATE TABLE `gallery_images` (
-  `id` int NOT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1124,12 +1153,12 @@ CREATE TABLE `gallery_images` (
 --
 
 CREATE TABLE `guests` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1139,14 +1168,14 @@ CREATE TABLE `guests` (
 --
 
 CREATE TABLE `guest_names` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `first_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `guest_type` enum('regular','pwd','senior') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'regular',
-  `age` int DEFAULT NULL,
-  `image_proof` varchar(44) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `guest_type` enum('regular','pwd','senior') NOT NULL DEFAULT 'regular',
+  `age` int(11) DEFAULT NULL,
+  `image_proof` varchar(44) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1156,10 +1185,10 @@ CREATE TABLE `guest_names` (
 --
 
 CREATE TABLE `hotel_policies` (
-  `id` int NOT NULL,
-  `policy_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `policy_content` text COLLATE utf8mb4_general_ci NOT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `policy_type` varchar(50) NOT NULL,
+  `policy_content` text NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1176,11 +1205,11 @@ INSERT INTO `hotel_policies` (`id`, `policy_type`, `policy_content`, `last_updat
 --
 
 CREATE TABLE `housekeeping_requests` (
-  `request_id` int NOT NULL,
-  `room_id` int DEFAULT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `status` enum('Pending','In Progress','Completed') COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `request_id` int(11) NOT NULL,
+  `room_id` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `status` enum('Pending','In Progress','Completed') DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `completed_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1191,9 +1220,9 @@ CREATE TABLE `housekeeping_requests` (
 --
 
 CREATE TABLE `id_card_type` (
-  `id_card_type_id` int NOT NULL,
+  `id_card_type_id` int(10) NOT NULL,
   `id_card_type` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `id_card_type`
@@ -1213,9 +1242,9 @@ INSERT INTO `id_card_type` (`id_card_type_id`, `id_card_type`) VALUES
 --
 
 CREATE TABLE `items` (
-  `item_id` int NOT NULL,
-  `item_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `category` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `item_id` int(11) NOT NULL,
+  `item_name` varchar(100) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1257,14 +1286,14 @@ INSERT INTO `items` (`item_id`, `item_name`, `category`, `price`) VALUES
 --
 
 CREATE TABLE `location_info` (
-  `id` int NOT NULL,
-  `address` text COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `address` text NOT NULL,
   `latitude` decimal(10,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
-  `map_zoom_level` int DEFAULT '15',
-  `contact_phone` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contact_email` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `map_zoom_level` int(11) DEFAULT 15,
+  `contact_phone` varchar(50) DEFAULT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1281,13 +1310,13 @@ INSERT INTO `location_info` (`id`, `address`, `latitude`, `longitude`, `map_zoom
 --
 
 CREATE TABLE `maintenance_settings` (
-  `id` int NOT NULL,
-  `is_enabled` tinyint(1) DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `is_enabled` tinyint(1) DEFAULT 0,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `message` text COLLATE utf8mb4_general_ci,
-  `allowed_ips` text COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `message` text DEFAULT NULL,
+  `allowed_ips` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1304,9 +1333,9 @@ INSERT INTO `maintenance_settings` (`id`, `is_enabled`, `start_time`, `end_time`
 --
 
 CREATE TABLE `menu_categories` (
-  `id` int NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `display_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `display_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1322,7 +1351,8 @@ INSERT INTO `menu_categories` (`id`, `name`, `display_name`) VALUES
 (6, 'iceblend', 'ICE BLENDED'),
 (7, 'tea', 'TEA'),
 (8, 'otherdrinks', 'OTHER DRINKS'),
-(9, 'Coffee', 'Coffee');
+(9, 'SAD', 'SAD'),
+(18, 'GAGA', 'GAGA');
 
 -- --------------------------------------------------------
 
@@ -1331,13 +1361,13 @@ INSERT INTO `menu_categories` (`id`, `name`, `display_name`) VALUES
 --
 
 CREATE TABLE `menu_items` (
-  `id` int NOT NULL,
-  `category_id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `availability` tinyint(1) NOT NULL DEFAULT '1'
+  `image_path` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `availability` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1346,12 +1376,12 @@ CREATE TABLE `menu_items` (
 
 INSERT INTO `menu_items` (`id`, `category_id`, `name`, `price`, `image_path`, `description`, `availability`) VALUES
 (1, 1, 'Hand-cut Potato Fries', 160.00, 'uploads/menus/menu_68120be0791bf.png', 'Crispy fries with seasoning', 0),
-(2, 1, 'Mozzarella Stick', 150.00, 'uploads/menus/menu_6810015e57a69.jpg', 'Fried mozzarella with marinara sauce', 1),
+(2, 1, 'Mozzarella Stick', 150.00, 'uploads/menus/menu_6810015e57a69.jpg', 'Fried mozzarella with marinara sauce', 0),
 (3, 1, 'Chicken Wings', 180.00, 'uploads/menus/menu_67f927bc54efc.jpg', 'Spicy chicken wings', 1),
 (4, 2, 'Salad', 200.00, 'uploads/menus/menu_67fb19926baf0.png', 'Fresh garden salad with dressing', 1),
 (5, 2, 'Coconut Salad', 200.00, 'uploads/menus/menu_67ff5aa2dae0f.jpg', 'Tropical coconut salad', 1),
 (6, 3, 'Spaghetti', 300.00, 'images/menu_67b427110a801.jpg', 'Classic spaghetti with tomato sauce', 1),
-(7, 4, 'Egg Sandwich', 500.00, '', 'Grilled egg sandwich', 1),
+(7, 4, 'Egg Sandwich', 500.00, '', 'Grilled egg sandwich', 0),
 (8, 1, 'Spaghetti maccaroni', 270.00, 'images/menu_67b4289215e15.jpg', 'Spaghetti with creamy sauce', 1),
 (431, 6, 'Matcha', 180.00, '', 'Matcha green tea drink', 1),
 (432, 1, 'Carbonara', 120.00, '', 'Carbonara pasta with bacon and cheese', 1);
@@ -1363,9 +1393,9 @@ INSERT INTO `menu_items` (`id`, `category_id`, `name`, `price`, `image_path`, `d
 --
 
 CREATE TABLE `menu_items_addons` (
-  `id` int NOT NULL,
-  `menu_item_id` int DEFAULT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `menu_item_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1374,7 +1404,9 @@ CREATE TABLE `menu_items_addons` (
 --
 
 INSERT INTO `menu_items_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
-(1, 1, 'Hotdog', 40.00);
+(1, 3, 'HAtdog', 15.00),
+(2, 3, 'cheese', 20.00),
+(3, 3, 'Gravy', 20.00);
 
 -- --------------------------------------------------------
 
@@ -1383,9 +1415,9 @@ INSERT INTO `menu_items_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
 --
 
 CREATE TABLE `menu_item_addons` (
-  `id` int NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1412,13 +1444,13 @@ INSERT INTO `menu_item_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
 --
 
 CREATE TABLE `messages` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `sender_type` enum('user','admin','system') COLLATE utf8mb4_general_ci NOT NULL,
-  `read_status` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(50) COLLATE utf8mb4_general_ci DEFAULT 'unread'
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `sender_type` enum('user','admin','system') NOT NULL,
+  `read_status` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1510,15 +1542,15 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `sender_type`, `read_status`
 --
 
 CREATE TABLE `notifications` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text COLLATE utf8mb4_general_ci NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `reference_id` int DEFAULT NULL,
-  `is_read` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `icon` varchar(50) NOT NULL,
+  `reference_id` int(11) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1819,14 +1851,14 @@ INSERT INTO `notifications` (`id`, `user_id`, `title`, `message`, `type`, `icon`
 --
 
 CREATE TABLE `offers` (
-  `id` int NOT NULL,
-  `title` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `discount` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `discount` varchar(50) NOT NULL,
+  `description` text NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1835,7 +1867,7 @@ CREATE TABLE `offers` (
 
 INSERT INTO `offers` (`id`, `title`, `image`, `discount`, `description`, `active`, `created_at`, `updated_at`) VALUES
 (1, 'Weekend Getaway', 'images/offer_67f946a852068.jpg', '', 'Perfect weekend escape with breakfast included', 1, '2025-03-05 11:14:57', '2025-05-26 16:23:51'),
-(2, 'Family', 'images/couple.jpg', '', 'Special rate for family stays with complimentary activities', 1, '2025-03-05 11:14:57', '2025-05-26 16:23:55'),
+(2, 'Family Time', 'images/couple.jpg', '0% OFF', 'Special rate for family stays with complimentary activities', 1, '2025-03-05 11:14:57', '2025-11-20 11:22:53'),
 (3, 'Events', 'images/4.jpg', '', 'Stay longer, save more with our weekly rates', 1, '2025-03-05 11:14:57', '2025-05-31 16:06:56');
 
 -- --------------------------------------------------------
@@ -1845,38 +1877,47 @@ INSERT INTO `offers` (`id`, `title`, `image`, `discount`, `description`, `active
 --
 
 CREATE TABLE `orders` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `table_id` int NOT NULL,
-  `customer_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` int NOT NULL,
-  `nickname` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `table_id` int(11) NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `contact_number` int(11) NOT NULL,
+  `nickname` varchar(255) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `amount_paid` int NOT NULL,
-  `change_amount` int NOT NULL,
-  `extra_fee` int NOT NULL,
-  `order_type` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_option` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_status` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `remaining_balance` decimal(10,2) DEFAULT '0.00',
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `reject_reason` text COLLATE utf8mb4_general_ci,
-  `final_total` int NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `discount_type` varchar(255) COLLATE utf8mb4_general_ci DEFAULT 'none',
-  `discount_amount` int NOT NULL,
-  `id_number` varchar(55) COLLATE utf8mb4_general_ci NOT NULL,
+  `amount_paid` int(11) NOT NULL,
+  `change_amount` int(11) NOT NULL,
+  `extra_fee` int(11) NOT NULL,
+  `order_type` varchar(255) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `payment_option` varchar(255) NOT NULL,
+  `payment_status` varchar(255) NOT NULL,
+  `remaining_balance` decimal(10,2) DEFAULT 0.00,
+  `status` varchar(20) DEFAULT 'Pending',
+  `reject_reason` text DEFAULT NULL,
+  `final_total` int(11) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `discount_type` varchar(255) DEFAULT 'none',
+  `discount_amount` int(11) NOT NULL,
+  `id_number` varchar(55) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   `updated_at` date NOT NULL,
-  `cancellation_reason` text COLLATE utf8mb4_general_ci,
+  `cancellation_reason` text DEFAULT NULL,
   `cancelled_at` datetime DEFAULT NULL,
-  `notification_status` tinyint(1) DEFAULT '0',
-  `cashier_id` int DEFAULT NULL,
-  `table_name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `type_of_order` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `processed_by` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `notification_status` tinyint(1) DEFAULT 0,
+  `cashier_id` int(11) DEFAULT NULL,
+  `table_name` varchar(100) DEFAULT NULL,
+  `type_of_order` varchar(50) DEFAULT NULL,
+  `processed_by` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `table_id`, `customer_name`, `contact_number`, `nickname`, `total_amount`, `amount_paid`, `change_amount`, `extra_fee`, `order_type`, `payment_method`, `payment_option`, `payment_status`, `remaining_balance`, `status`, `reject_reason`, `final_total`, `order_date`, `discount_type`, `discount_amount`, `id_number`, `completed_at`, `updated_at`, `cancellation_reason`, `cancelled_at`, `notification_status`, `cashier_id`, `table_name`, `type_of_order`, `processed_by`) VALUES
+(1, 45, 0, 'Carlos  Bernales', 2147483647, '', 235.00, 118, 0, 0, 'regular', 'gcash', 'partial', 'paid', 117.50, 'Pending', NULL, 235, '2025-11-23 13:50:09', 'none', 0, '', NULL, '0000-00-00', NULL, NULL, 1, NULL, 'N/A', 'regular', NULL),
+(2, 45, 0, 'Carlos  Bernales', 2147483647, '', 355.00, 178, 0, 0, 'advance', 'maya', 'partial', 'paid', 177.50, 'Pending', NULL, 355, '2025-11-23 13:51:52', 'none', 0, '', NULL, '0000-00-00', NULL, NULL, 1, NULL, 'N/A', 'advance', NULL),
+(3, 45, 0, 'Carlos  Bernales', 2147483647, '', 235.00, 118, 0, 0, 'advance', 'gcash', 'partial', 'paid', 117.50, 'Pending', NULL, 235, '2025-11-23 14:08:10', 'none', 0, '', NULL, '0000-00-00', NULL, NULL, 1, NULL, 'N/A', 'advance', NULL);
 
 -- --------------------------------------------------------
 
@@ -1885,12 +1926,22 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `order_items` (
-  `id` int NOT NULL,
-  `order_id` int NOT NULL,
-  `item_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `quantity` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `item_name` varchar(100) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `item_name`, `quantity`, `unit_price`) VALUES
+(1, 1, 'Chicken Wings', 1, 180.00),
+(2, 2, 'Carbonara', 1, 120.00),
+(3, 2, 'Chicken Wings', 1, 180.00),
+(4, 3, 'Chicken Wings', 1, 180.00);
 
 -- --------------------------------------------------------
 
@@ -1899,9 +1950,9 @@ CREATE TABLE `order_items` (
 --
 
 CREATE TABLE `order_item_addons` (
-  `id` int NOT NULL,
-  `order_item_id` int NOT NULL,
-  `addon_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_item_id` int(11) NOT NULL,
+  `addon_name` varchar(100) NOT NULL,
   `addon_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1910,7 +1961,15 @@ CREATE TABLE `order_item_addons` (
 --
 
 INSERT INTO `order_item_addons` (`id`, `order_item_id`, `addon_name`, `addon_price`) VALUES
-(2, 2, 'Extra Ranchs', 30.00);
+(1, 1, 'HAtdog', 15.00),
+(2, 1, 'cheese', 20.00),
+(3, 1, 'Gravy', 20.00),
+(4, 3, 'HAtdog', 15.00),
+(5, 3, 'cheese', 20.00),
+(6, 3, 'Gravy', 20.00),
+(7, 4, 'HAtdog', 15.00),
+(8, 4, 'cheese', 20.00),
+(9, 4, 'Gravy', 20.00);
 
 -- --------------------------------------------------------
 
@@ -1919,42 +1978,12 @@ INSERT INTO `order_item_addons` (`id`, `order_item_id`, `addon_name`, `addon_pri
 --
 
 CREATE TABLE `order_payments` (
-  `payment_id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `payment_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
   `payment_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `order_payments`
---
-
-INSERT INTO `order_payments` (`payment_id`, `order_id`, `amount`, `payment_method`, `payment_date`) VALUES
-(1, 1, 80.00, 'maya', '2025-04-11 22:12:24'),
-(2, 4, 95.00, 'cash', '2025-04-11 22:14:07'),
-(0, 45, 90.00, 'gcash', '2025-05-01 01:03:05'),
-(0, 4, 80.00, 'maya', '2025-05-01 12:03:12'),
-(0, 42, 60.00, 'cash', '2025-05-02 20:52:06'),
-(0, 46, 240.00, 'bank', '2025-05-03 09:04:31'),
-(0, 47, 90.00, 'maya', '2025-05-03 09:06:05'),
-(0, 50, 90.00, 'cash', '2025-05-03 23:17:11'),
-(0, 49, 90.00, 'gcash', '2025-05-03 23:31:51'),
-(0, 14, 240.00, 'cash', '2025-05-08 12:13:13'),
-(0, 14, 9.00, 'cash', '2025-05-08 12:13:43'),
-(0, 14, 1.00, 'gcash', '2025-05-08 12:13:55'),
-(0, 9, 135.00, 'gcash', '2025-05-09 23:56:07'),
-(0, 15, 80.00, 'cash', '2025-05-15 22:13:06'),
-(0, 2, 90.00, 'cash', '2025-05-27 00:12:12'),
-(0, 3, 90.00, 'gcash', '2025-06-01 01:59:54'),
-(0, 9, 230.00, 'gcash', '2025-06-01 02:00:11'),
-(0, 19, 60.00, 'maya', '2025-06-01 22:13:07'),
-(0, 12, 90.00, 'maya', '2025-06-02 01:13:52'),
-(0, 20, 90.00, 'cash', '2025-06-02 09:39:23'),
-(0, 23, 90.00, 'cash', '2025-06-02 09:39:39'),
-(0, 14, 170.00, 'cash', '2025-06-02 09:39:52'),
-(0, 27, 150.00, 'cash', '2025-06-02 10:24:52'),
-(0, 2, 150.00, 'cash', '2025-06-13 08:08:02');
 
 -- --------------------------------------------------------
 
@@ -1963,9 +1992,9 @@ INSERT INTO `order_payments` (`payment_id`, `order_id`, `amount`, `payment_metho
 --
 
 CREATE TABLE `package_durations` (
-  `id` int NOT NULL,
-  `hours` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `hours` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1975,9 +2004,9 @@ CREATE TABLE `package_durations` (
 --
 
 CREATE TABLE `package_max_guests` (
-  `id` int NOT NULL,
-  `capacity` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1987,9 +2016,9 @@ CREATE TABLE `package_max_guests` (
 --
 
 CREATE TABLE `package_menu_items` (
-  `id` int NOT NULL,
-  `item_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1999,10 +2028,10 @@ CREATE TABLE `package_menu_items` (
 --
 
 CREATE TABLE `package_notes` (
-  `id` int NOT NULL,
-  `note_type` enum('30PAX','50PAX') COLLATE utf8mb4_general_ci NOT NULL,
-  `note_text` text COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `note_type` enum('30PAX','50PAX') NOT NULL,
+  `note_text` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2012,13 +2041,13 @@ CREATE TABLE `package_notes` (
 --
 
 CREATE TABLE `page_content` (
-  `id` int NOT NULL,
-  `page_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `hero_title` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `hero_subtitle` text COLLATE utf8mb4_general_ci,
-  `section_title` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `section_intro` text COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `page_name` varchar(50) NOT NULL,
+  `hero_title` varchar(255) NOT NULL,
+  `hero_subtitle` text DEFAULT NULL,
+  `section_title` varchar(255) DEFAULT NULL,
+  `section_intro` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2035,14 +2064,14 @@ INSERT INTO `page_content` (`id`, `page_name`, `hero_title`, `hero_subtitle`, `s
 --
 
 CREATE TABLE `payments` (
-  `payment_id` int NOT NULL,
-  `booking_reference` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `booking_id` int NOT NULL,
+  `payment_id` int(11) NOT NULL,
+  `booking_reference` varchar(255) NOT NULL,
+  `booking_id` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `reference_number` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `reference_number` varchar(100) DEFAULT NULL,
   `payment_date` datetime DEFAULT NULL,
-  `proof_file` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `proof_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2066,10 +2095,10 @@ INSERT INTO `payments` (`payment_id`, `booking_reference`, `booking_id`, `amount
 --
 
 CREATE TABLE `payment_methods` (
-  `id` int NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `display_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `display_name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2087,12 +2116,12 @@ INSERT INTO `payment_methods` (`id`, `name`, `display_name`, `is_active`) VALUES
 --
 
 CREATE TABLE `reservation_orders` (
-  `order_id` int NOT NULL,
-  `reservation_id` int NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `quantity` int NOT NULL,
-  `notes` text COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `order_id` int(11) NOT NULL,
+  `reservation_id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2102,12 +2131,12 @@ CREATE TABLE `reservation_orders` (
 --
 
 CREATE TABLE `resetpass` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `reset_token` varchar(64) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reset_token` varchar(64) NOT NULL,
   `reset_token_expires` datetime NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `used` tinyint(1) DEFAULT '0'
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `used` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2117,12 +2146,12 @@ CREATE TABLE `resetpass` (
 --
 
 CREATE TABLE `reviews` (
-  `review_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `review_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `rating` decimal(2,1) DEFAULT NULL,
-  `review` text COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `review` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2132,13 +2161,13 @@ CREATE TABLE `reviews` (
 --
 
 CREATE TABLE `rooms` (
-  `room_id` int NOT NULL,
-  `room_number` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `room_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `room_number` varchar(10) NOT NULL,
+  `room_type` varchar(50) NOT NULL,
   `rate` decimal(10,2) NOT NULL,
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Available',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `room_type_id` int DEFAULT NULL
+  `status` varchar(20) DEFAULT 'Available',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `room_type_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2148,24 +2177,10 @@ CREATE TABLE `rooms` (
 --
 
 CREATE TABLE `room_images` (
-  `image_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `image_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `room_images`
---
-
-INSERT INTO `room_images` (`image_id`, `room_type_id`, `image_path`) VALUES
-(1, 1, 'uploads/rooms/standard.jpg'),
-(2, 1, 'uploads/rooms/5.jpg'),
-(3, 2, 'uploads/rooms/5.jpg'),
-(4, 2, 'uploads/rooms/5.jpg'),
-(5, 1, 'uploads/rooms/5.jpg'),
-(6, 1, 'uploads/rooms/5.jpg'),
-(7, 2, 'uploads/rooms/5.jpg'),
-(8, 2, 'uploads/rooms/5.jpg');
 
 -- --------------------------------------------------------
 
@@ -2174,15 +2189,15 @@ INSERT INTO `room_images` (`image_id`, `room_type_id`, `image_path`) VALUES
 --
 
 CREATE TABLE `room_inquiries` (
-  `inquiry_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `inquiry_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `check_in` date DEFAULT NULL,
   `check_out` date DEFAULT NULL,
-  `guests` int DEFAULT NULL,
-  `message` text COLLATE utf8mb4_general_ci,
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `guests` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2192,13 +2207,13 @@ CREATE TABLE `room_inquiries` (
 --
 
 CREATE TABLE `room_numbers` (
-  `room_number_id` int NOT NULL,
-  `room_type_id` int NOT NULL,
-  `room_number` int NOT NULL,
-  `floor_number` int DEFAULT NULL,
-  `status` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'available',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `room_number_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_number` varchar(10) NOT NULL,
+  `floor_number` int(11) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'available',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2206,8 +2221,8 @@ CREATE TABLE `room_numbers` (
 --
 
 INSERT INTO `room_numbers` (`room_number_id`, `room_type_id`, `room_number`, `floor_number`, `status`, `created_at`, `updated_at`) VALUES
-(2, 4, 2, 2, 'Occupied', '2025-11-21 02:43:41', '2025-11-21 02:43:41'),
-(3, 4, 2, 2, 'Available', '2025-11-21 05:10:52', '2025-11-21 05:10:52');
+(1, 2, '1', NULL, 'active', '2025-11-20 14:45:31', '2025-11-20 14:45:31'),
+(2, 1, '3', 6, 'active', '2025-11-24 11:32:44', '2025-11-24 11:33:14');
 
 -- --------------------------------------------------------
 
@@ -2216,12 +2231,12 @@ INSERT INTO `room_numbers` (`room_number_id`, `room_type_id`, `room_number`, `fl
 --
 
 CREATE TABLE `room_reviews` (
-  `review_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `review_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `rating` decimal(3,1) NOT NULL,
-  `review` text COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `review` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2262,14 +2277,14 @@ INSERT INTO `room_reviews` (`review_id`, `room_type_id`, `user_id`, `rating`, `r
 --
 
 CREATE TABLE `room_transfers` (
-  `transfer_id` int NOT NULL,
-  `booking_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `old_room_type_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `new_room_type_id` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `transfer_reason` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `transfer_id` int(11) NOT NULL,
+  `booking_id` varchar(50) NOT NULL,
+  `old_room_type_id` varchar(50) NOT NULL,
+  `new_room_type_id` varchar(50) NOT NULL,
+  `transfer_reason` text NOT NULL,
   `price_difference` decimal(10,2) NOT NULL,
   `transfer_date` datetime NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2287,13 +2302,13 @@ INSERT INTO `room_transfers` (`transfer_id`, `booking_id`, `old_room_type_id`, `
 --
 
 CREATE TABLE `room_transfer_logs` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `old_room_id` int NOT NULL,
-  `new_room_id` int NOT NULL,
-  `transfer_reason` text COLLATE utf8mb4_general_ci NOT NULL,
-  `transfer_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `old_room_id` int(11) NOT NULL,
+  `new_room_id` int(11) NOT NULL,
+  `transfer_reason` text NOT NULL,
+  `transfer_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2310,20 +2325,20 @@ INSERT INTO `room_transfer_logs` (`id`, `booking_id`, `old_room_id`, `new_room_i
 --
 
 CREATE TABLE `room_types` (
-  `room_type_id` int NOT NULL,
-  `room_type` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_type` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `capacity` int NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `beds` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `rating` decimal(3,1) DEFAULT '0.0',
-  `image` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image2` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image3` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `discount_percent` int DEFAULT '0',
+  `capacity` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `beds` varchar(100) DEFAULT NULL,
+  `rating` decimal(3,1) DEFAULT 0.0,
+  `image` varchar(255) DEFAULT NULL,
+  `image2` varchar(255) DEFAULT NULL,
+  `image3` varchar(255) DEFAULT NULL,
+  `discount_percent` int(11) DEFAULT 0,
   `discount_valid_until` date DEFAULT NULL,
-  `rating_count` int DEFAULT '0',
-  `status` enum('active','inactive') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active'
+  `rating_count` int(11) DEFAULT 0,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2331,8 +2346,10 @@ CREATE TABLE `room_types` (
 --
 
 INSERT INTO `room_types` (`room_type_id`, `room_type`, `price`, `capacity`, `description`, `beds`, `rating`, `image`, `image2`, `image3`, `discount_percent`, `discount_valid_until`, `rating_count`, `status`) VALUES
-(1, '2', 2.00, 2, '2', '2', 2.0, 'room_691fcd80884e86.97899480.jpg', NULL, NULL, 0, NULL, 2, 'active'),
-(4, 'asdasd', 5.00, 5, '5', '5', 5.0, 'room_691fd1d7513c89.67670890.jpg', 'room_691fd1d7516e94.78651878.jpg', '', 0, NULL, 5, 'active');
+(1, 'Standard Double Room', 100.00, 2, NULL, NULL, 0.0, NULL, NULL, NULL, 0, NULL, 0, 'active'),
+(2, 'Deluxe Room', 150.00, 2, NULL, NULL, 0.0, NULL, NULL, NULL, 0, NULL, 0, 'active'),
+(3, 'Family Room', 200.00, 4, NULL, '1', 0.0, NULL, NULL, NULL, 0, NULL, 0, 'active'),
+(4, '1', 1.00, 1, '1', '1', 1.0, '../aa/uploads/rooms/room_type_691f2963c38f2.jpg', '../aa/uploads/rooms/room_type_691f2963c3a9f_2.jpg', NULL, 1, NULL, 0, 'active');
 
 -- --------------------------------------------------------
 
@@ -2341,8 +2358,8 @@ INSERT INTO `room_types` (`room_type_id`, `room_type`, `price`, `capacity`, `des
 --
 
 CREATE TABLE `room_type_amenities` (
-  `room_type_id` int NOT NULL,
-  `amenity_id` int NOT NULL
+  `room_type_id` int(11) NOT NULL,
+  `amenity_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2376,12 +2393,12 @@ INSERT INTO `room_type_amenities` (`room_type_id`, `amenity_id`) VALUES
 --
 
 CREATE TABLE `sales` (
-  `id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `order_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `payment_method` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2406,15 +2423,15 @@ INSERT INTO `sales` (`id`, `order_id`, `total_amount`, `payment_method`, `create
 --
 
 CREATE TABLE `seasonal_discounts` (
-  `id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `room_type_id` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2424,13 +2441,13 @@ CREATE TABLE `seasonal_discounts` (
 --
 
 CREATE TABLE `seasonal_effects` (
-  `id` int NOT NULL,
-  `name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `effect_type` enum('snow','hearts','fireworks') COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `effect_type` enum('snow','hearts','fireworks') NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2449,12 +2466,12 @@ INSERT INTO `seasonal_effects` (`id`, `name`, `start_date`, `end_date`, `effect_
 --
 
 CREATE TABLE `services` (
-  `service_id` int NOT NULL,
-  `name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
+  `service_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Available',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` varchar(20) DEFAULT 'Available',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2464,12 +2481,12 @@ CREATE TABLE `services` (
 --
 
 CREATE TABLE `service_bookings` (
-  `service_booking_id` int NOT NULL,
-  `booking_id` int DEFAULT NULL,
-  `service_id` int DEFAULT NULL,
+  `service_booking_id` int(11) NOT NULL,
+  `booking_id` int(11) DEFAULT NULL,
+  `service_id` int(11) DEFAULT NULL,
   `booking_date` date NOT NULL,
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` varchar(20) DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2479,10 +2496,10 @@ CREATE TABLE `service_bookings` (
 --
 
 CREATE TABLE `settings` (
-  `id` int NOT NULL,
-  `setting_key` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `setting_value` text COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `setting_key` varchar(50) NOT NULL,
+  `setting_value` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2499,10 +2516,10 @@ INSERT INTO `settings` (`id`, `setting_key`, `setting_value`, `created_at`) VALU
 --
 
 CREATE TABLE `shift` (
-  `shift_id` int NOT NULL,
+  `shift_id` int(10) NOT NULL,
   `shift` varchar(100) NOT NULL,
   `shift_timing` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `shift`
@@ -2521,18 +2538,18 @@ INSERT INTO `shift` (`shift_id`, `shift`, `shift_timing`) VALUES
 --
 
 CREATE TABLE `staff` (
-  `emp_id` int NOT NULL,
+  `emp_id` int(11) NOT NULL,
   `emp_name` varchar(100) NOT NULL,
-  `staff_type_id` int NOT NULL,
-  `shift_id` int NOT NULL,
-  `id_card_type` int NOT NULL,
+  `staff_type_id` int(11) NOT NULL,
+  `shift_id` int(11) NOT NULL,
+  `id_card_type` int(11) NOT NULL,
   `id_card_no` varchar(20) NOT NULL,
   `address` varchar(100) NOT NULL,
-  `contact_no` bigint NOT NULL,
-  `salary` bigint NOT NULL,
-  `joining_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `contact_no` bigint(20) NOT NULL,
+  `salary` bigint(20) NOT NULL,
+  `joining_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `staff`
@@ -2551,9 +2568,9 @@ INSERT INTO `staff` (`emp_id`, `emp_name`, `staff_type_id`, `shift_id`, `id_card
 --
 
 CREATE TABLE `staff_type` (
-  `staff_type_id` int NOT NULL,
+  `staff_type_id` int(10) NOT NULL,
   `staff_type` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `staff_type`
@@ -2577,11 +2594,11 @@ INSERT INTO `staff_type` (`staff_type_id`, `staff_type`) VALUES
 --
 
 CREATE TABLE `tables` (
-  `id` int NOT NULL,
-  `table_number` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `capacity` int NOT NULL,
-  `location` enum('Indoor','Outdoor','Balcony') COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('Available','Occupied') COLLATE utf8mb4_general_ci DEFAULT 'Available'
+  `id` int(11) NOT NULL,
+  `table_number` varchar(50) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `location` enum('Indoor','Outdoor','Balcony') NOT NULL,
+  `status` enum('Available','Occupied') DEFAULT 'Available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2591,32 +2608,32 @@ CREATE TABLE `tables` (
 --
 
 CREATE TABLE `table_bookings` (
-  `id` int NOT NULL,
-  `user_id` int DEFAULT NULL,
-  `package_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `email_address` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `email_address` varchar(100) NOT NULL,
   `booking_date` date NOT NULL,
   `booking_time` time NOT NULL,
-  `num_guests` int NOT NULL,
-  `special_requests` text COLLATE utf8mb4_general_ci,
-  `payment_method` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
+  `num_guests` int(11) NOT NULL,
+  `special_requests` text DEFAULT NULL,
+  `payment_method` varchar(20) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `downpayment_amount` decimal(10,2) DEFAULT '0.00',
-  `amount_paid` decimal(10,2) DEFAULT '0.00',
-  `change_amount` decimal(10,2) DEFAULT '0.00',
-  `payment_status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `status` varchar(20) COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `package_type` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_reference` varchar(100) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_proof` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cancellation_reason` text COLLATE utf8mb4_general_ci,
+  `downpayment_amount` decimal(10,2) DEFAULT 0.00,
+  `amount_paid` decimal(10,2) DEFAULT 0.00,
+  `change_amount` decimal(10,2) DEFAULT 0.00,
+  `payment_status` varchar(20) DEFAULT 'Pending',
+  `status` varchar(20) DEFAULT 'Pending',
+  `package_type` varchar(50) DEFAULT NULL,
+  `payment_reference` varchar(100) DEFAULT NULL,
+  `payment_proof` varchar(255) DEFAULT NULL,
+  `cancellation_reason` text DEFAULT NULL,
   `cancelled_at` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `payment_option` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `amount_to_pay` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `reservation_type` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `payment_option` varchar(50) DEFAULT NULL,
+  `amount_to_pay` varchar(50) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `reservation_type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2638,10 +2655,10 @@ INSERT INTO `table_bookings` (`id`, `user_id`, `package_name`, `contact_number`,
 --
 
 CREATE TABLE `table_cancellations` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `reason` text COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reason` text NOT NULL,
   `cancelled_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2659,12 +2676,12 @@ INSERT INTO `table_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `can
 --
 
 CREATE TABLE `table_number` (
-  `id` int NOT NULL,
-  `table_number` int NOT NULL,
-  `status` enum('available','occupied') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available',
+  `id` int(11) NOT NULL,
+  `table_number` int(11) NOT NULL,
+  `status` enum('available','occupied') NOT NULL DEFAULT 'available',
   `occupied_at` timestamp NULL DEFAULT NULL,
-  `order_id` int DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `order_id` int(11) DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2690,21 +2707,21 @@ INSERT INTO `table_number` (`id`, `table_number`, `status`, `occupied_at`, `orde
 --
 
 CREATE TABLE `table_packages` (
-  `id` int NOT NULL,
-  `package_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `price` double(10,2) NOT NULL,
-  `capacity` int NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci,
-  `menu_items` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `available_tables` int NOT NULL,
-  `image_path` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image1` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image2` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image3` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image4` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image5` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` enum('active','inactive') COLLATE utf8mb4_general_ci DEFAULT 'active',
-  `reason` text COLLATE utf8mb4_general_ci
+  `id` int(11) NOT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `price` int(11) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `menu_items` varchar(255) NOT NULL,
+  `available_tables` int(11) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `image1` varchar(255) DEFAULT NULL,
+  `image2` varchar(255) DEFAULT NULL,
+  `image3` varchar(255) DEFAULT NULL,
+  `image4` varchar(255) DEFAULT NULL,
+  `image5` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `reason` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2712,9 +2729,13 @@ CREATE TABLE `table_packages` (
 --
 
 INSERT INTO `table_packages` (`id`, `package_name`, `price`, `capacity`, `description`, `menu_items`, `available_tables`, `image_path`, `image1`, `image2`, `image3`, `image4`, `image5`, `status`, `reason`) VALUES
-(6, '6', 6.00, 6, '6', NULL, 6, NULL, 'pkg_691ff0ee0c345.jpg', 'pkg_691ff0ee0c5e4.jpg', '', '', '', 'inactive', NULL),
-(7, '2', 2.00, 2, '2', NULL, 2, NULL, 'b20d7fb07f2dcfae.jpg', '4809dae41c9e5645.jpg', '07fe092d82b533de.jpg', '', '', 'inactive', NULL),
-(8, '4', 4.00, 4, '4', NULL, 4, NULL, 'bacc6f139a972a7b.jpg', '86f7bdf8b97f4254.jpg', '2c2c802f6e616789.jpg', '', '', 'inactive', NULL);
+(1, 'Couples', 0, 5, 'Perfect for couples\r\n', '', 0, 'uploads/table_packages/6823f400cf4c2.jpg', NULL, NULL, NULL, NULL, NULL, 'inactive', 'Under Maintenance'),
+(2, 'Friends', 0, 10, 'Ideal for small groups', '', 0, 'uploads/table_packages/67fb0cd104e49.webp', NULL, NULL, NULL, NULL, NULL, 'active', NULL),
+(3, 'Family', 0, 10, 'Great for family gatherings', '', 0, 'uploads/table_packages/67fb10c391a74.png', NULL, NULL, NULL, NULL, NULL, 'active', NULL),
+(7, 'Package A', 20000, 30, 'Basic package for large groups', '1 Appetizer, 2 Pasta, 2 Mains, Salad Bar, Rice, Drinks', 2, 'uploads/table_packages/67fb10116989f.png', 'uploads/tables/package1.jpg', 'uploads/tables/package2.jpg', 'uploads/tables/package3.jpg', 'uploads/tables/package4.jpg', 'uploads/tables/package5.jpg', 'active', NULL),
+(8, 'Pacakge B', 33000, 30, 'Premium package with extra services', 'Appetizer, 2 Pasta, 3 Mains, Salad Bar, Rice, 1 Dessert, Drinks', 2, 'uploads/table_packages/67fb10ded4762.png', 'uploads/tables/package1.jpg', 'uploads/tables/package2.jpg', 'uploads/tables/package3.jpg', 'uploads/tables/package4.jpg', 'uploads/tables/package5.jpg', 'active', NULL),
+(9, 'Package C', 45000, 30, 'All-inclusive luxury package', '3 Appetizer, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2 Desserts, Drinks', 1, 'uploads/table_packages/67fb120e4bfc4.png', 'uploads/tables/package1.jpg', 'uploads/tables/package2.jpg', 'uploads/tables/package3.jpg', 'uploads/tables/package4.jpg', 'uploads/tables/package5.jpg', 'active', NULL),
+(10, 'sdadas', 3232, 232, 'sdsad', '', 323, 'uploads/table_packages/691efd2024d84.jpg', NULL, NULL, NULL, NULL, NULL, 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -2723,15 +2744,15 @@ INSERT INTO `table_packages` (`id`, `package_name`, `price`, `capacity`, `descri
 --
 
 CREATE TABLE `table_reservations` (
-  `reservation_id` int NOT NULL,
-  `customer_name` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `guest_count` int NOT NULL,
-  `table_type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
+  `reservation_id` int(11) NOT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `guest_count` int(11) NOT NULL,
+  `table_type` varchar(50) NOT NULL,
   `reservation_datetime` datetime NOT NULL,
-  `status` enum('pending','confirmed','cancelled') COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2741,21 +2762,21 @@ CREATE TABLE `table_reservations` (
 --
 
 CREATE TABLE `userss` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_name` varchar(50) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_general_ci,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `actual_password` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `profile_photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_type` enum('customer','admin','frontdesk','cashier') COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `verification_code` varchar(6) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `contact_number` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `actual_password` varchar(255) DEFAULT NULL,
+  `profile_photo` varchar(255) DEFAULT NULL,
+  `user_type` enum('customer','admin','frontdesk','cashier') NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `verification_code` varchar(6) DEFAULT NULL,
   `verification_expiry` datetime DEFAULT NULL,
-  `is_verified` tinyint(1) DEFAULT '0',
-  `reset_token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_verified` tinyint(1) DEFAULT 0,
+  `reset_token` varchar(255) DEFAULT NULL,
   `reset_token_expires` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2772,7 +2793,7 @@ INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`
 (7, 'Fammela', 'De Guzman', 'Fammela45@gmail.com', '912345678787', 'wawa calapan city', '$2y$10$Z94WFz0rzhGwbouxahK5CekTfN.237R11cWycWsRMZJMeYFK78e8i', NULL, NULL, 'admin', NULL, NULL, NULL, 0, NULL, NULL),
 (8, 'chano', 'Realisan', 'christianrealisan40@gmail.com', '912345678787', 'tawagan', '$2y$10$zWivDB8Tvv9d4o42LtPGsuRS087Ox8M2LFz6F6zfYvyxy74E0vOzu', 'chanopassword', '681607ca1054f.jpg', 'admin', NULL, NULL, NULL, 0, NULL, NULL),
 (9, 'Aizzy', 'Villanueva', 'aizzyvillanueva5@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$6FJdPRpNRHB5rzVQ6L8EO.7xNMFRTQ.qS84uCvwkqB/nmB1aAx5Fy', '020104', NULL, 'admin', NULL, NULL, NULL, 0, NULL, NULL),
-(10, 'Fammela', 'De Guzman', 'fammeladeguzman21@gmail.com', '09362715617', 'Wawa, Calapan City', '$2y$10$jzaXEO9o/PwIOupvpROwY.dM2iwCfUxgwYectEme5LxZuboitI1vG', 'fammelapassword', '../uploads/profile/profile_10_1746278895.png', 'cashier', NULL, NULL, NULL, 0, NULL, NULL),
+(10, 'Fammela', 'De Guzman', 'fammeladeguzman21@gmail.com', '09362715617', 'Wawa, Calapan City', '$2y$10$SJOaFMSWJd7i98eTtHeBSe1uq/CZbJARFYZ/fGblsYFOFR9j.rYm2', 'fammelapassword', '../uploads/profile/profile_10_1746278895.png', 'cashier', NULL, NULL, NULL, 0, NULL, NULL),
 (11, 'Alfred', 'Aceveda', 'alfredaceveda.3@gmail.com', '09363950698', NULL, '$2y$10$VtAD8.4Tl0ncmczJ5WgYcuB1sMQ1bU7TdjVDKTzZuC11MZRYoykny', NULL, NULL, '', NULL, '749192', '2025-04-14 09:50:14', 0, NULL, NULL),
 (12, 'Alfred', 'Aceveda', 'cyvieshi@gmail.com', '09363950698', NULL, '$2y$10$HOX.EaHIlJlphxRlYhjs0OVQpDM.QdgAt.rCH7XaDc2zvZJE28d.m', NULL, NULL, '', NULL, '891266', '2025-04-14 09:51:28', 0, NULL, NULL),
 (13, 'aizzy', 'villanueva', 'aizzy2004@gmail.com', '09127418448', NULL, '$2y$10$.VtKuRPB5t4v8XJ3pIe2Ye8Xq.JRF2nwv172DA0jz/dM7vYxU4J5u', NULL, NULL, '', NULL, '084580', '2025-04-14 10:04:38', 0, NULL, NULL),
@@ -2790,8 +2811,9 @@ INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`
 (36, 'Myra', 'Aceveda', 'myra2006@gmail.com', '09638322673', NULL, '$2y$10$PWhwxvCUIqKngu7Vr3unQ.lHzYNSbO9mIQ8dvF9CZ.KPalEIX9.UG', NULL, NULL, 'customer', NULL, NULL, NULL, 0, NULL, NULL),
 (40, 'christian realisan Christian Realisan', 'realisan', 'chanomabalo@gmail.com', '09124343343', NULL, '$2y$10$9NAc1tYNKs/dyzPvRqBuhu7sI51uMmW2xu0zR318t./NU2zBCDR0i', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
 (41, 'Elly', 'Mildred', 'ellymildred846@gmail.com', '09951779200', NULL, '$2y$10$cJzE7CDOXKXPvaif0cvB3eotY.ZUvd.8rjGgsWE86fU0SzV2DRjgy', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
-(42, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', NULL, '$2y$10$50.kfBZ0.SDwt.qEm5VqQeNPmZ2odnfiWqoyj96LT4X/ReMH/a2Oy', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
-(43, 'Chan', 'Chan', 'chan.christians123@gmail.com', '09112222222', NULL, '$2y$10$yuRf9CSeCcdoBE7DThbiJuV0yj8.c4Lcv.KjVQVCL2HfumNEMqXbm', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL);
+(43, 'Chan', 'Chan', 'chan.christians123@gmail.com', '09112222222', NULL, '$2y$10$yuRf9CSeCcdoBE7DThbiJuV0yj8.c4Lcv.KjVQVCL2HfumNEMqXbm', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(44, 'Henz', 'Ollywod', 'ollywodhenz@gmail.com', '09267615921', NULL, '$2y$10$B/8hHJuPTqiIaRxiRHtVr.Aq81jbGza/cgr7s/6xRNrdY./KnTugu', NULL, 'profile_6922c38c6b37d9.85367249.jpg', 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(45, 'Carlos ', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', NULL, '$2y$10$djb2VvV3CY6KhxoATZ4kCuoNKTG3sYLZEa.fhUipGsXgidMdIpNxu', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2800,22 +2822,22 @@ INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`
 --
 
 CREATE TABLE `users_unified` (
-  `id` int NOT NULL,
-  `firstname` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `lastname` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(20) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` text COLLATE utf8mb4_general_ci,
-  `profile_photo` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_type` enum('admin','frontdesk','cashier','customer') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'customer',
-  `is_verified` tinyint(1) DEFAULT '0',
-  `verification_code` varchar(6) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `profile_photo` varchar(255) DEFAULT NULL,
+  `user_type` enum('admin','frontdesk','cashier','customer') NOT NULL DEFAULT 'customer',
+  `is_verified` tinyint(1) DEFAULT 0,
+  `verification_code` varchar(6) DEFAULT NULL,
   `verification_expiry` datetime DEFAULT NULL,
-  `reset_token` varchar(64) COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `reset_token` varchar(64) DEFAULT NULL,
   `reset_token_expires` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2840,12 +2862,12 @@ INSERT INTO `users_unified` (`id`, `firstname`, `lastname`, `email`, `password`,
 --
 
 CREATE TABLE `user_logs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `action` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `details` text COLLATE utf8mb4_general_ci,
-  `ip_address` varchar(45) COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `details` text DEFAULT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2855,12 +2877,12 @@ CREATE TABLE `user_logs` (
 --
 
 CREATE TABLE `verification_codes` (
-  `id` int NOT NULL,
-  `email` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(6) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `code` varchar(6) NOT NULL,
   `expiry` datetime NOT NULL,
-  `used` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `used` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2869,7 +2891,8 @@ CREATE TABLE `verification_codes` (
 
 INSERT INTO `verification_codes` (`id`, `email`, `code`, `expiry`, `used`, `created_at`) VALUES
 (1, 'christianrealisan25@gmail.com', '724799', '2025-04-12 21:00:03', 1, '2025-04-12 07:45:03'),
-(2, 'chanomabalo@gmail.com', '328548', '2025-04-12 21:05:07', 0, '2025-04-12 07:50:07');
+(2, 'chanomabalo@gmail.com', '328548', '2025-04-12 21:05:07', 0, '2025-04-12 07:50:07'),
+(0, '09951776920', '076912', '2025-11-23 08:18:18', 0, '2025-11-23 08:03:18');
 
 -- --------------------------------------------------------
 
@@ -2878,11 +2901,11 @@ INSERT INTO `verification_codes` (`id`, `email`, `code`, `expiry`, `used`, `crea
 --
 
 CREATE TABLE `verification_methods` (
-  `id` int NOT NULL,
-  `method_name` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `maintenance_message` text COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `method_name` varchar(50) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `maintenance_message` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2900,11 +2923,11 @@ INSERT INTO `verification_methods` (`id`, `method_name`, `is_active`, `maintenan
 --
 
 CREATE TABLE `verification_types` (
-  `id` int NOT NULL,
-  `type` varchar(50) COLLATE utf8mb4_general_ci NOT NULL,
-  `is_enabled` tinyint(1) DEFAULT '1',
-  `disable_message` text COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `is_enabled` tinyint(1) DEFAULT 1,
+  `disable_message` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2951,6 +2974,12 @@ ALTER TABLE `bookings`
   ADD PRIMARY KEY (`booking_id`),
   ADD KEY `idx_bookings_dates` (`check_in`,`check_out`),
   ADD KEY `idx_bookings_status` (`status`);
+
+--
+-- Indexes for table `booking_history`
+--
+ALTER TABLE `booking_history`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `cashier`
@@ -3093,6 +3122,7 @@ ALTER TABLE `rooms`
 --
 ALTER TABLE `room_numbers`
   ADD PRIMARY KEY (`room_number_id`),
+  ADD UNIQUE KEY `room_number` (`room_number`),
   ADD KEY `room_type_id` (`room_type_id`);
 
 --
@@ -3157,199 +3187,205 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `admin_sessions`
 --
 ALTER TABLE `admin_sessions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `beds`
 --
 ALTER TABLE `beds`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `booking_history`
+--
+ALTER TABLE `booking_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cashier`
 --
 ALTER TABLE `cashier`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `discount_types`
 --
 ALTER TABLE `discount_types`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
 --
 ALTER TABLE `event_packages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `fix_booking_ids_log`
 --
 ALTER TABLE `fix_booking_ids_log`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
 --
 ALTER TABLE `menu_categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `menu_items`
 --
 ALTER TABLE `menu_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=438;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=433;
 
 --
 -- AUTO_INCREMENT for table `menu_items_addons`
 --
 ALTER TABLE `menu_items_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `menu_item_addons`
 --
 ALTER TABLE `menu_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=404;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=405;
 
 --
 -- AUTO_INCREMENT for table `offers`
 --
 ALTER TABLE `offers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `resetpass`
 --
 ALTER TABLE `resetpass`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `room_numbers`
 --
 ALTER TABLE `room_numbers`
-  MODIFY `room_number_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `room_number_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `room_transfers`
 --
 ALTER TABLE `room_transfers`
-  MODIFY `transfer_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `transfer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `room_types`
 --
 ALTER TABLE `room_types`
-  MODIFY `room_type_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `room_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `table_bookings`
 --
 ALTER TABLE `table_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `table_number`
 --
 ALTER TABLE `table_number`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `table_packages`
 --
 ALTER TABLE `table_packages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `userss`
 --
 ALTER TABLE `userss`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `users_unified`
 --
 ALTER TABLE `users_unified`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

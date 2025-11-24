@@ -49518,3 +49518,417 @@ Stack trace:
 [24-Nov-2025 11:06:52 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
 [24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 567
 [24-Nov-2025 11:06:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 568
+[24-Nov-2025 09:36:17 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:36:18 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:36:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:36:38 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:37:30 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:37:52 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:37:52 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[24-Nov-2025 17:37:52 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[24-Nov-2025 17:37:52 Asia/Manila] Index idx_messages_status already exists on table messages
+[24-Nov-2025 17:37:52 Asia/Manila] Index idx_activities_type already exists on table activities
+[24-Nov-2025 17:37:52 Asia/Manila] Index idx_customers_vip already exists on table customers
+[24-Nov-2025 17:37:52 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[24-Nov-2025 17:37:52 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[24-Nov-2025 17:37:52 Asia/Manila] Current date: 2025-11-24
+[24-Nov-2025 17:37:52 Asia/Manila] Week start: 2025-11-24
+[24-Nov-2025 17:37:52 Asia/Manila] Week end: 2025-11-30
+[24-Nov-2025 17:37:52 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[24-Nov-2025 17:37:52 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[24-Nov-2025 17:37:52 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[24-Nov-2025 17:37:52 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 2
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 0
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 1
+)
+
+[24-Nov-2025 17:37:52 Asia/Manila] Weekly labels: Array
+(
+    [0] => 18
+    [1] => 19
+    [2] => 20
+    [3] => 21
+    [4] => 22
+    [5] => 23
+    [6] => 24
+)
+
+[24-Nov-2025 17:37:52 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[24-Nov-2025 17:37:52 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[24-Nov-2025 17:37:52 Asia/Manila] Total records found: 0
+[24-Nov-2025 17:37:52 Asia/Manila] Final days array: []
+[24-Nov-2025 17:37:52 Asia/Manila] Final revenue array: []
+[24-Nov-2025 17:37:52 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[24-Nov-2025 17:37:52 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[24-Nov-2025 09:37:53 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:38:02 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:38:04 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:38:04 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 17:38:04 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 09:48:26 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 662
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 680
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 681
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 682
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 683
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 684
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 689
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 695
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 662
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 680
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 681
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 682
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 683
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 684
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 689
+[24-Nov-2025 17:48:26 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 695
+[24-Nov-2025 09:49:54 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 644
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 644
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:49:54 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 09:50:16 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:50:17 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 09:50:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:50:36 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 09:51:18 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 655
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 666
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 667
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 668
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 669
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 670
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 673
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 674
+[24-Nov-2025 17:51:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 679
+[24-Nov-2025 09:53:58 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:54:09 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:54:34 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:55:46 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:56:00 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 17:56:01 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 17:56:01 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 651
+[24-Nov-2025 09:56:31 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:57:10 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:57:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:57:40 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:59:06 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:59:10 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 09:59:18 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:01:06 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:03:15 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:03:29 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:04:37 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 708
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 708
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 708
+[24-Nov-2025 10:04:45 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Undefined variable $rn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 708
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 708
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 687
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 701
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 702
+[24-Nov-2025 18:04:45 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 708
+[24-Nov-2025 10:05:58 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:07:21 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:08:11 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:12:52 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:14:56 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:16:30 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:16:38 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:18:01 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:18:29 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:19:07 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:19:21 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:19:38 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:20:47 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:21:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:21:48 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:22:00 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:24:14 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:24:26 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:24:44 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:25:04 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:27:00 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:27:16 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:27:25 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:27:32 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:28:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:29:09 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:29:37 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:29:39 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:33:41 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 10:37:16 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 11:49:12 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 11:49:13 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 11:49:14 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 11:49:15 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 11:49:29 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:22:37 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:22:57 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:22:59 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:23:04 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:23:05 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:23:06 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:23:06 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:12 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:19 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:22 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:28 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:29 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:39 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:44 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:46 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:54 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:55 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:25:57 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:33:26 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:33:38 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:38:58 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:40:27 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:42:15 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:42:34 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:43:08 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:43:14 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:45:37 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:47:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:47:39 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:47:46 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:48:06 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:48:13 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 20:48:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[24-Nov-2025 20:48:13 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[24-Nov-2025 12:48:28 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 20:48:29 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[24-Nov-2025 20:48:29 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[24-Nov-2025 12:49:42 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:50:28 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 20:50:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[24-Nov-2025 20:50:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[24-Nov-2025 12:55:22 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:55:28 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:57:17 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:57:44 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:57:48 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:57:51 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:57:53 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 12:58:03 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:00:35 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:00:45 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:00:59 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:01:13 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:01:28 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:01:41 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:01:45 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:02:06 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:02:07 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:02:47 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:03:17 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:03:20 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:03:32 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 21:03:32 Asia/Manila] PHP Warning:  include(../adminFrontend/header.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 2
+[24-Nov-2025 21:03:32 Asia/Manila] PHP Warning:  include(): Failed opening '../adminFrontend/header.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 2
+[24-Nov-2025 21:03:32 Asia/Manila] PHP Warning:  include(../mydb.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 3
+[24-Nov-2025 21:03:32 Asia/Manila] PHP Warning:  include(): Failed opening '../mydb.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 3
+[24-Nov-2025 21:03:32 Asia/Manila] PHP Warning:  Undefined variable $conn in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 6
+[24-Nov-2025 21:03:32 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function query() on null in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php:6
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\index.php(97): include_once()
+#1 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 6
+[24-Nov-2025 13:04:14 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 21:04:14 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 42
+[24-Nov-2025 13:04:24 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:04:36 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:04:41 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:08:42 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 21:08:42 Asia/Manila] Redirecting user with role: admin
+[24-Nov-2025 13:08:43 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:08:44 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:08:45 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:08:48 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 21:08:48 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 21:08:48 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 21:08:48 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 21:08:48 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 13:08:49 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:08:51 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 21:08:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 21:08:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 21:08:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 21:08:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 551
+[24-Nov-2025 13:11:47 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:11:49 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:16:52 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:17:11 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:17:25 UTC] Database connected successfully to: hotelms
+[24-Nov-2025 13:18:06 UTC] Database connected successfully to: hotelms

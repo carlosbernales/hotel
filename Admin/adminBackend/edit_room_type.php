@@ -11,6 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     $description = $conn->real_escape_string($_POST['description']);
     $rating = floatval($_POST['rating']);
     $rating_count = intval($_POST['rating_count']);
+    $room_number = $conn->real_escape_string($_POST['room_number']);
+    $floor_number = $conn->real_escape_string($_POST['floor_number']);
+
+    $check = $conn->query("SELECT * FROM room_numbers WHERE room_number='$room_number' AND room_type_id<>$room_type_id");
+    if ($check->num_rows > 0) {
+        echo "<script>alert('Room number $room_number already exists. Please choose a different number.'); window.history.back();</script>";
+        exit;
+    }
 
     $res = $conn->query("SELECT image, image2, image3 FROM room_types WHERE room_type_id = $room_type_id");
     if ($res && $res->num_rows > 0) {
@@ -27,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     ];
 
     $uploadedFiles = $_FILES['images'];
-
     $anyUploaded = false;
     foreach ($uploadedFiles['name'] as $filename) {
         if (!empty($filename)) {
@@ -48,7 +55,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
             if (!empty($uploadedFiles['name'][$i])) {
                 $ext = pathinfo($uploadedFiles['name'][$i], PATHINFO_EXTENSION);
                 $newName = uniqid('room_', true) . '.' . $ext;
-
                 if (move_uploaded_file($uploadedFiles['tmp_name'][$i], $imagePath . $newName)) {
                     if ($i == 0)
                         $newImages['image'] = $newName;
@@ -66,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
         SET room_type=?, beds=?, price=?, capacity=?, description=?, rating=?, rating_count=?, image=?, image2=?, image3=?
         WHERE room_type_id=?
     ");
-
     $stmt->bind_param(
         "sidididsssi",
         $room_type,
@@ -83,6 +88,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     );
 
     if ($stmt->execute()) {
+        $exists = $conn->query("SELECT * FROM room_numbers WHERE room_type_id=$room_type_id");
+        if ($exists->num_rows > 0) {
+            $conn->query("UPDATE room_numbers 
+                         SET room_number='$room_number', floor_number='$floor_number' 
+                         WHERE room_type_id=$room_type_id");
+        } else {
+            $conn->query("INSERT INTO room_numbers (room_number, floor_number, room_type_id) 
+                         VALUES ('$room_number', '$floor_number', $room_type_id)");
+        }
+
         header("Location: ../../Admin/index.php?room_management");
         exit;
     } else {

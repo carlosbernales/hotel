@@ -8,9 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = floatval($_POST['price']);
     $capacity = intval($_POST['capacity']);
     $description = $conn->real_escape_string($_POST['description']);
-
     $rating = floatval($_POST['rating']);
     $rating_count = intval($_POST['rating_count']);
+
+    $room_number = $conn->real_escape_string($_POST['room_number']);
+    $floor_number = $conn->real_escape_string($_POST['floor_number']);
+
+    $checkSql = "SELECT * FROM room_numbers WHERE room_number = '$room_number'";
+    $checkResult = $conn->query($checkSql);
+
+    if ($checkResult->num_rows > 0) {
+        echo "<script>alert('Room number $room_number already exists. Please choose a different number.'); window.history.back();</script>";
+        exit();
+    }
 
     $imagePaths = ["", "", ""];
     $uploadDir = "../../Admin/adminBackend/room_type_images/";
@@ -44,10 +54,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             '$rating', '$rating_count')";
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: ../../Admin/index.php?room_management");
-        exit();
+        $room_type_id = $conn->insert_id;
+
+        $sqlRoomNumber = "INSERT INTO room_numbers (room_number, floor_number, room_type_id) 
+                          VALUES ('$room_number', '$floor_number', '$room_type_id')";
+
+        if ($conn->query($sqlRoomNumber) === TRUE) {
+            header("Location: ../../Admin/index.php?room_management");
+            exit();
+        } else {
+            echo "<script>alert('Error inserting room number: " . $conn->error . "'); window.history.back();</script>";
+        }
     } else {
-        echo "Error: " . $conn->error;
+        echo "<script>alert('Error inserting room type: " . $conn->error . "'); window.history.back();</script>";
     }
 
     $conn->close();
