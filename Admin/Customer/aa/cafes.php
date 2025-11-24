@@ -54,7 +54,7 @@ $checkColumnQuery = "SHOW COLUMNS FROM menu_items LIKE 'is_active'";
 $isActiveColumnExists = mysqli_query($con, $checkColumnQuery)->num_rows > 0;
 
 if ($isActiveColumnExists) {
-$items_query = "SELECT mi.*, mc.name as category_name, mc.display_name as category_display_name, 
+    $items_query = "SELECT mi.*, mc.name as category_name, mc.display_name as category_display_name, 
                 COALESCE(mi.availability, 1) as availability 
                 FROM menu_items mi 
                 JOIN menu_categories mc ON mi.category_id = mc.id 
@@ -81,7 +81,7 @@ while ($row = mysqli_fetch_assoc($items_result)) {
     $addon_query = "SELECT * FROM menu_items_addons WHERE menu_item_id = " . $row['id'];
     $addon_result = mysqli_query($con, $addon_query);
     $addons = [];
-    
+
     if ($addon_result) {
         while ($addon = mysqli_fetch_assoc($addon_result)) {
             $addons[] = [
@@ -91,12 +91,12 @@ while ($row = mysqli_fetch_assoc($items_result)) {
             ];
         }
     }
-    
+
     $category_name = $row['category_name'];
     if (!isset($menu_items[$category_name])) {
         $menu_items[$category_name] = [];
     }
-    
+
     $menu_items[$category_name][] = [
         'id' => $row['id'],
         'name' => $row['name'],
@@ -129,26 +129,27 @@ if (!$payment_methods_result) {
 // Payment methods dropdown is now handled in the HTML form with more detailed options
 
 // Process order placement
-if(isset($_POST['place_order'])) {
+if (isset($_POST['place_order'])) {
     try {
         // Get payment method details
         $payment_method_id = $_POST['payment_method'];
         $payment_method_name = '';
-        
+
         foreach ($payment_methods as $method) {
             if ($method['id'] == $payment_method_id) {
                 $payment_method_name = $method['name'];
                 break;
             }
         }
-        
+
         // Insert order with payment details
         $sql = "INSERT INTO orders (customer_id, item_name, quantity, total_amount, order_date, payment_status, 
                 payment_method) 
                 VALUES (?, ?, ?, ?, NOW(), 'Pending', ?)";
-                
+
         $stmt = $con->prepare($sql);
-        $stmt->bind_param("isidss", 
+        $stmt->bind_param(
+            "isidss",
             $_SESSION['user_id'],
             $_POST['item_name'],
             $_POST['quantity'],
@@ -156,10 +157,10 @@ if(isset($_POST['place_order'])) {
             $payment_method_name
         );
         $stmt->execute();
-        
+
         // Redirect or show success message
         echo "<script>alert('Order placed successfully!');</script>";
-    } catch(Exception $e) {
+    } catch (Exception $e) {
         echo "<script>alert('Error processing order: " . $e->getMessage() . "');</script>";
     }
 }
@@ -189,10 +190,10 @@ $extraFee = 0;
 if ($hasTableDetails) {
     $duration = intval($tableDetails['duration']);
     $startTime = strtotime($tableDetails['time']);
-    
+
     // Calculate extra hours beyond 4-hour limit
     $extraHours = max(0, $duration - 4);
-    
+
     if ($extraHours > 0) {
         // Check if time is beyond 2 PM (14:00)
         $isAfter2PM = date('H', $startTime) >= 14;
@@ -978,10 +979,10 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                     <div class="flex-grow-1 me-3">
                         <select class="form-select form-select-lg" id="menu-categories-mobile">
                             <?php foreach ($categories as $index => $category): ?>
-                                <option value="<?php echo htmlspecialchars($category['name']); ?>" 
-                                        <?php echo $index === 0 ? 'selected' : ''; ?>>
-                                    <?php echo htmlspecialchars($category['name']); ?>
-                                </option>
+                                                <option value="<?php echo htmlspecialchars($category['name']); ?>" 
+                                                        <?php echo $index === 0 ? 'selected' : ''; ?>>
+                                                    <?php echo htmlspecialchars($category['name']); ?>
+                                                </option>
                             <?php endforeach; ?>
                         </select>
                     </div>
@@ -999,10 +1000,10 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                 <h3 class="text-center py-3">Menu Categories</h3>
                 <ul class="list-group" id="menu-categories-desktop">
                     <?php foreach ($categories as $index => $category): ?>
-                        <li class="list-group-item <?php echo $index === 0 ? 'active' : ''; ?>" 
-                            data-category="<?php echo htmlspecialchars($category['name']); ?>">
-                            <?php echo htmlspecialchars($category['name']); ?>
-                        </li>
+                                        <li class="list-group-item <?php echo $index === 0 ? 'active' : ''; ?>" 
+                                            data-category="<?php echo htmlspecialchars($category['name']); ?>">
+                                            <?php echo htmlspecialchars($category['name']); ?>
+                                        </li>
                     <?php endforeach; ?>
                 </ul>
             </div>
@@ -1014,28 +1015,28 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                     <h6 class="mb-1"><i class="fas fa-clock me-2"></i>Store Hours</h6>
                     <p class="mb-0"><?php echo $store_hours_message; ?></p>
                     <?php if (!$is_store_open): ?>
-                        <p class="mb-0 mt-2 text-danger">
-                            <strong>We are currently closed.</strong>
-                        </p>
-                        <?php 
-                        // Calculate next opening time
-                        $now = new DateTime();
-                        $next_opening = clone $opening_time;
-                        
-                        if ($now > $closing_time) {
-                            // If after closing, set to next day's opening
-                            $next_opening->modify('+1 day');
-                        }
-                        
-                        $time_until = $now->diff($next_opening);
-                        ?>
-                        <p class="mb-0 mt-1 text-muted">
-                            <small>
-                                Orders will be available again at 6:30 AM<?php echo $now > $closing_time ? ' tomorrow' : ''; ?>.
-                                <br>
-                                Please come back during our operating hours to place your order.
-                            </small>
-                        </p>
+                                        <p class="mb-0 mt-2 text-danger">
+                                            <strong>We are currently closed.</strong>
+                                        </p>
+                                        <?php
+                                        // Calculate next opening time
+                                        $now = new DateTime();
+                                        $next_opening = clone $opening_time;
+
+                                        if ($now > $closing_time) {
+                                            // If after closing, set to next day's opening
+                                            $next_opening->modify('+1 day');
+                                        }
+
+                                        $time_until = $now->diff($next_opening);
+                                        ?>
+                                        <p class="mb-0 mt-1 text-muted">
+                                            <small>
+                                                Orders will be available again at 6:30 AM<?php echo $now > $closing_time ? ' tomorrow' : ''; ?>.
+                                                <br>
+                                                Please come back during our operating hours to place your order.
+                                            </small>
+                                        </p>
                     <?php endif; ?>
                 </div>
 
@@ -1076,33 +1077,33 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                 <div class="modal-body">
                     <!-- Table Reservation Details -->
                     <?php if ($hasTableDetails): ?>
-                    <div class="reservation-details mb-4">
-                        <div class="card border-0 shadow-sm">
-                            <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6">
-                                        <h6 class="mb-3">Reservation Details</h6>
-                                        <p class="mb-2"><strong>Package:</strong> <?php echo htmlspecialchars($tableDetails['package_name']); ?></p>
-                                        <p class="mb-2"><strong>Date:</strong> <?php echo date('F j, Y', strtotime($tableDetails['date'])); ?></p>
-                                        <p class="mb-2"><strong>Time:</strong> <?php echo date('g:i A', strtotime($tableDetails['time'])); ?></p>
-                                        <p class="mb-2"><strong>Duration:</strong> <?php echo htmlspecialchars($tableDetails['duration']); ?> hours</p>
-                                        <p class="mb-2"><strong>Number of Guests:</strong> <?php echo htmlspecialchars($tableDetails['guests']); ?></p>
-                        </div>
+                                    <div class="reservation-details mb-4">
+                                        <div class="card border-0 shadow-sm">
+                                            <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                                        <h6 class="mb-3">Reservation Details</h6>
+                                                        <p class="mb-2"><strong>Package:</strong> <?php echo htmlspecialchars($tableDetails['package_name']); ?></p>
+                                                        <p class="mb-2"><strong>Date:</strong> <?php echo date('F j, Y', strtotime($tableDetails['date'])); ?></p>
+                                                        <p class="mb-2"><strong>Time:</strong> <?php echo date('g:i A', strtotime($tableDetails['time'])); ?></p>
+                                                        <p class="mb-2"><strong>Duration:</strong> <?php echo htmlspecialchars($tableDetails['duration']); ?> hours</p>
+                                                        <p class="mb-2"><strong>Number of Guests:</strong> <?php echo htmlspecialchars($tableDetails['guests']); ?></p>
+                                        </div>
 
-                                    <?php if ($extraHours > 0): ?>
-                        <div class="col-md-6">
-                                        <div class="alert alert-warning mt-3">
-                                            <h6 class="mb-2">Extended Hours Fee</h6>
-                                            <p class="mb-1"><strong>Extra Hours:</strong> <?php echo $extraHours; ?> hour(s)</p>
-                                            <p class="mb-1"><strong>Rate:</strong> ₱<?php echo number_format($hourlyRate, 2); ?>/hour</p>
-                                            <p class="mb-0"><strong>Fee:</strong> ₱<?php echo number_format($extraFee, 2); ?></p>
-                            </div>
-                            </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                                    <?php if ($extraHours > 0): ?>
+                                                        <div class="col-md-6">
+                                                                        <div class="alert alert-warning mt-3">
+                                                                            <h6 class="mb-2">Extended Hours Fee</h6>
+                                                                            <p class="mb-1"><strong>Extra Hours:</strong> <?php echo $extraHours; ?> hour(s)</p>
+                                                                            <p class="mb-1"><strong>Rate:</strong> ₱<?php echo number_format($hourlyRate, 2); ?>/hour</p>
+                                                                            <p class="mb-0"><strong>Fee:</strong> ₱<?php echo number_format($extraFee, 2); ?></p>
+                                                            </div>
+                                                            </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                     <?php endif; ?>
 
                     <div class="row">
@@ -1115,10 +1116,10 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                                         <!-- Items will be populated here -->
                                     </div>
                                     <?php if (!$hasTableDetails): ?>
-                                        <div class="alert alert-warning mb-3">
-                                            <i class="fas fa-clock me-2"></i>
-                                            Please note: Orders require at least 1 hour preparation time.
-                                        </div>
+                                                        <div class="alert alert-warning mb-3">
+                                                            <i class="fas fa-clock me-2"></i>
+                                                            Please note: Orders require at least 1 hour preparation time.
+                                                        </div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -1146,10 +1147,10 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                                         <select class="form-select" id="payment-method" name="payment_method" onchange="updatePaymentDetails(this.value)">
                                             <option value="">Select Payment Method</option>
                                             <?php foreach ($payment_methods as $method): ?>
-                                                <option value="<?php echo htmlspecialchars($method['id']); ?>"
-                                                        data-name="<?php echo htmlspecialchars($method['name']); ?>">
-                                            <?php echo htmlspecialchars($method['display_name']); ?>
-                                        </option>
+                                                                <option value="<?php echo htmlspecialchars($method['id']); ?>"
+                                                                        data-name="<?php echo htmlspecialchars($method['name']); ?>">
+                                                            <?php echo htmlspecialchars($method['display_name']); ?>
+                                                        </option>
                                     <?php endforeach; ?>
                                 </select>
                                         
@@ -1166,10 +1167,10 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                                             <span>₱<span class="modal-total-amount">0.00</span></span>
                                         </div>
                                         <?php if ($hasTableDetails && $extraHours > 0): ?>
-                                        <div class="d-flex justify-content-between mb-2 text-warning">
-                                            <span>Extra Hours Fee:</span>
-                                            <span>₱<?php echo number_format($extraFee, 2); ?></span>
-                                        </div>
+                                                        <div class="d-flex justify-content-between mb-2 text-warning">
+                                                            <span>Extra Hours Fee:</span>
+                                                            <span>₱<?php echo number_format($extraFee, 2); ?></span>
+                                                        </div>
                                         <?php endif; ?>
                                         <div class="border-top pt-2 mt-2">
                                             <div class="d-flex justify-content-between">
@@ -1195,9 +1196,9 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
                             <div class="alert alert-info mt-3 mb-0">
                                 <i class="fas fa-info-circle me-2"></i>
                                 <?php if ($hasTableDetails): ?>
-                                    This is for table advance orders. Your order will be served at your reserved table.
+                                                    This is for table advance orders. Your order will be served at your reserved table.
                                 <?php else: ?>
-                                    This is for pickup orders only. Please collect your order at our counter.
+                                                    This is for pickup orders only. Please collect your order at our counter.
                                 <?php endif; ?>
                             </div>
                         </div>
@@ -2273,9 +2274,9 @@ echo "<!-- Debug - Guests: " . htmlspecialchars($tableDetails['guests']) . " -->
     <!-- Update your order form -->
     <form id="orderForm" method="POST" action="process_order.php" enctype="multipart/form-data">
         <?php if ($hasTableDetails): ?>
-            <input type="hidden" name="extra_hours" value="<?php echo $extraHours; ?>">
-            <input type="hidden" name="hourly_rate" value="<?php echo $hourlyRate ?? 0; ?>">
-            <input type="hidden" name="extra_fee" value="<?php echo $extraFee; ?>">
+                            <input type="hidden" name="extra_hours" value="<?php echo $extraHours; ?>">
+                            <input type="hidden" name="hourly_rate" value="<?php echo $hourlyRate ?? 0; ?>">
+                            <input type="hidden" name="extra_fee" value="<?php echo $extraFee; ?>">
         <?php endif; ?>
         <input type="hidden" name="payment_method" id="selected_payment_method">
         <!-- The rest of your form fields will be added dynamically -->
