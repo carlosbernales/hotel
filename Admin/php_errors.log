@@ -50467,3 +50467,165 @@ Stack trace:
 [25-Nov-2025 03:20:38 UTC] Database connected successfully to: hotelms
 [25-Nov-2025 03:20:45 UTC] Database connected successfully to: hotelms
 [25-Nov-2025 03:21:15 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:52:25 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:52:26 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:55:16 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 13:55:16 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[25-Nov-2025 13:55:16 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[25-Nov-2025 13:55:16 Asia/Manila] Index idx_messages_status already exists on table messages
+[25-Nov-2025 13:55:16 Asia/Manila] Index idx_activities_type already exists on table activities
+[25-Nov-2025 13:55:16 Asia/Manila] Index idx_customers_vip already exists on table customers
+[25-Nov-2025 13:55:16 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[25-Nov-2025 13:55:16 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[25-Nov-2025 13:55:16 Asia/Manila] Current date: 2025-11-25
+[25-Nov-2025 13:55:16 Asia/Manila] Week start: 2025-11-24
+[25-Nov-2025 13:55:16 Asia/Manila] Week end: 2025-11-30
+[25-Nov-2025 13:55:16 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[25-Nov-2025 13:55:16 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[25-Nov-2025 13:55:16 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 1
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[25-Nov-2025 13:55:16 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 3
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 1
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[25-Nov-2025 13:55:16 Asia/Manila] Weekly labels: Array
+(
+    [0] => 19
+    [1] => 20
+    [2] => 21
+    [3] => 22
+    [4] => 23
+    [5] => 24
+    [6] => 25
+)
+
+[25-Nov-2025 13:55:16 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 250.00
+    [6] => 0.00
+)
+
+[25-Nov-2025 13:55:16 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[25-Nov-2025 13:55:16 Asia/Manila] Total records found: 0
+[25-Nov-2025 13:55:16 Asia/Manila] Final days array: []
+[25-Nov-2025 13:55:16 Asia/Manila] Final revenue array: []
+[25-Nov-2025 13:55:16 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[25-Nov-2025 13:55:16 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[25-Nov-2025 05:55:16 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:55:20 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:55:22 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:55:32 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:57:13 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:57:38 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:57:52 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:57:56 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:05 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:08 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:09 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:11 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:16 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:26 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:31 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 05:58:36 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 06:00:13 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:08:21 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:09:29 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:09:43 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:13:27 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 15:13:27 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'br.room_number' in 'where clause' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php:48
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php(48): mysqli->prepare('\r\n    SELECT b....')
+#1 C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php(506): isRoomOccupied(Object(mysqli), '1', '1', '2025-12-01', '2025-12-02')
+#2 C:\laragon\www\hotel\Admin\index.php(97): include_once('C:\\laragon\\www\\...')
+#3 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 48
+[25-Nov-2025 07:13:35 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 15:13:35 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'br.room_number' in 'where clause' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php:48
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php(48): mysqli->prepare('\r\n    SELECT b....')
+#1 C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php(506): isRoomOccupied(Object(mysqli), '1', '1', '2025-12-01', '2025-12-02')
+#2 C:\laragon\www\hotel\Admin\index.php(97): include_once('C:\\laragon\\www\\...')
+#3 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking.php on line 48
+[25-Nov-2025 07:13:51 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:20:34 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:20:43 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 07:21:34 UTC] Database connected successfully to: hotelms

@@ -2,34 +2,48 @@
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
-$sql = "
-SELECT 
-    rt.room_type_id,
-    rt.room_type,
-    rt.price,
-    rt.capacity,
-    rt.description,
-    rt.beds,
-    rt.image,
-    rt.image2,
-    rt.image3,
-    rn.room_number,
-    rn.floor_number,
-    rt.status AS room_type_status,
-    rn.status AS room_number_status
-FROM room_types rt
-INNER JOIN room_numbers rn 
-    ON rn.room_type_id = rt.room_type_id
-WHERE rt.status = 'active'
-  AND rn.status = 'active'
-ORDER BY rt.room_type_id ASC
-";
-
-
-
-$result = $conn->query($sql);
 $path = "../Admin/adminBackend/room_type_images/";
+
+if(isset($_POST['check_in']) && isset($_POST['check_out'])){
+    $check_in = $_POST['check_in'];
+    $check_out = $_POST['check_out'];
+
+    $sql = "
+    SELECT 
+        rt.room_type_id,
+        rt.room_type,
+        rt.price,
+        rt.capacity,
+        rt.description,
+        rt.beds,
+        rt.image,
+        rt.image2,
+        rt.image3,
+        rn.room_number,
+        rn.floor_number
+    FROM room_types rt
+    INNER JOIN room_numbers rn ON rn.room_type_id = rt.room_type_id
+    WHERE rt.status = 'active'
+      AND rn.status = 'active'
+      AND rt.room_type_id NOT IN (
+        SELECT br.room_type_id
+        FROM booked_rooms br
+        INNER JOIN bookings b 
+            ON b.booking_id = br.booking_id
+        WHERE NOT b.status IN ('rejected', 'finished', 'reschedule')
+          AND (
+                (b.check_in <= '$check_out' AND b.check_out >= '$check_in')
+              )
+      )
+    ORDER BY rt.room_type_id ASC
+    ";
+
+    $result = $conn->query($sql);
+} else {
+    $result = null;
+}
 ?>
+
 <style>
     body {
         background-color: #f5f5f5;
@@ -453,19 +467,14 @@ $path = "../Admin/adminBackend/room_type_images/";
         </div>
 
         <!-- RIGHT SIDE -->
-        <form action="#" method="POST" class="d-flex gap-2">
+        <form action="" method="POST" class="d-flex gap-2">
 
-            <!-- Check-in Date -->
-            <input type="date" name="check_in" class="form-control" required>
+    <input type="date" name="check_in" class="form-control" required>
+    <input type="date" name="check_out" class="form-control" required>
 
-            <!-- Check-out Date -->
-            <input type="date" name="check_out" class="form-control" required>
+    <button type="submit" class="btn btn-primary">Check Availability</button>
+</form>
 
-            <!-- Button -->
-            <button type="submit" class="btn btn-primary">
-                Check Availability
-            </button>
-        </form>
 
     </div>
 
@@ -479,81 +488,51 @@ $path = "../Admin/adminBackend/room_type_images/";
 
 <div class="row">
 <?php
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-
+if($result && $result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
         $img1 = $path . $row['image'];
         $img2 = $path . $row['image2'];
         $img3 = $path . $row['image3'];
 ?>
     <div class="col-lg-4 col-md-6 mb-4">
         <div class="info-card">
-
-            <!-- Status Badge (always active because SQL filters) -->
             <div class="carousel-container">
                 <span class="status-badge status-available">Available</span>
-
-                <!-- Image Carousel -->
                 <div id="carousel<?= $row['room_type_id'] ?>" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
-                        
                         <div class="carousel-item active">
                             <img src="<?= $img1 ?>" class="d-block w-100">
                         </div>
-
-                        <?php if (!empty($row['image2'])) { ?>
+                        <?php if(!empty($row['image2'])){ ?>
                         <div class="carousel-item">
                             <img src="<?= $img2 ?>" class="d-block w-100">
                         </div>
                         <?php } ?>
-
-                        <?php if (!empty($row['image3'])) { ?>
+                        <?php if(!empty($row['image3'])){ ?>
                         <div class="carousel-item">
                             <img src="<?= $img3 ?>" class="d-block w-100">
                         </div>
                         <?php } ?>
                     </div>
-
                     <button class="carousel-control-prev" type="button" data-bs-target="#carousel<?= $row['room_type_id'] ?>" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carousel<?= $row['room_type_id'] ?>" data-bs-slide="next">
                         <span class="carousel-control-next-icon"></span>
                     </button>
-
                 </div>
             </div>
 
-            <!-- Room Details -->
             <div class="room-details">
                 <h2 class="room-type"><?= $row['room_type'] ?></h2>
-
-                <div class="price-tag">
-                    ₱<?= number_format($row['price']) ?> <small>/ night</small>
-                </div>
-
+                <div class="price-tag">₱<?= number_format($row['price']) ?> <small>/ night</small></div>
                 <div class="room-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-users"></i>
-                        <span><strong>Capacity:</strong> <?= $row['capacity'] ?> Guests</span>
-                    </div>
+                    <div class="meta-item"><i class="fas fa-users"></i> <span><strong>Capacity:</strong> <?= $row['capacity'] ?> Guests</span></div>
                 </div>
-
                 <p class="room-description"><?= $row['description'] ?></p>
-
-                <div class="bed-info">
-                    <h6><i class="fas fa-bed"></i> Beds</h6>
-                    <p><?= $row['beds'] ?></p>
-                </div>
-
+                <div class="bed-info"><h6><i class="fas fa-bed"></i> Beds</h6><p><?= $row['beds'] ?></p></div>
                 <div class="room-footer">
-                    <div class="location-info">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <strong>Room <?= $row['room_number'] ?></strong> |
-                        <?= $row['floor_number'] ?> Floor
-                    </div>
-
-                    <!-- Always enabled because room is active -->
+                    <div class="location-info"><i class="fas fa-map-marker-alt"></i> <strong>Room <?= $row['room_number'] ?></strong> | <?= $row['floor_number'] ?> Floor</div>
                     <button class="btn-add-to-list"
                         onclick="addToCart(
                             '<?= $row['room_type'] ?>',
@@ -566,14 +545,16 @@ if ($result->num_rows > 0) {
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 <?php
     }
+} elseif(isset($_POST['check_in'])) {
+    echo "<p class='text-center'>No rooms available for the selected dates.</p>";
 }
 ?>
 </div>
+
 
 
 
