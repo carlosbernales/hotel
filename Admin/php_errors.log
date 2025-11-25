@@ -50277,3 +50277,193 @@ Stack trace:
 [23-Nov-2025 09:20:37 UTC] Database connected successfully to: hotelms
 [23-Nov-2025 09:20:37 UTC] Database connected successfully to: hotelms
 >>>>>>> Stashed changes
+[25-Nov-2025 01:48:30 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 09:48:30 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[25-Nov-2025 09:48:30 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[25-Nov-2025 09:48:30 Asia/Manila] Index idx_messages_status already exists on table messages
+[25-Nov-2025 09:48:30 Asia/Manila] Index idx_activities_type already exists on table activities
+[25-Nov-2025 09:48:30 Asia/Manila] Index idx_customers_vip already exists on table customers
+[25-Nov-2025 09:48:30 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[25-Nov-2025 09:48:30 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[25-Nov-2025 09:48:30 Asia/Manila] Current date: 2025-11-25
+[25-Nov-2025 09:48:30 Asia/Manila] Week start: 2025-11-24
+[25-Nov-2025 09:48:30 Asia/Manila] Week end: 2025-11-30
+[25-Nov-2025 09:48:30 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[25-Nov-2025 09:48:30 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[25-Nov-2025 09:48:30 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 2
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[25-Nov-2025 09:48:30 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 2
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 2
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 1
+)
+
+[25-Nov-2025 09:48:30 Asia/Manila] Weekly labels: Array
+(
+    [0] => 19
+    [1] => 20
+    [2] => 21
+    [3] => 22
+    [4] => 23
+    [5] => 24
+    [6] => 25
+)
+
+[25-Nov-2025 09:48:30 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 150.00
+    [4] => 150.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[25-Nov-2025 09:48:30 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[25-Nov-2025 09:48:30 Asia/Manila] Total records found: 0
+[25-Nov-2025 09:48:30 Asia/Manila] Final days array: []
+[25-Nov-2025 09:48:30 Asia/Manila] Final revenue array: []
+[25-Nov-2025 09:48:30 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[25-Nov-2025 09:48:30 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[25-Nov-2025 01:48:30 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 01:48:35 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 324
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 359
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 324
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 359
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 324
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 359
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 324
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 359
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 308
+[25-Nov-2025 09:48:35 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\room_management.php on line 315
+[25-Nov-2025 01:48:40 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 09:48:41 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 09:48:41 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 09:48:41 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 09:48:41 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 01:48:44 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 01:55:40 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 01:56:03 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 01:56:25 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 01:56:52 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 01:58:33 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:05:41 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:05:50 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 10:05:50 Asia/Manila] Redirecting user with role: admin
+[25-Nov-2025 02:05:55 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 10:05:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 10:05:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 10:05:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 10:05:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[25-Nov-2025 02:05:58 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:06:00 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:06:01 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:06:02 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:38:31 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:39:08 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:39:47 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:44:46 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:52:25 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:52:42 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:53:05 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:53:09 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:55:34 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:56:04 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:56:18 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 02:57:34 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:00:55 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:04:38 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:05:53 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:09:03 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:09:10 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:10:11 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:10:14 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:12:22 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:12:31 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:13:18 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:13:20 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:17:47 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:20:02 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:20:31 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:20:38 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:20:45 UTC] Database connected successfully to: hotelms
+[25-Nov-2025 03:21:15 UTC] Database connected successfully to: hotelms

@@ -2,17 +2,33 @@
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
-$sql = "SELECT first_name, last_name, email, contact_number, is_verified FROM userss";
+$sql = "
+SELECT 
+    rt.room_type_id,
+    rt.room_type,
+    rt.price,
+    rt.capacity,
+    rt.description,
+    rt.beds,
+    rt.image,
+    rt.image2,
+    rt.image3,
+    rn.room_number,
+    rn.floor_number,
+    rt.status AS room_type_status,
+    rn.status AS room_number_status
+FROM room_types rt
+INNER JOIN room_numbers rn 
+    ON rn.room_type_id = rt.room_type_id
+WHERE rt.status = 'active'
+  AND rn.status = 'active'
+ORDER BY rt.room_type_id ASC
+";
+
+
+
 $result = $conn->query($sql);
-
-$users = [];
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $users[] = $row;
-    }
-}
-
-$conn->close();
+$path = "../Admin/adminBackend/room_type_images/";
 ?>
 <style>
     body {
@@ -427,270 +443,159 @@ $conn->close();
         }
     }
 </style>
-<div class="main-content" id="mainContent">
-    <div class="breadcrumb-custom">
-        <i class="fas fa-home"></i>
-        <span>User Information</span>
+    <div class="main-content" id="mainContent">
+        <div class="breadcrumb-custom d-flex justify-content-between align-items-center p-3">
+
+        <!-- LEFT SIDE -->
+        <div>
+            <i class="fas fa-home"></i>
+            <span>User Information</span>
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <form action="#" method="POST" class="d-flex gap-2">
+
+            <!-- Check-in Date -->
+            <input type="date" name="check_in" class="form-control" required>
+
+            <!-- Check-out Date -->
+            <input type="date" name="check_out" class="form-control" required>
+
+            <!-- Button -->
+            <button type="submit" class="btn btn-primary">
+                Check Availability
+            </button>
+        </form>
+
     </div>
+
 
     <button class="btn-cart-toggle" onclick="openSidebar()">
         <i class="fas fa-shopping-cart"></i>
         <span class="cart-badge" id="cartBadge">0</span>
     </button>
 
-    <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="info-card">
+
+
+<div class="row">
+<?php
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+
+        $img1 = $path . $row['image'];
+        $img2 = $path . $row['image2'];
+        $img3 = $path . $row['image3'];
+?>
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="info-card">
+
+            <!-- Status Badge (always active because SQL filters) -->
+            <div class="carousel-container">
+                <span class="status-badge status-available">Available</span>
+
                 <!-- Image Carousel -->
-                <div class="carousel-container">
-                    <span class="status-badge status-available">Available</span>
-                    <div id="roomCarousel" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-indicators">
-                            <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="0"
-                                class="active"></button>
-                            <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="1"></button>
-                            <button type="button" data-bs-target="#roomCarousel" data-bs-slide-to="2"></button>
+                <div id="carousel<?= $row['room_type_id'] ?>" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        
+                        <div class="carousel-item active">
+                            <img src="<?= $img1 ?>" class="d-block w-100">
                         </div>
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=800"
-                                    class="d-block w-100" alt="Room View 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=800"
-                                    class="d-block w-100" alt="Room View 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1566665797739-1674de7a421a?w=800"
-                                    class="d-block w-100" alt="Room View 3">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    </div>
-                </div>
 
-                <!-- Room Details -->
-                <div class="room-details">
-                    <h2 class="room-type">Deluxe Suite</h2>
-                    <div class="price-tag">
-                        ₱5,500.00 <small>/ night</small>
+                        <?php if (!empty($row['image2'])) { ?>
+                        <div class="carousel-item">
+                            <img src="<?= $img2 ?>" class="d-block w-100">
+                        </div>
+                        <?php } ?>
+
+                        <?php if (!empty($row['image3'])) { ?>
+                        <div class="carousel-item">
+                            <img src="<?= $img3 ?>" class="d-block w-100">
+                        </div>
+                        <?php } ?>
                     </div>
 
-                    <div class="room-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-users"></i>
-                            <span><strong>Capacity:</strong> 4 Guests</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-ruler-combined"></i>
-                            <span><strong>Size:</strong> 45 m²</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-wifi"></i>
-                            <span>Free WiFi</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-snowflake"></i>
-                            <span>Air Conditioning</span>
-                        </div>
-                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel<?= $row['room_type_id'] ?>" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel<?= $row['room_type_id'] ?>" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
 
-                    <p class="room-description">
-                        Experience luxury and comfort in our spacious Deluxe Suite. Featuring modern amenities,
-                        elegant furnishings, and stunning views. Perfect for families or groups seeking a premium
-                        accommodation experience with all the conveniences of home and the luxury of a boutique
-                        hotel.
-                    </p>
-
-                    <div class="bed-info">
-                        <h6><i class="fas fa-bed"></i> Bed Configuration</h6>
-                        <p>1 King Size Bed + 1 Queen Size Bed</p>
-                    </div>
-
-                    <div class="room-footer">
-                        <div class="location-info">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <strong>Room 205</strong> | 2nd Floor
-                        </div>
-                        <button class="btn-add-to-list" onclick="addToCart()">
-                            <i class="fas fa-cart-plus"></i>
-                            Add to List
-                        </button>
-                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Card 2 -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="info-card">
-                <div class="carousel-container">
-                    <span class="status-badge status-occupied">Occupied</span>
-                    <div id="roomCarousel2" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?w=800"
-                                    class="d-block w-100" alt="Room View 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800"
-                                    class="d-block w-100" alt="Room View 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1629140727571-9b5c6f6267b4?w=800"
-                                    class="d-block w-100" alt="Room View 3">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel2"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel2"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
+            <!-- Room Details -->
+            <div class="room-details">
+                <h2 class="room-type"><?= $row['room_type'] ?></h2>
+
+                <div class="price-tag">
+                    ₱<?= number_format($row['price']) ?> <small>/ night</small>
+                </div>
+
+                <div class="room-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-users"></i>
+                        <span><strong>Capacity:</strong> <?= $row['capacity'] ?> Guests</span>
                     </div>
                 </div>
 
-                <div class="room-details">
-                    <h2 class="room-type">Executive Room</h2>
-                    <div class="price-tag">
-                        ₱4,200.00 <small>/ night</small>
+                <p class="room-description"><?= $row['description'] ?></p>
+
+                <div class="bed-info">
+                    <h6><i class="fas fa-bed"></i> Beds</h6>
+                    <p><?= $row['beds'] ?></p>
+                </div>
+
+                <div class="room-footer">
+                    <div class="location-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <strong>Room <?= $row['room_number'] ?></strong> |
+                        <?= $row['floor_number'] ?> Floor
                     </div>
 
-                    <div class="room-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>2 Guests</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-ruler-combined"></i>
-                            <span>32 m²</span>
-                        </div>
-                    </div>
-
-                    <p class="room-description">
-                        Perfect for business travelers. This executive room features a work desk, ergonomic chair,
-                        and high-speed internet access. Includes premium amenities and complimentary breakfast.
-                    </p>
-
-                    <div class="bed-info">
-                        <h6><i class="fas fa-bed"></i> Bed Configuration</h6>
-                        <p>1 Queen Size Bed</p>
-                    </div>
-
-                    <div class="room-footer">
-                        <div class="location-info">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <strong>Room 310</strong> | 3rd Floor
-                        </div>
-                        <button class="btn-add-to-list" disabled style="opacity: 0.5; cursor: not-allowed;">
-                            <i class="fas fa-ban"></i>
-                            Occupied
-                        </button>
-                    </div>
+                    <!-- Always enabled because room is active -->
+                    <button class="btn-add-to-list"
+                        onclick="addToCart(
+                            '<?= $row['room_type'] ?>',
+                            <?= $row['price'] ?>,
+                            '<?= $row['room_number'] ?>',
+                            '<?= $row['floor_number'] ?>',
+                            '<?= $img1 ?>'
+                        )">
+                        <i class="fas fa-cart-plus"></i> Add to List
+                    </button>
                 </div>
             </div>
-        </div>
 
-        <!-- Card 3 -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="info-card">
-                <div class="carousel-container">
-                    <span class="status-badge status-available">Available</span>
-                    <div id="roomCarousel3" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
-                            <div class="carousel-item active">
-                                <img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=800"
-                                    class="d-block w-100" alt="Room View 1">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800"
-                                    class="d-block w-100" alt="Room View 2">
-                            </div>
-                            <div class="carousel-item">
-                                <img src="https://images.unsplash.com/photo-1590073844006-33379778ae09?w=800"
-                                    class="d-block w-100" alt="Room View 3">
-                            </div>
-                        </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#roomCarousel3"
-                            data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#roomCarousel3"
-                            data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="room-details">
-                    <h2 class="room-type">Standard Room</h2>
-                    <div class="price-tag">
-                        ₱2,800.00 <small>/ night</small>
-                    </div>
-
-                    <div class="room-meta">
-                        <div class="meta-item">
-                            <i class="fas fa-users"></i>
-                            <span>2 Guests</span>
-                        </div>
-                        <div class="meta-item">
-                            <i class="fas fa-ruler-combined"></i>
-                            <span>25 m²</span>
-                        </div>
-                    </div>
-
-                    <p class="room-description">
-                        Comfortable and affordable accommodation with all essential amenities.
-                        Perfect for couples or solo travelers looking for quality stay at great value.
-                    </p>
-
-                    <div class="bed-info">
-                        <h6><i class="fas fa-bed"></i> Bed Configuration</h6>
-                        <p>2 Single Beds</p>
-                    </div>
-
-                    <div class="room-footer">
-                        <div class="location-info">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <strong>Room 108</strong> | 1st Floor
-                        </div>
-                        <button class="btn-add-to-list"
-                            onclick="addToCart('Standard Room', 2800, '108', '1st Floor', 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=200')">
-                            <i class="fas fa-cart-plus"></i>
-                            Add to List
-                        </button>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
+<?php
+    }
+}
+?>
+</div>
+
+
+
 
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
-    <!-- Sidebar Cart -->
-    <div class="sidebar-cart" id="sidebarCart">
-        <div class="sidebar-header">
-            <h4><i class="fas fa-shopping-cart"></i> Booking List</h4>
-            <button class="close-sidebar" onclick="closeSidebar()">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="sidebar-content" id="cartContent">
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Your booking list is empty</p>
-            </div>
+<div class="sidebar-cart" id="sidebarCart">
+    <div class="sidebar-header">
+        <h4><i class="fas fa-shopping-cart"></i> Booking List</h4>
+        <button class="close-sidebar" onclick="closeSidebar()">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="sidebar-content" id="cartContent">
+        <div class="empty-cart">
+            <i class="fas fa-shopping-cart"></i>
+            <p>Your booking list is empty</p>
         </div>
     </div>
+</div>
+
 </div>
 
 <?php include 'adminFrontend/footer.php'; ?>
@@ -698,81 +603,83 @@ $conn->close();
 <script>
     let cartItems = [];
 
-    function addToCart() {
-        const room = {
-            id: Date.now(),
-            name: 'Deluxe Suite',
-            price: 5500,
-            room_number: '205',
-            floor: '2nd Floor',
-            image: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=200'
-        };
+function addToCart(name, price, room_number, floor, image) {
+    const room = {
+        id: Date.now(),
+        name,
+        price,
+        room_number,
+        floor,
+        image
+    };
 
-        cartItems.push(room);
-        updateCart();
-        openSidebar();
-    }
+    cartItems.push(room);
+    updateCart();
+    openSidebar();
+}
 
-    function removeFromCart(id) {
-        cartItems = cartItems.filter(item => item.id !== id);
-        updateCart();
-    }
+function removeFromCart(id) {
+    cartItems = cartItems.filter(item => item.id !== id);
+    updateCart();
+}
 
-    function updateCart() {
-        const cartContent = document.getElementById('cartContent');
+function updateCart() {
+    const cartContent = document.getElementById('cartContent');
 
-        if (cartItems.length === 0) {
-            cartContent.innerHTML = `
-                    <div class="empty-cart">
-                        <i class="fas fa-shopping-cart"></i>
-                        <p>Your booking list is empty</p>
-                    </div>
-                `;
-            return;
-        }
-
-        const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-
+    if (cartItems.length === 0) {
         cartContent.innerHTML = `
-                ${cartItems.map(item => `
-                    <div class="cart-item">
-                        <img src="${item.image}" alt="${item.name}" class="cart-item-image">
-                        <div class="cart-item-details">
-                            <div class="cart-item-title">${item.name}</div>
-                            <div class="cart-item-price">₱${item.price.toLocaleString()}</div>
-                            <small>Room ${item.room_number} - ${item.floor}</small>
-                            <div class="mt-2">
-                                <button class="remove-item" onclick="removeFromCart(${item.id})">
-                                    <i class="fas fa-trash"></i> Remove
-                                </button>
-                            </div>
-                        </div>
+            <div class="empty-cart">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Your booking list is empty</p>
+            </div>`;
+        document.getElementById("cartBadge").innerText = 0;
+        return;
+    }
+
+    const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+
+    document.getElementById("cartBadge").innerText = cartItems.length;
+
+    cartContent.innerHTML = `
+        ${cartItems.map(item => `
+            <div class="cart-item">
+                <img src="${item.image}" class="cart-item-image">
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${item.name}</div>
+                    <div class="cart-item-price">₱${item.price.toLocaleString()}</div>
+                    <small>Room ${item.room_number} - ${item.floor}</small>
+                    <div class="mt-2">
+                        <button class="remove-item" onclick="removeFromCart(${item.id})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
                     </div>
-                `).join('')}
-                
-                <div class="cart-total">
-                    <h5>Total Amount</h5>
-                    <div class="total-amount">₱${total.toLocaleString()}</div>
-                    <button class="btn-checkout" onclick="checkout()">
-                        <i class="fas fa-check-circle"></i> Proceed to Checkout
-                    </button>
                 </div>
-            `;
-    }
+            </div>
+        `).join('')}
 
-    function openSidebar() {
-        document.getElementById('sidebarCart').classList.add('active');
-        document.getElementById('overlay').classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
+        <div class="cart-total">
+            <h5>Total Amount</h5>
+            <div class="total-amount">₱${total.toLocaleString()}</div>
+            <button class="btn-checkout" onclick="checkout()">
+                <i class="fas fa-check-circle"></i> Proceed to Checkout
+            </button>
+        </div>`;
+}
 
-    function closeSidebar() {
-        document.getElementById('sidebarCart').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-        document.body.style.overflow = 'auto';
-    }
+function openSidebar() {
+    document.getElementById('sidebarCart').classList.add('active');
+    document.getElementById('overlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
 
-    function checkout() {
-        alert('Proceeding to checkout with ' + cartItems.length + ' room(s)');
-    }
+function closeSidebar() {
+    document.getElementById('sidebarCart').classList.remove('active');
+    document.getElementById('overlay').classList.remove('active');
+    document.body.style.overflow = 'auto';
+}
+
+function checkout() {
+    alert('Proceeding to checkout with ' + cartItems.length + ' room(s)');
+}
+
 </script>

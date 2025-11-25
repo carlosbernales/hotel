@@ -317,11 +317,28 @@ if ($result) {
                                                 </div>
                                             </div>
 
-
-                                            <div class="mb-3">
-                                                <label class="form-label package-label">Beds</label>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label package-label">Beds</label>
                                                 <input type="number" name="beds" class="form-control package-input"
-                                                    value="<?php echo htmlspecialchars($room_type['beds']); ?>">
+                                                    value="<?php echo htmlspecialchars($room_type['beds']); ?>" required>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label package-label">Status</label>
+                                                    <select name="status" class="form-control package-input" required>
+                                                    <option value="active" 
+                                                        <?php echo ($room_type['status'] === 'active') ? 'selected' : ''; ?>>
+                                                        active
+                                                    </option>
+
+                                                    <option value="inactive" 
+                                                        <?php echo ($room_type['status'] === 'inactive') ? 'selected' : ''; ?>>
+                                                        inactive
+                                                    </option>
+                                                </select>
+
+                                                </div>
+
                                             </div>
 
                                             <div class="row">

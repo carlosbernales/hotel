@@ -29,3 +29,5 @@ table with advance order - cashier
 add_to_cart
 
 
+show nothing at first, then if check in checkout date after checking availablity, match it on check_in and check_out where status is equal to rejected, finished and reschedule on bookings table, then match the booking_id from bookings table to booking_id from booked_rooms table. then if the room_type_id from room_types table has match to the room_type_id from booked_rooms table and the entered check in checkout matched check_in and check_out from bookings table then dont show it as available unless the status of it from bookings table is equal to rejected, finished, reschedule; 
+
