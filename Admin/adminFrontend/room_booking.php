@@ -1,49 +1,3 @@
-<?php
-include 'adminBackend/mydb.php';
-include 'adminFrontend/header.php';
-
-$path = "../Admin/adminBackend/room_type_images/";
-
-if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
-    $check_in = $_POST['check_in'];
-    $check_out = $_POST['check_out'];
-
-    $sql = "
-    SELECT 
-        rt.room_type_id,
-        rt.room_type,
-        rt.price,
-        rt.capacity,
-        rt.description,
-        rt.beds,
-        rt.image,
-        rt.image2,
-        rt.image3,
-        rn.room_number,
-        rn.floor_number
-    FROM room_types rt
-    INNER JOIN room_numbers rn ON rn.room_type_id = rt.room_type_id
-    WHERE rt.status = 'active'
-      AND rn.status = 'active'
-      AND rt.room_type_id NOT IN (
-        SELECT br.room_type_id
-        FROM booked_rooms br
-        INNER JOIN bookings b 
-            ON b.booking_id = br.booking_id
-        WHERE NOT b.status IN ('rejected', 'finished', 'reschedule')
-          AND (
-                (b.check_in <= '$check_out' AND b.check_out >= '$check_in')
-              )
-      )
-    ORDER BY rt.room_type_id ASC
-    ";
-
-    $result = $conn->query($sql);
-} else {
-    $result = null;
-}
-?>
-
 <style>
     body {
         background-color: #f5f5f5;
@@ -749,6 +703,53 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
         }
     }
 </style>
+
+<?php
+include 'adminBackend/mydb.php';
+include 'adminFrontend/header.php';
+
+$path = "../Admin/adminBackend/room_type_images/";
+
+if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
+    $check_in = $_POST['check_in'];
+    $check_out = $_POST['check_out'];
+
+    $sql = "
+    SELECT 
+        rt.room_type_id,
+        rt.room_type,
+        rt.price,
+        rt.capacity,
+        rt.description,
+        rt.beds,
+        rt.image,
+        rt.image2,
+        rt.image3,
+        rn.room_number,
+        rn.floor_number
+    FROM room_types rt
+    INNER JOIN room_numbers rn ON rn.room_type_id = rt.room_type_id
+    WHERE rt.status = 'active'
+      AND rn.status = 'active'
+      AND rt.room_type_id NOT IN (
+        SELECT br.room_type_id
+        FROM booked_rooms br
+        INNER JOIN bookings b 
+            ON b.booking_id = br.booking_id
+        WHERE NOT b.status IN ('rejected', 'finished', 'reschedule')
+          AND (
+                (b.check_in <= '$check_out' AND b.check_out >= '$check_in')
+              )
+      )
+    ORDER BY rt.room_type_id ASC
+    ";
+
+    $result = $conn->query($sql);
+} else {
+    $result = null;
+}
+?>
+
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center p-3">
         <div>

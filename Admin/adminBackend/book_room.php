@@ -45,10 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // --- Extra bed price ---
     $extra_bed_text = 'None';
     if ($extra_bed_id) {
-        $bedQuery = $conn->query("SELECT price FROM beds WHERE id = " . intval($extra_bed_id));
+        $bedQuery = $conn->query("SELECT * FROM beds WHERE id = " . intval($extra_bed_id));
         if ($bedQuery && $bedQuery->num_rows > 0) {
             $bedData = $bedQuery->fetch_assoc();
-            $extra_bed_text = $bedData['price']; // store price in extra_bed column
+            $extra_bed_text = $bedData['id']; // store price in extra_bed column
         }
     }
 
