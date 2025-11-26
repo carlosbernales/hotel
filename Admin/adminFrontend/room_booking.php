@@ -1146,21 +1146,43 @@ while ($row = $bedQuery->fetch_assoc()) {
             return;
         }
 
-        // Sum capacity from all selected rooms
         const totalCapacity = cartItems.reduce((sum, item) => sum + item.capacity, 0);
         document.getElementById("total_capacity").value = totalCapacity;
 
-        // Set modal check-in/out from main form
         const checkInInput = document.querySelector("input[name='check_in']");
         const checkOutInput = document.querySelector("input[name='check_out']");
-
         document.getElementById("modal_check_in").value = checkInInput?.value || "";
         document.getElementById("modal_check_out").value = checkOutInput?.value || "";
 
         document.getElementById("room_quantity").value = cartItems.length;
 
-        const total = cartItems.reduce((sum, item) => sum + item.price, 0);
-        document.getElementById("total_amount").value = total.toLocaleString();
+        const nights = getNumberOfNights();
+
+        // Rooms total
+        let roomsTotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0) * nights;
+
+        // Extra bed
+        const extraBedSelect = document.getElementById("extra_bed");
+        const extraBedPrice = Number(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
+        let extraBedTotal = extraBedPrice * nights;
+
+        // Subtotal
+        let subtotal = roomsTotal + extraBedTotal;
+
+        // Discount
+        let discountPercent = 0;
+        document.querySelectorAll(".discount-select").forEach(select => {
+            const percent = Number(select.selectedOptions[0]?.dataset.percent) || 0;
+            if (percent > 0 && discountPercent === 0) discountPercent = percent; // apply only once
+        });
+
+        const discountAmount = subtotal * (discountPercent / 100);
+        const totalAmount = subtotal - discountAmount;
+
+        // Update modal (formatted only for display)
+        document.getElementById("total_discount_percent").value = discountPercent + "%";
+        document.getElementById("total_discount_amount").value = "₱" + discountAmount.toLocaleString();
+        document.getElementById("total_amount").value = totalAmount.toLocaleString();
 
         const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
         checkoutModal.show();
@@ -1289,22 +1311,58 @@ while ($row = $bedQuery->fetch_assoc()) {
         updateTotalAmount();
     });
 
-    function updateTotalAmount() {
-        // Sum base room prices
-        let totalAmount = cartItems.reduce((sum, item) => sum + item.price, 0);
-
-        // Add extra bed price if selected
-        const extraBedSelect = document.getElementById("extra_bed");
-        const selectedOption = extraBedSelect.selectedOptions[0];
-        const extraBedPrice = selectedOption ? parseFloat(selectedOption.dataset.price) || 0 : 0;
-
-        totalAmount += extraBedPrice;
-
-        // Subtract total discount if any
-        let discountAmount = parseFloat(document.getElementById("total_discount_amount")?.value.replace(/[₱,]/g, "")) || 0;
-
-        document.getElementById("total_amount").value = (totalAmount - discountAmount).toLocaleString();
+    // Calculate number of nights
+    function getNumberOfNights() {
+        const checkIn = new Date(document.getElementById("modal_check_in").value);
+        const checkOut = new Date(document.getElementById("modal_check_out").value);
+        if (checkIn && checkOut && checkOut > checkIn) {
+            return (checkOut - checkIn) / (1000 * 60 * 60 * 24);
+        }
+        return 1;
     }
+
+    // Main function to update totals
+    function updateTotalAmount() {
+        const nights = getNumberOfNights();
+
+        // Rooms total
+        let roomsTotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0) * nights;
+
+        // Extra bed total
+        const extraBedSelect = document.getElementById("extra_bed");
+        const extraBedPrice = Number(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
+        let extraBedTotal = extraBedPrice * nights;
+
+        let subtotal = roomsTotal + extraBedTotal;
+
+        // Discount
+        let discountPercent = 0;
+        document.querySelectorAll(".discount-select").forEach(select => {
+            const percent = Number(select.selectedOptions[0]?.dataset.percent) || 0;
+            if (percent > 0 && discountPercent === 0) discountPercent = percent; // only once
+        });
+
+        const discountAmount = subtotal * (discountPercent / 100);
+        const totalAmount = subtotal - discountAmount;
+
+        // Update modal
+        document.getElementById("total_discount_percent").value = discountPercent + "%";
+        document.getElementById("total_discount_amount").value = "₱" + discountAmount.toLocaleString();
+        document.getElementById("total_amount").value = totalAmount.toLocaleString();
+    }
+
+    // Trigger update when extra bed or discount changes
+    document.getElementById("extra_bed").addEventListener("change", updateTotalAmount);
+    document.addEventListener("change", function (e) {
+        if (e.target.classList.contains("discount-select")) {
+            updateTotalAmount();
+        }
+    });
+
+    // Also recalc when check-in/out dates change (nights change)
+    document.getElementById("modal_check_in").addEventListener("change", updateTotalAmount);
+    document.getElementById("modal_check_out").addEventListener("change", updateTotalAmount);
+
 
     function submitCheckout() {
         if (cartItems.length === 0) {

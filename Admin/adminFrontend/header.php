@@ -360,28 +360,27 @@ $currentPage = basename($page);
                 <i class="fas fa-users"></i> Customer Info
             </a>
 
+            <div
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking_list.php']) ? 'active' : ''; ?>">
+                <a href="#" class="dropdown-toggle">
+                    <span><i class="fas fa-user-tie"></i> Room Bookings</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?room_booking_list"
+                        class="<?php echo ($currentPage == 'room_booking_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Pending
+                    </a>
+                </div>
+
+            </div>
+
+
             <a href="index.php?room_booking"
                 class="<?php echo ($currentPage == 'room_booking.php') ? 'active' : ''; ?>">
                 <i class="fas fa-users"></i> Room Booking
             </a>
-
-            <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_types.php', 'room_number.php']) ? 'active' : ''; ?>">
-                <a href="#" class="dropdown-toggle">
-                    <span><i class="fas fa-user-tie"></i> Rooms</span>
-                    <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <div class="sidebar-submenu">
-                    <a href="<?php echo ($currentPage == 'room_types.php') ? 'javascript:void(0)' : 'room_types.php'; ?>"
-                        class="<?php echo ($currentPage == 'room_types.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-users-cog"></i> Room Types
-                    </a>
-                    <a href="<?php echo ($currentPage == 'room_number.php') ? 'javascript:void(0)' : 'room_number.php'; ?>"
-                        class="<?php echo ($currentPage == 'room_number.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-user-plus"></i> Room Number
-                    </a>
-                </div>
-            </div>
 
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php']) ? 'active' : ''; ?>">

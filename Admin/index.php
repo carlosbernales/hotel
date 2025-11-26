@@ -88,6 +88,14 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['room_booking'])) {
     $page = "adminFrontend/room_booking.php";
 
+} elseif (isset($_GET['room_booking_list'])) {
+    $page = "adminFrontend/room_booking_list.php";
+
+
+} elseif (isset($_GET['book_room_details'])) {
+    $page = "adminFrontend/book_room_details.php";
+
+
 
 } elseif (isset($_GET['advance_checkin'])) {
     include 'advance_checkin_page.php';

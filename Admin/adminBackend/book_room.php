@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // --- Nights calculation ---
     $nights = (new DateTime($check_out))->diff(new DateTime($check_in))->days ?: 1;
     $downpayment_amount = 0.0;
-    $remaining_balance = $total_amount;
+    $remaining_balance = 0.0;
 
     // --- Booking reference ---
     $booking_reference = generateBookingReference();

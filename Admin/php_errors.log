@@ -51013,3 +51013,312 @@ Stack trace:
 [25-Nov-2025 15:42:10 UTC] Database connected successfully to: hotelms
 [25-Nov-2025 15:42:15 UTC] Database connected successfully to: hotelms
 [25-Nov-2025 15:42:41 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 04:43:21 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 12:43:21 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[26-Nov-2025 12:43:21 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[26-Nov-2025 12:43:21 Asia/Manila] Index idx_messages_status already exists on table messages
+[26-Nov-2025 12:43:21 Asia/Manila] Index idx_activities_type already exists on table activities
+[26-Nov-2025 12:43:21 Asia/Manila] Index idx_customers_vip already exists on table customers
+[26-Nov-2025 12:43:21 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[26-Nov-2025 12:43:21 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[26-Nov-2025 12:43:21 Asia/Manila] Current date: 2025-11-26
+[26-Nov-2025 12:43:21 Asia/Manila] Week start: 2025-11-24
+[26-Nov-2025 12:43:21 Asia/Manila] Week end: 2025-11-30
+[26-Nov-2025 12:43:21 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[26-Nov-2025 12:43:21 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[26-Nov-2025 12:43:21 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 1
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[26-Nov-2025 12:43:21 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 3
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 1
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[26-Nov-2025 12:43:21 Asia/Manila] Weekly labels: Array
+(
+    [0] => 20
+    [1] => 21
+    [2] => 22
+    [3] => 23
+    [4] => 24
+    [5] => 25
+    [6] => 26
+)
+
+[26-Nov-2025 12:43:21 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 250.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[26-Nov-2025 12:43:21 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[26-Nov-2025 12:43:21 Asia/Manila] Total records found: 0
+[26-Nov-2025 12:43:21 Asia/Manila] Final days array: []
+[26-Nov-2025 12:43:21 Asia/Manila] Final revenue array: []
+[26-Nov-2025 12:43:21 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[26-Nov-2025 12:43:21 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[26-Nov-2025 04:43:21 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 04:43:25 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 04:44:06 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 04:49:34 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 04:57:19 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 04:57:20 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 12:57:20 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[26-Nov-2025 12:57:20 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[26-Nov-2025 12:57:20 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[26-Nov-2025 12:57:20 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 548
+[26-Nov-2025 05:07:25 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:07:30 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:08:08 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:08:09 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:09:31 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:09:33 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:09:34 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:09:35 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:09:36 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:09:41 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:10:49 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:11:11 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:11:12 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:11:15 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:11:17 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:11:33 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:13:30 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:14:25 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:14:26 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:14:29 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:14:43 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 13:14:43 Asia/Manila] Redirecting user with role: admin
+[26-Nov-2025 05:14:51 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:14:52 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:14:54 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:15:06 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:28:57 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:29:10 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:29:51 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:30:42 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 05:30:50 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:06:07 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:06:23 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:06:33 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:06:39 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:09:30 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 14:09:30 Asia/Manila] PHP Warning:  Undefined array key "check_in " in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 182
+[26-Nov-2025 14:09:30 Asia/Manila] PHP Warning:  Undefined array key "check_out  " in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 182
+[26-Nov-2025 14:09:30 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 188
+[26-Nov-2025 14:09:30 Asia/Manila] PHP Warning:  Undefined array key "check_in " in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 182
+[26-Nov-2025 14:09:30 Asia/Manila] PHP Warning:  Undefined array key "check_out  " in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 182
+[26-Nov-2025 14:09:30 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 188
+[26-Nov-2025 06:24:22 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 14:24:22 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 188
+[26-Nov-2025 14:24:22 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 188
+[26-Nov-2025 06:24:41 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:24:54 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:25:47 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:28:00 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:33:22 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:35:28 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:36:03 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:37:27 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:44:51 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:57:51 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 06:58:00 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:49:14 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:49:15 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:07 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:07 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:11 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:14 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:29 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:30 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:31 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:50:32 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:51:55 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 16:51:55 Asia/Manila] PHP Warning:  Undefined variable $bookings in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 178
+[26-Nov-2025 16:51:55 Asia/Manila] PHP Warning:  foreach() argument must be of type array|object, null given in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 178
+[26-Nov-2025 16:51:55 Asia/Manila] PHP Warning:  Undefined variable $bookings in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 210
+[26-Nov-2025 16:51:55 Asia/Manila] PHP Warning:  foreach() argument must be of type array|object, null given in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 210
+[26-Nov-2025 08:52:07 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:52:11 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:52:13 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:52:36 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:53:50 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:53:55 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:53:57 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:53:59 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:54:42 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:54:43 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:55:01 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 08:58:50 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:00:14 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:02:43 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:02:57 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:03:04 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:08:46 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 17:08:46 Asia/Manila] PHP Warning:  Undefined array key "amount_paid" in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 213
+[26-Nov-2025 17:08:46 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 213
+[26-Nov-2025 09:08:57 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:10:38 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:10:54 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:11:04 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:11:39 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:12:17 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:12:35 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:19:25 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:19:40 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:22:10 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:43:53 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:44:24 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:46:45 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:49:37 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:53:11 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:55:38 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:56:13 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:56:49 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:57:49 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:58:53 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:59:02 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:59:14 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 09:59:45 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:00:13 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:00:14 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:01:18 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:12:02 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:12:46 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:13:38 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:15:41 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:15:47 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:15:50 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:15:54 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:15:55 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:21:59 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 18:22:00 Asia/Manila] PHP Warning:  Undefined variable $currentBookingId in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 28
+[26-Nov-2025 18:22:00 Asia/Manila] PHP Warning:  Undefined variable $newCheckIn in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 29
+[26-Nov-2025 18:22:00 Asia/Manila] PHP Warning:  Undefined variable $newCheckOut in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 30
+[26-Nov-2025 10:23:21 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:23:25 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:23:29 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:23:32 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:23:38 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:23:54 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:25:37 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:25:50 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:29:27 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:33:37 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:33:39 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:36:06 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:36:12 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:36:32 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:36:58 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:38:54 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:39:39 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:40:08 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:40:14 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:41:21 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:44:48 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:44:57 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:44:59 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:45:11 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:54:24 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 10:54:47 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:00:35 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:02:46 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:04:51 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:06:32 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:10:31 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:11:26 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:16:24 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:19:13 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:20:42 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 19:20:42 Asia/Manila] PHP Warning:  Undefined variable $net_amount in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 234
+[26-Nov-2025 19:20:42 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 234
+[26-Nov-2025 11:20:59 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:21:21 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:22:43 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:22:51 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:24:30 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:25:18 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:28:11 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:28:34 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:30:56 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:31:18 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:33:30 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:34:33 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:36:12 UTC] Database connected successfully to: hotelms
+[26-Nov-2025 11:36:17 UTC] Database connected successfully to: hotelms
