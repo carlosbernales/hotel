@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 26, 2025 at 04:39 PM
+-- Generation Time: Nov 27, 2025 at 09:52 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -304,8 +304,8 @@ CREATE TABLE `booked_rooms` (
 
 INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
 (1, 1, 2, 'ASD', 1000.00, '2025-11-26 14:02:08'),
-(2, 1, 1, 'SAD', 1500.00, '2025-11-26 14:02:08'),
-(3, 2, 2, 'ASD', 1000.00, '2025-11-26 14:03:31');
+(2, 1, 3, 'DAS', 1700.00, '2025-11-26 14:02:08'),
+(3, 2, 4, 'GAF', 2000.00, '2025-11-26 14:03:31');
 
 -- --------------------------------------------------------
 
@@ -350,8 +350,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`) VALUES
-(1, 'BK-X41NLQH79TAB', NULL, 'dsad', 'asdas', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-27', '2025-11-30 00:00:00', NULL, 2, NULL, 2, '0', 'gcash', 8400.00, '2025-11-26 14:02:08', 3, 0.00, 0.00, 'admin', 2, 0, '2', 'PWD', 20.00, 2100.00, 'finished'),
-(2, 'BK-KYIXFLF089W7', NULL, 'asdas', 'dsad', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-30', '2025-12-02 00:00:00', NULL, 2, NULL, 1, '0', 'gcash', 4050.00, '2025-11-26 14:03:31', 1, 1000.00, 3050.00, 'admin', 1, 1, '2', 'PWD', 20.00, 400.00, 'cancelled');
+(1, 'BK-X41NLQH79TAB', NULL, 'dsad', 'asdas', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-27', '2025-11-30 00:00:00', NULL, 2, NULL, 2, '0', 'gcash', 8880.00, '2025-11-26 14:02:08', 3, 8400.00, 0.00, 'admin', 2, 0, '2', 'PWD', 20.00, 2100.00, 'accepted'),
+(2, 'BK-KYIXFLF089W7', NULL, 'asdas', 'dsad', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-30', '2025-12-01 00:00:00', NULL, 2, NULL, 1, '0', 'gcash', 2400.00, '2025-11-26 14:03:31', 1, 1000.00, 0.00, 'admin', 1, 1, '2', 'PWD', 20.00, 400.00, 'rescheduled');
 
 -- --------------------------------------------------------
 
@@ -2255,7 +2255,9 @@ CREATE TABLE `room_numbers` (
 INSERT INTO `room_numbers` (`room_number_id`, `room_type_id`, `room_number`, `floor_number`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, '1', 1, 'active', '2025-11-25 01:56:03', '2025-11-25 02:56:16'),
 (2, 2, '2', 2, 'active', '2025-11-25 01:56:25', '2025-11-25 02:38:57'),
-(3, 3, '3', 3, 'active', '2025-11-25 03:00:55', '2025-11-25 03:13:15');
+(3, 3, '3', 3, 'active', '2025-11-25 03:00:55', '2025-11-25 03:13:15'),
+(4, 4, '4', 3, 'active', '2025-11-27 05:33:38', '2025-11-27 05:33:38'),
+(5, 5, '6', 2, 'active', '2025-11-27 06:03:49', '2025-11-27 06:03:49');
 
 -- --------------------------------------------------------
 
@@ -2381,7 +2383,9 @@ CREATE TABLE `room_types` (
 INSERT INTO `room_types` (`room_type_id`, `room_type`, `price`, `capacity`, `description`, `beds`, `rating`, `image`, `image2`, `image3`, `discount_percent`, `discount_valid_until`, `rating_count`, `status`) VALUES
 (1, 'SAD', 1500.00, 5, '1', '1', 0.0, 'room_69250cb3902a42.09004842.PNG', 'room_69250cb3904ee1.36489725.png', '', 0, NULL, 0, 'active'),
 (2, 'ASD', 1000.00, 4, '2', '2', 0.0, 'room_69250cc99a72b7.10451651.PNG', '', '', 0, NULL, 0, 'active'),
-(3, 'DAS', 1700.00, 3, '3', '3', 0.0, 'room_69251be738e365.79766834.png', '', '', 0, NULL, 0, 'active');
+(3, 'DAS', 1700.00, 3, '3', '3', 0.0, 'room_69251be738e365.79766834.png', '', '', 0, NULL, 0, 'active'),
+(4, 'GAF', 2000.00, 10, 'sad', '2', 0.0, 'room_6927e2b292eff0.54912094.PNG', 'room_6927e2b2930d93.32182489.png', '', 0, NULL, 0, 'active'),
+(5, 'HAH', 500.00, 10, 'dsad', '4', 0.0, 'room_6927e9c566a739.98032173.PNG', '', '', 0, NULL, 0, 'active');
 
 -- --------------------------------------------------------
 
@@ -3383,7 +3387,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `room_numbers`
 --
 ALTER TABLE `room_numbers`
-  MODIFY `room_number_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `room_number_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `room_transfers`
@@ -3395,7 +3399,7 @@ ALTER TABLE `room_transfers`
 -- AUTO_INCREMENT for table `room_types`
 --
 ALTER TABLE `room_types`
-  MODIFY `room_type_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `room_type_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `table_bookings`

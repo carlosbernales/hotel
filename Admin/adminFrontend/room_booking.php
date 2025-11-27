@@ -833,16 +833,14 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
                                 <div class="location-info"><i class="fas fa-map-marker-alt"></i> <strong>Room
                                         <?= $row['room_number'] ?></strong> | <?= $row['floor_number'] ?> Floor</div>
                                 <button class="btn-add-to-list" onclick="addToCart(
-    '<?= $row['room_type'] ?>',
-    <?= $row['price'] ?>,
-    '<?= $row['room_number'] ?>',
-    '<?= $row['floor_number'] ?>',
-    '<?= $img1 ?>',
-    <?= $row['capacity'] ?>,
-    <?= $row['room_type_id'] ?>
-)">
-
-
+                                        '<?= $row['room_type'] ?>',
+                                        <?= $row['price'] ?>,
+                                        '<?= $row['room_number'] ?>',
+                                        '<?= $row['floor_number'] ?>',
+                                        '<?= $img1 ?>',
+                                        <?= $row['capacity'] ?>,
+                                        <?= $row['room_type_id'] ?>
+                                    )">
                                     <i class="fas fa-cart-plus"></i> Add to List
                                 </button>
                             </div>
@@ -853,25 +851,20 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
             }
         } elseif (isset($_POST['check_in'])) {
             echo '<div class="availability-message message-no-rooms">
-                    <i class="fas fa-exclamation-circle"></i>
-                    <strong>No Rooms Available</strong>
-                    <p class="mb-0 mt-2">Sorry, there are no rooms available for the selected dates. Please try different dates.</p>
-                </div>';
+                                <i class="fas fa-exclamation-circle"></i>
+                                <strong>No Rooms Available</strong>
+                                <p class="mb-0 mt-2">Sorry, there are no rooms available for the selected dates. Please try different dates.</p>
+                            </div>';
         } else {
             // Page loaded or reloaded without form submission
             echo '<div class="availability-message message-check-availability">
-                <i class="fas fa-calendar-check"></i>
-                <strong>Ready to Book?</strong>
-                <p class="mb-0 mt-2">Please select your check-in and check-out dates to see available rooms.</p>
-            </div>';
+                            <i class="fas fa-calendar-check"></i>
+                            <strong>Ready to Book?</strong>
+                            <p class="mb-0 mt-2">Please select your check-in and check-out dates to see available rooms.</p>
+                        </div>';
         }
         ?>
     </div>
-
-
-
-
-
     <div class="overlay" id="overlay" onclick="closeSidebar()"></div>
 
     <div class="sidebar-cart" id="sidebarCart">
@@ -1028,9 +1021,21 @@ while ($row = $bedQuery->fetch_assoc()) {
                             <input type="text" id="total_discount_amount" name="total_discount_amount"
                                 class="form-control custom-input" readonly value="₱0">
                         </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Payment</label>
+                            <input type="number" id="payment_amount" name="payment_amount"
+                                class="form-control custom-input" min="0" step="0.01">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Change</label>
+                            <input type="text" id="change_amount" name="change_amount" class="form-control custom-input"
+                                readonly>
+                        </div>
+
                     </div>
 
-                    <!-- Hidden input to store cart items as JSON -->
                     <input type="hidden" name="cart_items" id="cart_items">
 
                     <div class="col-12 mt-4 text-center">
@@ -1049,7 +1054,6 @@ while ($row = $bedQuery->fetch_assoc()) {
 
 <script>
     let cartItems = [];
-    // Set this based on PHP result
     let availabilityChecked = <?= isset($result) && $result ? 'true' : 'false' ?>;
 
     function addToCart(name, price, room_number, floor, image, capacity, room_type_id) {
@@ -1072,7 +1076,7 @@ while ($row = $bedQuery->fetch_assoc()) {
             floor,
             image,
             capacity,
-            room_type_id // ← add this
+            room_type_id
         };
 
         cartItems.push(room);
@@ -1180,7 +1184,6 @@ while ($row = $bedQuery->fetch_assoc()) {
         const discountAmount = subtotal * (discountPercent / 100);
         const totalAmount = subtotal - discountAmount;
 
-        // Update modal (formatted only for display)
         document.getElementById("total_discount_percent").value = discountPercent + "%";
         document.getElementById("total_discount_amount").value = "₱" + discountAmount.toLocaleString();
         document.getElementById("total_amount").value = totalAmount.toLocaleString();
@@ -1196,7 +1199,6 @@ while ($row = $bedQuery->fetch_assoc()) {
         const children = parseInt(document.querySelector("input[name='num_children']").value) || 0;
         const totalGuests = adults + children;
 
-        // Update readonly number of guests
         document.querySelector("input[name='number_of_guests']").value = totalGuests;
 
         const guestList = document.getElementById("guestList");
@@ -1266,13 +1268,12 @@ while ($row = $bedQuery->fetch_assoc()) {
 
         if (totalGuests > totalCapacity) {
             alert("Guest count exceeds the room’s total capacity!");
-            event.target.value = ""; // Reset the last edited input
+            event.target.value = "";
         }
 
         updateGuestInputs();
     }
 
-    // Attach listeners
     document.querySelector("input[name='num_adults']").addEventListener("input", validateCapacity);
     document.querySelector("input[name='num_children']").addEventListener("input", validateCapacity);
 
@@ -1296,7 +1297,7 @@ while ($row = $bedQuery->fetch_assoc()) {
             const percent = parseInt(select.selectedOptions[0]?.dataset.percent) || 0;
             if (percent > 0 && !discountApplied) {
                 discountPercent = percent;
-                discountApplied = true; // apply 20% only once even if multiple guests
+                discountApplied = true;
             }
         });
 
@@ -1312,7 +1313,6 @@ while ($row = $bedQuery->fetch_assoc()) {
         updateTotalAmount();
     });
 
-    // Calculate number of nights
     function getNumberOfNights() {
         const checkIn = new Date(document.getElementById("modal_check_in").value);
         const checkOut = new Date(document.getElementById("modal_check_out").value);
@@ -1322,21 +1322,17 @@ while ($row = $bedQuery->fetch_assoc()) {
         return 1;
     }
 
-    // Main function to update totals
     function updateTotalAmount() {
         const nights = getNumberOfNights();
 
-        // Rooms total
         let roomsTotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0) * nights;
 
-        // Extra bed total
         const extraBedSelect = document.getElementById("extra_bed");
         const extraBedPrice = Number(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
         let extraBedTotal = extraBedPrice * nights;
 
         let subtotal = roomsTotal + extraBedTotal;
 
-        // Discount
         let discountPercent = 0;
         document.querySelectorAll(".discount-select").forEach(select => {
             const percent = Number(select.selectedOptions[0]?.dataset.percent) || 0;
@@ -1346,13 +1342,11 @@ while ($row = $bedQuery->fetch_assoc()) {
         const discountAmount = subtotal * (discountPercent / 100);
         const totalAmount = subtotal - discountAmount;
 
-        // Update modal
         document.getElementById("total_discount_percent").value = discountPercent + "%";
         document.getElementById("total_discount_amount").value = "₱" + discountAmount.toLocaleString();
         document.getElementById("total_amount").value = totalAmount.toLocaleString();
     }
 
-    // Trigger update when extra bed or discount changes
     document.getElementById("extra_bed").addEventListener("change", updateTotalAmount);
     document.addEventListener("change", function (e) {
         if (e.target.classList.contains("discount-select")) {
@@ -1360,7 +1354,6 @@ while ($row = $bedQuery->fetch_assoc()) {
         }
     });
 
-    // Also recalc when check-in/out dates change (nights change)
     document.getElementById("modal_check_in").addEventListener("change", updateTotalAmount);
     document.getElementById("modal_check_out").addEventListener("change", updateTotalAmount);
 
@@ -1371,10 +1364,8 @@ while ($row = $bedQuery->fetch_assoc()) {
             return;
         }
 
-        // Assign cart items JSON to hidden input
         document.getElementById("cart_items").value = JSON.stringify(cartItems);
 
-        // Optionally validate guests
         const totalGuests = parseInt(document.querySelector("input[name='num_adults']").value) +
             parseInt(document.querySelector("input[name='num_children']").value);
         if (totalGuests > parseInt(document.getElementById("total_capacity").value)) {
@@ -1382,6 +1373,53 @@ while ($row = $bedQuery->fetch_assoc()) {
             return;
         }
 
+        const totalAmount = parseFloat(document.getElementById("total_amount").value.replace(/,/g, '')) || 0;
+        const payment = parseFloat(document.getElementById("payment_amount").value) || 0;
+
+        if (payment < totalAmount) {
+            alert("Payment must be equal to or greater than the total amount.");
+            return;
+        }
+
         document.getElementById("checkoutForm").submit();
     }
+
+
+    document.getElementById("payment_amount").addEventListener("input", function () {
+        const totalAmount = parseFloat(
+            document.getElementById("total_amount").value.replace(/,/g, '')
+        ) || 0;
+
+        const payment = parseFloat(this.value) || 0;
+        const change = payment >= totalAmount ? payment - totalAmount : 0;
+
+        document.getElementById("change_amount").value = "₱" + change.toLocaleString();
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const checkIn = document.getElementById("check_in");
+        const checkOut = document.getElementById("check_out");
+
+        const today = new Date().toISOString().split("T")[0];
+        checkIn.setAttribute("min", today);
+        checkOut.setAttribute("min", today);
+
+        checkIn.addEventListener("change", function () {
+            if (checkIn.value) {
+                checkOut.min = checkIn.value;
+                if (checkOut.value && checkOut.value < checkIn.value) {
+                    checkOut.value = checkIn.value;
+                }
+            }
+        });
+
+        checkOut.addEventListener("change", function () {
+            if (checkOut.value && checkIn.value && checkOut.value < checkIn.value) {
+                alert("Check-out date cannot be before check-in date!");
+                checkOut.value = checkIn.value;
+            }
+        });
+    });
+
+
 </script>

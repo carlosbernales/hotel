@@ -1,9 +1,6 @@
 <?php
 include '../adminBackend/mydb.php';
 
-/**
- * Generate random booking reference with BK- prefix
- */
 function generateBookingReference($length = 12)
 {
     $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -16,7 +13,6 @@ function generateBookingReference($length = 12)
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // --- Booking Info ---
     $check_in = $_POST['check_in'] ?? '';
     $check_out = $_POST['check_out'] ?? '';
     $first_name = $_POST['first_name'] ?? '';
@@ -36,23 +32,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'pending';
     $user_id = null;
 
-    // --- Walk-in specific ---
     $booking_type = 'walkin';
-    $room_type_id = null; // <-- null only for bookings table
+    $room_type_id = null;
     $user_types = 'admin';
     $arrival_time = null;
 
-    // --- Extra bed price ---
     $extra_bed_text = 'None';
     if ($extra_bed_id) {
         $bedQuery = $conn->query("SELECT * FROM beds WHERE id = " . intval($extra_bed_id));
         if ($bedQuery && $bedQuery->num_rows > 0) {
             $bedData = $bedQuery->fetch_assoc();
-            $extra_bed_text = $bedData['id']; // store price in extra_bed column
+            $extra_bed_text = $bedData['id'];
         }
     }
 
-    // --- Determine discount_type ---
     $discounts = [];
     for ($i = 1; $i <= $num_adults + $num_children; $i++) {
         $guestDiscount = $_POST["guest_discount_$i"] ?? '';
@@ -62,15 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $discount_type = implode(' & ', $discounts) ?: 'none';
 
-    // --- Nights calculation ---
     $nights = (new DateTime($check_out))->diff(new DateTime($check_in))->days ?: 1;
     $downpayment_amount = 0.0;
     $remaining_balance = 0.0;
 
-    // --- Booking reference ---
     $booking_reference = generateBookingReference();
 
-    // --- Insert into bookings table ---
     $stmt = $conn->prepare("
         INSERT INTO bookings (
             booking_reference, user_id, first_name, last_name, email, contact,
@@ -98,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $check_out,
         $arrival_time,
         $number_of_guests,
-        $room_type_id, // null for bookings table only
+        $room_type_id,
         $room_quantity,
         $payment_option,
         $payment_method,
@@ -119,7 +109,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         $booking_id = $conn->insert_id;
 
-        // --- Insert each room into booked_rooms ---
         $cartItems = json_decode($_POST['cart_items'], true);
         if ($cartItems && count($cartItems) > 0) {
             foreach ($cartItems as $item) {

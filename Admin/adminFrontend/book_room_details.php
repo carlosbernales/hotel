@@ -1,57 +1,3 @@
-<?php
-include 'adminBackend/mydb.php';
-include 'adminFrontend/header.php';
-$booking_id = $_GET['id'];
-
-// 1. Fetch booking
-$booking_sql = "SELECT * FROM bookings WHERE booking_id = $booking_id";
-$booking = $conn->query($booking_sql)->fetch_assoc();
-
-// 2. Fetch rooms
-$rooms_sql = "
-    SELECT room_type_id, room_type_name, price
-    FROM booked_rooms
-    WHERE booking_id = $booking_id
-";
-$rooms = $conn->query($rooms_sql);
-
-// 3. Fetch guest names
-$guests_sql = "
-    SELECT first_name, last_name, guest_type
-    FROM guest_names
-    WHERE booking_id = $booking_id
-";
-$guests = $conn->query($guests_sql);
-
-
-// Step 1: Fetch all occupied room types for the selected dates
-$occupied_sql = "
-    SELECT br.room_type_id
-    FROM booked_rooms br
-    JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.status NOT IN ('finished','rejected','rescheduled')
-      AND b.booking_id != $booking_id
-      AND (
-            (b.check_in <= '{$booking['check_out']}' AND b.check_out >= '{$booking['check_in']}')
-          )
-";
-$occupied_res = $conn->query($occupied_sql);
-$occupied_rooms = [];
-while ($row = $occupied_res->fetch_assoc()) {
-    $occupied_rooms[] = $row['room_type_id'];
-}
-
-?>
-
-<?php
-$beds = [];
-$bed_sql = "SELECT * FROM beds";
-$bed_res = $conn->query($bed_sql);
-while ($b = $bed_res->fetch_assoc()) {
-    $beds[] = $b;
-}
-?>
-
 <style>
     :root {
         --gold: #C9A961;
@@ -278,7 +224,59 @@ while ($b = $bed_res->fetch_assoc()) {
         }
     }
 </style>
+<?php
+include 'adminBackend/mydb.php';
+include 'adminFrontend/header.php';
+$booking_id = $_GET['id'];
 
+// 1. Fetch booking
+$booking_sql = "SELECT * FROM bookings WHERE booking_id = $booking_id";
+$booking = $conn->query($booking_sql)->fetch_assoc();
+
+// 2. Fetch rooms
+$rooms_sql = "
+    SELECT *
+    FROM booked_rooms
+    WHERE booking_id = $booking_id
+";
+$rooms = $conn->query($rooms_sql);
+
+// 3. Fetch guest names
+$guests_sql = "
+    SELECT first_name, last_name, guest_type
+    FROM guest_names
+    WHERE booking_id = $booking_id
+";
+$guests = $conn->query($guests_sql);
+
+
+// Step 1: Fetch all occupied room types for the selected dates
+$occupied_sql = "
+    SELECT br.room_type_id
+    FROM booked_rooms br
+    JOIN bookings b ON br.booking_id = b.booking_id
+    WHERE b.status NOT IN ('finished','rejected','rescheduled')
+      AND b.booking_id != $booking_id
+      AND (
+            (b.check_in <= '{$booking['check_out']}' AND b.check_out >= '{$booking['check_in']}')
+          )
+";
+$occupied_res = $conn->query($occupied_sql);
+$occupied_rooms = [];
+while ($row = $occupied_res->fetch_assoc()) {
+    $occupied_rooms[] = $row['room_type_id'];
+}
+
+?>
+
+<?php
+$beds = [];
+$bed_sql = "SELECT * FROM beds";
+$bed_res = $conn->query($bed_sql);
+while ($b = $bed_res->fetch_assoc()) {
+    $beds[] = $b;
+}
+?>
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
@@ -398,7 +396,7 @@ while ($b = $bed_res->fetch_assoc()) {
                     <tbody>
                         <?php while ($r = $rooms->fetch_assoc()): ?>
                             <?php $rtid = $r['room_type_id']; ?>
-                            <tr>
+                            <tr data-booked-room-id="<?= $r['id'] ?>">
                                 <td>
                                     <select class="form-select roomTypeSelect">
                                         <?php foreach ($roomTypes as $rt): ?>
@@ -463,15 +461,6 @@ while ($b = $bed_res->fetch_assoc()) {
                 </div>
 
                 <div class="info-item">
-                    <label><i class="fas fa-history"></i> Old Total Amount</label>
-                    <?php
-                    $totalOld = $booking['total_amount'] + $booking['discount_amount'];
-                    ?>
-                    <input type="text" id="totalAmountOld" class="form-control"
-                        value="<?= number_format($totalOld, 2) ?>" readonly>
-                </div>
-
-                <div class="info-item">
                     <label><i class="fas fa-hand-holding-usd"></i> Down Payment</label>
                     <input type="text" id="downPayment" class="form-control"
                         value="<?= number_format($booking['downpayment_amount'], 2) ?>" readonly>
@@ -499,12 +488,6 @@ while ($b = $bed_res->fetch_assoc()) {
             </div>
 
             <div class="action-buttons">
-                <button type="button" id="cancelBtn" class="btn btn-secondary">
-                    <i class="fas fa-times"></i> Cancel
-                </button>
-                <button type="button" id="rejectBtn" class="btn btn-danger">
-                    <i class="fas fa-ban"></i> Reject
-                </button>
                 <button type="button" id="rescheduleBtn" class="btn btn-warning">
                     <i class="fas fa-calendar-alt"></i> Reschedule
                 </button>
@@ -517,7 +500,6 @@ while ($b = $bed_res->fetch_assoc()) {
 </div>
 
 <script>
-    /* ----------------- Room Availability & Duplicate Prevention ----------------- */
     function updateRoomOptions() {
         const selectedValues = Array.from(document.querySelectorAll('.roomTypeSelect'))
             .map(select => select.value)
@@ -570,10 +552,7 @@ while ($b = $bed_res->fetch_assoc()) {
             });
     }
 
-    /* ----------------- Total, Discount & Payment Calculations ----------------- */
     function updateTotal() {
-        let total = 0;
-
         const check_in = document.getElementById('check_in').value;
         const check_out = document.getElementById('check_out').value;
 
@@ -584,27 +563,43 @@ while ($b = $bed_res->fetch_assoc()) {
         let nights = (end - start) / (1000 * 60 * 60 * 24);
         nights = nights < 1 ? 1 : nights;
 
+        let roomTotal = 0;
+
         document.querySelectorAll('#roomsTable tbody tr').forEach(tr => {
             let priceText = tr.querySelector('.roomPrice').textContent.replace(/,/g, '').replace('₱', '');
             let price = parseFloat(priceText) || 0;
-            total += price * nights;
+            roomTotal += price;
         });
 
-        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
-        const discountAmount = total * (discountPercentage / 100);
-        const netTotal = total - discountAmount;
+        let extraBedPrice = 0;
+        const extraBedText = "<?= $extraBedDisplay ?>";
+        const bedMatch = extraBedText.match(/\((.*?) per night\)/);
 
-        const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
-        const totalDue = netTotal - downPayment;
+        if (bedMatch) {
+            extraBedPrice = parseFloat(bedMatch[1].replace(/,/g, "")) || 0;
+        }
+
+        let subtotal = (roomTotal + extraBedPrice) * nights;
+
+        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+        const discountAmount = subtotal * (discountPercentage / 100);
+
+        const netTotal = subtotal - discountAmount;
 
         document.getElementById('totalAmountNew').value = netTotal.toFixed(2);
+
+        const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
+
+        let totalDue = netTotal - downPayment;
+        if (totalDue < 0) totalDue = 0;
+
         document.getElementById('totalDue').value = totalDue.toFixed(2);
 
         const payment = parseFloat(document.getElementById('paymentInput').value.replace(/,/g, '')) || 0;
         document.getElementById('changeAmount').value = (payment - totalDue).toFixed(2);
     }
 
-    /* ----------------- Event Listeners ----------------- */
+
     document.getElementById('check_in').addEventListener('change', function () {
         checkRoomAvailability();
         updateTotal();
@@ -633,10 +628,95 @@ while ($b = $bed_res->fetch_assoc()) {
 
     checkRoomAvailability();
     updateTotal();
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const checkIn = document.getElementById("check_in");
+        const checkOut = document.getElementById("check_out");
+
+        const now = new Date();
+        now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+        const minDate = now.toISOString().slice(0, 16);
+
+        checkIn.min = minDate;
+        checkOut.min = minDate;
+
+        function validateDates() {
+            const inDate = new Date(checkIn.value);
+            const outDate = new Date(checkOut.value);
+
+            if (checkIn.value && checkOut.value && inDate >= outDate) {
+                alert("Check-out must be later than Check-in.");
+                checkOut.value = "";
+            }
+
+            updateTotal();
+        }
+
+        checkIn.addEventListener("change", () => {
+            checkOut.min = checkIn.value;
+            validateDates();
+        });
+
+        checkOut.addEventListener("change", validateDates);
+    });
+
+
+
+    document.getElementById('processBookingBtn').addEventListener('click', () => {
+        processBooking('accepted');
+    });
+
+    document.getElementById('rescheduleBtn').addEventListener('click', () => {
+        processBooking('rescheduled');
+    });
+
+    function processBooking(status) {
+        const bookingId = <?= $booking_id ?>;
+        const checkIn = document.getElementById('check_in').value;
+        const checkOut = document.getElementById('check_out').value;
+        const totalAmount = parseFloat(document.getElementById('totalAmountNew').value) || 0;
+
+        const rooms = Array.from(document.querySelectorAll('#roomsTable tbody tr')).map(tr => {
+            const roomId = tr.dataset.bookedRoomId;
+            const select = tr.querySelector('.roomTypeSelect');
+            const selectedOption = select.selectedOptions[0];
+
+            return {
+                id: roomId,
+                room_type_id: select.value,
+                room_type_name: selectedOption.text.replace(/\s*\(.*\)$/, ''),
+                price: parseFloat(selectedOption.dataset.price) || 0
+            };
+        });
+
+
+        fetch('../Admin/adminBackend/update_room_booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                bookingId,
+                checkIn,
+                checkOut,
+                totalAmount,
+                rooms,
+                status
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Booking updated successfully!');
+                    window.location.href = '../Admin/index.php?room_booking_list';
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            })
+
+            .catch(err => console.error(err));
+    }
+
 </script>
-
-
-
 
 
 

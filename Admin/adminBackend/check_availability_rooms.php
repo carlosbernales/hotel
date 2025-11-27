@@ -8,7 +8,6 @@ date_default_timezone_set('Asia/Manila');
 $check_in_dt = strtotime($check_in);
 $unavailable = [];
 
-// Fetch all relevant bookings except current booking
 $sql = "
     SELECT br.room_type_id, b.check_out, b.status
     FROM booked_rooms br
@@ -23,13 +22,11 @@ while ($row = $res->fetch_assoc()) {
     $check_out_time = strtotime($row['check_out']);
 
     if (in_array($row['status'], ['pending', 'accepted'])) {
-        // Occupied, but show available after check_out + 3h
         if ($check_in_dt <= $check_out_time + 3 * 3600) {
             $available_time = date('Y-m-d H:i', $check_out_time + 3 * 3600);
             $unavailable[$room_id] = "Occupied, Available at $available_time";
         }
     } elseif ($row['status'] === 'finished') {
-        // Finished booking + 3h maintenance
         $maintenance_end = $check_out_time + 3 * 3600;
         if ($check_in_dt <= $maintenance_end) {
             $available_time = date('Y-m-d H:i', $maintenance_end);
@@ -38,6 +35,5 @@ while ($row = $res->fetch_assoc()) {
     }
 }
 
-// Return JSON
 header('Content-Type: application/json');
 echo json_encode(['unavailable' => $unavailable]);

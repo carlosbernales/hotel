@@ -73,6 +73,7 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['event_settings'])) {
     $page = "event_settings.php";
 
+
 } elseif (isset($_GET['room_management'])) {
     $page = "adminFrontend/room_management.php";
 

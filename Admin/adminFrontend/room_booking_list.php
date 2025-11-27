@@ -222,16 +222,6 @@ while ($g = $resGuests->fetch_assoc()) {
                                     class="btn btn-sm table-action-btn">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-
-
-                                <form method="POST"
-                                    action="../Admin/adminBackend/delete_room_booking.php?id=<?= $b['booking_id']; ?>"
-                                    style="display:inline-block;">
-                                    <button type="submit" class="btn btn-sm table-action-btn table-action-delete"
-                                        onclick="return confirm('Are you sure you want to delete this?')">
-                                        <i class="bi bi-trash"></i>
-                                    </button>
-                                </form>
                             </td>
                         </tr>
                     <?php endforeach; ?>

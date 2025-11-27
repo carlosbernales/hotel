@@ -75,7 +75,7 @@ class AuthManager
 
         switch ($this->getUserRole()) {
             case 'admin':
-                header("Location: ../../../Admin/index.php?dashboard");  // Use absolute path to Admin directory
+                header("Location: ../../../Admin/index.php?room_booking");  // Use absolute path to Admin directory
                 break;
             case 'frontdesk':
                 header("Location: /Admin/Frontdesk/index.php?dashboard");

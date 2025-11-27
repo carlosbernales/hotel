@@ -88,7 +88,6 @@ $result = $conn->query($query);
         --border-light: #eeeeee;
     }
 
-    /* --- General Layout and Components --- */
     .breadcrumb-custom {
         background-color: var(--background-white);
         padding: 15px 20px;
@@ -119,7 +118,6 @@ $result = $conn->query($query);
         background-color: #C39D30;
     }
 
-    /* --- General Card Styling (info-card) --- */
     .info-card {
         background-color: var(--background-white);
         padding: 20px;
@@ -131,15 +129,12 @@ $result = $conn->query($query);
         color: var(--text-dark);
     }
 
-    /* --- Table Type Grid (Container) --- */
     .table-type-grid {
         display: grid;
-        /* 3 columns on typical desktop, adapting for smaller screens */
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 20px;
     }
 
-    /* --- Individual Table Type Card --- */
     .table-type-card {
         border: 1px solid var(--border-light);
         border-radius: 8px;
@@ -164,7 +159,6 @@ $result = $conn->query($query);
         display: block;
     }
 
-    /* --- Main Status Badge (Occupied/Available) --- */
     .table-status-badge {
         position: absolute;
         top: 10px;
@@ -179,16 +173,13 @@ $result = $conn->query($query);
 
     .table-status-badge.available {
         background-color: #28a745;
-        /* Green for main 'Available' status */
     }
 
     .table-status-badge.occupied {
         background-color: #ffc107;
-        /* Yellow/Orange for 'Occupied' status */
         color: var(--text-dark);
     }
 
-    /* --- Card Actions --- */
     .table-actions {
         position: absolute;
         top: 10px;
@@ -209,7 +200,6 @@ $result = $conn->query($query);
         background-color: var(--primary-gold);
     }
 
-    /* --- Card Body and Content --- */
     .table-card-body {
         padding: 15px;
     }
@@ -227,11 +217,9 @@ $result = $conn->query($query);
         margin-bottom: 10px;
     }
 
-    /* --- New Details Grid (Duration, Max Pax, Time Limit, Max Guests) --- */
     .table-details-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        /* Two columns for details */
         gap: 8px 10px;
         font-size: 0.9em;
         padding: 10px 0;
@@ -251,7 +239,6 @@ $result = $conn->query($query);
         margin-right: 5px;
     }
 
-    /* --- Is Available Row (0/1 Status) --- */
     .is-available-row {
         font-size: 0.9em;
         margin-bottom: 10px;
@@ -263,24 +250,18 @@ $result = $conn->query($query);
         padding: 2px 5px;
         border-radius: 3px;
         white-space: nowrap;
-        /* Prevent wrapping */
     }
 
     .is-available-status-text.available {
         color: #28a745;
-        /* Dark Green text */
         background-color: #e5f4e7;
-        /* Light Green background */
     }
 
     .is-available-status-text.unavailable {
         color: #dc3545;
-        /* Dark Red text */
         background-color: #fce8e8;
-        /* Light Red background */
     }
 
-    /* --- Description and Notes --- */
     .table-description-area {
         padding-bottom: 10px;
     }
@@ -301,7 +282,6 @@ $result = $conn->query($query);
         color: var(--text-light);
     }
 
-    /* Utility Classes (Retained) */
     .text-success {
         color: #28a745;
     }
@@ -312,7 +292,6 @@ $result = $conn->query($query);
 </style>
 
 <style>
-    /* Add Table Button */
     .table-add-btn {
         background-color: #C9A961;
         color: #2d2d2d;
@@ -357,21 +336,16 @@ $result = $conn->query($query);
 
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <?php
-                    // Image paths setup (same as original)
                     $img1 = "../Admin/adminBackend/event_packages_images/" . $row['image_path'];
                     $img2 = "../Admin/adminBackend/event_packages_images/" . $row['image_path2'];
                     $img3 = "../Admin/adminBackend/event_packages_images/" . $row['image_path3'];
 
-                    // Logic for is_available badge
-                    // Assuming 'is_available' is a column with 0/1, and 'status' is a column with 'Occupied'/'Available'
                     $is_available_status = (intval($row['is_available']) > 0) ? 'Available' : 'Not Available';
                     $is_available_class = (intval($row['is_available']) > 0) ? 'available' : 'unavailable';
 
-                    // Logic for main status badge (Occupied/Available)
-                    $main_status_text = $row['status']; // Assuming this already holds 'Occupied' or 'Available'
+                    $main_status_text = $row['status'];
                     $main_status_class = (strtolower($main_status_text) === 'available') ? 'available' : 'occupied';
 
-                    // Format Duration and Time Limit for display (assuming they are in minutes or similar format)
                     $duration_display = !empty($row['duration']) ? $row['duration'] . '' : 'N/A';
                     $time_limit_display = !empty($row['time_limit']) ? $row['time_limit'] . '' : 'N/A';
                     ?>
@@ -468,7 +442,7 @@ $result = $conn->query($query);
                             <div class="modal-content package-modal">
 
                                 <form method="POST" enctype="multipart/form-data"
-                                    action="../Admin/adminBackend/edit_table_package.php?id=<?php echo $row['id']; ?>">
+                                    action="../Admin/adminBackend/event_management_edit.php?id=<?php echo $row['id']; ?>">
 
                                     <div class="modal-header package-modal-header">
                                         <h5 class="modal-title fw-bold" id="editModalLabel<?php echo $row['id']; ?>">
@@ -535,21 +509,18 @@ $result = $conn->query($query);
                                             </div>
                                         </div>
 
-                                        <!-- DESCRIPTION (full row) -->
                                         <div class="mb-3">
                                             <label class="form-label package-label">Description</label>
                                             <textarea name="description" class="form-control package-input"
-                                                rows="3"><?php echo htmlspecialchars($row['description']); ?></textarea>
+                                                rows="3"><?php echo htmlspecialchars($row['description'] !== null ? $row['description'] : ''); ?></textarea>
                                         </div>
 
-                                        <!-- NOTES (full row) -->
                                         <div class="mb-3">
                                             <label class="form-label package-label">Notes</label>
                                             <textarea name="notes" class="form-control package-input"
-                                                rows="2"><?php echo htmlspecialchars($row['notes']); ?></textarea>
+                                                rows="2"><?php echo htmlspecialchars($row['notes'] !== null ? $row['notes'] : ''); ?></textarea>
                                         </div>
 
-                                        <!-- IMAGE (ONE INPUT ONLY) -->
                                         <div class="mb-3">
                                             <label class="form-label package-label">Image</label>
                                             <input type="file" name="image" class="form-control package-input">
