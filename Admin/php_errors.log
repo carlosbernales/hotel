@@ -51501,3 +51501,267 @@ Stack trace:
 [27-Nov-2025 00:35:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
 [26-Nov-2025 16:38:06 UTC] Database connected successfully to: hotelms
 [27-Nov-2025 00:38:06 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:12:00 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:12:00 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:12:17 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:12:17 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[27-Nov-2025 09:12:17 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[27-Nov-2025 09:12:17 Asia/Manila] Index idx_messages_status already exists on table messages
+[27-Nov-2025 09:12:17 Asia/Manila] Index idx_activities_type already exists on table activities
+[27-Nov-2025 09:12:17 Asia/Manila] Index idx_customers_vip already exists on table customers
+[27-Nov-2025 09:12:17 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[27-Nov-2025 09:12:17 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[27-Nov-2025 09:12:17 Asia/Manila] Current date: 2025-11-27
+[27-Nov-2025 09:12:17 Asia/Manila] Week start: 2025-11-24
+[27-Nov-2025 09:12:17 Asia/Manila] Week end: 2025-11-30
+[27-Nov-2025 09:12:17 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[27-Nov-2025 09:12:17 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[27-Nov-2025 09:12:17 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[27-Nov-2025 09:12:17 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 3
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[27-Nov-2025 09:12:17 Asia/Manila] Weekly labels: Array
+(
+    [0] => 21
+    [1] => 22
+    [2] => 23
+    [3] => 24
+    [4] => 25
+    [5] => 26
+    [6] => 27
+)
+
+[27-Nov-2025 09:12:17 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 8400.00
+    [6] => 0.00
+)
+
+[27-Nov-2025 09:12:17 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[27-Nov-2025 09:12:17 Asia/Manila] Total records found: 0
+[27-Nov-2025 09:12:17 Asia/Manila] Final days array: []
+[27-Nov-2025 09:12:17 Asia/Manila] Final revenue array: []
+[27-Nov-2025 09:12:17 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[27-Nov-2025 09:12:17 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[27-Nov-2025 01:12:18 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:12:21 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:12:23 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:12:26 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:12:29 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:12:29 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:19:57 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:19:57 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:20:43 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:20:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:20:52 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:20:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:21:06 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:21:06 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:21:21 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:21:22 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:23:21 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:23:21 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 176
+[27-Nov-2025 09:23:21 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 176
+[27-Nov-2025 09:23:21 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect DATE value: '' in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php:179
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php(179): mysqli->query('\r\n    SELECT br...')
+#1 C:\laragon\www\hotel\Admin\index.php(105): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 179
+[27-Nov-2025 01:23:25 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:23:32 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:24:10 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:24:31 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:25:34 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:25:39 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:25:41 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:25:41 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:26:08 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:26:08 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:26:15 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:26:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:27:34 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:27:34 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:27:47 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:27:47 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:28:00 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:28:00 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:28:55 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:28:55 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:29:16 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:29:16 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:30:48 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:30:48 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:31:19 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:31:19 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:33:13 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:33:13 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:33:29 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:33:29 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:36:00 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:36:00 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 581
+[27-Nov-2025 01:36:15 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:36:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 581
+[27-Nov-2025 01:36:35 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:36:35 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 581
+[27-Nov-2025 01:36:43 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:36:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 581
+[27-Nov-2025 01:37:36 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:37:36 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 01:37:53 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 09:37:53 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 573
+[27-Nov-2025 01:38:39 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:39:48 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:41:07 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:41:47 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:41:53 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:43:40 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:43:54 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:44:03 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:44:14 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:44:20 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:44:28 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:45:11 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:46:05 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:46:27 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:48:31 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:49:46 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:50:08 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:50:14 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:50:34 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:51:57 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:52:06 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:52:42 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:52:56 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:53:12 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:55:07 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:55:27 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:55:48 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:56:37 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:56:48 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 01:59:11 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:01:07 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:01:38 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:02:03 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:03:23 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 10:03:23 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 02:04:36 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 10:04:36 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 537
+[27-Nov-2025 02:05:15 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:05:46 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:05:55 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:06:28 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:09:02 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:11:30 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:12:24 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:12:31 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:14:27 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:14:36 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:16:46 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:17:21 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:18:00 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:19:29 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:19:39 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:21:11 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:21:22 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:21:46 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:23:12 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:23:55 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:23:57 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:23:59 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:24:00 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:24:02 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:24:05 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:24:06 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:25:02 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:25:04 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:25:05 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:25:59 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:26:27 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:28:01 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:28:14 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:28:48 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:29:33 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:30:01 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:30:06 UTC] Database connected successfully to: hotelms
+[27-Nov-2025 02:30:20 UTC] Database connected successfully to: hotelms

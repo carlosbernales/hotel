@@ -5,42 +5,36 @@ $check_in = $_GET['check_in'];
 $booking_id = $_GET['booking_id'];
 
 date_default_timezone_set('Asia/Manila');
-
-$check_in_dt = date('Y-m-d H:i:s', strtotime($check_in));
+$check_in_dt = strtotime($check_in);
 $unavailable = [];
 
-// Occupied rooms: only check if check_in < existing booking check_out
+// Fetch all relevant bookings except current booking
 $sql = "
-    SELECT br.room_type_id, b.check_out
+    SELECT br.room_type_id, b.check_out, b.status
     FROM booked_rooms br
     JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.status NOT IN ('finished','rejected','rescheduled')
-      AND b.booking_id != $booking_id
+    WHERE b.booking_id != $booking_id
+      AND b.status NOT IN ('rejected','rescheduled')
 ";
 $res = $conn->query($sql);
+
 while ($row = $res->fetch_assoc()) {
-    $existing_check_out = strtotime($row['check_out']);
-    if (strtotime($check_in_dt) < $existing_check_out) {
-        $unavailable[$row['room_type_id']] = 'Occupied';
-    }
-}
+    $room_id = $row['room_type_id'];
+    $check_out_time = strtotime($row['check_out']);
 
-// Finished bookings + 3h maintenance
-$sql2 = "
-    SELECT br.room_type_id, b.check_out
-    FROM booked_rooms br
-    JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.status = 'finished'
-      AND b.booking_id != $booking_id
-";
-$res2 = $conn->query($sql2);
-while ($row = $res2->fetch_assoc()) {
-    $finished_check_out = strtotime($row['check_out']);
-    $maintenance_end = $finished_check_out + 3 * 3600; // 3 hours
-
-    if (strtotime($check_in_dt) < $maintenance_end) {
-        $available_time = date('Y-m-d H:i', $maintenance_end);
-        $unavailable[$row['room_type_id']] = "Maintenance until $available_time";
+    if (in_array($row['status'], ['pending', 'accepted'])) {
+        // Occupied, but show available after check_out + 3h
+        if ($check_in_dt <= $check_out_time + 3 * 3600) {
+            $available_time = date('Y-m-d H:i', $check_out_time + 3 * 3600);
+            $unavailable[$room_id] = "Occupied, Available at $available_time";
+        }
+    } elseif ($row['status'] === 'finished') {
+        // Finished booking + 3h maintenance
+        $maintenance_end = $check_out_time + 3 * 3600;
+        if ($check_in_dt <= $maintenance_end) {
+            $available_time = date('Y-m-d H:i', $maintenance_end);
+            $unavailable[$room_id] = "Maintenance until $available_time";
+        }
     }
 }
 
