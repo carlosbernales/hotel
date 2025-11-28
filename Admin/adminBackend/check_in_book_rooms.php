@@ -4,21 +4,14 @@ include '../adminBackend/mydb.php';
 $data = json_decode(file_get_contents("php://input"), true);
 
 $booking_id = $data['booking_id'];
-$checkin = $data['check_in'];
 $checkout = $data['check_out'];
 $total_amount = $data['total_amount'];
+$downpayment_amount = $data['downpayment_amount'];
+$remaining_balance = $data['remaining_balance'];
 $rooms = $data['rooms'];
 
-$dpQry = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
-$dpQry->bind_param("i", $booking_id);
-$dpQry->execute();
-$dpQry->bind_result($existingDownPayment);
-$dpQry->fetch();
-$dpQry->close();
-
-$totalDue = max(0, $total_amount - $existingDownPayment);
-
-$newDownPayment = $existingDownPayment + $totalDue;
+date_default_timezone_set('Asia/Manila');
+$checkin = date('Y-m-d H:i:s');
 
 $updateBooking = $conn->prepare("
     UPDATE bookings
@@ -26,12 +19,22 @@ $updateBooking = $conn->prepare("
         check_in = ?, 
         check_out = ?, 
         total_amount = ?, 
-        remaining_balance = 0,
-        downpayment_amount = ?,
+        downpayment_amount = ?, 
+        remaining_balance = ?, 
         status = 'checkin'
     WHERE booking_id = ?
 ");
-$updateBooking->bind_param("ssdii", $checkin, $checkout, $total_amount, $newDownPayment, $booking_id);
+
+$updateBooking->bind_param(
+    "ssdddi",
+    $checkin,
+    $checkout,
+    $total_amount,
+    $downpayment_amount,
+    $remaining_balance,
+    $booking_id
+);
+
 $updateBooking->execute();
 
 foreach ($rooms as $r) {
@@ -56,6 +59,7 @@ foreach ($rooms as $r) {
             price = ?
         WHERE id = ?
     ");
+
     $updateRoom->bind_param(
         "iisdi",
         $r['room_type_id'],

@@ -497,11 +497,20 @@ while ($b = $bed_res->fetch_assoc()) {
                 </div>
             </div>
 
-            <div class="action-buttons">
-                <button type="button" id="processBookingBtn" class="btn btn-success">
-                    <i class="fas fa-check-circle"></i> Check In
-                </button>
+            <div class="footer-buttons" style="display: flex; justify-content: flex-end; gap: 10px; padding: 10px;">
+                <div class="action-buttons">
+                    <button type="button" id="extendStayBtn" class="btn btn-success">
+                        <i class="fas fa-check-circle"></i> Extend Stay
+                    </button>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" id="checkOutBtn" class="btn btn-warning ">
+                        <i class="fas fa-check-circle"></i> Check Out
+                    </button>
+                </div>
             </div>
+
         </div>
     </div>
 </div>
@@ -729,7 +738,7 @@ while ($b = $bed_res->fetch_assoc()) {
 </script>
 
 <script>
-    document.getElementById('processBookingBtn').addEventListener('click', function () {
+    document.getElementById('checOutBtn').addEventListener('click', function () {
         const paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
         const totalDue = parseFloat(document.getElementById('totalDue').value) || 0;
 
@@ -757,7 +766,7 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
 
-        fetch('../Admin/adminBackend/update_room_booking.php', {
+        fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -775,8 +784,6 @@ while ($b = $bed_res->fetch_assoc()) {
             })
             .catch(err => alert("Error: " + err));
     });
-
-
 </script>
 
 

@@ -1,4 +1,377 @@
 <style>
+    /* =================================================================
+   ROOM DETAILS MODAL STYLES - Integrated with existing CSS
+   ================================================================= */
+
+    /* Modal Base Styling */
+    .room-details-modal {
+        border-radius: 15px;
+        border: none;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Modal Header */
+    .modal-header-custom {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: #fff;
+        padding: 20px 30px;
+        border: none;
+        position: relative;
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding-right: 40px;
+    }
+
+    .modal-title-custom {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-title-custom i {
+        color: #d4af37;
+    }
+
+    .price-badge-modal {
+        background: linear-gradient(135deg, #d4af37 0%, #c19b2e 100%);
+        color: #2c3e50;
+        padding: 8px 20px;
+        border-radius: 25px;
+        font-size: 20px;
+        font-weight: 700;
+        box-shadow: 0 3px 10px rgba(212, 175, 55, 0.3);
+    }
+
+    .price-badge-modal small {
+        font-size: 14px;
+        font-weight: 400;
+        opacity: 0.9;
+    }
+
+    .btn-close-custom {
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: #fff;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .btn-close-custom:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: #d4af37;
+        color: #d4af37;
+        transform: translateY(-50%) rotate(90deg);
+    }
+
+    /* Modal Body */
+    .modal-body-custom {
+        padding: 0;
+        background: #f8f9fa;
+    }
+
+    /* Carousel - Enhanced from existing styles */
+    .room-carousel-modal {
+        position: relative;
+        background: #000;
+    }
+
+    .room-carousel-modal .carousel-inner {
+        border-radius: 0;
+    }
+
+    .room-carousel-modal img {
+        height: 400px;
+        object-fit: cover;
+    }
+
+    .modal-indicators {
+        margin-bottom: 15px;
+    }
+
+    .modal-indicators button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 2px solid #d4af37;
+    }
+
+    .modal-indicators button.active {
+        background-color: #d4af37;
+    }
+
+    .modal-carousel-control {
+        width: auto;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .room-carousel-modal:hover .modal-carousel-control {
+        opacity: 1;
+    }
+
+    .carousel-control-icon-modal {
+        background: linear-gradient(135deg, #d4af37 0%, #c19b2e 100%);
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        color: #fff;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-carousel-control:hover .carousel-control-icon-modal {
+        background: linear-gradient(135deg, #c19b2e 0%, #b8941f 100%);
+        transform: scale(1.1);
+    }
+
+    /* Room Info Grid - Unique naming to avoid conflicts */
+    .room-info-grid-modal {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 25px 30px;
+        background: #fff;
+    }
+
+    .info-card-modal {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        border-left: 4px solid #d4af37;
+        transition: all 0.3s ease;
+    }
+
+    .info-card-modal:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .info-icon-modal {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #d4af37 0%, #f4d03f 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 22px;
+        flex-shrink: 0;
+    }
+
+    .info-content-modal {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label-modal {
+        font-size: 12px;
+        color: #6c757d;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .info-value-modal {
+        font-size: 16px;
+        color: #2c3e50;
+        font-weight: 700;
+    }
+
+    /* Description Section */
+    .room-description-modal {
+        padding: 25px 30px;
+        background: #fff;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .section-title-modal {
+        font-size: 16px;
+        font-weight: 700;
+        color: #2c3e50;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-title-modal i {
+        color: #d4af37;
+    }
+
+    .room-description-modal p {
+        color: #495057;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    /* Amenities Section */
+    .room-amenities-modal {
+        padding: 25px 30px;
+        background: #f8f9fa;
+        border-top: 1px solid #e9ecef;
+    }
+
+    .amenities-grid-modal {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+
+    .amenity-item-modal {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 15px;
+        background: #fff;
+        border-radius: 8px;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+    }
+
+    .amenity-item-modal:hover {
+        border-color: #d4af37;
+        transform: translateX(5px);
+    }
+
+    .amenity-item-modal i {
+        color: #d4af37;
+        font-size: 18px;
+        width: 25px;
+    }
+
+    .amenity-item-modal span {
+        color: #495057;
+        font-weight: 500;
+    }
+
+    /* Modal Footer */
+    .modal-footer-custom {
+        padding: 20px 30px;
+        background: #fff;
+        border-top: 2px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        gap: 15px;
+    }
+
+    .btn-close-modal {
+        background: #6c757d;
+        color: #fff;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* View Details Button - Matches your existing button style */
+    .btn-view-details {
+        background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        color: #fff;
+        border: 2px solid #d4af37;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        width: 100%;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .btn-view-details:hover {
+        background: linear-gradient(135deg, #d4af37 0%, #c19b2e 100%);
+        color: #2c3e50;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .room-info-grid-modal {
+            grid-template-columns: 1fr;
+        }
+
+        .amenities-grid-modal {
+            grid-template-columns: 1fr;
+        }
+
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .room-carousel-modal img {
+            height: 250px;
+        }
+
+        .modal-footer-custom {
+            flex-direction: column;
+        }
+
+        .btn-close-modal,
+        .btn-book-now-modal {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Custom scrollbar for modal - matches your existing scrollbar style */
+    .modal-body-custom::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .modal-body-custom::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 10px;
+    }
+
+    .modal-body-custom::-webkit-scrollbar-thumb {
+        background: #d4af37;
+        border-radius: 10px;
+    }
+
+    .modal-body-custom::-webkit-scrollbar-thumb:hover {
+        background: #c19b2e;
+    }
+</style>
+<style>
     body {
         background-color: #f5f5f5;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -711,11 +1084,12 @@ include 'adminFrontend/header.php';
 $path = "../Admin/adminBackend/room_type_images/";
 
 if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
+
     $check_in = $_POST['check_in'];
     $check_out = $_POST['check_out'];
 
     $sql = "
-    SELECT 
+    SELECT
         rt.room_type_id,
         rt.room_type,
         rt.price,
@@ -725,29 +1099,33 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
         rt.image,
         rt.image2,
         rt.image3,
-        rn.room_number,
-        rn.floor_number
+
+        (
+        SELECT COUNT(*) 
+        FROM room_numbers rn_total
+        WHERE rn_total.room_type_id = rt.room_type_id
+            AND rn_total.status = 'active'
+        ) AS total_rooms,
+
+        (
+        SELECT COUNT(DISTINCT rn_used.room_number_id)
+        FROM booked_rooms br_used
+        JOIN bookings b_used ON b_used.booking_id = br_used.booking_id
+        JOIN room_numbers rn_used ON rn_used.room_number_id = br_used.room_number_fk_id
+        WHERE rn_used.room_type_id = rt.room_type_id
+            AND rn_used.status = 'active'
+            AND b_used.status IN ('pending','accepted','checkin')
+            AND NOT (b_used.check_out < '$check_in' OR b_used.check_in > '$check_out')
+        ) AS unavailable_rooms
     FROM room_types rt
-    INNER JOIN room_numbers rn ON rn.room_type_id = rt.room_type_id
     WHERE rt.status = 'active'
-      AND rn.status = 'active'
-      AND rt.room_type_id NOT IN (
-        SELECT br.room_type_id
-        FROM booked_rooms br
-        INNER JOIN bookings b 
-            ON b.booking_id = br.booking_id
-        WHERE NOT b.status IN ('rejected', 'finished', 'reschedule')
-          AND (
-                (b.check_in <= '$check_out' AND b.check_out >= '$check_in')
-              )
-      )
+    HAVING (total_rooms - unavailable_rooms) > 0
     ORDER BY rt.room_type_id ASC
     ";
 
     $result = $conn->query($sql);
-} else {
-    $result = null;
 }
+
 ?>
 
 <div class="main-content" id="mainContent">
@@ -782,6 +1160,46 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
         <?php
         if ($result && $result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
+
+                $total_rooms = isset($row['total_rooms']) ? intval($row['total_rooms']) : 0;
+                $unavailable_rooms = isset($row['unavailable_rooms']) ? intval($row['unavailable_rooms']) : 0;
+
+                if ($total_rooms === 0 && !isset($row['total_rooms'])) {
+                    $q = $conn->prepare("SELECT COUNT(*) FROM room_numbers WHERE room_type_id = ? AND status = 'active'");
+                    $q->bind_param("i", $row['room_type_id']);
+                    $q->execute();
+                    $q->bind_result($count_total);
+                    $q->fetch();
+                    $q->close();
+                    $total_rooms = intval($count_total);
+                }
+
+                if (!isset($row['unavailable_rooms'])) {
+                    $unavailable_rooms = 0;
+                    if (!empty($check_in) && !empty($check_out)) {
+                        $qr = $conn->prepare("
+                                SELECT COUNT(DISTINCT rn.room_number_id)
+                                FROM room_numbers rn
+                                INNER JOIN booked_rooms br ON br.room_number_fk_id = rn.room_number_id
+                                INNER JOIN bookings b ON b.booking_id = br.booking_id
+                                WHERE rn.room_type_id = ?
+                                AND rn.status = 'active'
+                                AND b.status IN ('pending','accepted')
+                                AND NOT (b.check_out < ? OR b.check_in > ?)
+                            ");
+                        $qr->bind_param("iss", $row['room_type_id'], $check_out, $check_in);
+                        $qr->execute();
+                        $qr->bind_result($cnt_unavail);
+                        $qr->fetch();
+                        $qr->close();
+                        $unavailable_rooms = intval($cnt_unavail);
+                    }
+                }
+
+                $available = $total_rooms - $unavailable_rooms;
+                if ($available < 0)
+                    $available = 0;
+
                 $img1 = $path . $row['image'];
                 $img2 = $path . $row['image2'];
                 $img3 = $path . $row['image3'];
@@ -789,7 +1207,9 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="info-card">
                         <div class="carousel-container">
-                            <span class="status-badge status-available">Available</span>
+                            <span class="status-badge <?= $available > 0 ? 'status-available' : 'status-unavailable' ?>">
+                                <?= $available > 0 ? 'Available' : 'Unavailable' ?>
+                            </span>
                             <div id="carousel<?= $row['room_type_id'] ?>" class="carousel slide" data-bs-ride="carousel">
                                 <div class="carousel-inner">
                                     <div class="carousel-item active">
@@ -824,29 +1244,170 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
                                 <div class="meta-item"><i class="fas fa-users"></i> <span><strong>Capacity:</strong>
                                         <?= $row['capacity'] ?> Guests</span></div>
                             </div>
-                            <p class="room-description"><?= $row['description'] ?></p>
+                            <p class="room-description">Description: <?= $row['description'] ?></p>
                             <div class="bed-info">
                                 <h6><i class="fas fa-bed"></i> Beds</h6>
                                 <p><?= $row['beds'] ?></p>
                             </div>
                             <div class="room-footer">
-                                <div class="location-info"><i class="fas fa-map-marker-alt"></i> <strong>Room
-                                        <?= $row['room_number'] ?></strong> | <?= $row['floor_number'] ?> Floor</div>
-                                <button class="btn-add-to-list" onclick="addToCart(
-                                        '<?= $row['room_type'] ?>',
-                                        <?= $row['price'] ?>,
-                                        '<?= $row['room_number'] ?>',
-                                        '<?= $row['floor_number'] ?>',
-                                        '<?= $img1 ?>',
-                                        <?= $row['capacity'] ?>,
-                                        <?= $row['room_type_id'] ?>
+                                <div class="location-info">
+                                    <i></i>
+                                    <strong>Available Rooms: <?= $available ?></strong>
+                                </div>
+
+                                <button class="btn-add-to-list" <?= $available > 0 ? "" : "disabled" ?> onclick="addToCart(
+                                        '<?= addslashes($row['room_type']) ?>',
+                                        <?= floatval($row['price']) ?>,
+                                        '<?= isset($row['room_number']) ? addslashes($row['room_number']) : '' ?>',
+                                        '<?= isset($row['floor_number']) ? addslashes($row['floor_number']) : '' ?>',
+                                        '<?= addslashes($img1) ?>',
+                                        <?= intval($row['capacity']) ?>,
+                                        <?= intval($row['room_type_id']) ?>,
+                                        <?= $available ?>       
                                     )">
-                                    <i class="fas fa-cart-plus"></i> Add to List
+                                    <i class="fas fa-cart-plus"></i> <?= $available > 0 ? 'Add to List' : 'No rooms' ?>
                                 </button>
+
+                                <button class="btn btn-view-details" data-bs-toggle="modal"
+                                    data-bs-target="#detailsModal<?= $row['room_type_id'] ?>">
+                                    <i class="fas fa-info-circle"></i> View Details
+                                </button>
+
                             </div>
                         </div>
                     </div>
                 </div>
+                <!-- Modal -->
+                <div class="modal fade" id="detailsModal<?= $row['room_type_id'] ?>" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content room-details-modal">
+                            <!-- Modal Header -->
+                            <div class="modal-header-custom">
+                                <div class="header-content">
+                                    <h5 class="modal-title-custom">
+                                        <i class="fas fa-door-open"></i>
+                                        <?= $row['room_type'] ?>
+                                    </h5>
+                                    <span class="price-badge-modal">₱<?= number_format($row['price']) ?> <small>/
+                                            night</small></span>
+                                </div>
+                                <button type="button" class="btn-close-custom" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            <div class="modal-body-custom">
+                                <!-- Carousel -->
+                                <div id="carouselDetails<?= $row['room_type_id'] ?>" class="carousel slide room-carousel-modal"
+                                    data-bs-ride="carousel">
+                                    <div class="carousel-indicators modal-indicators">
+                                        <button type="button" data-bs-target="#carouselDetails<?= $row['room_type_id'] ?>"
+                                            data-bs-slide-to="0" class="active"></button>
+                                        <?php if (!empty($row['image2'])): ?>
+                                            <button type="button" data-bs-target="#carouselDetails<?= $row['room_type_id'] ?>"
+                                                data-bs-slide-to="1"></button>
+                                        <?php endif; ?>
+                                        <?php if (!empty($row['image3'])): ?>
+                                            <button type="button" data-bs-target="#carouselDetails<?= $row['room_type_id'] ?>"
+                                                data-bs-slide-to="2"></button>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="carousel-inner">
+                                        <div class="carousel-item active">
+                                            <img src="<?= $path . $row['image'] ?>" class="d-block w-100" alt="Room Image 1">
+                                        </div>
+                                        <?php if (!empty($row['image2'])): ?>
+                                            <div class="carousel-item">
+                                                <img src="<?= $path . $row['image2'] ?>" class="d-block w-100" alt="Room Image 2">
+                                            </div>
+                                        <?php endif; ?>
+                                        <?php if (!empty($row['image3'])): ?>
+                                            <div class="carousel-item">
+                                                <img src="<?= $path . $row['image3'] ?>" class="d-block w-100" alt="Room Image 3">
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <button class="carousel-control-prev modal-carousel-control" type="button"
+                                        data-bs-target="#carouselDetails<?= $row['room_type_id'] ?>" data-bs-slide="prev">
+                                        <span class="carousel-control-icon-modal"><i class="fas fa-chevron-left"></i></span>
+                                    </button>
+                                    <button class="carousel-control-next modal-carousel-control" type="button"
+                                        data-bs-target="#carouselDetails<?= $row['room_type_id'] ?>" data-bs-slide="next">
+                                        <span class="carousel-control-icon-modal"><i class="fas fa-chevron-right"></i></span>
+                                    </button>
+                                </div>
+
+                                <div class="room-info-grid-modal">
+                                    <div class="info-card-modal">
+                                        <div class="info-icon-modal">
+                                            <i class="fas fa-users"></i>
+                                        </div>
+                                        <div class="info-content-modal">
+                                            <span class="info-label-modal">Capacity</span>
+                                            <span class="info-value-modal"><?= $row['capacity'] ?> Guests</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-card-modal">
+                                        <div class="info-icon-modal">
+                                            <i class="fas fa-bed"></i>
+                                        </div>
+                                        <div class="info-content-modal">
+                                            <span class="info-label-modal">Beds</span>
+                                            <span class="info-value-modal"><?= $row['beds'] ?></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="info-card-modal">
+                                        <div class="info-icon-modal">
+                                            <i class="fas fa-dollar-sign"></i>
+                                        </div>
+                                        <div class="info-content-modal">
+                                            <span class="info-label-modal">Price</span>
+                                            <span class="info-value-modal">₱<?= number_format($row['price']) ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="room-description-modal">
+                                    <h6 class="section-title-modal">
+                                        <i class="fas fa-align-left"></i> Description
+                                    </h6>
+                                    <p><?= $row['description'] ?></p>
+                                </div>
+
+                                <div class="room-amenities-modal">
+                                    <h6 class="section-title-modal">
+                                        <i class="fas fa-star"></i> Amenities
+                                    </h6>
+                                    <div class="amenities-grid-modal">
+                                        <div class="amenity-item-modal">
+                                            <i class="fas fa-wifi"></i>
+                                            <span>Free WiFi</span>
+                                        </div>
+                                        <div class="amenity-item-modal">
+                                            <i class="fas fa-snowflake"></i>
+                                            <span>Air Conditioning</span>
+                                        </div>
+                                        <div class="amenity-item-modal">
+                                            <i class="fas fa-tv"></i>
+                                            <span>Flat Screen TV</span>
+                                        </div>
+                                        <div class="amenity-item-modal">
+                                            <i class="fas fa-shopping-basket"></i>
+                                            <span>Mini Fridge</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
                 <?php
             }
         } elseif (isset($_POST['check_in'])) {
@@ -1021,19 +1582,6 @@ while ($row = $bedQuery->fetch_assoc()) {
                             <input type="text" id="total_discount_amount" name="total_discount_amount"
                                 class="form-control custom-input" readonly value="₱0">
                         </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Payment</label>
-                            <input type="number" id="payment_amount" name="payment_amount"
-                                class="form-control custom-input" min="0" step="0.01">
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label">Change</label>
-                            <input type="text" id="change_amount" name="change_amount" class="form-control custom-input"
-                                readonly>
-                        </div>
-
                     </div>
 
                     <input type="hidden" name="cart_items" id="cart_items">
@@ -1056,15 +1604,21 @@ while ($row = $bedQuery->fetch_assoc()) {
     let cartItems = [];
     let availabilityChecked = <?= isset($result) && $result ? 'true' : 'false' ?>;
 
-    function addToCart(name, price, room_number, floor, image, capacity, room_type_id) {
+    function addToCart(name, price, room_number, floor, image, capacity, room_type_id, available) {
         if (!availabilityChecked) {
             alert("Please check room availability first.");
             return;
         }
 
-        const exists = cartItems.some(item => item.room_type_id === room_type_id);
-        if (exists) {
-            alert("This room type is already in your booking list.");
+        const existingItem = cartItems.find(item => item.room_type_id === room_type_id);
+        if (existingItem) {
+            if (existingItem.quantity < existingItem.available) {
+                existingItem.quantity += 1;
+                updateCart();
+                openSidebar();
+            } else {
+                alert("You cannot book more than the available rooms.");
+            }
             return;
         }
 
@@ -1076,14 +1630,15 @@ while ($row = $bedQuery->fetch_assoc()) {
             floor,
             image,
             capacity,
-            room_type_id
+            room_type_id,
+            quantity: 1,
+            available
         };
 
         cartItems.push(room);
         updateCart();
         openSidebar();
     }
-
 
     function removeFromCart(id) {
         cartItems = cartItems.filter(item => item.id !== id);
@@ -1114,7 +1669,11 @@ while ($row = $bedQuery->fetch_assoc()) {
                 <div class="cart-item-details">
                     <div class="cart-item-title">${item.name}</div>
                     <div class="cart-item-price">₱${item.price.toLocaleString()}</div>
-                    <small>Room ${item.room_number} - ${item.floor}</small>
+                    <div class="cart-item-quantity mt-2">
+                        <button onclick="decreaseQuantity(${item.id})" class="btn-qty">-</button>
+                        <input type="text" value="${item.quantity}" readonly class="qty-input">
+                        <button onclick="increaseQuantity(${item.id})" class="btn-qty">+</button>
+                    </div>
                     <div class="mt-2">
                         <button class="remove-item" onclick="removeFromCart(${item.id})">
                             <i class="fas fa-trash"></i> Remove
@@ -1123,7 +1682,6 @@ while ($row = $bedQuery->fetch_assoc()) {
                 </div>
             </div>
         `).join('')}
-
         <div class="cart-total">
             <h5>Total Amount</h5>
             <div class="total-amount">₱${total.toLocaleString()}</div>
@@ -1131,6 +1689,25 @@ while ($row = $bedQuery->fetch_assoc()) {
                 <i class="fas fa-check-circle"></i> Proceed to Checkout
             </button>
         </div>`;
+
+    }
+
+    function increaseQuantity(id) {
+        const item = cartItems.find(i => i.id === id);
+        if (item.quantity < item.available) {
+            item.quantity++;
+            updateCart();
+        } else {
+            alert(`Cannot exceed available rooms: ${item.available}`);
+        }
+    }
+
+    function decreaseQuantity(id) {
+        const item = cartItems.find(i => i.id === id);
+        if (item.quantity > 1) {
+            item.quantity--;
+            updateCart();
+        }
     }
 
     function openSidebar() {
@@ -1163,18 +1740,14 @@ while ($row = $bedQuery->fetch_assoc()) {
 
         const nights = getNumberOfNights();
 
-        // Rooms total
         let roomsTotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0) * nights;
 
-        // Extra bed
         const extraBedSelect = document.getElementById("extra_bed");
         const extraBedPrice = Number(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
         let extraBedTotal = extraBedPrice * nights;
 
-        // Subtotal
         let subtotal = roomsTotal + extraBedTotal;
 
-        // Discount
         let discountPercent = 0;
         document.querySelectorAll(".discount-select").forEach(select => {
             const percent = Number(select.selectedOptions[0]?.dataset.percent) || 0;
@@ -1250,11 +1823,6 @@ while ($row = $bedQuery->fetch_assoc()) {
                 <option value="PWD" data-percent="20">PWD (20%)</option>
                 <option value="Senior" data-percent="20">Senior (20%)</option>
             </select>
-        </div>
-
-        <div class="col-md-3">
-            <label class="form-label">Proof Image</label>
-            <input type="file" name="proof${number}" class="form-control" required>
         </div>
     </div>
     `;
@@ -1373,28 +1941,8 @@ while ($row = $bedQuery->fetch_assoc()) {
             return;
         }
 
-        const totalAmount = parseFloat(document.getElementById("total_amount").value.replace(/,/g, '')) || 0;
-        const payment = parseFloat(document.getElementById("payment_amount").value) || 0;
-
-        if (payment < totalAmount) {
-            alert("Payment must be equal to or greater than the total amount.");
-            return;
-        }
-
         document.getElementById("checkoutForm").submit();
     }
-
-
-    document.getElementById("payment_amount").addEventListener("input", function () {
-        const totalAmount = parseFloat(
-            document.getElementById("total_amount").value.replace(/,/g, '')
-        ) || 0;
-
-        const payment = parseFloat(this.value) || 0;
-        const change = payment >= totalAmount ? payment - totalAmount : 0;
-
-        document.getElementById("change_amount").value = "₱" + change.toLocaleString();
-    });
 
     document.addEventListener("DOMContentLoaded", function () {
         const checkIn = document.getElementById("check_in");
@@ -1420,6 +1968,4 @@ while ($row = $bedQuery->fetch_assoc()) {
             }
         });
     });
-
-
 </script>

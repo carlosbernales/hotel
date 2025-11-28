@@ -17,6 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     $getImages->close();
 
     $folder = "../../Admin/adminBackend/room_type_images/";
+
     $images = [$img1, $img2, $img3];
 
     foreach ($images as $img) {
@@ -27,11 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
             }
         }
     }
-
-    $deleteRooms = $conn->prepare("DELETE FROM room_numbers WHERE room_type_id = ?");
-    $deleteRooms->bind_param("i", $room_type_id);
-    $deleteRooms->execute();
-    $deleteRooms->close();
 
     $stmt = $conn->prepare("DELETE FROM room_types WHERE room_type_id = ?");
     $stmt->bind_param("i", $room_type_id);

@@ -3,14 +3,22 @@ include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
 $room_types = [];
-$result = $conn->query("SELECT rt.*, rn.room_number, rn.floor_number 
-                        FROM room_types rt 
-                        LEFT JOIN room_numbers rn 
-                        ON rt.room_type_id = rn.room_type_id");
-
+$result = $conn->query("SELECT * FROM room_types");
 if ($result) {
     $room_types = $result->fetch_all(MYSQLI_ASSOC);
 }
+
+$room_number = [];
+$sql = "
+    SELECT rn.*, rt.room_type
+    FROM room_numbers rn
+    JOIN room_types rt ON rn.room_type_id = rt.room_type_id
+";
+$result = $conn->query($sql);
+if ($result) {
+    $room_number = $result->fetch_all(MYSQLI_ASSOC);
+}
+
 
 ?>
 
@@ -301,44 +309,11 @@ if ($result) {
                                                 <input type="text" name="room_type" class="form-control package-input"
                                                     value="<?php echo htmlspecialchars($room_type['room_type']); ?>">
                                             </div>
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Room Number</label>
-                                                    <input type="text" name="room_number" class="form-control package-input"
-                                                        value="<?php echo htmlspecialchars($room_type['room_number']); ?>"
-                                                        required>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Floor Number</label>
-                                                    <input type="text" name="floor_number"
-                                                        class="form-control package-input"
-                                                        value="<?php echo htmlspecialchars($room_type['floor_number']); ?>"
-                                                        required>
-                                                </div>
-                                            </div>
 
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Beds</label>
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">Beds</label>
                                                 <input type="number" name="beds" class="form-control package-input"
-                                                    value="<?php echo htmlspecialchars($room_type['beds']); ?>" required>
-                                                </div>
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Status</label>
-                                                    <select name="status" class="form-control package-input" required>
-                                                    <option value="active" 
-                                                        <?php echo ($room_type['status'] === 'active') ? 'selected' : ''; ?>>
-                                                        active
-                                                    </option>
-
-                                                    <option value="inactive" 
-                                                        <?php echo ($room_type['status'] === 'inactive') ? 'selected' : ''; ?>>
-                                                        inactive
-                                                    </option>
-                                                </select>
-
-                                                </div>
-
+                                                    value="<?php echo htmlspecialchars($room_type['beds']); ?>">
                                             </div>
 
                                             <div class="row">
@@ -377,6 +352,17 @@ if ($result) {
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label package-label">Status</label>
+                                                <select name="status" class="form-control package-input" required>
+                                                    <option value="active" <?php echo ($room_type['status'] == 'active') ? 'selected' : ''; ?>>
+                                                        Active</option>
+                                                    <option value="inactive" <?php echo ($room_type['status'] == 'inactive') ? 'selected' : ''; ?>>Inactive
+                                                    </option>
+
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
                                                 <label class="form-label package-label">Images (optional, max 3)</label>
                                                 <input type="file" class="form-control package-input edit_images"
                                                     id="edit_images<?php echo $room_type['room_type_id']; ?>"
@@ -403,9 +389,208 @@ if ($result) {
             </table>
         </div>
     </div>
+
+
+    <div class="info-card" style="margin-bottom: 40px;">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="m-0">Room Number</h5>
+            <a class="btn table-add-btn" data-bs-toggle="modal" data-bs-target="#addRoomNumberModal">
+                Add Room
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table id="bookingTable" class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Room Type</th>
+                        <th>Room Number</th>
+                        <th>Floor Number</th>
+                        <th>Status</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($room_number as $room_numbers): ?>
+                        <tr>
+                            <td><?php echo $room_numbers['room_type']; ?></td>
+                            <td><?php echo $room_numbers['room_number']; ?></td>
+                            <td><?php echo $room_numbers['floor_number']; ?></td>
+                            <td><?php echo $room_numbers['status']; ?></td>
+
+                            <td>
+
+                                <button type="button" class="btn btn-sm table-action-btn table-action-edit"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editRoomNumber<?php echo $room_numbers['room_number_id']; ?>"
+                                    title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+                                <form method="POST"
+                                    action="../Admin/adminBackend/delete_room_number.php?id=<?php echo $room_numbers['room_number_id']; ?>"
+                                    style="display:inline-block;">
+                                    <button type="submit" class="btn btn-sm table-action-btn table-action-delete"
+                                        onclick="return confirm('Are you sure you want to delete this room type?')"
+                                        title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+
+                            </td>
+                        </tr>
+
+                        <div class="modal fade" id="editRoomNumber<?php echo $room_numbers['room_number_id']; ?>"
+                            tabindex="-1"
+                            aria-labelledby="editRoomNumberLabel<?php echo $room_numbers['room_number_id']; ?>"
+                            aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content package-modal">
+                                    <form method="POST"
+                                        action="../Admin/adminBackend/edit_room_number.php?id=<?php echo $room_numbers['room_number_id']; ?>">
+
+                                        <div class="modal-header package-modal-header">
+                                            <h5 class="modal-title fw-bold">Edit Room</h5>
+                                            <button type="button" class="btn-close package-modal-close"
+                                                data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body package-modal-body">
+
+                                            <!-- Room Type Dropdown -->
+                                            <div class="mb-3">
+                                                <label for="roomType" class="form-label package-label">Room Type</label>
+                                                <select class="form-control package-input" id="roomType" name="room_type_id"
+                                                    required>
+                                                    <option value="" disabled>Select Room Type</option>
+                                                    <?php
+                                                    $result = $conn->query("SELECT * FROM room_types");
+                                                    if ($result) {
+                                                        while ($room = $result->fetch_assoc()) {
+                                                            $selected = ($room['room_type_id'] == $room_numbers['room_type_id']) ? 'selected' : '';
+                                                            echo '<option value="' . $room['room_type_id'] . '" ' . $selected . '>' . $room['room_type'] . '</option>';
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                            </div>
+
+                                            <!-- Room Number -->
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">Room Number</label>
+                                                <input type="text" name="room_number" class="form-control package-input"
+                                                    value="<?php echo htmlspecialchars($room_numbers['room_number']); ?>"
+                                                    required>
+                                            </div>
+
+                                            <!-- Floor Number -->
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">Floor Number</label>
+                                                <input type="number" name="floor_number" class="form-control package-input"
+                                                    value="<?php echo htmlspecialchars($room_numbers['floor_number']); ?>"
+                                                    required>
+                                            </div>
+
+                                            <!-- Status -->
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">Status</label>
+                                                <select name="status" class="form-control package-input" required>
+                                                    <option value="active" <?php echo ($room_numbers['status'] == 'active') ? 'selected' : ''; ?>>
+                                                        Active</option>
+                                                    <option value="inactive" <?php echo ($room_numbers['status'] == 'inactive') ? 'selected' : ''; ?>>Inactive
+                                                    </option>
+
+                                                </select>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <div class="d-flex justify-content-end gap-2">
+                                                <button type="submit" class="btn package-btn-save">
+                                                    Save Changes
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 
+
+
+<div class="modal fade" id="addRoomNumberModal" tabindex="-1" aria-labelledby="addRoomNumberModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content package-modal">
+            <div class="modal-header package-modal-header">
+                <h5 class="modal-title fw-bold" id="addRoomNumberModalLabel">Add Room Number</h5>
+                <button type="button" class="btn-close package-modal-close" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body package-modal-body">
+                <form id="addRoomForm" method="POST" action="../Admin/adminBackend/add_room_numbers.php">
+
+                    <div class="mb-3">
+                        <label for="roomType" class="form-label package-label">Room Type</label>
+                        <select class="form-control package-input" id="roomType" name="room_type_id" required>
+                            <option value="" disabled selected>Select Room Type</option>
+                            <?php
+                            $room_types = [];
+                            $result = $conn->query("SELECT * FROM room_types");
+                            if ($result) {
+                                $room_types = $result->fetch_all(MYSQLI_ASSOC);
+                                foreach ($room_types as $room) {
+                                    echo '<option value="' . htmlspecialchars($room['room_type_id']) . '">' . htmlspecialchars($room['room_type']) . '</option>';
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="roomNumber" class="form-label package-label">Room Number</label>
+                        <input type="text" class="form-control package-input" id="roomNumber" name="room_number"
+                            required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="floorNumber" class="form-label package-label">Floor Number</label>
+                        <input type="number" class="form-control package-input" id="floorNumber" name="floor_number"
+                            min="1" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="status" class="form-label package-label">Status</label>
+                        <select class="form-select package-input" id="status" name="status" required>
+                            <option value="">Select Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn package-btn-save">
+                                Save Room
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -424,20 +609,6 @@ if ($result) {
                         <label for="roomType" class="form-label package-label">Room Type</label>
                         <input type="text" class="form-control package-input" id="roomType" name="room_type" required>
                     </div>
-
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="roomNumber" class="form-label package-label">Room Number</label>
-                            <input type="text" class="form-control package-input" id="roomNumber" name="room_number"
-                                required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="floorNumber" class="form-label package-label">Floor Number</label>
-                            <input type="text" class="form-control package-input" id="floorNumber" name="floor_number"
-                                required>
-                        </div>
-                    </div>
-
 
                     <div class="mb-3">
                         <label for="beds" class="form-label package-label">Beds</label>
@@ -476,6 +647,15 @@ if ($result) {
                     </div>
 
                     <div class="mb-3">
+                        <label for="status" class="form-label package-label">Status</label>
+                        <select class="form-select package-input" id="status" name="status" required>
+                            <option value="">Select Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="images" class="form-label package-label">Images (Max 3)</label>
                         <input type="file" class="form-control package-input" id="images" name="images[]" multiple
                             required>
@@ -497,11 +677,28 @@ if ($result) {
 </div>
 
 
-
-
-
 <?php include 'adminFrontend/footer.php'; ?>
 
+<script>
+    $(document).ready(function () {
+        $('#bookingTable').DataTable({
+            responsive: true,
+            pageLength: 10,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+            language: {
+                search: "Search bookings:",
+                lengthMenu: "Show _MENU_ entries",
+                info: "Showing _START_ to _END_ of _TOTAL_ bookings",
+                paginate: {
+                    first: "First",
+                    last: "Last",
+                    next: "Next",
+                    previous: "Previous"
+                }
+            }
+        });
+    });
+</script>
 
 <script>
     document.getElementById('images').addEventListener('change', function () {

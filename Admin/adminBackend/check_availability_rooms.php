@@ -1,39 +1,68 @@
 <?php
 include '../adminBackend/mydb.php';
+header('Content-Type: application/json');
+ini_set('display_errors', 0);
 
-$check_in = $_GET['check_in'];
-$booking_id = $_GET['booking_id'];
+$check_in = $_GET['check_in'] ?? '';
+$check_out = $_GET['check_out'] ?? '';
+$booking_id = $_GET['booking_id'] ?? 0;
 
-date_default_timezone_set('Asia/Manila');
+if (!$check_in || !$check_out) {
+    echo json_encode([]);
+    exit;
+}
+
 $check_in_dt = strtotime($check_in);
-$unavailable = [];
+$check_out_dt = strtotime($check_out);
+
+$roomNumbers = [];
+$rn_res = $conn->query("SELECT * FROM room_numbers WHERE status='active'");
+while ($rn = $rn_res->fetch_assoc()) {
+    $roomNumbers[$rn['room_type_id']][] = $rn;
+}
 
 $sql = "
-    SELECT br.room_type_id, b.check_out, b.status
-    FROM booked_rooms br
-    JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.booking_id != $booking_id
-      AND b.status NOT IN ('rejected','rescheduled')
+SELECT br.room_number_fk_id, b.check_in, b.check_out, b.status
+FROM booked_rooms br
+JOIN bookings b ON br.booking_id = b.booking_id
+WHERE b.booking_id != $booking_id
 ";
 $res = $conn->query($sql);
 
-while ($row = $res->fetch_assoc()) {
-    $room_id = $row['room_type_id'];
-    $check_out_time = strtotime($row['check_out']);
+$unavailable = [];
+$maintenance_times = [];
 
-    if (in_array($row['status'], ['pending', 'accepted'])) {
-        if ($check_in_dt <= $check_out_time + 3 * 3600) {
-            $available_time = date('Y-m-d H:i', $check_out_time + 3 * 3600);
-            $unavailable[$room_id] = "Occupied, Available at $available_time";
-        }
-    } elseif ($row['status'] === 'finished') {
-        $maintenance_end = $check_out_time + 3 * 3600;
-        if ($check_in_dt <= $maintenance_end) {
-            $available_time = date('Y-m-d H:i', $maintenance_end);
-            $unavailable[$room_id] = "Maintenance until $available_time";
+while ($row = $res->fetch_assoc()) {
+    $booked_start = strtotime($row['check_in']);
+    $booked_end = strtotime($row['check_out']);
+
+    if ($row['status'] === 'finished') {
+        $booked_end += 3 * 3600;
+    }
+
+    if (!($check_out_dt < $booked_start || $check_in_dt > $booked_end)) {
+        $unavailable[$row['room_number_fk_id']] = true;
+
+        if ($row['status'] === 'finished') {
+            $maintenance_times[$row['room_number_fk_id']] = date('Y-m-d H:i', $booked_end);
         }
     }
 }
 
-header('Content-Type: application/json');
-echo json_encode(['unavailable' => $unavailable]);
+foreach ($roomNumbers as $type_id => &$rooms) {
+    $available_rooms = [];
+    foreach ($rooms as $r) {
+        if (!isset($unavailable[$r['room_number_id']])) {
+            $available_rooms[] = $r;
+        } elseif (isset($maintenance_times[$r['room_number_id']])) {
+            $r['note'] = "Available at " . $maintenance_times[$r['room_number_id']];
+            $available_rooms[] = $r;
+        }
+    }
+    $rooms = $available_rooms;
+}
+unset($rooms);
+
+$roomNumbers = array_filter($roomNumbers, fn($rooms) => count($rooms) > 0);
+
+echo json_encode($roomNumbers);

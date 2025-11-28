@@ -361,16 +361,37 @@ $currentPage = basename($page);
             </a>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking_list.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-user-tie"></i> Room Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </a>
 
                 <div class="sidebar-submenu">
+                    <a href="index.php?pending_room_bookings_list"
+                        class="<?php echo ($currentPage == 'pending_room_bookings_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Pending
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?accepted_room_bookings_list"
+                        class="<?php echo ($currentPage == 'accepted_room_bookings_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Accepted
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
                     <a href="index.php?room_booking_list"
                         class="<?php echo ($currentPage == 'room_booking_list.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-users-cog"></i> Pending
+                        <i class="fas fa-users-cog"></i> Check Ins
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?finished_room_bookings_list"
+                        class="<?php echo ($currentPage == 'finished_room_bookings_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Finished
                     </a>
                 </div>
 

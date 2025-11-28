@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 27, 2025 at 09:52 AM
+-- Generation Time: Nov 28, 2025 at 12:14 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -292,6 +292,7 @@ INSERT INTO `beds` (`id`, `item_type`, `available_quantity`, `total_quantity`, `
 CREATE TABLE `booked_rooms` (
   `id` int NOT NULL,
   `booking_id` int NOT NULL,
+  `room_number_fk_id` int DEFAULT NULL,
   `room_type_id` int NOT NULL,
   `room_type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` decimal(10,2) NOT NULL,
@@ -302,10 +303,11 @@ CREATE TABLE `booked_rooms` (
 -- Dumping data for table `booked_rooms`
 --
 
-INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
-(1, 1, 2, 'ASD', 1000.00, '2025-11-26 14:02:08'),
-(2, 1, 3, 'DAS', 1700.00, '2025-11-26 14:02:08'),
-(3, 2, 4, 'GAF', 2000.00, '2025-11-26 14:03:31');
+INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
+(1, 1, 1, 1, 'SAD', 1500.00, '2025-11-28 05:59:48'),
+(2, 1, 2, 1, 'SAD', 1500.00, '2025-11-28 05:59:48'),
+(3, 2, 3, 5, 'HAH', 500.00, '2025-11-28 08:10:23'),
+(4, 2, 4, 5, 'HAH', 500.00, '2025-11-28 08:10:23');
 
 -- --------------------------------------------------------
 
@@ -322,7 +324,7 @@ CREATE TABLE `bookings` (
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `contact` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `booking_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `check_in` date DEFAULT NULL,
+  `check_in` datetime DEFAULT NULL,
   `check_out` datetime DEFAULT NULL,
   `arrival_time` time DEFAULT NULL,
   `number_of_guests` int DEFAULT NULL,
@@ -350,8 +352,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`) VALUES
-(1, 'BK-X41NLQH79TAB', NULL, 'dsad', 'asdas', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-27', '2025-11-30 00:00:00', NULL, 2, NULL, 2, '0', 'gcash', 8880.00, '2025-11-26 14:02:08', 3, 8400.00, 0.00, 'admin', 2, 0, '2', 'PWD', 20.00, 2100.00, 'accepted'),
-(2, 'BK-KYIXFLF089W7', NULL, 'asdas', 'dsad', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-30', '2025-12-01 00:00:00', NULL, 2, NULL, 1, '0', 'gcash', 2400.00, '2025-11-26 14:03:31', 1, 1000.00, 0.00, 'admin', 1, 1, '2', 'PWD', 20.00, 400.00, 'rescheduled');
+(1, 'BK-NELH1R2R633P', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-29 00:00:00', '2025-11-28 16:25:02', NULL, 10, NULL, 2, '0', 'gcash', 16000.00, '2025-11-28 05:59:48', 2, 16000.00, 0.00, 'admin', 1, 2, '1', 'PWD', 20.00, 1200.00, 'checkin'),
+(2, 'BK-Y3I7BW4CZDD5', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-28 00:00:00', '2025-12-01 00:00:00', NULL, 2, NULL, 1, '0', 'gcash', 2400.00, '2025-11-28 08:10:23', 3, 1200.00, 1200.00, 'admin', 2, 0, '0', 'PWD', 20.00, 600.00, 'checkin');
 
 -- --------------------------------------------------------
 
@@ -1205,10 +1207,11 @@ CREATE TABLE `guest_names` (
 --
 
 INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
-(1, 1, 'das', 'dsadsad', 'Adult', NULL, NULL, '2025-11-26 14:02:08'),
-(2, 1, 'dasd', 'asdsad', 'Adult', NULL, NULL, '2025-11-26 14:02:08'),
-(3, 2, 'asds', 'adsad', 'Adult', NULL, NULL, '2025-11-26 14:03:31'),
-(4, 2, 'dsad', 'asdsa', 'Child', NULL, NULL, '2025-11-26 14:03:31');
+(1, 1, 'dasdasd', 'sadas', 'Adult', NULL, NULL, '2025-11-28 05:59:48'),
+(2, 1, 'asd', 'asdas', 'Child', NULL, NULL, '2025-11-28 05:59:48'),
+(3, 1, 'asda', 'sdasds', 'Child', NULL, NULL, '2025-11-28 05:59:48'),
+(4, 2, 'sad', 'asdas', 'Adult', NULL, NULL, '2025-11-28 08:10:23'),
+(5, 2, 'asd', 'asdasd', 'Adult', NULL, NULL, '2025-11-28 08:10:23');
 
 -- --------------------------------------------------------
 
@@ -2253,11 +2256,10 @@ CREATE TABLE `room_numbers` (
 --
 
 INSERT INTO `room_numbers` (`room_number_id`, `room_type_id`, `room_number`, `floor_number`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, '1', 1, 'active', '2025-11-25 01:56:03', '2025-11-25 02:56:16'),
-(2, 2, '2', 2, 'active', '2025-11-25 01:56:25', '2025-11-25 02:38:57'),
-(3, 3, '3', 3, 'active', '2025-11-25 03:00:55', '2025-11-25 03:13:15'),
-(4, 4, '4', 3, 'active', '2025-11-27 05:33:38', '2025-11-27 05:33:38'),
-(5, 5, '6', 2, 'active', '2025-11-27 06:03:49', '2025-11-27 06:03:49');
+(1, 1, '1', 2, 'active', '2025-11-28 05:51:28', '2025-11-28 05:51:28'),
+(2, 1, '2', 1, 'active', '2025-11-28 05:54:25', '2025-11-28 05:54:25'),
+(3, 5, '3', 2, 'active', '2025-11-28 05:54:34', '2025-11-28 05:54:34'),
+(4, 5, '4', 2, 'active', '2025-11-28 05:55:02', '2025-11-28 05:55:53');
 
 -- --------------------------------------------------------
 
@@ -3008,8 +3010,7 @@ ALTER TABLE `beds`
 --
 ALTER TABLE `booked_rooms`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_booking_id` (`booking_id`),
-  ADD KEY `idx_room_type_id` (`room_type_id`);
+  ADD KEY `idx_booking_id` (`booking_id`);
 
 --
 -- Indexes for table `bookings`
@@ -3243,7 +3244,7 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `bookings`
@@ -3297,7 +3298,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
@@ -3387,7 +3388,7 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT for table `room_numbers`
 --
 ALTER TABLE `room_numbers`
-  MODIFY `room_number_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `room_number_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `room_transfers`
@@ -3451,8 +3452,7 @@ ALTER TABLE `admin_sessions`
 -- Constraints for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  ADD CONSTRAINT `booked_rooms_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `booked_rooms_ibfk_2` FOREIGN KEY (`room_type_id`) REFERENCES `room_types` (`room_type_id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `booked_rooms_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `orders`

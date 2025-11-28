@@ -89,12 +89,28 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['room_booking'])) {
     $page = "adminFrontend/room_booking.php";
 
+    ///ROOM BOOKINGS
+} elseif (isset($_GET['pending_room_bookings_list'])) {
+    $page = "adminFrontend/pending_room_bookings_list.php";
+
+} elseif (isset($_GET['accepted_room_bookings_list'])) {
+    $page = "adminFrontend/accepted_room_bookings_list.php";
+
 } elseif (isset($_GET['room_booking_list'])) {
     $page = "adminFrontend/room_booking_list.php";
 
+} elseif (isset($_GET['finished_room_bookings_list'])) {
+    $page = "adminFrontend/finished_room_bookings_list.php";
+    //////////////////
 
 } elseif (isset($_GET['book_room_details'])) {
     $page = "adminFrontend/book_room_details.php";
+
+} elseif (isset($_GET['accepted_room_bookDetails'])) {
+    $page = "adminFrontend/accepted_room_bookDetails.php";
+
+} elseif (isset($_GET['extend_checkout_room_booking'])) {
+    $page = "adminFrontend/extend_checkout_room_booking.php";
 
 
 
