@@ -1114,7 +1114,7 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
         JOIN room_numbers rn_used ON rn_used.room_number_id = br_used.room_number_fk_id
         WHERE rn_used.room_type_id = rt.room_type_id
             AND rn_used.status = 'active'
-            AND b_used.status IN ('pending','accepted','checkin')
+            AND b_used.status IN ('pending','accepted','checkin','rescheduled')
             AND NOT (b_used.check_out < '$check_in' OR b_used.check_in > '$check_out')
         ) AS unavailable_rooms
     FROM room_types rt
@@ -1512,33 +1512,34 @@ while ($row = $bedQuery->fetch_assoc()) {
                                 readonly>
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Number of Guests</label>
-                            <input type="number" name="number_of_guests" class="form-control custom-input" readonly>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">Number of Guests</label>
+                                <input type="number" name="number_of_guests" class="form-control custom-input" readonly>
+                            </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Adults</label>
-                            <input type="number" name="num_adults" class="form-control custom-input" required>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Adults</label>
+                                <input type="number" name="num_adults" class="form-control custom-input" required>
+                            </div>
 
-                        <div class="col-md-4">
-                            <label class="form-label">Children</label>
-                            <input type="number" name="num_children" class="form-control custom-input" required>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Children</label>
+                                <input type="number" name="num_children" class="form-control custom-input" required>
+                            </div>
 
-                        <div class="col-md-6">
-                            <label class="form-label">Room Quantity</label>
-                            <input type="number" name="room_quantity" id="room_quantity"
-                                class="form-control custom-input" readonly>
+                            <div class="col-md-3">
+                                <label class="form-label">Room Quantity</label>
+                                <input type="number" name="room_quantity" id="room_quantity"
+                                    class="form-control custom-input" readonly>
+                            </div>
                         </div>
-
-                        <div class="col-md-6">
+                        <div class="col-12 mb-2">
                             <label class="form-label">Extra Bed</label>
-                            <select name="extra_bed" id="extra_bed" class="form-control custom-input">
-                                <?php echo $bedOptions; ?>
-                            </select>
+                            <div id="extraBedContainer" class="row"></div>
                         </div>
+
+
 
                         <input type="hidden" id="total_capacity" name="total_capacity">
                     </div>
@@ -1559,11 +1560,14 @@ while ($row = $bedQuery->fetch_assoc()) {
                         <div class="col-md-6">
                             <label class="form-label">Payment Method</label>
                             <select name="payment_method" class="form-control custom-input" required>
-                                <option value="gcash">GCash</option>
-                                <option value="bank">Bank Transfer</option>
-                                <option value="cash">Cash</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="GCash">GCash</option>
+                                <option value="Paypal">Paypal</option>
                             </select>
                         </div>
+
 
                         <div class="col-md-6">
                             <label class="form-label">Total Amount</label>
@@ -1658,7 +1662,11 @@ while ($row = $bedQuery->fetch_assoc()) {
             return;
         }
 
-        const total = cartItems.reduce((sum, item) => sum + item.price, 0);
+        const nights = getNumberOfNights();
+        const total = cartItems.reduce((sum, item) =>
+            sum + (item.price * item.quantity * nights), 0
+        );
+
 
         document.getElementById("cartBadge").innerText = cartItems.length;
 
@@ -1689,7 +1697,33 @@ while ($row = $bedQuery->fetch_assoc()) {
                 <i class="fas fa-check-circle"></i> Proceed to Checkout
             </button>
         </div>`;
+        generateExtraBedDropdowns();
+    }
 
+    function generateExtraBedDropdowns() {
+        const container = document.getElementById("extraBedContainer");
+        container.innerHTML = "";
+
+        const totalRooms = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+        if (totalRooms === 0) return;
+
+        for (let i = 1; i <= totalRooms; i++) {
+
+            const col = document.createElement("div");
+            col.classList.add("col-md-6", "mb-2");
+
+            col.innerHTML = `
+            <select class="form-control custom-input extra-bed-select" data-index="${i}">
+                <?= $bedOptions ?>
+            </select>
+        `;
+
+            container.appendChild(col);
+        }
+
+        document.querySelectorAll(".extra-bed-select").forEach(select => {
+            select.addEventListener("change", updateTotalAmount);
+        });
     }
 
     function increaseQuantity(id) {
@@ -1731,41 +1765,19 @@ while ($row = $bedQuery->fetch_assoc()) {
         const totalCapacity = cartItems.reduce((sum, item) => sum + item.capacity, 0);
         document.getElementById("total_capacity").value = totalCapacity;
 
+        document.getElementById("room_quantity").value =
+            cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
+        updateTotalAmount();
+
         const checkInInput = document.querySelector("input[name='check_in']");
         const checkOutInput = document.querySelector("input[name='check_out']");
         document.getElementById("modal_check_in").value = checkInInput?.value || "";
         document.getElementById("modal_check_out").value = checkOutInput?.value || "";
 
-        document.getElementById("room_quantity").value = cartItems.length;
-
-        const nights = getNumberOfNights();
-
-        let roomsTotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0) * nights;
-
-        const extraBedSelect = document.getElementById("extra_bed");
-        const extraBedPrice = Number(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
-        let extraBedTotal = extraBedPrice * nights;
-
-        let subtotal = roomsTotal + extraBedTotal;
-
-        let discountPercent = 0;
-        document.querySelectorAll(".discount-select").forEach(select => {
-            const percent = Number(select.selectedOptions[0]?.dataset.percent) || 0;
-            if (percent > 0 && discountPercent === 0) discountPercent = percent; // apply only once
-        });
-
-        const discountAmount = subtotal * (discountPercent / 100);
-        const totalAmount = subtotal - discountAmount;
-
-        document.getElementById("total_discount_percent").value = discountPercent + "%";
-        document.getElementById("total_discount_amount").value = "₱" + discountAmount.toLocaleString();
-        document.getElementById("total_amount").value = totalAmount.toLocaleString();
-
         const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
         checkoutModal.show();
     }
-
-
 
     function updateGuestInputs() {
         const adults = parseInt(document.querySelector("input[name='num_adults']").value) || 0;
@@ -1775,7 +1787,7 @@ while ($row = $bedQuery->fetch_assoc()) {
         document.querySelector("input[name='number_of_guests']").value = totalGuests;
 
         const guestList = document.getElementById("guestList");
-        guestList.innerHTML = ""; // clear first
+        guestList.innerHTML = "";
         let counter = 1;
 
         // ADULTS
@@ -1793,39 +1805,39 @@ while ($row = $bedQuery->fetch_assoc()) {
 
     function createGuestInput(number, type) {
         return `
-    <div class="row g-2 guest-item mb-2 p-2 border rounded">
-        <div class="col-12 mb-1"><strong>Guest #${number}</strong></div>
+        <div class="row g-2 guest-item mb-2 p-2 border rounded">
+            <div class="col-12 mb-1"><strong>Guest #${number}</strong></div>
 
-        <div class="col-md-3">
-            <label class="form-label">First Name</label>
-            <input type="text" name="guest_firstname_${number}" class="form-control" required>
-        </div>
+            <div class="col-md-3">
+                <label class="form-label">First Name</label>
+                <input type="text" name="guest_firstname_${number}" class="form-control" required>
+            </div>
 
-        <div class="col-md-3">
-            <label class="form-label">Last Name</label>
-            <input type="text" name="guest_lastname_${number}" class="form-control" required>
-        </div>
+            <div class="col-md-3">
+                <label class="form-label">Last Name</label>
+                <input type="text" name="guest_lastname_${number}" class="form-control" required>
+            </div>
 
-        <div class="col-md-3">
-            <label class="form-label">Guest Type</label>
-            <select class="form-control" disabled>
-                <option value="Adult" ${type === "Adult" ? "selected" : ""}>Adult</option>
-                <option value="Child" ${type === "Child" ? "selected" : ""}>Child</option>
-            </select>
-            <!-- Hidden input to submit value -->
-            <input type="hidden" name="guest_type_${number}" value="${type}">
-        </div>
+            <div class="col-md-3">
+                <label class="form-label">Guest Type</label>
+                <select class="form-control" disabled>
+                    <option value="Adult" ${type === "Adult" ? "selected" : ""}>Adult</option>
+                    <option value="Child" ${type === "Child" ? "selected" : ""}>Child</option>
+                </select>
+                <!-- Hidden input to submit value -->
+                <input type="hidden" name="guest_type_${number}" value="${type}">
+            </div>
 
-        <div class="col-md-3">
-            <label class="form-label">Discount</label>
-            <select name="guest_discount_${number}" class="form-control discount-select" data-number="${number}">
-                <option value="" selected>Select Discount</option>
-                <option value="PWD" data-percent="20">PWD (20%)</option>
-                <option value="Senior" data-percent="20">Senior (20%)</option>
-            </select>
+            <div class="col-md-3">
+                <label class="form-label">Discount</label>
+                <select name="guest_discount_${number}" class="form-control discount-select" data-number="${number}">
+                    <option value="" selected>Select Discount</option>
+                    <option value="PWD" data-percent="20">PWD (20%)</option>
+                    <option value="Senior" data-percent="20">Senior (20%)</option>
+                </select>
+            </div>
         </div>
-    </div>
-    `;
+        `;
     }
 
     function validateCapacity(event) {
@@ -1845,105 +1857,108 @@ while ($row = $bedQuery->fetch_assoc()) {
     document.querySelector("input[name='num_adults']").addEventListener("input", validateCapacity);
     document.querySelector("input[name='num_children']").addEventListener("input", validateCapacity);
 
-    document.addEventListener("change", function (e) {
-        if (e.target.classList.contains("discount-select")) {
-            updateTotalDiscount();
-        }
-    });
-
-    function updateTotalDiscount() {
-        let totalAmount = cartItems.reduce((sum, item) => sum + item.price, 0);
-
-        const extraBedSelect = document.getElementById("extra_bed");
-        const extraBedPrice = parseFloat(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
-        totalAmount += extraBedPrice;
-
-        let discountApplied = false;
-        let discountPercent = 0;
-
-        document.querySelectorAll(".discount-select").forEach(select => {
-            const percent = parseInt(select.selectedOptions[0]?.dataset.percent) || 0;
-            if (percent > 0 && !discountApplied) {
-                discountPercent = percent;
-                discountApplied = true;
-            }
-        });
-
-        const totalDiscountAmount = totalAmount * (discountPercent / 100);
-
-        document.getElementById("total_discount_percent").value = discountPercent + "%";
-        document.getElementById("total_discount_amount").value = "₱" + totalDiscountAmount.toLocaleString();
-        document.getElementById("total_amount").value = (totalAmount - totalDiscountAmount).toLocaleString();
-    }
-
-
-    document.getElementById("extra_bed").addEventListener("change", function () {
-        updateTotalAmount();
-    });
-
     function getNumberOfNights() {
-        const checkIn = new Date(document.getElementById("modal_check_in").value);
-        const checkOut = new Date(document.getElementById("modal_check_out").value);
-        if (checkIn && checkOut && checkOut > checkIn) {
+        const checkInValue = document.getElementById("check_in")?.value;
+        const checkOutValue = document.getElementById("check_out")?.value;
+
+        if (!checkInValue || !checkOutValue) return 1;
+
+        const checkIn = new Date(checkInValue);
+        const checkOut = new Date(checkOutValue);
+
+        if (checkOut > checkIn) {
             return (checkOut - checkIn) / (1000 * 60 * 60 * 24);
         }
         return 1;
     }
 
+    document.addEventListener("change", function (e) {
+        if (e.target.classList.contains("discount-select") || e.target.classList.contains("extra-bed-select")) {
+            updateTotalAmount();
+        }
+    });
+
     function updateTotalAmount() {
         const nights = getNumberOfNights();
 
-        let roomsTotal = cartItems.reduce((sum, item) => sum + Number(item.price), 0) * nights;
+        let roomsTotal = cartItems.reduce((sum, item) =>
+            sum + (Number(item.price) * Number(item.quantity) * nights)
+            , 0);
 
-        const extraBedSelect = document.getElementById("extra_bed");
-        const extraBedPrice = Number(extraBedSelect?.selectedOptions[0]?.dataset.price) || 0;
-        let extraBedTotal = extraBedPrice * nights;
+        let extraBedTotal = 0;
+        document.querySelectorAll(".extra-bed-select").forEach(select => {
+            const option = select.options[select.selectedIndex];
+            const price = option ? Number(option.dataset.price) || 0 : 0;
+            extraBedTotal += price * nights;
+        });
 
         let subtotal = roomsTotal + extraBedTotal;
 
         let discountPercent = 0;
         document.querySelectorAll(".discount-select").forEach(select => {
-            const percent = Number(select.selectedOptions[0]?.dataset.percent) || 0;
-            if (percent > 0 && discountPercent === 0) discountPercent = percent; // only once
+            if (discountPercent === 0) {
+                const option = select.options[select.selectedIndex];
+                discountPercent = option ? Number(option.dataset.percent) || 0 : 0;
+            }
         });
 
-        const discountAmount = subtotal * (discountPercent / 100);
+        let discountAmount = subtotal * (discountPercent / 100);
+
         const totalAmount = subtotal - discountAmount;
 
-        document.getElementById("total_discount_percent").value = discountPercent + "%";
-        document.getElementById("total_discount_amount").value = "₱" + discountAmount.toLocaleString();
-        document.getElementById("total_amount").value = totalAmount.toLocaleString();
+        const totalAmountInput = document.getElementById("total_amount");
+        if (totalAmountInput) totalAmountInput.value = "₱" + totalAmount.toLocaleString();
+
+        const discountPercentInput = document.getElementById("total_discount_percent");
+        if (discountPercentInput) discountPercentInput.value = discountPercent + "%";
+
+        const discountAmountInput = document.getElementById("total_discount_amount");
+        if (discountAmountInput) discountAmountInput.value = "₱" + discountAmount.toLocaleString();
     }
-
-    document.getElementById("extra_bed").addEventListener("change", updateTotalAmount);
-    document.addEventListener("change", function (e) {
-        if (e.target.classList.contains("discount-select")) {
-            updateTotalAmount();
-        }
-    });
-
+    updateTotalAmount();
     document.getElementById("modal_check_in").addEventListener("change", updateTotalAmount);
     document.getElementById("modal_check_out").addEventListener("change", updateTotalAmount);
-
-
     function submitCheckout() {
-        if (cartItems.length === 0) {
-            alert("Your booking list is empty.");
-            return;
+        let valid = true;
+
+        document.querySelectorAll("#checkoutForm input").forEach(input => {
+            input.style.borderColor = "";
+        });
+
+        const mainGuestFields = ['first_name', 'last_name', 'contact', 'num_adults'];
+        for (let fieldName of mainGuestFields) {
+            const field = document.querySelector(`input[name="${fieldName}"]`);
+            if (!field || !field.value.trim()) {
+                field.style.borderColor = "red";
+                valid = false;
+            }
         }
+        const guestInputs = document.querySelectorAll("#guestList input[type='text']");
+        guestInputs.forEach(input => {
+            if (!input.value.trim()) {
+                input.style.borderColor = "red";
+                valid = false;
+            }
+        });
+
+        if (!valid) return;
+
+        document.querySelectorAll('input[name="extra_beds[]"]').forEach(el => el.remove());
+
+        Array.from(document.querySelectorAll(".extra-bed-select"))
+            .map(s => s.value)
+            .filter(v => v)
+            .forEach(v => {
+                const hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "extra_beds[]";
+                hiddenInput.value = v;
+                document.getElementById("checkoutForm").appendChild(hiddenInput);
+            });
 
         document.getElementById("cart_items").value = JSON.stringify(cartItems);
-
-        const totalGuests = parseInt(document.querySelector("input[name='num_adults']").value) +
-            parseInt(document.querySelector("input[name='num_children']").value);
-        if (totalGuests > parseInt(document.getElementById("total_capacity").value)) {
-            alert("Guest count exceeds room capacity!");
-            return;
-        }
-
         document.getElementById("checkoutForm").submit();
     }
-
     document.addEventListener("DOMContentLoaded", function () {
         const checkIn = document.getElementById("check_in");
         const checkOut = document.getElementById("check_out");

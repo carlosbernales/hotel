@@ -49,6 +49,11 @@ Check in List
 -Check Out
 
 
-on book_room_details
+done bookings reserve and checkin,
 
-delete when backs, make it same in check_in check_out on accepted_room_bookDetails.php
+undone
+
+pending, checkins, finished
+
+accepted_room_bookDetails im doing reset Room Number when changing 
+Room Type

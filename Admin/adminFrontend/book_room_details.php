@@ -285,9 +285,12 @@ while ($b = $bed_res->fetch_assoc()) {
     <div class="info-card" style="margin-bottom: 40px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">Booking Details</h3>
-            <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Back
+            <a href="../Admin/adminBackend/delete_roomBook_cancelBtn.php?booking_id=<?= $booking['booking_id'] ?>"
+                class="btn btn-danger"
+                onclick="return confirm('Are you sure you want to cancel this booking? This action cannot be undone.')">
+                <i class="fas fa-arrow-left"></i> Cancel
             </a>
+
         </div>
 
         <div class="container-fluid">
@@ -314,58 +317,49 @@ while ($b = $bed_res->fetch_assoc()) {
                     <input class="form-control" value="<?= $booking['num_children'] ?>" readonly>
                 </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-bed"></i> Extra Bed</label>
-                    <?php
-                    $extraBedDisplay = "None";
-                    foreach ($beds as $bed) {
-                        if ($booking['extra_bed'] == $bed['id']) {
-                            $extraBedDisplay = $bed['item_type'] . " (" . number_format($bed['price'], 2) . " per night)";
-                            break;
+                <?php
+                $amenitiesDisplay = "None";
+                $bookingId = $booking['booking_id'];
+
+                $amenities_sql = "SELECT * FROM booking_amenities WHERE booking_fk_id = ?";
+                $stmt = $conn->prepare($amenities_sql);
+                $stmt->bind_param("i", $bookingId);
+                $stmt->execute();
+                $res = $stmt->get_result();
+
+                $extraBedTotal = 0;
+
+                if ($res->num_rows > 0) {
+                    $items = [];
+                    while ($row = $res->fetch_assoc()) {
+                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . " (₱" . number_format($row['price'], 2) . ")";
+                        if (strtolower($row['bedOrNot'] ?? '') === 'yes') {
+                            $extraBedTotal += $row['quantity'] * $row['price'];
                         }
                     }
-                    ?>
-                    <input type="text" class="form-control" value="<?= $extraBedDisplay ?>" readonly>
-                </div>
-
-                <div class="info-item">
-                    <label><i class="fas fa-wallet"></i> Remaining Balance</label>
-                    <input type="text" id="remainingBalance" class="form-control"
-                        value="<?= ($booking['remaining_balance'] > 0) ? number_format($booking['remaining_balance'], 2) : '0' ?>"
-                        readonly>
-                </div>
+                    $amenitiesDisplay = implode("\n", $items);
+                }
+                ?>
+                <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                <script>
+                    const extraBedTotal = <?= $extraBedTotal ?>;
+                </script>
             </div>
 
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label><i class="fas fa-calendar-check"></i> Check-in</label>
-                    <input type="datetime-local" id="check_in" class="form-control"
-                        value="<?= date('Y-m-d\TH:i', strtotime($booking['check_in'])) ?>">
+                    <input type="date" id="check_in" class="form-control"
+                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>">
                 </div>
+
                 <div class="col-md-6">
                     <label><i class="fas fa-calendar-times"></i> Check-out</label>
-                    <input type="datetime-local" id="check_out" class="form-control"
-                        value="<?= date('Y-m-d\TH:i', strtotime($booking['check_out'])) ?>">
+                    <input type="date" id="check_out" class="form-control"
+                        value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
                 </div>
             </div>
 
-            <h4 class="section-header">Discount Details</h4>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label><i class="fas fa-tag"></i> Type</label>
-                    <input class="form-control" value="<?= $booking['discount_type'] ?>" readonly>
-                </div>
-                <div class="info-item">
-                    <label><i class="fas fa-percent"></i> Percentage</label>
-                    <input class="form-control" id="discountPercentage" value="<?= $booking['discount_percentage'] ?>"
-                        readonly>
-                </div>
-                <div class="info-item">
-                    <label><i class="fas fa-money-bill-wave"></i> Amount</label>
-                    <input class="form-control" id="discount_amount" value="<?= $booking['discount_amount'] ?>"
-                        readonly>
-                </div>
-            </div>
 
             <?php
             $roomNumbers = [];
@@ -423,9 +417,10 @@ while ($b = $bed_res->fetch_assoc()) {
                                                 </option>
                                             <?php endforeach;
                                         else: ?>
-                                            <option value="" selected disabled>Select room number</option>
+                                            <option value="" selected>Select room number</option>
                                         <?php endif; ?>
                                     </select>
+
                                 </td>
 
                                 <td class="roomPrice">₱<?= number_format($roomTypes[$bookedRoomTypeId]['price'], 2) ?></td>
@@ -461,11 +456,39 @@ while ($b = $bed_res->fetch_assoc()) {
                 </table>
             </div>
 
+
+
             <h4 class="section-header">Payment Details</h4>
 
             <div class="info-grid">
                 <div class="info-item">
-                    <label><i class="fas fa-calculator"></i> New Total Amount</label>
+                    <label class="form-label">Payment Method</label>
+                    <select name="payment_method" class="form-control custom-input" required>
+                        <option value="Cash" <?= ($booking['payment_method'] == 'Cash') ? 'selected' : '' ?>>Cash</option>
+                        <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>
+                            Credit Card</option>
+                        <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>
+                            Debit Card</option>
+                        <option value="GCash" <?= ($booking['payment_method'] == 'GCash') ? 'selected' : '' ?>>GCash
+                        </option>
+                        <option value="Paypal" <?= ($booking['payment_method'] == 'Paypal') ? 'selected' : '' ?>>Paypal
+                        </option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-percent"></i> Discount</label>
+                    <input class="form-control" id="discountPercentage"
+                        value="<?= (int) $booking['discount_percentage'] ?>%" readonly>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-money-bill-wave"></i> Amount Deducted</label>
+                    <input class="form-control" id="discount_amount" value="<?= $booking['discount_amount'] ?>"
+                        readonly>
+                </div>
+            </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label><i class="fas fa-calculator"></i> Total Amount</label>
                     <input type="text" id="totalAmountNew" class="form-control"
                         value="<?= number_format($booking['total_amount'], 2) ?>" readonly>
                 </div>
@@ -485,7 +508,7 @@ while ($b = $bed_res->fetch_assoc()) {
             <div class="payment-card">
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label><i class="fas fa-credit-card"></i> Payment Amount</label>
+                        <label><i class="fas fa-credit-card"></i> Payment Amount / Downpayment</label>
                         <input type="number" id="paymentInput" class="form-control" min="0"
                             placeholder="Enter payment amount">
                     </div>
@@ -498,7 +521,10 @@ while ($b = $bed_res->fetch_assoc()) {
             </div>
 
             <div class="action-buttons">
-                <button type="button" id="processBookingBtn" class="btn btn-success">
+                <button type="button" id="processReserveBtn" class="btn btn-warning">
+                    <i class="fas fa-check-circle"></i> Reserve
+                </button>
+                <button type="button" id="processCheckinBtn" class="btn btn-success">
                     <i class="fas fa-check-circle"></i> Check In
                 </button>
             </div>
@@ -644,7 +670,6 @@ while ($b = $bed_res->fetch_assoc()) {
         return true;
     }
 
-
     document.querySelectorAll('.roomTypeSelect').forEach(select => {
         select.addEventListener('change', function () {
             const row = this.closest('tr');
@@ -684,7 +709,7 @@ while ($b = $bed_res->fetch_assoc()) {
             roomsTotal += parseFloat(selectedOption.dataset.price);
         });
 
-        let extraBedPrice = <?= $booking['extra_bed'] ? ($beds[array_search($booking['extra_bed'], array_column($beds, 'id'))]['price'] ?? 0) : 0 ?>;
+        let extraBedPrice = extraBedTotal;
 
         let totalBeforeDiscount = (roomsTotal + extraBedPrice) * nights;
 
@@ -722,63 +747,113 @@ while ($b = $bed_res->fetch_assoc()) {
         const totalDue = parseFloat(document.getElementById('totalDue').value) || 0;
 
         let change = payment - totalDue;
-        if (change < 0) change = 0; // No negative change
+        if (change < 0) change = 0;
 
         document.getElementById('changeAmount').value = change.toFixed(2);
     });
 </script>
-
 <script>
-    document.getElementById('processBookingBtn').addEventListener('click', function () {
-        const paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
-        const totalDue = parseFloat(document.getElementById('totalDue').value) || 0;
+    function processBooking(status) {
+        const roomSelects = document.querySelectorAll('.roomNumberSelect');
+        let allSelected = true;
 
-        if (totalDue > paymentInput) {
-            alert("Payment amount must be at least equal to the Total Due.");
+        roomSelects.forEach(select => {
+            const selectedOption = select.selectedOptions[0];
+            if (
+                !selectedOption ||
+                selectedOption.value === "" ||
+                selectedOption.text.includes("Select room number") ||
+                selectedOption.text.includes("Please choose a room number") ||
+                selectedOption.text.includes("No available rooms")
+            ) {
+                select.classList.add('is-invalid');
+                allSelected = false;
+            } else {
+                select.classList.remove('is-invalid');
+            }
+        });
+
+        if (!allSelected) {
+            alert('Please select a room number for all booked rooms.');
             return;
         }
 
-        if (!confirm("Are you done with this booking?")) {
-            return;
-        }
+        const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'check in' : 'reserve'} this booking?`);
+        if (!confirmed) return;
 
-        const bookingId = <?= $booking_id ?>;
-        const checkin = document.getElementById('check_in').value;
-        const checkout = document.getElementById('check_out').value;
-
-        const totalAmountNew = document.getElementById('totalAmountNew').value;
         const rooms = [];
-
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             rooms.push({
                 id: row.dataset.bookedRoomId,
-                room_type_id: row.querySelector('.roomTypeSelect').value,
-                room_number_fk_id: row.querySelector('.roomNumberSelect').value
+                room_type_id: parseInt(row.querySelector('.roomTypeSelect').value),
+                room_number_fk_id: parseInt(row.querySelector('.roomNumberSelect').value)
             });
         });
+
+        const bookingData = {
+            booking_id: <?= $booking['booking_id'] ?>,
+            check_in: status === 'checkin'
+                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+                : document.getElementById('check_in').value,
+            check_out: document.getElementById('check_out').value,
+            total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
+            payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
+            payment_method: document.querySelector('select[name="payment_method"]').value,
+            rooms: rooms,
+            status: status
+        };
+
 
         fetch('../Admin/adminBackend/update_room_booking.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                booking_id: bookingId,
-                check_in: checkin,
-                check_out: checkout,
-                total_amount: totalAmountNew,
-                rooms: rooms
-            })
+            body: JSON.stringify(bookingData)
         })
             .then(res => res.text())
-            .then(response => {
-                alert(response);
-                window.location.href = "../Admin/index.php?room_booking_list";
+            .then(res => {
+                if (res === "success") {
+                    alert(`Booking ${status === 'checkin' ? 'checked in' : 'reserved'} successfully!`);
+                    window.location.href = "../Admin/index.php?accepted_room_bookings_list";
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
             })
-            .catch(err => alert("Error: " + err));
-    });
+            .catch(err => console.error(err));
+    }
 
+    document.getElementById('processCheckinBtn').addEventListener('click', () => processBooking('checkin'));
+    document.getElementById('processReserveBtn').addEventListener('click', () => processBooking('reserved'));
 
 </script>
 
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const checkIn = document.getElementById('check_in');
+        const checkOut = document.getElementById('check_out');
+
+        const today = new Date().toISOString().split('T')[0];
+
+        checkIn.min = today;
+        checkOut.min = today;
+
+        checkIn.addEventListener("change", () => {
+            checkOut.min = checkIn.value;
+
+            if (checkOut.value < checkIn.value) {
+                checkOut.value = checkIn.value;
+            }
+        });
+
+        checkOut.addEventListener("change", () => {
+            if (checkOut.value < checkIn.value) {
+                alert("Check-out cannot be earlier than check-in.");
+                checkOut.value = checkIn.value;
+            }
+        });
+    });
+
+</script>
 
 
 <?php include 'adminFrontend/footer.php'; ?>

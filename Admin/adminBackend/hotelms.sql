@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 28, 2025 at 12:14 PM
+-- Generation Time: Nov 29, 2025 at 11:21 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -304,10 +304,10 @@ CREATE TABLE `booked_rooms` (
 --
 
 INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
-(1, 1, 1, 1, 'SAD', 1500.00, '2025-11-28 05:59:48'),
-(2, 1, 2, 1, 'SAD', 1500.00, '2025-11-28 05:59:48'),
-(3, 2, 3, 5, 'HAH', 500.00, '2025-11-28 08:10:23'),
-(4, 2, 4, 5, 'HAH', 500.00, '2025-11-28 08:10:23');
+(7, 4, 1, 1, 'SAD', 1500.00, '2025-11-29 10:41:39'),
+(8, 4, 2, 1, 'SAD', 1500.00, '2025-11-29 10:41:39'),
+(9, 4, 3, 5, 'HAH', 500.00, '2025-11-29 10:41:39'),
+(10, 5, 4, 5, 'HAH', 500.00, '2025-11-29 11:19:03');
 
 -- --------------------------------------------------------
 
@@ -352,8 +352,32 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`) VALUES
-(1, 'BK-NELH1R2R633P', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-29 00:00:00', '2025-11-28 16:25:02', NULL, 10, NULL, 2, '0', 'gcash', 16000.00, '2025-11-28 05:59:48', 2, 16000.00, 0.00, 'admin', 1, 2, '1', 'PWD', 20.00, 1200.00, 'checkin'),
-(2, 'BK-Y3I7BW4CZDD5', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-28 00:00:00', '2025-12-01 00:00:00', NULL, 2, NULL, 1, '0', 'gcash', 2400.00, '2025-11-28 08:10:23', 3, 1200.00, 1200.00, 'admin', 2, 0, '0', 'PWD', 20.00, 600.00, 'checkin');
+(4, 'BK-UGJLTCD4G70C', NULL, 'das', 'dsadasd', 'carlosbernales24@gmail.com', '99999999999', 'walkin', '2025-12-02 00:00:00', '2025-12-04 00:00:00', NULL, 2, NULL, 3, '0', 'Cash', 8800.00, '2025-11-29 10:41:39', 1, 4000.00, 4800.00, 'admin', 2, 0, NULL, '0', 20.00, 900.00, 'rescheduled'),
+(5, 'BK-Y3ZCT2NYBZMU', NULL, 'sdsa', 'dasda', 'carlosbernales24@gmail.com', '99999999999', 'walkin', '2025-11-29 19:19:32', '2025-12-04 00:00:00', NULL, 2, NULL, 1, '0', 'Cash', 1000.00, '2025-11-29 11:19:03', 2, 500.00, 500.00, 'admin', 2, 0, NULL, '0', 0.00, 0.00, 'checkin');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_amenities`
+--
+
+CREATE TABLE `booking_amenities` (
+  `id` int NOT NULL,
+  `amenities_fk_id` int NOT NULL,
+  `booking_fk_id` int NOT NULL,
+  `bedOrNot` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `quantity` int NOT NULL,
+  `amenity_name` varchar(255) NOT NULL,
+  `price` double(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking_amenities`
+--
+
+INSERT INTO `booking_amenities` (`id`, `amenities_fk_id`, `booking_fk_id`, `bedOrNot`, `quantity`, `amenity_name`, `price`) VALUES
+(3, 2, 4, 'yes', 1, 'Queens Bed', 1000.00),
+(4, 1, 4, 'yes', 1, 'single bed', 1000.00);
 
 -- --------------------------------------------------------
 
@@ -1207,11 +1231,10 @@ CREATE TABLE `guest_names` (
 --
 
 INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
-(1, 1, 'dasdasd', 'sadas', 'Adult', NULL, NULL, '2025-11-28 05:59:48'),
-(2, 1, 'asd', 'asdas', 'Child', NULL, NULL, '2025-11-28 05:59:48'),
-(3, 1, 'asda', 'sdasds', 'Child', NULL, NULL, '2025-11-28 05:59:48'),
-(4, 2, 'sad', 'asdas', 'Adult', NULL, NULL, '2025-11-28 08:10:23'),
-(5, 2, 'asd', 'asdasd', 'Adult', NULL, NULL, '2025-11-28 08:10:23');
+(6, 4, 'dasdsadsad', 'asdas', 'Adult', NULL, NULL, '2025-11-29 10:41:39'),
+(7, 4, 'asdasd', 'sadsad', 'Adult', NULL, NULL, '2025-11-29 10:41:39'),
+(8, 5, 'asdasdasd', 'asd', 'Adult', NULL, NULL, '2025-11-29 11:19:03'),
+(9, 5, 'asdas', 'dasdas', 'Adult', NULL, NULL, '2025-11-29 11:19:03');
 
 -- --------------------------------------------------------
 
@@ -3000,6 +3023,12 @@ ALTER TABLE `admin_sessions`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `amenities`
+--
+ALTER TABLE `amenities`
+  ADD PRIMARY KEY (`amenity_id`);
+
+--
 -- Indexes for table `beds`
 --
 ALTER TABLE `beds`
@@ -3019,6 +3048,12 @@ ALTER TABLE `bookings`
   ADD PRIMARY KEY (`booking_id`),
   ADD KEY `idx_bookings_dates` (`check_in`,`check_out`),
   ADD KEY `idx_bookings_status` (`status`);
+
+--
+-- Indexes for table `booking_amenities`
+--
+ALTER TABLE `booking_amenities`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `booking_history`
@@ -3235,6 +3270,12 @@ ALTER TABLE `admin_sessions`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `amenities`
+--
+ALTER TABLE `amenities`
+  MODIFY `amenity_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `beds`
 --
 ALTER TABLE `beds`
@@ -3244,13 +3285,19 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `booking_amenities`
+--
+ALTER TABLE `booking_amenities`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
@@ -3298,7 +3345,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`

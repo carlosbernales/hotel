@@ -1,7 +1,8 @@
 <?php
 include '../adminBackend/mydb.php';
 
-function generateRandomFilename($length = 12) {
+function generateRandomFilename($length = 12)
+{
     return bin2hex(random_bytes($length));
 }
 
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Record not found.");
     }
 
-    $newImages = ["", "", ""]; 
+    $newImages = ["", "", ""];
 
     if (!empty($_FILES['image']['name'][0])) {
         foreach ($_FILES['image']['tmp_name'] as $key => $tmp_name) {
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!empty($currentImages[$i]) && file_exists($imageDir . $currentImages[$i])) {
                 unlink($imageDir . $currentImages[$i]);
             }
-            $newImages[$i] = ""; 
+            $newImages[$i] = "";
         }
     } else {
         $newImages = $currentImages;

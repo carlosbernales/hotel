@@ -4,7 +4,8 @@ include 'adminFrontend/header.php';
 
 $bookings = [];
 
-$sqlBookings = "SELECT * FROM bookings WHERE status = 'accepted'";
+$sqlBookings = "SELECT * FROM bookings WHERE status IN ('accepted', 'reserved', 'rescheduled')";
+
 $resBookings = $conn->query($sqlBookings);
 
 while ($row = $resBookings->fetch_assoc()) {

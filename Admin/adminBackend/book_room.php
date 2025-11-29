@@ -24,21 +24,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $num_children = intval($_POST['num_children'] ?? 0);
     $payment_method = $_POST['payment_method'] ?? '';
     $payment_option = $_POST['payment_option'] ?? 'full';
-    $extra_bed_id = $_POST['extra_bed'] ?? null;
     $room_quantity = intval($_POST['room_quantity'] ?? 0);
-    $total_amount = floatval(str_replace(',', '', $_POST['total_amount'] ?? 0));
+    $total_amount = floatval(str_replace(['₱', ',', ' '], '', $_POST['total_amount'] ?? 0));
     $total_discount_percent = floatval(str_replace('%', '', $_POST['total_discount_percent'] ?? 0));
     $total_discount_amount = floatval(str_replace(['₱', ','], '', $_POST['total_discount_amount'] ?? 0));
-    $status = 'pending';
+    $status = 'uncounted';
     $user_id = null;
-
     $booking_type = 'walkin';
     $room_type_id = null;
     $user_types = 'admin';
     $arrival_time = null;
-
-    $extra_bed_id = isset($_POST['extra_bed']) ? intval($_POST['extra_bed']) : 0;
-
+    $extra_beds = $_POST['extra_beds'] ?? [];
 
     $discounts = [];
     for ($i = 1; $i <= $num_adults + $num_children; $i++) {
@@ -59,10 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         INSERT INTO bookings (
             booking_reference, user_id, first_name, last_name, email, contact,
             booking_type, check_in, check_out, arrival_time, number_of_guests, room_type_id,
-            room_quantity, payment_option, payment_method, total_amount, status, nights,
+            room_quantity, payment_option, payment_method, total_amount, nights,
             downpayment_amount, remaining_balance, user_types, num_adults, num_children,
-            extra_bed, discount_type, discount_percentage, discount_amount
-        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+            discount_type, discount_percentage, discount_amount, status
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ");
 
     if (!$stmt) {
@@ -70,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt->bind_param(
-        "sisssssssiiiiisssdddsiiisdd",
+        "sisssssssiiiiisssddssiiiss",
         $booking_reference,
         $user_id,
         $first_name,
@@ -87,17 +83,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $payment_option,
         $payment_method,
         $total_amount,
-        $status,
         $nights,
         $downpayment_amount,
         $remaining_balance,
         $user_types,
         $num_adults,
         $num_children,
-        $extra_bed_id,
         $discount_type,
         $total_discount_percent,
-        $total_discount_amount
+        $total_discount_amount,
+        $status
     );
 
     if ($stmt->execute()) {
@@ -107,7 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($cartItems && count($cartItems) > 0) {
             foreach ($cartItems as $item) {
                 $room_type_id_item = intval($item['room_type_id']);
-                $quantity = intval($item['quantity'] ?? 1); // <-- use quantity from cart
+                $quantity = intval($item['quantity'] ?? 1);
+
                 $roomQuery = $conn->query("SELECT room_type, price FROM room_types WHERE room_type_id = $room_type_id_item");
                 if ($roomQuery && $roomQuery->num_rows > 0) {
                     $roomData = $roomQuery->fetch_assoc();
@@ -115,11 +111,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $price = floatval($roomData['price']);
 
                     $stmtRoom = $conn->prepare("
-                INSERT INTO booked_rooms (booking_id, room_type_id, room_type_name, price)
-                VALUES (?, ?, ?, ?)
-            ");
+                        INSERT INTO booked_rooms (booking_id, room_type_id, room_type_name, price)
+                        VALUES (?, ?, ?, ?)
+                    ");
 
-                    for ($q = 0; $q < $quantity; $q++) { // loop exactly the quantity
+                    for ($q = 0; $q < $quantity; $q++) {
                         $stmtRoom->bind_param("iisd", $booking_id, $room_type_id_item, $room_type_name, $price);
                         $stmtRoom->execute();
                     }
@@ -127,7 +123,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
         }
-
 
         $totalGuests = $num_adults + $num_children;
         $stmtGuest = $conn->prepare("
@@ -144,6 +139,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
             $stmtGuest->close();
         }
+
+        if (!empty($extra_beds) && is_array($extra_beds)) {
+            $bedCounts = array_count_values($extra_beds);
+            foreach ($bedCounts as $bedId => $qty) {
+                $bedId = intval($bedId);
+                $bedQuery = $conn->query("SELECT id, item_type, price FROM beds WHERE id = $bedId");
+                if ($bedQuery && $bedQuery->num_rows > 0) {
+                    $bedData = $bedQuery->fetch_assoc();
+                    $amenity_name = $bedData['item_type'];
+                    $price = floatval($bedData['price']);
+                    $amenities_fk_id = intval($bedData['id']);
+
+                    $stmtAmenity = $conn->prepare("
+                        INSERT INTO booking_amenities (booking_fk_id, amenities_fk_id, amenity_name, price, quantity, bedOrNot)
+                        VALUES (?, ?, ?, ?, ?, ?)
+                    ");
+                    $bedOrNot = 'yes';
+                    $stmtAmenity->bind_param("iisdis", $booking_id, $amenities_fk_id, $amenity_name, $price, $qty, $bedOrNot);
+                    $stmtAmenity->execute();
+                    $stmtAmenity->close();
+
+                }
+            }
+        }
+
         header("Location: ../../Admin/index.php?book_room_details&id=" . $booking_id);
         exit();
 
@@ -157,4 +177,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
 }
-?>

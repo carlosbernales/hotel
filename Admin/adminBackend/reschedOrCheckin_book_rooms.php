@@ -4,14 +4,23 @@ include '../adminBackend/mydb.php';
 $data = json_decode(file_get_contents("php://input"), true);
 
 $booking_id = $data['booking_id'];
+$checkin = $data['check_in'];
 $checkout = $data['check_out'];
 $total_amount = $data['total_amount'];
-$downpayment_amount = $data['downpayment_amount'];
-$remaining_balance = $data['remaining_balance'];
+$payment_input = $data['payment_input'];
 $rooms = $data['rooms'];
+$payment_method = $data['payment_method'];
+$status = $data['status'];
 
-date_default_timezone_set('Asia/Manila');
-$checkin = date('Y-m-d H:i:s');
+$currentDPQry = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
+$currentDPQry->bind_param("i", $booking_id);
+$currentDPQry->execute();
+$currentDPQry->bind_result($currentDownpayment);
+$currentDPQry->fetch();
+$currentDPQry->close();
+
+$downpayment_amount = $currentDownpayment + $payment_input;
+$remaining_balance = max(0, $total_amount - $downpayment_amount);
 
 $updateBooking = $conn->prepare("
     UPDATE bookings
@@ -21,29 +30,15 @@ $updateBooking = $conn->prepare("
         total_amount = ?, 
         downpayment_amount = ?, 
         remaining_balance = ?, 
-        status = 'checkin'
+        payment_method = ?,  
+        status = ?
     WHERE booking_id = ?
 ");
-
-$updateBooking->bind_param(
-    "ssdddi",
-    $checkin,
-    $checkout,
-    $total_amount,
-    $downpayment_amount,
-    $remaining_balance,
-    $booking_id
-);
-
+$updateBooking->bind_param("ssddsssi", $checkin, $checkout, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
 $updateBooking->execute();
 
 foreach ($rooms as $r) {
-
-    $typeQry = $conn->prepare("
-        SELECT room_type, price 
-        FROM room_types 
-        WHERE room_type_id = ?
-    ");
+    $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
     $typeQry->bind_param("i", $r['room_type_id']);
     $typeQry->execute();
     $typeQry->bind_result($roomTypeName, $roomPrice);
@@ -59,18 +54,10 @@ foreach ($rooms as $r) {
             price = ?
         WHERE id = ?
     ");
-
-    $updateRoom->bind_param(
-        "iisdi",
-        $r['room_type_id'],
-        $r['room_number_fk_id'],
-        $roomTypeName,
-        $roomPrice,
-        $r['id']
-    );
-
+    $updateRoom->bind_param("iisdi", $r['room_type_id'], $r['room_number_fk_id'], $roomTypeName, $roomPrice, $r['id']);
     $updateRoom->execute();
 }
 
 echo "success";
+
 ?>
