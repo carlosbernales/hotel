@@ -49,11 +49,5 @@ Check in List
 -Check Out
 
 
-done bookings reserve and checkin,
 
-undone
 
-pending, checkins, finished
-
-accepted_room_bookDetails im doing reset Room Number when changing 
-Room Type
