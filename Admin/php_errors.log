@@ -54482,3 +54482,123 @@ Stack trace:
 [30-Nov-2025 12:24:58 UTC] Database connected successfully to: hotelms
 [30-Nov-2025 12:25:03 UTC] Database connected successfully to: hotelms
 [30-Nov-2025 12:25:05 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:41:48 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:46:59 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:47:50 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:48:56 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:50:53 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:52:10 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:52:19 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:56:30 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:56:45 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:57:12 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:57:18 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:58:37 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 14:58:47 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:00:17 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:00:25 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:00:50 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:05:24 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 23:05:25 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ba.amenity_id' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php:58
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php(58): mysqli->prepare('\r\n    SELECT ba...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 58
+[30-Nov-2025 15:05:47 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 23:05:47 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'a.amenity_name' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php:58
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php(58): mysqli->prepare('\r\n    SELECT ba...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 58
+[30-Nov-2025 15:06:10 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 23:06:10 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'a.amenity_name' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php:58
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php(58): mysqli->prepare('\r\n    SELECT ba...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 58
+[30-Nov-2025 15:06:50 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 23:06:50 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'a.amenity_name' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php:58
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php(58): mysqli->prepare('\r\n    SELECT ba...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 58
+[30-Nov-2025 15:06:57 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 23:06:57 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ba.amenity_id' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php:58
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php(58): mysqli->prepare('\r\n    SELECT ba...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 58
+[30-Nov-2025 15:07:02 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:09:19 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:09:26 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:10:37 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:10:44 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:13:13 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:13:15 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:13:24 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:13:53 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:14:06 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:14:07 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:14:11 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:14:51 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:15:05 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:15:07 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:15:11 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:15:56 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:16:40 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:17:04 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:17:18 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:17:25 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:17:28 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:19:00 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:19:41 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:20:23 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:20:41 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:20:55 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:22:36 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:26:20 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:26:46 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:27:03 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:28:31 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:29:01 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:29:59 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:31:53 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:33:06 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:33:13 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:34:58 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:35:43 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:35:52 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:36:55 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:37:02 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:37:06 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:39:31 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:40:40 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:40:58 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:41:04 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:41:13 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:41:35 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:43:02 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:43:41 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:45:33 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:45:40 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:45:45 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:53:59 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:54:11 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:54:28 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:54:34 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 23:54:34 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 353
+[30-Nov-2025 23:54:34 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 353
+[30-Nov-2025 15:58:51 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:59:44 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:59:46 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:59:50 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 15:59:57 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 16:00:01 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 16:00:03 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 16:00:07 UTC] Database connected successfully to: hotelms
+[30-Nov-2025 16:00:13 UTC] Database connected successfully to: hotelms

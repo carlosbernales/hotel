@@ -1,59 +1,3 @@
-<?php
-include 'adminBackend/mydb.php';
-include 'adminFrontend/header.php';
-
-$bookings = [];
-
-$sqlBookings = "SELECT * FROM bookings WHERE status = 'checkin'";
-$resBookings = $conn->query($sqlBookings);
-
-while ($row = $resBookings->fetch_assoc()) {
-    $id = $row['booking_id'];
-    $bookings[$id] = [
-        "booking" => $row,
-        "rooms" => [],
-        "guests" => []
-    ];
-}
-
-$sqlRooms = "
-    SELECT *
-    FROM booked_rooms
-";
-$resRooms = $conn->query($sqlRooms);
-
-while ($r = $resRooms->fetch_assoc()) {
-    $id = $r['booking_id'];
-    if (isset($bookings[$id])) {
-        $bookings[$id]['rooms'][] = $r;
-    }
-}
-
-$sqlGuests = "
-    SELECT *
-    FROM guest_names
-";
-$resGuests = $conn->query($sqlGuests);
-
-while ($g = $resGuests->fetch_assoc()) {
-    $id = $g['booking_id'];
-    if (isset($bookings[$id])) {
-        $bookings[$id]['guests'][] = $g;
-    }
-}
-
-$amenitiesQuery = "SELECT * FROM amenity_list ORDER BY amenity_name ASC";
-$amenitiesResult = $conn->query($amenitiesQuery);
-
-$amenities = [];
-if ($amenitiesResult->num_rows > 0) {
-    while ($row = $amenitiesResult->fetch_assoc()) {
-        $amenities[] = $row;
-    }
-}
-
-?>
-
 <style>
     /* Add Table Button */
     .table-add-btn {
@@ -193,6 +137,64 @@ if ($amenitiesResult->num_rows > 0) {
         color: white;
     }
 </style>
+
+<?php
+include 'adminBackend/mydb.php';
+include 'adminFrontend/header.php';
+
+$bookings = [];
+
+$sqlBookings = "SELECT * FROM bookings WHERE status = 'checkin'";
+$resBookings = $conn->query($sqlBookings);
+
+while ($row = $resBookings->fetch_assoc()) {
+    $id = $row['booking_id'];
+    $bookings[$id] = [
+        "booking" => $row,
+        "rooms" => [],
+        "guests" => []
+    ];
+}
+
+$sqlRooms = "
+    SELECT *
+    FROM booked_rooms
+";
+$resRooms = $conn->query($sqlRooms);
+
+while ($r = $resRooms->fetch_assoc()) {
+    $id = $r['booking_id'];
+    if (isset($bookings[$id])) {
+        $bookings[$id]['rooms'][] = $r;
+    }
+}
+
+$sqlGuests = "
+    SELECT *
+    FROM guest_names
+";
+$resGuests = $conn->query($sqlGuests);
+
+while ($g = $resGuests->fetch_assoc()) {
+    $id = $g['booking_id'];
+    if (isset($bookings[$id])) {
+        $bookings[$id]['guests'][] = $g;
+    }
+}
+
+$amenitiesQuery = "SELECT * FROM amenity_list ORDER BY amenity_name ASC";
+$amenitiesResult = $conn->query($amenitiesQuery);
+
+$amenities = [];
+if ($amenitiesResult->num_rows > 0) {
+    while ($row = $amenitiesResult->fetch_assoc()) {
+        $amenities[] = $row;
+    }
+}
+
+
+?>
+
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
@@ -261,17 +263,16 @@ if ($amenitiesResult->num_rows > 0) {
                             <h5 class="modal-title" id="addAmenitiesModalLabel">Add Amenities</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
+
                         <div class="modal-body">
                             <form id="amenitiesForm">
-                                <input type="hidden" id="modalBookingIdInput" name="booking_id" value="">
                                 <div class="mb-3">
                                     <label for="amenitySelect" class="form-label">Select Amenity</label>
                                     <select class="form-select" id="amenitySelect" name="amenity_id">
                                         <option value="">-- Select Amenity --</option>
                                         <?php foreach ($amenities as $amenity): ?>
-                                            <option value="<?= $amenity['id'] ?>" data-price="<?= $amenity['price'] ?>">
-                                                <?= $amenity['amenity_name'] ?> -
-                                                ₱<?= number_format($amenity['price'], 2) ?>
+                                            <option value="<?= $amenity['id'] ?>">
+                                                <?= $amenity['amenity_name'] ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -282,22 +283,16 @@ if ($amenitiesResult->num_rows > 0) {
                                 <thead>
                                     <tr>
                                         <th>Amenity</th>
-                                        <th>Price</th>
                                         <th>Quantity</th>
-                                        <th>Total</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    <div id="noAmenitiesMessage" class="text-center text-muted" style="display:none;">
+                                        No amenities added for this booking.
+                                    </div>
                                     <!-- Dynamically added rows here -->
                                 </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th colspan="3" class="text-end">Subtotal:</th>
-                                        <th id="amenitiesSubtotal">0.00</th>
-                                        <th></th>
-                                    </tr>
-                                </tfoot>
                             </table>
                         </div>
 
@@ -312,69 +307,114 @@ if ($amenitiesResult->num_rows > 0) {
             <script>
                 const amenitySelect = document.getElementById('amenitySelect');
                 const amenitiesTableBody = document.querySelector('#selectedAmenitiesTable tbody');
-                const subtotalDisplay = document.getElementById('amenitiesSubtotal');
+                const amenitiesTable = document.getElementById('selectedAmenitiesTable');
+                const noAmenitiesMessage = document.getElementById('noAmenitiesMessage');
 
-                function updateSubtotal() {
-                    let subtotal = 0;
-                    amenitiesTableBody.querySelectorAll('.total').forEach(input => {
-                        subtotal += parseFloat(input.value) || 0;
+                function addAmenityRow(id, name, quantity = 1) {
+                    const existingRow = amenitiesTableBody.querySelector(`tr[data-id="${id}"]`);
+                    if (existingRow) {
+                        const qtyInput = existingRow.querySelector('.quantity');
+                        qtyInput.value = parseInt(qtyInput.value) + quantity;
+                        return;
+                    }
+
+                    const row = document.createElement('tr');
+                    row.setAttribute('data-id', id);
+                    row.innerHTML = `
+        <td>${name}</td>
+        <td><input type="number" class="form-control quantity" value="${quantity}" min="1" style="width:80px;"></td>
+        <td><button type="button" class="btn btn-sm btn-danger remove-amenity">Remove</button></td>
+    `;
+                    amenitiesTableBody.appendChild(row);
+
+                    row.querySelector('.remove-amenity').addEventListener('click', () => {
+                        row.remove();
+                        checkNoAmenities();
                     });
-                    subtotalDisplay.textContent = subtotal.toFixed(2);
                 }
 
+                function checkNoAmenities() {
+                    if (amenitiesTableBody.querySelectorAll('tr').length === 0) {
+                        noAmenitiesMessage.style.display = 'block';
+                        amenitiesTable.style.display = 'none';
+                    } else {
+                        noAmenitiesMessage.style.display = 'none';
+                        amenitiesTable.style.display = 'table';
+                    }
+                }
+
+                // Add amenity from select
                 amenitySelect.addEventListener('change', () => {
                     const selectedOption = amenitySelect.selectedOptions[0];
                     if (!selectedOption.value) return;
 
                     const id = selectedOption.value;
-                    const name = selectedOption.text.split(' - ')[0];
-                    const price = parseFloat(selectedOption.dataset.price);
+                    const name = selectedOption.text;
 
-                    const existingRow = amenitiesTableBody.querySelector(`tr[data-id="${id}"]`);
-                    if (existingRow) {
-                        const qtyInput = existingRow.querySelector('.quantity');
-                        qtyInput.value = parseInt(qtyInput.value) + 1;
-                        const totalInput = existingRow.querySelector('.total');
-                        totalInput.value = (price * qtyInput.value).toFixed(2);
-                        updateSubtotal();
-                    } else {
-                        const row = document.createElement('tr');
-                        row.setAttribute('data-id', id);
-                        row.innerHTML = `
-      <td>${name}</td>
-      <td><input type="number" class="form-control price" value="${price.toFixed(2)}" min="0" step="0.01" style="width:100px;"></td>
-      <td><input type="number" class="form-control quantity" value="1" min="1" style="width:80px;"></td>
-      <td><input type="number" class="form-control total" value="${price.toFixed(2)}" min="0" step="0.01" style="width:100px;"></td>
-      <td><button type="button" class="btn btn-sm btn-danger remove-amenity">Remove</button></td>
-    `;
-                        amenitiesTableBody.appendChild(row);
-
-                        const qtyInput = row.querySelector('.quantity');
-                        const priceInput = row.querySelector('.price');
-                        const totalInput = row.querySelector('.total');
-
-                        function updateRowTotal() {
-                            const qty = parseInt(qtyInput.value) || 1;
-                            const pr = parseFloat(priceInput.value) || 0;
-                            totalInput.value = (qty * pr).toFixed(2);
-                            updateSubtotal();
-                        }
-
-                        qtyInput.addEventListener('input', updateRowTotal);
-                        priceInput.addEventListener('input', updateRowTotal);
-                        totalInput.addEventListener('input', updateSubtotal);
-
-                        row.querySelector('.remove-amenity').addEventListener('click', function () {
-                            row.remove();
-                            updateSubtotal();
-                        });
-
-                        updateSubtotal();
-                    }
-
+                    addAmenityRow(id, name);
+                    checkNoAmenities();
                     amenitySelect.value = '';
                 });
+
+                let CURRENT_BOOKING_ID = null;
+
+                // Open modal and load existing amenities
+                document.querySelectorAll(".add-amenities-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        CURRENT_BOOKING_ID = btn.getAttribute("data-id");
+
+                        amenitiesTableBody.innerHTML = '';
+                        checkNoAmenities();
+
+                        fetch(`../Admin/adminBackend/get_booking_amenities.php?booking_id=${CURRENT_BOOKING_ID}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                if (!data || data.length === 0) {
+                                    noAmenitiesMessage.style.display = 'block';
+                                    amenitiesTable.style.display = 'none';
+                                } else {
+                                    noAmenitiesMessage.style.display = 'none';
+                                    amenitiesTable.style.display = 'table';
+                                    data.forEach(item => {
+                                        addAmenityRow(item.amenities_fk_id, item.amenity_name, parseInt(item.quantity));
+                                    });
+                                }
+                            });
+                    });
+                });
+
+                // Save amenities
+                document.getElementById("saveAmenitiesBtn").addEventListener("click", () => {
+                    const rows = amenitiesTableBody.querySelectorAll("tr");
+                    const items = [];
+
+                    rows.forEach(row => {
+                        items.push({
+                            amenity_id: row.getAttribute("data-id"),
+                            amenity_name: row.children[0].textContent,
+                            quantity: row.querySelector(".quantity").value
+                        });
+                    });
+
+                    fetch("../Admin/adminBackend/booking_add_amenities.php", {
+                        method: "POST",
+                        body: JSON.stringify({
+                            booking_id: CURRENT_BOOKING_ID,
+                            items: items
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                window.location.reload();
+                            } else {
+                                alert("Error saving amenities");
+                            }
+                        });
+                });
+
             </script>
+
         </div>
     </div>
 </div>

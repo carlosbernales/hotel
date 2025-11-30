@@ -835,7 +835,7 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => {
                 if (res === "success") {
                     alert(`Booking ${status === 'checkin' ? 'checked in' : 'reserved'} successfully!`);
-                    window.location.href = "../Admin/index.php?accepted_room_bookings_list";
+                    window.location.href = "../Admin/index.php?room_booking";
                 } else {
                     alert('Something went wrong. Please try again.');
                 }

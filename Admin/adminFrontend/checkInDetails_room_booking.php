@@ -350,11 +350,14 @@ while ($b = $bed_res->fetch_assoc()) {
                 if ($res->num_rows > 0) {
                     $items = [];
                     while ($row = $res->fetch_assoc()) {
-                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . " (₱" . number_format($row['price'], 2) . ")";
+                        $displayPrice = (strtolower($row['bedOrNot'] ?? '') === 'yes') ? "₱" . number_format($row['price'], 2) : "";
+                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . ($displayPrice ? " ($displayPrice)" : "");
+
                         if (strtolower($row['bedOrNot'] ?? '') === 'yes') {
                             $extraBedTotal += $row['quantity'] * $row['price'];
                         }
                     }
+
                     $amenitiesDisplay = implode("\n", $items);
                 }
                 ?>
