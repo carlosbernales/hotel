@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 30, 2025 at 11:28 AM
+-- Generation Time: Nov 30, 2025 at 12:26 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -237,6 +237,37 @@ INSERT INTO `amenities` (`amenity_id`, `name`, `icon`) VALUES
 (3, 'Flat-screen TV', 'fa-television'),
 (4, 'Free WiFi', 'fa-wifi'),
 (5, 'Hot Shower', 'fa-shower');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `amenity_list`
+--
+
+CREATE TABLE `amenity_list` (
+  `id` int NOT NULL,
+  `amenity_name` varchar(255) NOT NULL,
+  `price` double(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `amenity_list`
+--
+
+INSERT INTO `amenity_list` (`id`, `amenity_name`, `price`) VALUES
+(1, 'Toothbrush', 50.00),
+(2, 'Toothpaste', 50.00),
+(3, 'Shampoo', 80.00),
+(4, 'Conditioner', 80.00),
+(5, 'Soap', 40.00),
+(6, 'Towel', 100.00),
+(7, 'Slippers', 70.00),
+(8, 'Hair Dryer', 150.00),
+(9, 'Shaving Kit', 60.00),
+(10, 'Comb', 30.00),
+(11, 'Mini Fridge Items', 200.00),
+(12, 'Extra Pillow', 100.00),
+(13, 'Extra Blanket', 120.00);
 
 -- --------------------------------------------------------
 
@@ -3030,6 +3061,12 @@ ALTER TABLE `amenities`
   ADD PRIMARY KEY (`amenity_id`);
 
 --
+-- Indexes for table `amenity_list`
+--
+ALTER TABLE `amenity_list`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `beds`
 --
 ALTER TABLE `beds`
@@ -3275,6 +3312,12 @@ ALTER TABLE `admin_sessions`
 --
 ALTER TABLE `amenities`
   MODIFY `amenity_id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `amenity_list`
+--
+ALTER TABLE `amenity_list`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `beds`

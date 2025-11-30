@@ -17,7 +17,7 @@ while ($row = $resBookings->fetch_assoc()) {
 }
 
 $sqlRooms = "
-    SELECT booking_id, room_type_id, room_type_name, price
+    SELECT *
     FROM booked_rooms
 ";
 $resRooms = $conn->query($sqlRooms);
@@ -30,7 +30,7 @@ while ($r = $resRooms->fetch_assoc()) {
 }
 
 $sqlGuests = "
-    SELECT booking_id, first_name, last_name, guest_type
+    SELECT *
     FROM guest_names
 ";
 $resGuests = $conn->query($sqlGuests);
@@ -42,6 +42,15 @@ while ($g = $resGuests->fetch_assoc()) {
     }
 }
 
+$amenitiesQuery = "SELECT * FROM amenity_list ORDER BY amenity_name ASC";
+$amenitiesResult = $conn->query($amenitiesQuery);
+
+$amenities = [];
+if ($amenitiesResult->num_rows > 0) {
+    while ($row = $amenitiesResult->fetch_assoc()) {
+        $amenities[] = $row;
+    }
+}
 
 ?>
 
@@ -205,7 +214,7 @@ while ($g = $resGuests->fetch_assoc()) {
                         <th>Contact</th>
                         <th>Schedule</th>
                         <th>Status</th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -218,16 +227,154 @@ while ($g = $resGuests->fetch_assoc()) {
                             <td><?= $b['check_in'] ?> - <?= $b['check_out'] ?></td>
                             <td><?= $b['status'] ?></td>
                             <td>
-                                <a href="../Admin/index.php?checkInDetails_room_booking&id=<?= $id ?>"
-                                    class="btn btn-sm table-action-btn">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+                                <!-- Dropdown Button -->
+                                <div class="dropdown">
+                                    <button class="btn btn-sm btn-primary dropdown-toggle" type="button"
+                                        id="dropdownMenuButton<?= $id ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?= $id ?>">
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="../Admin/index.php?checkInDetails_room_booking&id=<?= $id ?>">
+                                                Edit
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item add-amenities-btn" href="#" data-id="<?= $id ?>"
+                                                data-bs-toggle="modal" data-bs-target="#addAmenitiesModal">
+                                                Add Amenities
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
-
             </table>
+            <div class="modal fade" id="addAmenitiesModal" tabindex="-1" aria-labelledby="addAmenitiesModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addAmenitiesModalLabel">Add Amenities</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="amenitiesForm">
+                                <input type="hidden" id="modalBookingIdInput" name="booking_id" value="">
+                                <div class="mb-3">
+                                    <label for="amenitySelect" class="form-label">Select Amenity</label>
+                                    <select class="form-select" id="amenitySelect" name="amenity_id">
+                                        <option value="">-- Select Amenity --</option>
+                                        <?php foreach ($amenities as $amenity): ?>
+                                            <option value="<?= $amenity['id'] ?>" data-price="<?= $amenity['price'] ?>">
+                                                <?= $amenity['amenity_name'] ?> -
+                                                ₱<?= number_format($amenity['price'], 2) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </form>
+
+                            <table class="table table-bordered mt-3" id="selectedAmenitiesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Amenity</th>
+                                        <th>Price</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Dynamically added rows here -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3" class="text-end">Subtotal:</th>
+                                        <th id="amenitiesSubtotal">0.00</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="saveAmenitiesBtn">Save Amenities</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const amenitySelect = document.getElementById('amenitySelect');
+                const amenitiesTableBody = document.querySelector('#selectedAmenitiesTable tbody');
+                const subtotalDisplay = document.getElementById('amenitiesSubtotal');
+
+                function updateSubtotal() {
+                    let subtotal = 0;
+                    amenitiesTableBody.querySelectorAll('.total').forEach(input => {
+                        subtotal += parseFloat(input.value) || 0;
+                    });
+                    subtotalDisplay.textContent = subtotal.toFixed(2);
+                }
+
+                amenitySelect.addEventListener('change', () => {
+                    const selectedOption = amenitySelect.selectedOptions[0];
+                    if (!selectedOption.value) return;
+
+                    const id = selectedOption.value;
+                    const name = selectedOption.text.split(' - ')[0];
+                    const price = parseFloat(selectedOption.dataset.price);
+
+                    const existingRow = amenitiesTableBody.querySelector(`tr[data-id="${id}"]`);
+                    if (existingRow) {
+                        const qtyInput = existingRow.querySelector('.quantity');
+                        qtyInput.value = parseInt(qtyInput.value) + 1;
+                        const totalInput = existingRow.querySelector('.total');
+                        totalInput.value = (price * qtyInput.value).toFixed(2);
+                        updateSubtotal();
+                    } else {
+                        const row = document.createElement('tr');
+                        row.setAttribute('data-id', id);
+                        row.innerHTML = `
+      <td>${name}</td>
+      <td><input type="number" class="form-control price" value="${price.toFixed(2)}" min="0" step="0.01" style="width:100px;"></td>
+      <td><input type="number" class="form-control quantity" value="1" min="1" style="width:80px;"></td>
+      <td><input type="number" class="form-control total" value="${price.toFixed(2)}" min="0" step="0.01" style="width:100px;"></td>
+      <td><button type="button" class="btn btn-sm btn-danger remove-amenity">Remove</button></td>
+    `;
+                        amenitiesTableBody.appendChild(row);
+
+                        const qtyInput = row.querySelector('.quantity');
+                        const priceInput = row.querySelector('.price');
+                        const totalInput = row.querySelector('.total');
+
+                        function updateRowTotal() {
+                            const qty = parseInt(qtyInput.value) || 1;
+                            const pr = parseFloat(priceInput.value) || 0;
+                            totalInput.value = (qty * pr).toFixed(2);
+                            updateSubtotal();
+                        }
+
+                        qtyInput.addEventListener('input', updateRowTotal);
+                        priceInput.addEventListener('input', updateRowTotal);
+                        totalInput.addEventListener('input', updateSubtotal);
+
+                        row.querySelector('.remove-amenity').addEventListener('click', function () {
+                            row.remove();
+                            updateSubtotal();
+                        });
+
+                        updateSubtotal();
+                    }
+
+                    amenitySelect.value = '';
+                });
+            </script>
         </div>
     </div>
 </div>

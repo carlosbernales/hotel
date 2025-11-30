@@ -294,6 +294,27 @@ while ($b = $bed_res->fetch_assoc()) {
             <h4 class="section-header">Booking Information</h4>
 
             <div class="info-grid">
+
+                <div class="info-item">
+                    <label><i class="fas fa-receipt"></i> Booking ID</label>
+                    <input class="form-control" value="<?= $booking['booking_reference'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> Last Name</label>
+                    <input class="form-control" value="<?= $booking['last_name'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> First Name</label>
+                    <input class="form-control" value="<?= $booking['first_name'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-phone-alt"></i> Contact Number</label>
+                    <input class="form-control" value="<?= $booking['contact'] ?>" readonly>
+                </div>
+
                 <div class="info-item">
                     <label><i class="fas fa-users"></i> Number of Guests</label>
                     <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>" readonly>
@@ -352,7 +373,7 @@ while ($b = $bed_res->fetch_assoc()) {
                 <div class="col-md-6">
                     <label><i class="fas fa-calendar-check"></i> Check-in</label>
                     <input type="date" id="check_in" class="form-control"
-                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>">
+                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
                 </div>
 
                 <div class="col-md-6">
