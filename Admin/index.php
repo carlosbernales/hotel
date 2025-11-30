@@ -109,8 +109,8 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['accepted_room_bookDetails'])) {
     $page = "adminFrontend/accepted_room_bookDetails.php";
 
-} elseif (isset($_GET['extend_checkout_room_booking'])) {
-    $page = "adminFrontend/extend_checkout_room_booking.php";
+} elseif (isset($_GET['checkInDetails_room_booking'])) {
+    $page = "adminFrontend/checkInDetails_room_booking.php";
 
 
 

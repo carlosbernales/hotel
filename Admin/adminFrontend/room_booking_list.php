@@ -218,7 +218,7 @@ while ($g = $resGuests->fetch_assoc()) {
                             <td><?= $b['check_in'] ?> - <?= $b['check_out'] ?></td>
                             <td><?= $b['status'] ?></td>
                             <td>
-                                <a href="../Admin/index.php?extend_checkout_room_booking&id=<?= $id ?>"
+                                <a href="../Admin/index.php?checkInDetails_room_booking&id=<?= $id ?>"
                                     class="btn btn-sm table-action-btn">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>

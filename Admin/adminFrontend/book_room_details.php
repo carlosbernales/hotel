@@ -252,7 +252,7 @@ $occupied_sql = "
     SELECT br.room_type_id
     FROM booked_rooms br
     JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.status NOT IN ('finished','rejected','rescheduled')
+    WHERE b.status NOT IN ('finished','rejected','uncounted')
       AND b.booking_id != $booking_id
       AND (
             (b.check_in <= '{$booking['check_out']}' AND b.check_out >= '{$booking['check_in']}')
@@ -297,6 +297,27 @@ while ($b = $bed_res->fetch_assoc()) {
             <h4 class="section-header">Booking Information</h4>
 
             <div class="info-grid">
+
+                <div class="info-item">
+                    <label><i class="fas fa-receipt"></i> Booking ID</label>
+                    <input class="form-control" value="<?= $booking['booking_reference'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> Last Name</label>
+                    <input class="form-control" value="<?= $booking['last_name'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> First Name</label>
+                    <input class="form-control" value="<?= $booking['first_name'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-phone-alt"></i> Contact Number</label>
+                    <input class="form-control" value="<?= $booking['contact'] ?>" readonly>
+                </div>
+
                 <div class="info-item">
                     <label><i class="fas fa-users"></i> Number of Guests</label>
                     <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>" readonly>
@@ -350,13 +371,13 @@ while ($b = $bed_res->fetch_assoc()) {
                 <div class="col-md-6">
                     <label><i class="fas fa-calendar-check"></i> Check-in</label>
                     <input type="date" id="check_in" class="form-control"
-                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>">
+                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
                 </div>
 
                 <div class="col-md-6">
                     <label><i class="fas fa-calendar-times"></i> Check-out</label>
                     <input type="date" id="check_out" class="form-control"
-                        value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
+                        value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>" disabled>
                 </div>
             </div>
 
@@ -395,7 +416,7 @@ while ($b = $bed_res->fetch_assoc()) {
                             <tr data-booked-room-id="<?= $r['id'] ?>" data-default-room-type="<?= $bookedRoomTypeId ?>"
                                 data-default-room-number="<?= $r['room_number_fk_id'] ?>">
                                 <td>
-                                    <select class="form-select roomTypeSelect">
+                                    <select class="form-select roomTypeSelect" disabled>
                                         <?php foreach ($roomTypes as $rtid => $rt): ?>
                                             <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
                                                 data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
@@ -531,6 +552,7 @@ while ($b = $bed_res->fetch_assoc()) {
         </div>
     </div>
 </div>
+
 
 <script>
     function disableSelectedRoomNumbers() {

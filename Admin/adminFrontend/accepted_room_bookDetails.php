@@ -252,7 +252,7 @@ $occupied_sql = "
     SELECT br.room_type_id
     FROM booked_rooms br
     JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.status NOT IN ('finished','rejected','rescheduled')
+    WHERE b.status NOT IN ('finished','rejected','uncounted')
       AND b.booking_id != $booking_id
       AND (
             (b.check_in <= '{$booking['check_out']}' AND b.check_out >= '{$booking['check_in']}')
@@ -337,10 +337,15 @@ while ($b = $bed_res->fetch_assoc()) {
                     $amenitiesDisplay = implode("\n", $items);
                 }
                 ?>
-                <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+
+                <?php if ($amenitiesDisplay !== "None"): ?>
+                    <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                <?php endif; ?>
+
                 <script>
                     const extraBedTotal = <?= $extraBedTotal ?>;
                 </script>
+
             </div>
 
             <div class="row mb-3">
@@ -544,55 +549,69 @@ while ($b = $bed_res->fetch_assoc()) {
             const currentValue = select.value;
 
             Array.from(select.options).forEach(option => {
-                option.disabled = option.value && option.value !== currentValue && selectedRoomNumbers.has(option.value);
+                const isBackendDisabled = option.dataset.backendDisabled === "true";
+                option.disabled = isBackendDisabled || (option.value && option.value !== currentValue && selectedRoomNumbers.has(option.value));
             });
         });
     }
 
-    function updateRoomNumbers(row) {
+
+    function updateRoomNumbers(row, changedByType = false) {
+
         const roomTypeSelect = row.querySelector('.roomTypeSelect');
         const roomNumberSelect = row.querySelector('.roomNumberSelect');
+
         const checkIn = document.getElementById('check_in').value;
         const checkOut = document.getElementById('check_out').value;
         const bookingId = <?= $booking_id ?>;
+
         const defaultNumber = row.dataset.defaultRoomNumber;
 
         fetch(`../Admin/adminBackend/check_availability_rooms.php?check_in=${checkIn}&check_out=${checkOut}&booking_id=${bookingId}`)
             .then(res => res.json())
             .then(data => {
+
                 roomNumberSelect.innerHTML = '';
 
-                if (data[roomTypeSelect.value] && data[roomTypeSelect.value].length > 0) {
-                    if (!defaultNumber || defaultNumber === "0") {
-                        const placeholder = document.createElement('option');
-                        placeholder.textContent = "Please choose a room number";
-                        placeholder.disabled = true;
-                        placeholder.selected = true;
-                        roomNumberSelect.appendChild(placeholder);
+                const type = roomTypeSelect.value;
+
+                if (data[type] && data[type].length > 0) {
+
+                    if (changedByType) {
+                        let opt = document.createElement("option");
+                        opt.textContent = "Select room number";
+                        opt.disabled = true;
+                        opt.selected = true;
+                        roomNumberSelect.appendChild(opt);
                     }
 
-                    data[roomTypeSelect.value].forEach(rn => {
+                    data[type].forEach(rn => {
                         const option = document.createElement('option');
                         option.value = rn.room_number_id;
                         option.textContent = rn.room_number + (rn.note ? ` (${rn.note})` : '');
-                        if (defaultNumber && rn.room_number_id == defaultNumber) option.selected = true;
+                        if (rn.disabled) {
+                            option.disabled = true;
+                            option.dataset.backendDisabled = "true"; // mark it
+                        }
+
+                        if (!changedByType && defaultNumber == rn.room_number_id) {
+                            option.selected = true;
+                        }
                         roomNumberSelect.appendChild(option);
                     });
+
                 } else {
-                    const option = document.createElement('option');
-                    option.textContent = 'No available rooms';
-                    option.disabled = true;
-                    option.selected = true;
-                    roomNumberSelect.appendChild(option);
+                    let opt = document.createElement("option");
+                    opt.textContent = "No available rooms";
+                    opt.disabled = true;
+                    opt.selected = true;
+                    roomNumberSelect.appendChild(opt);
                 }
 
                 disableSelectedRoomNumbers();
-            })
-            .catch(err => {
-                console.error('Error loading rooms:', err);
-                roomNumberSelect.innerHTML = '<option disabled selected>Error loading rooms</option>';
             });
     }
+
 
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => updateRoomNumbers(row));
@@ -614,9 +633,10 @@ while ($b = $bed_res->fetch_assoc()) {
 
         document.querySelectorAll('.roomTypeSelect').forEach(select => {
             select.addEventListener('change', function () {
+
                 const row = this.closest('tr');
 
-                updateRoomNumbers(row);
+                updateRoomNumbers(row, true);
 
                 const selectedOption = this.selectedOptions[0];
                 const priceCell = row.querySelector('.roomPrice');
@@ -628,6 +648,7 @@ while ($b = $bed_res->fetch_assoc()) {
                 checkCapacity();
             });
         });
+
     });
 
     function checkCapacity() {
@@ -660,10 +681,8 @@ while ($b = $bed_res->fetch_assoc()) {
                 const roomNumberSelect = row.querySelector('.roomNumberSelect');
                 if (defaultNumber) roomNumberSelect.value = defaultNumber;
             });
-
             return false;
         }
-
         return true;
     }
 
@@ -685,11 +704,17 @@ while ($b = $bed_res->fetch_assoc()) {
     });
 
     document.getElementById('check_in').addEventListener('change', () => {
-        document.querySelectorAll('#roomsTable tbody tr').forEach(row => updateRoomNumbers(row));
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            updateRoomNumbers(row, true);
+        });
     });
+
     document.getElementById('check_out').addEventListener('change', () => {
-        document.querySelectorAll('#roomsTable tbody tr').forEach(row => updateRoomNumbers(row));
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            updateRoomNumbers(row, true);
+        });
     });
+
 
     function calculateTotalAmount() {
         const checkIn = new Date(document.getElementById('check_in').value);
@@ -799,8 +824,6 @@ while ($b = $bed_res->fetch_assoc()) {
             rooms: rooms,
             status: status
         };
-
-
         fetch('../Admin/adminBackend/reschedOrCheckin_book_rooms.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -819,8 +842,6 @@ while ($b = $bed_res->fetch_assoc()) {
     }
     document.getElementById('processCheckinBtn').addEventListener('click', () => processBooking('checkin'));
     document.getElementById('processReschedBtn').addEventListener('click', () => processBooking('rescheduled'));
-
-
 </script>
 
 
@@ -849,7 +870,6 @@ while ($b = $bed_res->fetch_assoc()) {
             }
         });
     });
-
 </script>
 
 

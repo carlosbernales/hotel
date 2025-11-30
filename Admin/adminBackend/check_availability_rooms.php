@@ -26,7 +26,9 @@ SELECT br.room_number_fk_id, b.check_in, b.check_out, b.status
 FROM booked_rooms br
 JOIN bookings b ON br.booking_id = b.booking_id
 WHERE b.booking_id != $booking_id
+AND b.status NOT IN ('rejected', 'cancelled', 'uncounted')
 ";
+
 $res = $conn->query($sql);
 
 $unavailable = [];
@@ -55,12 +57,22 @@ foreach ($roomNumbers as $type_id => &$rooms) {
         if (!isset($unavailable[$r['room_number_id']])) {
             $available_rooms[] = $r;
         } elseif (isset($maintenance_times[$r['room_number_id']])) {
-            $r['note'] = "Available at " . $maintenance_times[$r['room_number_id']];
-            $available_rooms[] = $r;
+            $maintenance_date = date('Y-m-d', strtotime($maintenance_times[$r['room_number_id']]));
+            $check_in_date = date('Y-m-d', $check_in_dt);
+
+            if ($check_in_date >= $maintenance_date) {
+                $r['note'] = "Available at " . $maintenance_times[$r['room_number_id']];
+                $available_rooms[] = $r;
+            } else {
+                $r['note'] = "Available at " . $maintenance_times[$r['room_number_id']] . " (Unavailable)";
+                $r['disabled'] = true;
+                $available_rooms[] = $r;
+            }
         }
     }
     $rooms = $available_rooms;
 }
+
 unset($rooms);
 
 $roomNumbers = array_filter($roomNumbers, fn($rooms) => count($rooms) > 0);

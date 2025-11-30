@@ -1114,7 +1114,7 @@ if (isset($_POST['check_in']) && isset($_POST['check_out'])) {
         JOIN room_numbers rn_used ON rn_used.room_number_id = br_used.room_number_fk_id
         WHERE rn_used.room_type_id = rt.room_type_id
             AND rn_used.status = 'active'
-            AND b_used.status IN ('pending','accepted','checkin','rescheduled')
+            AND b_used.status IN ('pending','accepted','checkin','rescheduled', 'reserved')
             AND NOT (b_used.check_out < '$check_in' OR b_used.check_in > '$check_out')
         ) AS unavailable_rooms
     FROM room_types rt
