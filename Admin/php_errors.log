@@ -55253,3 +55253,101 @@ Stack trace:
 [01-Dec-2025 11:25:28 UTC] Database connected successfully to: hotelms
 [01-Dec-2025 11:26:06 UTC] Database connected successfully to: hotelms
 [01-Dec-2025 11:26:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:30:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:32:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:33:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:33:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:34:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:34:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:35:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:35:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:35:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:35:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:35:41 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:35:41 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:35:41 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 11:36:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:36:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:37:25 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:37:25 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:37:25 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 11:37:26 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:37:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:39:23 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:39:23 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:39:23 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 11:39:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:45 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:47 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:47 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:39:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:40:00 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:40:00 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 19:40:00 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 132
+[01-Dec-2025 11:40:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:40:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 31
+[01-Dec-2025 19:40:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 31
+[01-Dec-2025 19:40:12 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect DATETIME value: '' in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php:34
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php(34): mysqli->query('\r\n    SELECT br...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 34
+[01-Dec-2025 11:40:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:40:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 31
+[01-Dec-2025 19:40:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 31
+[01-Dec-2025 19:40:15 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect DATETIME value: '' in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php:34
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php(34): mysqli->query('\r\n    SELECT br...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 34
+[01-Dec-2025 11:40:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 19:40:19 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 135
+[01-Dec-2025 19:40:19 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 135
+[01-Dec-2025 19:40:19 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 135
+[01-Dec-2025 11:40:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:40:50 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:42:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:42:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:42:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:43:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:43:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:43:54 UTC] Database connected successfully to: hotelms

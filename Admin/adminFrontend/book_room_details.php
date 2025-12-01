@@ -155,13 +155,13 @@ while ($b = $bed_res->fetch_assoc()) {
                     <div class="col-md-6 mb-3">
                         <label><i class="fas fa-calendar-check"></i> Check-in Date</label>
                         <input type="date" id="check_in" class="form-control"
-                            value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
+                            value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label><i class="fas fa-calendar-times"></i> Check-out Date</label>
                         <input type="date" id="check_out" class="form-control"
-                            value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>" disabled>
+                            value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
                     </div>
                 </div>
             </div>
@@ -205,7 +205,7 @@ while ($b = $bed_res->fetch_assoc()) {
                                 <tr data-booked-room-id="<?= $r['id'] ?>" data-default-room-type="<?= $bookedRoomTypeId ?>"
                                     data-default-room-number="<?= $r['room_number_fk_id'] ?>">
                                     <td>
-                                        <select class="form-select roomTypeSelect" disabled>
+                                        <select class="form-select roomTypeSelect">
                                             <?php foreach ($roomTypes as $rtid => $rt): ?>
                                                 <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
                                                     data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
