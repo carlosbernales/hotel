@@ -12,6 +12,7 @@ $currentPage = basename($page);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         :root {
             --gold: #D4AF37;
@@ -361,7 +362,7 @@ $currentPage = basename($page);
             </a>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-user-tie"></i> Room Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -397,11 +398,42 @@ $currentPage = basename($page);
 
             </div>
 
+            <div
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking.php', 'table_management.php', 'cafe_management.php', 'event_management.php']) ? 'active' : ''; ?>">
+                <a href="#" class="dropdown-toggle">
+                    <span><i class="fas fa-user-tie"></i> Bookings</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
 
-            <a href="index.php?room_booking"
-                class="<?php echo ($currentPage == 'room_booking.php') ? 'active' : ''; ?>">
-                <i class="fas fa-users"></i> Room Booking
-            </a>
+                <div class="sidebar-submenu">
+                    <a href="index.php?room_booking"
+                        class="<?php echo ($currentPage == 'room_booking.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Room Booking
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table_management"
+                        class="<?php echo ($currentPage == 'table_management.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Table Booking
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?cafe_management"
+                        class="<?php echo ($currentPage == 'cafe_management.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Cafe Management
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?event_management"
+                        class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Event Management
+                    </a>
+                </div>
+            </div>
+
 
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php']) ? 'active' : ''; ?>">

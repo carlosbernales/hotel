@@ -17,126 +17,145 @@
         padding: 20px;
     }
 
-    .breadcrumb-custom {
-        background: var(--dark-bg);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-
-    .breadcrumb-custom i {
-        color: var(--gold);
-        margin-right: 8px;
-    }
-
     .info-card {
         background: var(--card-bg);
         border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        padding: 30px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 35px;
+    }
+
+    .section-card {
+        background: #FAFAFA;
+        border-radius: 10px;
+        padding: 25px;
+        border: 1px solid var(--border-color);
     }
 
     .section-header {
-        border-left: 4px solid var(--gold);
+        border-left: 5px solid var(--gold);
         padding-left: 15px;
-        margin: 30px 0 20px 0;
+        margin-bottom: 25px;
         color: var(--dark-bg);
-        font-weight: 600;
+        font-weight: 700;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-header i {
+        color: var(--gold);
     }
 
     .form-control,
     .form-select {
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 10px 12px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 15px;
         transition: all 0.3s ease;
+        font-size: 14px;
     }
 
     .form-control:focus,
     .form-select:focus {
         border-color: var(--gold);
-        box-shadow: 0 0 0 0.2rem rgba(201, 169, 97, 0.25);
+        box-shadow: 0 0 0 0.25rem rgba(201, 169, 97, 0.15);
+        outline: none;
     }
 
     .form-control:read-only {
         background: #F8F9FA;
         color: #6C757D;
+        cursor: not-allowed;
     }
 
     label {
-        font-weight: 500;
+        font-weight: 600;
         color: var(--text-dark);
-        margin-bottom: 6px;
-        font-size: 14px;
+        margin-bottom: 8px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    label i {
+        color: var(--gold);
+        width: 16px;
     }
 
     .table {
-        border-radius: 8px;
+        border-radius: 10px;
         overflow: hidden;
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        margin-bottom: 0;
     }
 
-    .table thead {
+    .table-dark {
         background: var(--dark-bg);
         color: white;
     }
 
-    .table thead th {
+    .table-dark th {
         border: none;
-        padding: 15px;
-        font-weight: 500;
+        padding: 16px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .table-dark th i {
+        color: var(--gold);
+        margin-right: 6px;
     }
 
     .table tbody td {
-        padding: 12px 15px;
+        padding: 14px 16px;
         vertical-align: middle;
         border-color: var(--border-color);
+        font-size: 14px;
     }
 
-    .table tbody tr:hover {
-        background: #F8F9FA;
+    .table-hover tbody tr:hover {
+        background: #F0F0F0;
+        transition: background 0.2s ease;
     }
 
     .btn {
-        padding: 10px 20px;
-        border-radius: 6px;
-        font-weight: 500;
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
         transition: all 0.3s ease;
         border: none;
+        font-size: 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn i {
+        font-size: 16px;
     }
 
     .btn-success {
-        background: var(--success);
+        background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
         color: white;
     }
 
     .btn-success:hover {
-        background: #218838;
+        background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
     }
 
     .btn-warning {
-        background: var(--warning);
+        background: linear-gradient(135deg, var(--warning) 0%, #E0A800 100%);
         color: var(--dark-bg);
     }
 
     .btn-warning:hover {
-        background: #E0A800;
+        background: linear-gradient(135deg, #E0A800 0%, #C69500 100%);
         transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
-    }
-
-    .btn-danger {
-        background: var(--danger);
-        color: white;
-    }
-
-    .btn-danger:hover {
-        background: #C82333;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+        box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
     }
 
     .btn-secondary {
@@ -146,19 +165,19 @@
 
     .btn-secondary:hover {
         background: #5A6268;
-        transform: translateY(-2px);
+        transform: translateY(-1px);
     }
 
     .btn-sm {
-        padding: 6px 12px;
-        font-size: 14px;
+        padding: 8px 16px;
+        font-size: 13px;
     }
 
     .info-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 15px;
-        margin-bottom: 20px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 0;
     }
 
     .info-item {
@@ -166,48 +185,79 @@
         flex-direction: column;
     }
 
+    .amenities-section {
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        border: 2px dashed var(--gold);
+    }
+
+    .payment-summary {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid var(--gold);
+    }
+
     .payment-card {
         background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
         color: white;
-        padding: 20px;
-        border-radius: 10px;
-        margin: 20px 0;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 25px;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
     }
 
     .payment-card label {
-        color: rgba(255, 255, 255, 0.9);
+        color: white;
+        font-weight: 600;
     }
 
-    .payment-card .form-control {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+    .payment-card label i {
         color: white;
     }
 
+    .payment-card .form-control {
+        background: rgba(255, 255, 255, 0.25);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        color: white;
+        font-weight: 600;
+    }
+
     .payment-card .form-control::placeholder {
-        color: rgba(255, 255, 255, 0.7);
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .payment-card .form-control:focus {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: white;
+        box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.2);
     }
 
     .action-buttons {
         display: flex;
-        gap: 10px;
+        gap: 15px;
         justify-content: flex-end;
         flex-wrap: wrap;
         margin-top: 30px;
-        padding-top: 20px;
-        border-top: 2px solid var(--border-color);
+        padding-top: 25px;
+        border-top: 3px solid var(--gold);
     }
 
     .badge {
-        padding: 6px 12px;
+        padding: 8px 14px;
         border-radius: 20px;
-        font-size: 12px;
-        font-weight: 500;
+        font-size: 13px;
+        font-weight: 600;
     }
 
     .badge-info {
-        background: #17A2B8;
+        background: linear-gradient(135deg, #17A2B8 0%, #138496 100%);
         color: white;
+    }
+
+    .text-danger-emphasis {
+        color: var(--danger) !important;
     }
 
     @media (max-width: 768px) {
@@ -221,6 +271,14 @@
 
         .action-buttons .btn {
             width: 100%;
+        }
+
+        .info-card {
+            padding: 20px;
+        }
+
+        .section-card {
+            padding: 15px;
         }
     }
 </style>
@@ -277,62 +335,68 @@ while ($b = $bed_res->fetch_assoc()) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"></i>
-            <span>Pending Bookings</span>
+            <i class="fas fa-home"> Booking Details</i>
         </div>
     </div>
 
     <div class="info-card" style="margin-bottom: 40px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">Booking Details</h3>
+            <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
+                <i class="fas fa-sign-out-alt" style="color: var(--gold);"></i> Guest Check-out
+            </h3>
             <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Back
+                <i class="fas fa-arrow-left"></i> Back to Bookings
             </a>
         </div>
 
         <div class="container-fluid">
-            <h4 class="section-header">Booking Information</h4>
+            <!-- Booking Information Section -->
+            <div class="section-card mb-4">
+                <h4 class="section-header">
+                    <i class="fas fa-info-circle"></i> Booking Information
+                </h4>
 
-            <div class="info-grid">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label><i class="fas fa-receipt"></i> Booking Reference</label>
+                        <input class="form-control" value="<?= $booking['booking_reference'] ?>" readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-receipt"></i> Booking ID</label>
-                    <input class="form-control" value="<?= $booking['booking_reference'] ?>" readonly>
-                </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-user"></i> First Name</label>
+                        <input class="form-control" value="<?= $booking['first_name'] ?>" readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-user"></i> Last Name</label>
-                    <input class="form-control" value="<?= $booking['last_name'] ?>" readonly>
-                </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-user"></i> Last Name</label>
+                        <input class="form-control" value="<?= $booking['last_name'] ?>" readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-user"></i> First Name</label>
-                    <input class="form-control" value="<?= $booking['first_name'] ?>" readonly>
-                </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-phone-alt"></i> Contact Number</label>
+                        <input class="form-control" value="<?= $booking['contact'] ?>" readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-phone-alt"></i> Contact Number</label>
-                    <input class="form-control" value="<?= $booking['contact'] ?>" readonly>
-                </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-users"></i> Number of Guests</label>
+                        <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>"
+                            readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-users"></i> Number of Guests</label>
-                    <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>" readonly>
-                </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-door-open"></i> Room Quantity</label>
+                        <input class="form-control" value="<?= $booking['room_quantity'] ?>" readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-door-open"></i> Room Quantity</label>
-                    <input class="form-control" value="<?= $booking['room_quantity'] ?>" readonly>
-                </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-male"></i> Adults</label>
+                        <input class="form-control" value="<?= $booking['num_adults'] ?>" readonly>
+                    </div>
 
-                <div class="info-item">
-                    <label><i class="fas fa-user"></i> Adults</label>
-                    <input class="form-control" value="<?= $booking['num_adults'] ?>" readonly>
-                </div>
-
-                <div class="info-item">
-                    <label><i class="fas fa-child"></i> Children</label>
-                    <input class="form-control" value="<?= $booking['num_children'] ?>" readonly>
+                    <div class="info-item">
+                        <label><i class="fas fa-child"></i> Children</label>
+                        <input class="form-control" value="<?= $booking['num_children'] ?>" readonly>
+                    </div>
                 </div>
 
                 <?php
@@ -363,29 +427,31 @@ while ($b = $bed_res->fetch_assoc()) {
                 ?>
 
                 <?php if ($amenitiesDisplay !== "None"): ?>
-                    <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                    <div class="amenities-section mt-3">
+                        <label><i class="fas fa-concierge-bell"></i> Booked Amenities</label>
+                        <textarea class="form-control" rows="4"
+                            readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                    </div>
                 <?php endif; ?>
 
                 <script>
                     const extraBedTotal = <?= $extraBedTotal ?>;
                 </script>
 
-            </div>
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <label><i class="fas fa-calendar-check"></i> Check-in Date</label>
+                        <input type="date" id="check_in" class="form-control"
+                            value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
+                    </div>
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label><i class="fas fa-calendar-check"></i> Check-in</label>
-                    <input type="date" id="check_in" class="form-control"
-                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
+                    <div class="col-md-6 mb-3">
+                        <label><i class="fas fa-calendar-times"></i> Check-out Date</label>
+                        <input type="date" id="check_out" class="form-control"
+                            value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
+                    </div>
                 </div>
-
-                <div class="col-md-6">
-                    <label><i class="fas fa-calendar-times"></i> Check-out</label>
-                    <input type="date" id="check_out" class="form-control"
-                        value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
-                </div>
             </div>
-
 
             <?php
             $roomNumbers = [];
@@ -404,159 +470,185 @@ while ($b = $bed_res->fetch_assoc()) {
                 }
             }
             ?>
-            <h4 class="section-header">Booked Rooms</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered" id="roomsTable">
-                    <thead>
-                        <tr>
-                            <th>Room Type</th>
-                            <th>Room Number</th>
-                            <th>Price</th>
-                            <th>Capacity</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($r = $rooms->fetch_assoc()): ?>
-                            <?php $bookedRoomTypeId = $r['room_type_id']; ?>
-                            <tr data-booked-room-id="<?= $r['id'] ?>" data-default-room-type="<?= $bookedRoomTypeId ?>"
-                                data-default-room-number="<?= $r['room_number_fk_id'] ?>">
-                                <td>
-                                    <select class="form-select roomTypeSelect">
-                                        <?php foreach ($roomTypes as $rtid => $rt): ?>
-                                            <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
-                                                data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
-                                                <?= $rt['room_type'] ?>
-                                            </option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                </td>
 
-                                <td>
-                                    <select class="form-select roomNumberSelect">
-                                        <?php
-                                        if ($r['room_number_fk_id'] && isset($roomNumbers[$bookedRoomTypeId])):
-                                            foreach ($roomNumbers[$bookedRoomTypeId] as $rn):
-                                                $selectedRN = ($rn['room_number_id'] == $r['room_number_fk_id']) ? 'selected' : '';
-                                                ?>
-                                                <option value="<?= $rn['room_number_id'] ?>" <?= $selectedRN ?>>
-                                                    <?= $rn['room_number'] ?>
-                                                </option>
-                                            <?php endforeach;
-                                        else: ?>
-                                            <option value="" selected>Select room number</option>
-                                        <?php endif; ?>
-                                    </select>
-
-                                </td>
-
-                                <td class="roomPrice">₱<?= number_format($roomTypes[$bookedRoomTypeId]['price'], 2) ?></td>
-                                <td class="roomCapacity"><?= $roomTypes[$bookedRoomTypeId]['capacity'] ?></td>
-                            </tr>
-                        <?php endwhile; ?>
-
-
-                    </tbody>
-
-                </table>
-            </div>
-
-            <h4 class="section-header">Guest Names</h4>
-            <div class="table-responsive">
-                <table class="table table-bordered mb-5">
-                    <thead>
-                        <tr>
-                            <th><i class="fas fa-id-card"></i> First Name</th>
-                            <th><i class="fas fa-id-card"></i> Last Name</th>
-                            <th><i class="fas fa-user-tag"></i> Guest Type</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php while ($g = $guests->fetch_assoc()): ?>
+            <!-- Booked Rooms Section -->
+            <div class="section-card mb-4">
+                <h4 class="section-header">
+                    <i class="fas fa-bed"></i> Booked Rooms
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle" id="roomsTable">
+                        <thead class="table-dark">
                             <tr>
-                                <td><?= $g['first_name'] ?></td>
-                                <td><?= $g['last_name'] ?></td>
-                                <td><span class="badge badge-info"><?= $g['guest_type'] ?></span></td>
+                                <th><i class="fas fa-door-closed"></i> Room Type</th>
+                                <th><i class="fas fa-hashtag"></i> Room Number</th>
+                                <th><i class="fas fa-tag"></i> Price</th>
+                                <th><i class="fas fa-users"></i> Capacity</th>
                             </tr>
-                        <?php endwhile; ?>
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            <?php while ($r = $rooms->fetch_assoc()): ?>
+                                <?php $bookedRoomTypeId = $r['room_type_id']; ?>
+                                <tr data-booked-room-id="<?= $r['id'] ?>" data-default-room-type="<?= $bookedRoomTypeId ?>"
+                                    data-default-room-number="<?= $r['room_number_fk_id'] ?>">
+                                    <td>
+                                        <select class="form-select roomTypeSelect">
+                                            <?php foreach ($roomTypes as $rtid => $rt): ?>
+                                                <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
+                                                    data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
+                                                    <?= $rt['room_type'] ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </td>
 
+                                    <td>
+                                        <select class="form-select roomNumberSelect">
+                                            <?php
+                                            if ($r['room_number_fk_id'] && isset($roomNumbers[$bookedRoomTypeId])):
+                                                foreach ($roomNumbers[$bookedRoomTypeId] as $rn):
+                                                    $selectedRN = ($rn['room_number_id'] == $r['room_number_fk_id']) ? 'selected' : '';
+                                                    ?>
+                                                    <option value="<?= $rn['room_number_id'] ?>" <?= $selectedRN ?>>
+                                                        <?= $rn['room_number'] ?>
+                                                    </option>
+                                                <?php endforeach;
+                                            else: ?>
+                                                <option value="" selected>Select room number</option>
+                                            <?php endif; ?>
+                                        </select>
+                                    </td>
 
-
-            <h4 class="section-header">Payment Details</h4>
-
-            <div class="info-grid">
-                <div class="info-item">
-                    <label class="form-label">Payment Method</label>
-                    <select name="payment_method" class="form-control custom-input" required>
-                        <option value="Cash" <?= ($booking['payment_method'] == 'Cash') ? 'selected' : '' ?>>Cash</option>
-                        <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>
-                            Credit Card</option>
-                        <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>
-                            Debit Card</option>
-                        <option value="GCash" <?= ($booking['payment_method'] == 'GCash') ? 'selected' : '' ?>>GCash
-                        </option>
-                        <option value="Paypal" <?= ($booking['payment_method'] == 'Paypal') ? 'selected' : '' ?>>Paypal
-                        </option>
-                    </select>
-                </div>
-                <div class="info-item">
-                    <label><i class="fas fa-percent"></i> Discount</label>
-                    <input class="form-control" id="discountPercentage"
-                        value="<?= (int) $booking['discount_percentage'] ?>%" readonly>
-                </div>
-                <div class="info-item">
-                    <label><i class="fas fa-money-bill-wave"></i> Amount Deducted</label>
-                    <input class="form-control" id="discount_amount" value="<?= $booking['discount_amount'] ?>"
-                        readonly>
-                </div>
-            </div>
-            <div class="info-grid">
-                <div class="info-item">
-                    <label><i class="fas fa-calculator"></i> Total Amount</label>
-                    <input type="text" id="totalAmountNew" class="form-control"
-                        value="<?= number_format($booking['total_amount'], 2) ?>" readonly>
-                </div>
-
-                <div class="info-item">
-                    <label><i class="fas fa-hand-holding-usd"></i> Down Payment</label>
-                    <input type="text" id="downPayment" class="form-control"
-                        value="<?= number_format($booking['downpayment_amount'], 2) ?>" readonly>
-                </div>
-
-                <div class="info-item">
-                    <label><i class="fas fa-file-invoice-dollar"></i> Total Due</label>
-                    <input type="text" id="totalDue" class="form-control" value="0" readonly>
+                                    <td class="roomPrice fw-semibold text-success">
+                                        ₱<?= number_format($roomTypes[$bookedRoomTypeId]['price'], 2) ?></td>
+                                    <td class="roomCapacity"><span
+                                            class="badge bg-secondary"><?= $roomTypes[$bookedRoomTypeId]['capacity'] ?></span>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
 
-            <div class="payment-card">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label><i class="fas fa-credit-card"></i> Payment Amount / Downpayment</label>
-                        <input type="number" id="paymentInput" class="form-control" min="0"
-                            placeholder="Enter payment amount">
+            <!-- Guest Names Section -->
+            <div class="section-card mb-4">
+                <h4 class="section-header">
+                    <i class="fas fa-address-book"></i> Guest List
+                </h4>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th><i class="fas fa-id-card"></i> First Name</th>
+                                <th><i class="fas fa-id-card"></i> Last Name</th>
+                                <th><i class="fas fa-user-tag"></i> Guest Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($g = $guests->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= $g['first_name'] ?></td>
+                                    <td><?= $g['last_name'] ?></td>
+                                    <td>
+                                        <span class="badge badge-info">
+                                            <i class="fas fa-user"></i> <?= ucfirst($g['guest_type']) ?>
+                                        </span>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Payment Details Section -->
+            <div class="section-card mb-4">
+                <h4 class="section-header">
+                    <i class="fas fa-file-invoice-dollar"></i> Payment Details
+                </h4>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                        <select name="payment_method" class="form-control custom-input" required>
+                            <option value="Cash" <?= ($booking['payment_method'] == 'Cash') ? 'selected' : '' ?>>Cash
+                            </option>
+                            <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>Credit Card</option>
+                            <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>Debit Card</option>
+                            <option value="GCash" <?= ($booking['payment_method'] == 'GCash') ? 'selected' : '' ?>>GCash
+                            </option>
+                            <option value="Paypal" <?= ($booking['payment_method'] == 'Paypal') ? 'selected' : '' ?>>Paypal
+                            </option>
+                        </select>
                     </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-percent"></i> Discount Applied</label>
+                        <input class="form-control" id="discountPercentage"
+                            value="<?= (int) $booking['discount_percentage'] ?>%" readonly>
+                    </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-money-bill-wave"></i> Discount Amount</label>
+                        <input class="form-control" id="discount_amount" value="<?= $booking['discount_amount'] ?>"
+                            readonly>
+                    </div>
+                </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label><i class="fas fa-coins"></i> Change</label>
-                        <input type="text" id="changeAmount" class="form-control" value="0" readonly>
+                <div class="payment-summary mt-4">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label><i class="fas fa-calculator"></i> Total Amount</label>
+                            <input type="text" id="totalAmountNew" class="form-control fw-bold"
+                                value="<?= number_format($booking['total_amount'], 2) ?>" readonly>
+                        </div>
+
+                        <div class="info-item">
+                            <label><i class="fas fa-hand-holding-usd"></i> Down Payment</label>
+                            <input type="text" id="downPayment" class="form-control"
+                                value="<?= number_format($booking['downpayment_amount'], 2) ?>" readonly>
+                        </div>
+
+                        <div class="info-item">
+                            <label><i class="fas fa-file-invoice-dollar"></i> Remaining Balance</label>
+                            <input type="text" id="totalDue" class="form-control fw-bold text-danger-emphasis" value="0"
+                                readonly>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-card">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label><i class="fas fa-wallet"></i> Payment Amount / Downpayment</label>
+                            <input type="number" id="paymentInput" class="form-control" min="0"
+                                placeholder="Enter payment amount">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label><i class="fas fa-coins"></i> Change</label>
+                            <input type="text" id="changeAmount" class="form-control" value="₱0.00" readonly>
+                        </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Action Buttons -->
             <div class="action-buttons">
-                <button type="button" id="processCheckOut" class="btn btn-warning">
-                    <i class="fas fa-check-circle"></i> Check Out
-                </button>
                 <button type="button" id="processExtendStay" class="btn btn-success">
-                    <i class="fas fa-check-circle"></i> Extend Stay
+                    <i class="fas fa-calendar-plus"></i> Extend Stay
+                </button>
+                <button type="button" id="processCheckOut" class="btn btn-warning">
+                    <i class="fas fa-sign-out-alt"></i> Process Check-out
                 </button>
             </div>
         </div>
     </div>
+
 </div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <script>
     function processBooking(status) {
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
@@ -627,7 +719,6 @@ while ($b = $bed_res->fetch_assoc()) {
             remainingBalance = totalAmount - paymentInput;
         }
 
-
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
             check_in: '<?= $booking['check_in'] ?>',
@@ -641,7 +732,6 @@ while ($b = $bed_res->fetch_assoc()) {
             status: finalStatus
         };
 
-
         fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -651,7 +741,13 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => {
                 if (res === "success") {
                     alert(`Booking ${finalStatus === 'finished' ? 'checked out' : 'extended'} successfully!`);
-                    window.location.href = "../Admin/index.php?accepted_room_bookings_list";
+
+                    if (finalStatus === 'finished') {
+                        window.location.href = `../Admin/adminFrontend/room_booking_receipt.php?booking_id=<?= $booking['booking_id'] ?>`;
+                    } else {
+                        window.location.href = "../Admin/index.php?room_booking_list";
+                    }
+
                 } else {
                     alert('Something went wrong. Please try again.');
                 }
@@ -661,6 +757,7 @@ while ($b = $bed_res->fetch_assoc()) {
 
     document.getElementById('processExtendStay').addEventListener('click', () => processBooking('checkin'));
     document.getElementById('processCheckOut').addEventListener('click', () => processBooking('finished'));
+
 </script>
 
 <script>
@@ -745,6 +842,9 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
     });
+
+
+
 </script>
 
 <script>

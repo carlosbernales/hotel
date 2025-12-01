@@ -18,8 +18,17 @@ while ($row = $resBookings->fetch_assoc()) {
 
 
 $sqlRooms = "
-    SELECT booking_id, room_type_id, room_type_name, price
-    FROM booked_rooms
+    SELECT 
+        br.booking_id,
+        br.room_type_id,
+        br.room_type_name,
+        br.price,
+        br.room_number_fk_id,
+        rn.room_number,
+        rn.floor_number
+    FROM booked_rooms br
+    LEFT JOIN room_numbers rn 
+        ON br.room_number_fk_id = rn.room_number_id
 ";
 $resRooms = $conn->query($sqlRooms);
 
@@ -42,154 +51,13 @@ while ($g = $resGuests->fetch_assoc()) {
         $bookings[$id]['guests'][] = $g;
     }
 }
-
-
 ?>
 
-<style>
-    /* Add Table Button */
-    .table-add-btn {
-        background-color: #C9A961;
-        color: #2d2d2d;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-        font-weight: 500;
-        border: none;
-        transition: all 0.3s ease;
-    }
-
-    .table-add-btn:hover {
-        background-color: #B8964F;
-        color: #2d2d2d;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .table-add-btn i {
-        font-size: 1.1rem;
-    }
-
-    /* Table Action Buttons */
-    .table-action-btn {
-        padding: 0.4rem 0.6rem;
-        border-radius: 4px;
-        border: none;
-        margin: 0 0.2rem;
-        transition: all 0.3s ease;
-        cursor: pointer;
-    }
-
-    .table-action-btn i {
-        font-size: 1rem;
-    }
-
-    /* View Button - Cyan/Info */
-    .table-action-view {
-        background-color: #17a2b8;
-        color: white;
-    }
-
-    .table-action-view:hover {
-        background-color: #138496;
-        color: white;
-        transform: scale(1.05);
-    }
-
-    /* Edit Button - Mustard/Gold matching your theme */
-    .table-action-edit {
-        background-color: #C9A961;
-        color: #2d2d2d;
-    }
-
-    .table-action-edit:hover {
-        background-color: #B8964F;
-        color: #2d2d2d;
-        transform: scale(1.05);
-    }
-
-    /* Delete Button - Red/Danger */
-    .table-action-delete {
-        background-color: #dc3545;
-        color: white;
-    }
-
-    .table-action-delete:hover {
-        background-color: #c82333;
-        color: white;
-        transform: scale(1.05);
-    }
-
-    /* Package Modal Styling */
-    .package-modal {
-        border: none;
-        border-radius: 8px;
-    }
-
-    .package-modal-header {
-        background-color: #C9A961;
-        color: #2d2d2d;
-        border-bottom: 2px solid #B8964F;
-    }
-
-    .package-modal-close {
-        filter: brightness(0.3);
-    }
-
-    .package-modal-body {
-        background-color: #f8f9fa;
-        padding: 2rem;
-    }
-
-    .package-label {
-        font-weight: 600;
-        color: #2d2d2d;
-    }
-
-    .package-input {
-        border: 1px solid #C9A961;
-        border-radius: 4px;
-        padding: 0.6rem;
-    }
-
-    .package-input:focus {
-        border-color: #B8964F;
-        box-shadow: 0 0 0 0.2rem rgba(201, 169, 97, 0.25);
-    }
-
-    .package-help-text {
-        color: #6c757d;
-    }
-
-    .package-btn-cancel {
-        background-color: #6c757d;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-    }
-
-    .package-btn-cancel:hover {
-        background-color: #5a6268;
-        color: white;
-    }
-
-    .package-btn-save {
-        background-color: #28a745;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-        font-weight: 500;
-    }
-
-    .package-btn-save:hover {
-        background-color: #218838;
-        color: white;
-    }
-</style>
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
             <i class="fas fa-home"></i>
-            <span>Pending Bookings</span>
+            <span>Finished Bookings</span>
         </div>
     </div>
 
@@ -205,7 +73,7 @@ while ($g = $resGuests->fetch_assoc()) {
                         <th>Fullname</th>
                         <th>Contact</th>
                         <th>Schedule</th>
-                        <th>Status</th>
+
                         <th></th>
                     </tr>
                 </thead>
@@ -216,13 +84,17 @@ while ($g = $resGuests->fetch_assoc()) {
                             <td><?= $b['booking_reference'] ?></td>
                             <td><?= $b['first_name'] . ' ' . $b['last_name'] ?></td>
                             <td><?= $b['contact'] ?></td>
-                            <td><?= $b['check_in'] ?> - <?= $b['check_out'] ?></td>
-                            <td><?= $b['status'] ?></td>
                             <td>
-                                <a href="../Admin/index.php?book_room_details&id=<?= $id ?>"
-                                    class="btn btn-sm table-action-btn">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
+                                <?= date("F j, Y", strtotime($b['check_in'])) ?> -
+                                <?= date("F j, Y", strtotime($b['check_out'])) ?>
+                            </td>
+
+
+                            <td>
+                                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#viewModal<?= $id ?>">
+                                    <i class="bi bi-eye"></i>
+                                </button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -232,115 +104,234 @@ while ($g = $resGuests->fetch_assoc()) {
         </div>
     </div>
 </div>
+
 <?php foreach ($bookings as $id => $data): ?>
     <?php $b = $data['booking']; ?>
 
-    <div class="modal fade" id="editModal<?= $id ?>" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content package-modal">
+    <!-- MODAL HERE -->
+    <div class="modal fade" id="viewModal<?= $id ?>" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
 
-                <div class="modal-header package-modal-header">
-                    <h5 class="modal-title fw-bold">Booking Details</h5>
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-file-text"></i> Booking Details – <?= $b['booking_reference'] ?>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body p-4">
 
-                    <!-- SINGLE BOOKING INFO -->
-                    <h5 class="fw-bold">Booking Information</h5>
-                    <div class="row">
-                        <div class="col-md-4 mb-2">
-                            <label>Number of Guests</label>
-                            <input class="form-control" value="<?= $b['number_of_guests'] ?>" readonly>
+                    <!-- GUEST INFORMATION -->
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-dark text-warning">
+                            <h6 class="mb-0"><i class="bi bi-person-fill"></i> Guest Information</h6>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Room Quantity</label>
-                            <input class="form-control" value="<?= $b['room_quantity'] ?>" readonly>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Total Amount</label>
-                            <input class="form-control" value="<?= $b['total_amount'] ?>" readonly>
-                        </div>
-
-                        <div class="col-md-4 mb-2">
-                            <label>Adults</label>
-                            <input class="form-control" value="<?= $b['num_adults'] ?>" readonly>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Children</label>
-                            <input class="form-control" value="<?= $b['num_children'] ?>" readonly>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Extra Bed</label>
-                            <input class="form-control" value="<?= $b['extra_bed'] ?>" readonly>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="text-muted small">First Name</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['first_name'] ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Last Name</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['last_name'] ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Email</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['email'] ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Contact</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['contact'] ?></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- DISCOUNT -->
-                    <h5 class="fw-bold mt-4">Discount Details</h5>
-                    <div class="row">
-                        <div class="col-md-4 mb-2">
-                            <label>Type</label>
-                            <input class="form-control" value="<?= $b['discount_type'] ?>" readonly>
+                    <!-- BOOKING DETAILS -->
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-dark text-warning">
+                            <h6 class="mb-0"><i class="bi bi-calendar-check"></i> Booking Details</h6>
                         </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Percentage</label>
-                            <input class="form-control" value="<?= $b['discount_percentage'] ?>" readonly>
-                        </div>
-                        <div class="col-md-4 mb-2">
-                            <label>Amount</label>
-                            <input class="form-control" value="<?= $b['discount_amount'] ?>" readonly>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Check-in</label>
+                                    <p class="mb-0 fw-semibold"><?= date('M d, Y', strtotime($b['check_in'])) ?>
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Check-out</label>
+                                    <p class="mb-0 fw-semibold">
+                                        <?= date('M d, Y', strtotime($b['check_out'])) ?>
+                                    </p>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="text-muted small">Nights</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['nights'] ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="text-muted small">Adults</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['num_adults'] ?></p>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="text-muted small">Children</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['num_children'] ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Total Guests</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['number_of_guests'] ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Room Quantity</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['room_quantity'] ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Payment Method</label>
+                                    <p class="mb-0 fw-semibold"><?= $b['payment_method'] ?></p>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- ROOMS -->
-                    <h5 class="fw-bold mt-4">Booked Rooms</h5>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Room Type ID</th>
-                                <th>Room Type</th>
-                                <th>Price</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($data['rooms'] as $r): ?>
-                                <tr>
-                                    <td><?= $r['room_type_id'] ?></td>
-                                    <td><?= $r['room_type_name'] ?></td>
-                                    <td><?= $r['price'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <!-- PAYMENT INFORMATION -->
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-dark text-warning">
+                            <h6 class="mb-0"><i class="bi bi-cash-stack"></i> Payment Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Total Amount</label>
+                                    <p class="mb-0 fw-bold text-success">
+                                        ₱<?= number_format($b['total_amount'], 2) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Downpayment</label>
+                                    <p class="mb-0 fw-semibold">
+                                        ₱<?= number_format($b['downpayment_amount'], 2) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Remaining Balance</label>
+                                    <p class="mb-0 fw-bold text-danger">
+                                        ₱<?= number_format($b['remaining_balance'], 2) ?>
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small">Discount</label>
+                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <!-- GUESTS -->
-                    <h5 class="fw-bold mt-4">Guest Names</h5>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Guest Type</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($data['guests'] as $g): ?>
-                                <tr>
-                                    <td><?= $g['first_name'] ?></td>
-                                    <td><?= $g['last_name'] ?></td>
-                                    <td><?= $g['guest_type'] ?></td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                    <!-- DISCOUNT INFORMATION -->
+                    <?php if ($b['discount_type'] != 'None' && $b['discount_percentage'] > 0): ?>
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-header bg-dark text-warning">
+                                <h6 class="mb-0"><i class="bi bi-percent"></i> Discount Information</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <label class="text-muted small">Discount Type</label>
+                                        <p class="mb-0 fw-semibold"><?= $b['discount_type'] ?></p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="text-muted small">Discount Percentage</label>
+                                        <p class="mb-0 fw-semibold"><?= $b['discount_percentage'] ?>%</p>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label class="text-muted small">Discount Amount</label>
+                                        <p class="mb-0 fw-semibold text-success">
+                                            ₱<?= number_format($b['discount_amount'], 2) ?>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
+                    <!-- BOOKED ROOMS TABLE -->
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-dark text-warning">
+                            <h6 class="mb-0"><i class="bi bi-door-open"></i> Booked Rooms</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Room Type</th>
+                                            <th>Price</th>
+                                            <th>Room Number</th>
+                                            <th>Floor Number</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($data['rooms'])): ?>
+                                            <?php foreach ($data['rooms'] as $room): ?>
+                                                <tr>
+                                                    <td class="fw-semibold"><?= $room['room_type_name'] ?></td>
+                                                    <td>₱<?= number_format($room['price'], 2) ?></td>
+                                                    <td><?= $room['room_number'] ?? 'N/A' ?></td>
+                                                    <td><?= $room['floor_number'] ?? 'N/A' ?></td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="4" class="text-center text-muted py-3">No rooms found
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GUEST LIST TABLE -->
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-header bg-dark text-warning">
+                            <h6 class="mb-0"><i class="bi bi-people-fill"></i> Guest List</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Guest Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (!empty($data['guests'])): ?>
+                                            <?php foreach ($data['guests'] as $guest): ?>
+                                                <tr>
+                                                    <td><?= $guest['first_name'] ?></td>
+                                                    <td><?= $guest['last_name'] ?></td>
+                                                    <td><span class="badge bg-secondary"><?= ucfirst($guest['guest_type']) ?></span>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="3" class="text-center text-muted py-3">No guests found
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
     </div>
-
 <?php endforeach; ?>
 
 

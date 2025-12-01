@@ -54602,3 +54602,654 @@ Stack trace:
 [30-Nov-2025 16:00:03 UTC] Database connected successfully to: hotelms
 [30-Nov-2025 16:00:07 UTC] Database connected successfully to: hotelms
 [30-Nov-2025 16:00:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:34:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:35:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 12:35:43 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 122
+[01-Dec-2025 12:35:43 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 122
+[01-Dec-2025 04:36:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:44 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:59 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:36:59 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:31 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:31 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:37:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:38:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:39:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:45 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:40:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:26 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:31 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:41:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:42:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:43:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:44:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:45:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:46:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:47:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:48:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:49:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:50:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:51:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:52:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:52:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:52:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:52:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:52:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:52:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:53:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:53:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:53:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:54:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 04:55:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:40:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:02 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:41:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:42:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:43:09 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:43:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:43:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:44:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:45:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:45:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:45:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:45:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:45:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:47:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:47:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:47:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:47:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:48:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:31 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:47 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:50 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:49:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:27 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:45 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:51:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:52:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:53:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:54:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:55:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 13:55:30 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[01-Dec-2025 13:55:30 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[01-Dec-2025 13:55:30 Asia/Manila] Index idx_messages_status already exists on table messages
+[01-Dec-2025 13:55:30 Asia/Manila] Index idx_activities_type already exists on table activities
+[01-Dec-2025 13:55:30 Asia/Manila] Index idx_customers_vip already exists on table customers
+[01-Dec-2025 13:55:30 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[01-Dec-2025 13:55:30 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[01-Dec-2025 13:55:30 Asia/Manila] Current date: 2025-12-01
+[01-Dec-2025 13:55:30 Asia/Manila] Week start: 2025-12-01
+[01-Dec-2025 13:55:30 Asia/Manila] Week end: 2025-12-07
+[01-Dec-2025 13:55:30 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[01-Dec-2025 13:55:30 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[01-Dec-2025 13:55:30 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[01-Dec-2025 13:55:30 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 4
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[01-Dec-2025 13:55:30 Asia/Manila] Weekly labels: Array
+(
+    [0] => 25
+    [1] => 26
+    [2] => 27
+    [3] => 28
+    [4] => 29
+    [5] => 30
+    [6] => 01
+)
+
+[01-Dec-2025 13:55:30 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 34200.00
+    [6] => 0.00
+)
+
+[01-Dec-2025 13:55:30 Asia/Manila] Café Performance Query: 
+    SELECT 
+        DATE_FORMAT(order_date, '%a') as day,
+        COALESCE(SUM(total_amount), 0) as daily_revenue
+    FROM orders
+    WHERE order_date >= DATE_SUB(CURRENT_DATE, INTERVAL 6 DAY)
+        AND order_type = 'café'
+        AND status = 'Completed'
+    GROUP BY DATE(order_date), DATE_FORMAT(order_date, '%a')
+    ORDER BY DATE(order_date)
+[01-Dec-2025 13:55:30 Asia/Manila] Total records found: 0
+[01-Dec-2025 13:55:30 Asia/Manila] Final days array: []
+[01-Dec-2025 13:55:30 Asia/Manila] Final revenue array: []
+[01-Dec-2025 13:55:30 Asia/Manila] Padded days array: ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+[01-Dec-2025 13:55:30 Asia/Manila] Padded revenue array: [0,0,0,0,0,0,0]
+[01-Dec-2025 05:55:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:55:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:56:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:56:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:56:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:56:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 05:56:31 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:16:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:17:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:17:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:18:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:18:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:18:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:18:59 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:33:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:33:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:33:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:33:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:33:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:35:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:35:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:35:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:36:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:36:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:40:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:43:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:44:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:46:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:46:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 06:51:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:30:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:33:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:35:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:35:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:35:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:35:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:35:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:36:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:36:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:36:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:36:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:36:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:36:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:37:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:37:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:37:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:38:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:39:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:40:45 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:40:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:41:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:41:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:41:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:41:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:41:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:42:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:42:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:43:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:44:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:44:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 15:44:10 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 356
+[01-Dec-2025 15:44:10 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 356
+[01-Dec-2025 15:44:10 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\book_room_details.php on line 356
+[01-Dec-2025 07:44:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:46:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:46:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:46:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:46:45 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:46:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:46:59 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:47:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:47:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:47:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:48:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:48:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:48:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:49:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:49:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:49:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:49:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:49:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:50:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:50:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:50:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:27 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:44 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:52:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:53:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:53:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:53:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:18 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:54:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:26 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:27 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:47 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:55:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:56:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:56:26 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:56:31 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:56:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:56:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:57:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:57:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:57:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 07:57:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:00:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:00:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:02:36 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:03:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:03:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:03:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:04:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:04:44 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:04:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:04:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:06:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:06:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:06:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:06:40 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:06:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:06:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:02 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:02 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 16:07:02 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 258
+[01-Dec-2025 16:07:02 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 258
+[01-Dec-2025 16:07:02 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect DATETIME value: '' in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php:261
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php(261): mysqli->query('\r\n    SELECT br...')
+#1 C:\laragon\www\hotel\Admin\index.php(122): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\accepted_room_bookDetails.php on line 261
+[01-Dec-2025 08:07:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:09 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:07:26 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:08:27 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:09:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:09:17 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:23:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:23:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:23:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:24:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:25:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:26:26 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:26:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:26:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:07 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:09 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:27:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:29:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:29:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:31:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:31:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:32:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:32:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:32:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:33:03 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:33:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:34:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:34:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:34:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:34:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:34:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:34:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:09 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:25 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:35:59 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:36:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:36:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:36:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:36:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:55:55 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:56:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:56:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:57:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:57:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:57:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:58:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:58:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:58:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:58:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:59:08 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:59:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 08:59:51 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:00:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:00:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:00:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:01:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:01:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:09 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:16 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:20 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:42 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:04:54 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:04 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:34 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:05:44 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:06:05 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:06:09 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:15:19 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:21:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:21:22 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:21:33 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:21:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:21:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:21:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:22:00 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:23:23 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:24:21 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:24:35 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:24:37 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:24:49 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:24:58 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:27:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:27:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:28:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:29:01 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:29:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:35:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:35:12 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:35:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:35:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:35:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:39:52 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:40:14 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 09:40:24 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:07:27 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:07:38 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:07:41 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:07:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:07:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:10:43 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:13:48 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:17:53 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:18:13 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:18:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:18:32 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:20:10 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:20:11 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:20:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:22:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:22:44 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:23:39 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:23:45 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:23:46 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:23:56 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:24:15 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:24:29 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:24:30 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:24:57 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:25:28 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:26:06 UTC] Database connected successfully to: hotelms
+[01-Dec-2025 11:26:07 UTC] Database connected successfully to: hotelms

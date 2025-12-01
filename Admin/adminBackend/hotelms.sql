@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 30, 2025 at 04:00 PM
+-- Generation Time: Dec 01, 2025 at 11:26 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -334,10 +334,8 @@ CREATE TABLE `booked_rooms` (
 --
 
 INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
-(1, 1, 3, 5, 'HAH', 500.00, '2025-11-30 15:13:53'),
-(2, 1, 2, 1, 'SAD', 1500.00, '2025-11-30 15:13:53'),
-(3, 1, 1, 1, 'SAD', 1500.00, '2025-11-30 15:13:53'),
-(4, 2, 4, 5, 'HAH', 500.00, '2025-11-30 15:17:18');
+(3, 2, 1, 1, 'SAD', 1500.00, '2025-12-01 08:24:11'),
+(4, 2, 2, 1, 'SAD', 1500.00, '2025-12-01 08:24:11');
 
 -- --------------------------------------------------------
 
@@ -382,8 +380,7 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`) VALUES
-(1, 'BK-XN3L2ODSCO4H', NULL, 'sad', 'asdasd', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-11-30 23:15:10', '2025-12-06 00:00:00', NULL, 2, NULL, 3, '0', 'Cash', 31200.00, '2025-11-30 15:13:53', 2, 0.00, 31200.00, 'admin', 2, 0, NULL, '0', 20.00, 2600.00, 'checkin'),
-(2, 'BK-8ZD8E2XI325S', NULL, 'sad', 'adasd', 'carlosbernales24@gmail.com', '09951776920', 'walkin', '2025-12-03 00:00:00', '2025-12-05 00:00:00', NULL, 2, NULL, 1, '0', 'Cash', 3000.00, '2025-11-30 15:17:18', 2, 0.00, 3000.00, 'admin', 2, 0, NULL, '0', 0.00, 0.00, 'reserved');
+(2, 'BK-MTBBVL2JN8YN', NULL, 'asd', 'asds', 'asdas', '99999999999', 'walkin', '2025-12-01 16:33:01', '2025-12-01 19:25:40', NULL, 2, NULL, 2, '0', 'Cash', 4000.00, '2025-12-01 08:24:11', 4, 4000.00, 0.00, 'admin', 2, 0, NULL, '0', 20.00, 3200.00, 'finished');
 
 -- --------------------------------------------------------
 
@@ -406,11 +403,11 @@ CREATE TABLE `booking_amenities` (
 --
 
 INSERT INTO `booking_amenities` (`id`, `amenities_fk_id`, `booking_fk_id`, `bedOrNot`, `quantity`, `amenity_name`, `price`) VALUES
-(1, 1, 1, 'yes', 2, 'single bed', 1000.00),
-(2, 2, 1, 'yes', 1, 'Queens Bed', 1000.00),
+(2, 1, 2, 'yes', 1, 'single bed', 1000.00),
 (3, 2, 2, 'yes', 1, 'Queens Bed', 1000.00),
-(8, 4, 1, 'no', 2, 'Conditioner', NULL),
-(9, 11, 1, 'no', 1, 'Mini Fridge Items', NULL);
+(4, 4, 2, 'no', 2, 'Conditioner', NULL),
+(5, 12, 2, 'no', 1, 'Extra Pillow', NULL),
+(6, 3, 2, 'no', 1, 'Shampoo', NULL);
 
 -- --------------------------------------------------------
 
@@ -1264,10 +1261,8 @@ CREATE TABLE `guest_names` (
 --
 
 INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
-(1, 1, 'asdasd', 'asd', 'Adult', NULL, NULL, '2025-11-30 15:13:53'),
-(2, 1, 'dasd', 'asdas', 'Adult', NULL, NULL, '2025-11-30 15:13:53'),
-(3, 2, 'asdasds', 'asd', 'Adult', NULL, NULL, '2025-11-30 15:17:18'),
-(4, 2, 'asdas', 'dasd', 'Adult', NULL, NULL, '2025-11-30 15:17:18');
+(3, 2, 'adasd', 'asd', 'Adult', NULL, NULL, '2025-12-01 08:24:11'),
+(4, 2, 'ad', 'asdsad', 'Adult', NULL, NULL, '2025-12-01 08:24:11');
 
 -- --------------------------------------------------------
 
@@ -3342,7 +3337,7 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `booking_amenities`
 --
 ALTER TABLE `booking_amenities`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
