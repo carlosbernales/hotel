@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $nights = (new DateTime($check_out))->diff(new DateTime($check_in))->days ?: 1;
     $downpayment_amount = 0.0;
-    $remaining_balance = 0.0;
+    $remaining_balance = floatval(str_replace(['₱', ',', ' '], '', $_POST['total_amount'] ?? 0));
 
     $booking_reference = generateBookingReference();
 

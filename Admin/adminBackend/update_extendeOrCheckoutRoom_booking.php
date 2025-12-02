@@ -19,8 +19,13 @@ $currentDPQry->bind_result($currentDownpayment);
 $currentDPQry->fetch();
 $currentDPQry->close();
 
-$downpayment_amount = $currentDownpayment + $payment_input;
-$remaining_balance = max(0, $total_amount - $downpayment_amount);
+if ($payment_input >= ($total_amount - $currentDownpayment)) {
+    $downpayment_amount = $total_amount;
+    $remaining_balance = 0;
+} else {
+    $downpayment_amount = $currentDownpayment + $payment_input;
+    $remaining_balance = $total_amount - $downpayment_amount;
+}
 
 $updateBooking = $conn->prepare("
     UPDATE bookings
@@ -59,5 +64,4 @@ foreach ($rooms as $r) {
 }
 
 echo "success";
-
 ?>

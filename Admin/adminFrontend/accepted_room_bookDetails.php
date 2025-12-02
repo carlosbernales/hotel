@@ -1,3 +1,287 @@
+<style>
+    :root {
+        --gold: #C9A961;
+        --dark-bg: #2C2C2C;
+        --card-bg: #FFFFFF;
+        --text-dark: #333333;
+        --border-color: #E0E0E0;
+        --success: #28A745;
+        --warning: #FFC107;
+        --danger: #DC3545;
+        --secondary: #6C757D;
+    }
+
+    .main-content {
+        background: #F5F5F5;
+        min-height: 100vh;
+        padding: 20px;
+    }
+
+    .info-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        padding: 35px;
+    }
+
+    .section-card {
+        background: #FAFAFA;
+        border-radius: 10px;
+        padding: 25px;
+        border: 1px solid var(--border-color);
+    }
+
+    .section-header {
+        border-left: 5px solid var(--gold);
+        padding-left: 15px;
+        margin-bottom: 25px;
+        color: var(--dark-bg);
+        font-weight: 700;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-header i {
+        color: var(--gold);
+    }
+
+    .form-control,
+    .form-select {
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        padding: 12px 15px;
+        transition: all 0.3s ease;
+        font-size: 14px;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: var(--gold);
+        box-shadow: 0 0 0 0.25rem rgba(201, 169, 97, 0.15);
+        outline: none;
+    }
+
+    .form-control:read-only {
+        background: #F8F9FA;
+        color: #6C757D;
+        cursor: not-allowed;
+    }
+
+    label {
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 8px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    label i {
+        color: var(--gold);
+        width: 16px;
+    }
+
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        margin-bottom: 0;
+    }
+
+    .table-dark {
+        background: var(--dark-bg);
+        color: white;
+    }
+
+    .table-dark th {
+        border: none;
+        padding: 16px;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .table-dark th i {
+        color: var(--gold);
+        margin-right: 6px;
+    }
+
+    .table tbody td {
+        padding: 14px 16px;
+        vertical-align: middle;
+        border-color: var(--border-color);
+        font-size: 14px;
+    }
+
+    .table-hover tbody tr:hover {
+        background: #F0F0F0;
+        transition: background 0.2s ease;
+    }
+
+    .btn {
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        font-size: 15px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn i {
+        font-size: 16px;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-warning {
+        background: linear-gradient(135deg, var(--warning) 0%, #E0A800 100%);
+        color: var(--dark-bg);
+    }
+
+    .btn-warning:hover {
+        background: linear-gradient(135deg, #E0A800 0%, #C69500 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
+    }
+
+    .btn-secondary {
+        background: var(--secondary);
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        background: #5A6268;
+        transform: translateY(-1px);
+    }
+
+    .btn-sm {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 0;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .amenities-section {
+        padding: 15px;
+        background: white;
+        border-radius: 8px;
+        border: 2px dashed var(--gold);
+    }
+
+    .payment-summary {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        border: 2px solid var(--gold);
+    }
+
+    .payment-card {
+        background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 25px;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .payment-card label {
+        color: white;
+        font-weight: 600;
+    }
+
+    .payment-card label i {
+        color: white;
+    }
+
+    .payment-card .form-control {
+        background: rgba(255, 255, 255, 0.25);
+        border: 2px solid rgba(255, 255, 255, 0.4);
+        color: white;
+        font-weight: 600;
+    }
+
+    .payment-card .form-control::placeholder {
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .payment-card .form-control:focus {
+        background: rgba(255, 255, 255, 0.35);
+        border-color: white;
+        box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.2);
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        margin-top: 30px;
+        padding-top: 25px;
+        border-top: 3px solid var(--gold);
+    }
+
+    .badge {
+        padding: 8px 14px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .badge-info {
+        background: linear-gradient(135deg, #17A2B8 0%, #138496 100%);
+        color: white;
+    }
+
+    .text-danger-emphasis {
+        color: var(--danger) !important;
+    }
+
+    @media (max-width: 768px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .action-buttons .btn {
+            width: 100%;
+        }
+
+        .info-card {
+            padding: 20px;
+        }
+
+        .section-card {
+            padding: 15px;
+        }
+    }
+</style>
 <?php
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
@@ -322,8 +606,8 @@ while ($b = $bed_res->fetch_assoc()) {
 
                         <div class="info-item">
                             <label><i class="fas fa-file-invoice-dollar"></i> Remaining Balance</label>
-                            <input type="text" id="totalDue" class="form-control fw-bold text-danger-emphasis" value="0"
-                                readonly>
+                            <input type="text" id="remainingBal" class="form-control fw-bold text-danger-emphasis"
+                                value="<?= number_format($booking['remaining_balance'], 2) ?>" readonly>
                         </div>
                     </div>
                 </div>
@@ -356,290 +640,6 @@ while ($b = $bed_res->fetch_assoc()) {
         </div>
     </div>
 
-    <style>
-        :root {
-            --gold: #C9A961;
-            --dark-bg: #2C2C2C;
-            --card-bg: #FFFFFF;
-            --text-dark: #333333;
-            --border-color: #E0E0E0;
-            --success: #28A745;
-            --warning: #FFC107;
-            --danger: #DC3545;
-            --secondary: #6C757D;
-        }
-
-        .main-content {
-            background: #F5F5F5;
-            min-height: 100vh;
-            padding: 20px;
-        }
-
-        .info-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            padding: 35px;
-        }
-
-        .section-card {
-            background: #FAFAFA;
-            border-radius: 10px;
-            padding: 25px;
-            border: 1px solid var(--border-color);
-        }
-
-        .section-header {
-            border-left: 5px solid var(--gold);
-            padding-left: 15px;
-            margin-bottom: 25px;
-            color: var(--dark-bg);
-            font-weight: 700;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .section-header i {
-            color: var(--gold);
-        }
-
-        .form-control,
-        .form-select {
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px 15px;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .form-control:focus,
-        .form-select:focus {
-            border-color: var(--gold);
-            box-shadow: 0 0 0 0.25rem rgba(201, 169, 97, 0.15);
-            outline: none;
-        }
-
-        .form-control:read-only {
-            background: #F8F9FA;
-            color: #6C757D;
-            cursor: not-allowed;
-        }
-
-        label {
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        label i {
-            color: var(--gold);
-            width: 16px;
-        }
-
-        .table {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-            margin-bottom: 0;
-        }
-
-        .table-dark {
-            background: var(--dark-bg);
-            color: white;
-        }
-
-        .table-dark th {
-            border: none;
-            padding: 16px;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .table-dark th i {
-            color: var(--gold);
-            margin-right: 6px;
-        }
-
-        .table tbody td {
-            padding: 14px 16px;
-            vertical-align: middle;
-            border-color: var(--border-color);
-            font-size: 14px;
-        }
-
-        .table-hover tbody tr:hover {
-            background: #F0F0F0;
-            transition: background 0.2s ease;
-        }
-
-        .btn {
-            padding: 12px 28px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            border: none;
-            font-size: 15px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .btn i {
-            font-size: 16px;
-        }
-
-        .btn-success {
-            background: linear-gradient(135deg, var(--success) 0%, #218838 100%);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #E0A800 100%);
-            color: var(--dark-bg);
-        }
-
-        .btn-warning:hover {
-            background: linear-gradient(135deg, #E0A800 0%, #C69500 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 193, 7, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5A6268;
-            transform: translateY(-1px);
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
-
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 0;
-        }
-
-        .info-item {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .amenities-section {
-            padding: 15px;
-            background: white;
-            border-radius: 8px;
-            border: 2px dashed var(--gold);
-        }
-
-        .payment-summary {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            border: 2px solid var(--gold);
-        }
-
-        .payment-card {
-            background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
-            color: white;
-            padding: 25px;
-            border-radius: 12px;
-            margin-top: 25px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        }
-
-        .payment-card label {
-            color: white;
-            font-weight: 600;
-        }
-
-        .payment-card label i {
-            color: white;
-        }
-
-        .payment-card .form-control {
-            background: rgba(255, 255, 255, 0.25);
-            border: 2px solid rgba(255, 255, 255, 0.4);
-            color: white;
-            font-weight: 600;
-        }
-
-        .payment-card .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .payment-card .form-control:focus {
-            background: rgba(255, 255, 255, 0.35);
-            border-color: white;
-            box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.2);
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: flex-end;
-            flex-wrap: wrap;
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 3px solid var(--gold);
-        }
-
-        .badge {
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .badge-info {
-            background: linear-gradient(135deg, #17A2B8 0%, #138496 100%);
-            color: white;
-        }
-
-        .text-danger-emphasis {
-            color: var(--danger) !important;
-        }
-
-        @media (max-width: 768px) {
-            .info-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .action-buttons .btn {
-                width: 100%;
-            }
-
-            .info-card {
-                padding: 20px;
-            }
-
-            .section-card {
-                padding: 15px;
-            }
-        }
-    </style>
 </div>
 
 <script>
@@ -836,29 +836,23 @@ while ($b = $bed_res->fetch_assoc()) {
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
-            roomsTotal += parseFloat(selectedOption.dataset.price);
+            roomsTotal += parseFloat(selectedOption.dataset.price) * nights; // multiply by nights
         });
 
-        let extraBedPrice = extraBedTotal;
+        let extraBedPrice = extraBedTotal * nights; // multiply by nights if applicable
 
-        let totalBeforeDiscount = (roomsTotal + extraBedPrice) * nights;
+        let totalBeforeDiscount = roomsTotal + extraBedPrice;
 
-        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value.replace('%', '')) || 0;
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
 
         const totalAmountNew = totalBeforeDiscount - discountAmount;
         document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
 
         const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
-
-        let totalDue;
-        if (totalAmountNew < downPayment) {
-            totalDue = 0;
-        } else {
-            totalDue = totalAmountNew - downPayment;
-        }
-
-        document.getElementById('totalDue').value = totalDue.toFixed(2);
+        let remainingBalance = totalAmountNew - downPayment;
+        if (remainingBalance < 0) remainingBalance = 0;
+        document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -873,13 +867,13 @@ while ($b = $bed_res->fetch_assoc()) {
     });
 
     document.getElementById('paymentInput').addEventListener('input', function () {
+
         const payment = parseFloat(this.value) || 0;
-        const totalDue = parseFloat(document.getElementById('totalDue').value) || 0;
+        const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
 
-        let change = payment - totalDue;
-        if (change < 0) change = 0;
+        let change = payment - remainingBal;
 
-        document.getElementById('changeAmount').value = change.toFixed(2);
+        document.getElementById('changeAmount').value = "₱" + change.toFixed(2);
     });
 </script>
 <script>

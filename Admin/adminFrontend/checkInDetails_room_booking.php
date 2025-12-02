@@ -342,7 +342,7 @@ while ($b = $bed_res->fetch_assoc()) {
     <div class="info-card" style="margin-bottom: 40px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
-                <i class="fas fa-sign-out-alt" style="color: var(--gold);"></i> Guest Check-out
+                <i class="fas fa-sign-out-alt" style="color: var(--gold);"></i> Checked-In
             </h3>
             <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to Bookings
@@ -610,8 +610,8 @@ while ($b = $bed_res->fetch_assoc()) {
 
                         <div class="info-item">
                             <label><i class="fas fa-file-invoice-dollar"></i> Remaining Balance</label>
-                            <input type="text" id="totalDue" class="form-control fw-bold text-danger-emphasis" value="0"
-                                readonly>
+                            <input type="text" id="remainingBal" class="form-control fw-bold text-danger-emphasis"
+                                value="<?= number_format($booking['remaining_balance'], 2) ?>" readonly>
                         </div>
                     </div>
                 </div>
@@ -635,7 +635,7 @@ while ($b = $bed_res->fetch_assoc()) {
             <!-- Action Buttons -->
             <div class="action-buttons">
                 <button type="button" id="processExtendStay" class="btn btn-success">
-                    <i class="fas fa-calendar-plus"></i> Extend Stay
+                    <i class="fas fa-calendar-plus"></i> Extend Stay/ Transfer Room
                 </button>
                 <button type="button" id="processCheckOut" class="btn btn-warning">
                     <i class="fas fa-sign-out-alt"></i> Process Check-out
@@ -644,7 +644,161 @@ while ($b = $bed_res->fetch_assoc()) {
         </div>
     </div>
 
+</div><!-- Review Changes Modal -->
+
+
+<div class="modal fade" id="reviewChangesModal" tabindex="-1" aria-labelledby="reviewChangesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Header -->
+            <div class="modal-header"
+                style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-bottom: 3px solid #c9a961;">
+                <h5 class="modal-title text-white" id="reviewChangesLabel">
+                    <i class="fas fa-clipboard-check me-2" style="color: #c9a961;"></i>
+                    Review Changes
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body" style="background-color: #f8f9fa; padding: 25px;">
+                <!-- Extension Info Alert -->
+                <div id="extendedInfo" class="alert alert-info border-0 shadow-sm mb-4"
+                    style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); display: none;">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-calendar-alt me-3 mt-1" style="color: #1976d2; font-size: 1.2rem;"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: #1565c0;">Extension Details</h6>
+                            <p class="mb-0" style="color: #424242; font-size: 0.95rem;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Changes Table -->
+                <div class="table-responsive" id="reviewChangesTable"
+                    style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <table class="table table-hover mb-0" style="background-color: white;">
+                        <thead style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+                            <tr>
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-bed me-2"></i>Original Type
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-door-closed me-2"></i>Original #
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-info-circle me-2"></i>Status
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-bed me-2"></i>New Type
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-door-open me-2"></i>New #
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="reviewRoomsBody">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- No Changes Message -->
+                <div id="noChangesMessage" class="text-center py-4" style="display:none; color: #757575;">
+                    <i class="fas fa-info-circle fa-2x mb-2" style="color: #c9a961;"></i>
+                    <p class="mb-0">No changes detected.</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 2px solid #e0e0e0; padding: 20px;">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal"
+                    style="background-color: #757575; border: none; font-weight: 500;">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button type="button" id="confirmChangesBtn" class="btn btn-success px-4"
+                    style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; font-weight: 500; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">
+                    <i class="fas fa-check-circle me-2"></i>Confirm Changes
+                </button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    /* Custom styling for the review modal */
+    #reviewChangesModal .modal-content {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    #reviewChangesModal .table tbody tr {
+        transition: all 0.2s ease;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    #reviewChangesModal .table tbody tr:hover {
+        background-color: #f5f5f5;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    #reviewChangesModal .table tbody td {
+        padding: 12px 15px;
+        vertical-align: middle;
+        color: #424242;
+        border: none;
+    }
+
+    #reviewChangesModal .table tbody td:last-child {
+        font-weight: 600;
+    }
+
+    /* Status badge styling */
+    #reviewChangesModal .table tbody tr td:last-child {
+        color: #c9a961;
+    }
+
+    /* Alert styling */
+    #extendedInfo p {
+        line-height: 1.6;
+    }
+
+    /* Button hover effects */
+    #confirmChangesBtn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
+    }
+
+    .btn-secondary:hover {
+        background-color: #616161 !important;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        #reviewChangesModal .modal-dialog {
+            margin: 10px;
+        }
+
+        #reviewChangesModal .table thead th {
+            font-size: 0.85rem;
+            padding: 10px 8px;
+        }
+
+        #reviewChangesModal .table tbody td {
+            font-size: 0.85rem;
+            padding: 10px 8px;
+        }
+    }
+</style>
+
+
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -653,11 +807,9 @@ while ($b = $bed_res->fetch_assoc()) {
     function processBooking(status) {
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
-        let hasUnavailable = false;
 
         roomSelects.forEach(select => {
             const selectedOption = select.selectedOptions[0];
-
             if (
                 !selectedOption ||
                 selectedOption.value === "" ||
@@ -669,10 +821,6 @@ while ($b = $bed_res->fetch_assoc()) {
                 allSelected = false;
             } else {
                 select.classList.remove('is-invalid');
-
-                if (status === 'checkin' && selectedOption.text.includes("(Unavailable)")) {
-                    hasUnavailable = true;
-                }
             }
         });
 
@@ -681,20 +829,17 @@ while ($b = $bed_res->fetch_assoc()) {
             return;
         }
 
-        if (hasUnavailable) {
-            alert('One or more rooms are unavailable at the selected dates. Cannot extend stay.');
-            return;
-        }
-
-        let overrideCheckout = null;
-        let finalStatus = status;
-
         if (status === 'finished') {
-            overrideCheckout = new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ');
-            finalStatus = 'finished';
+            const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
+            const paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
+
+            if (paymentInput < remainingBal) {
+                alert(`You still have (₱${remainingBal.toFixed(2)}) remaining balance!.`);
+                return;
+            }
         }
 
-        const confirmed = confirm(`Are you sure you want to ${finalStatus === 'finished' ? 'check out' : 'extend stay'} this booking?`);
+        const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'extend' : 'checkout'} this booking?`);
         if (!confirmed) return;
 
         const rooms = [];
@@ -706,33 +851,20 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
 
-        let paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
-        let totalAmount = parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, ''));
-
-        let downpaymentAmount, remainingBalance;
-
-        if (paymentInput >= totalAmount) {
-            downpaymentAmount = totalAmount;
-            remainingBalance = 0;
-        } else {
-            downpaymentAmount = paymentInput;
-            remainingBalance = totalAmount - paymentInput;
-        }
-
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
-            check_in: '<?= $booking['check_in'] ?>',
-            check_out: overrideCheckout ?? document.getElementById('check_out').value,
-            total_amount: totalAmount,
-            payment_input: paymentInput,
-            downpayment_amount: downpaymentAmount,
-            remaining_balance: remainingBalance,
+            check_out: status === 'finished'
+                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+                : document.getElementById('check_out').value,
+            check_in: document.getElementById('check_in').value,
+            total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
+            payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
             payment_method: document.querySelector('select[name="payment_method"]').value,
             rooms: rooms,
-            status: finalStatus
+            status: status
         };
-
         fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
+
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bookingData)
@@ -740,23 +872,106 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => res.text())
             .then(res => {
                 if (res === "success") {
-                    alert(`Booking ${finalStatus === 'finished' ? 'checked out' : 'extended'} successfully!`);
-
-                    if (finalStatus === 'finished') {
-                        window.location.href = `../Admin/adminFrontend/room_booking_receipt.php?booking_id=<?= $booking['booking_id'] ?>`;
-                    } else {
-                        window.location.href = "../Admin/index.php?room_booking_list";
-                    }
-
+                    alert(`Booking ${status === 'finished' ? 'checked out' : 'extended'} successfully!`);
+                    const reviewModalEl = document.getElementById('reviewChangesModal');
+                    const reviewModal = bootstrap.Modal.getInstance(reviewModalEl);
+                    reviewModal.hide();
+                    window.location.href = "../Admin/index.php?room_booking_list";
                 } else {
                     alert('Something went wrong. Please try again.');
                 }
             })
+
+
             .catch(err => console.error(err));
     }
 
-    document.getElementById('processExtendStay').addEventListener('click', () => processBooking('checkin'));
     document.getElementById('processCheckOut').addEventListener('click', () => processBooking('finished'));
+
+    document.getElementById('processExtendStay').addEventListener('click', () => {
+        const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
+        const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
+        const newCheckOutRaw = document.getElementById('check_out').value;
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const originalCheckIn = new Date(originalCheckInRaw).toLocaleDateString('en-US', options);
+        const originalCheckOut = new Date(originalCheckOutRaw).toLocaleDateString('en-US', options);
+        const newCheckOut = new Date(newCheckOutRaw).toLocaleDateString('en-US', options);
+
+        const isExtended = originalCheckOutRaw !== newCheckOutRaw;
+
+        const tbody = document.getElementById('reviewRoomsBody');
+        tbody.innerHTML = '';
+
+        let roomChangesExist = false; // tracks only room transfer changes
+        let changesExist = isExtended; // overall changes (extension or room transfer)
+
+        const extendedInfo = document.getElementById('extendedInfo');
+        if (isExtended) {
+            extendedInfo.querySelector('p').textContent = `This booking was originally booked from ${originalCheckIn} to ${originalCheckOut}, you want to extend it to ${newCheckOut}.`;
+            extendedInfo.style.display = '';
+        } else {
+            extendedInfo.textContent = '';
+            extendedInfo.style.display = 'none';
+        }
+
+        // Check rooms for transfers
+        document.querySelectorAll('#roomsTable tbody tr').forEach((row) => {
+            const originalType = row.dataset.defaultRoomType;
+            const originalNumber = row.dataset.defaultRoomNumber;
+            const selectedType = row.querySelector('.roomTypeSelect').value;
+            const selectedNumber = row.querySelector('.roomNumberSelect').value;
+
+            if (originalType !== selectedType || originalNumber !== selectedNumber) {
+                roomChangesExist = true;
+                changesExist = true;
+
+                const originalTypeText = row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
+                const selectedTypeText = row.querySelector(`.roomTypeSelect option[value="${selectedType}"]`)?.text || '-';
+                const originalNumberText = originalNumber || '-';
+                const selectedNumberText = row.querySelector(`.roomNumberSelect option[value="${selectedNumber}"]`)?.text || '-';
+
+                tbody.innerHTML += `
+                <tr>
+                    <td>${originalTypeText}</td>
+                    <td>${originalNumberText}</td>
+                    <td>Room Transfer</td>
+                    <td>${selectedTypeText}</td>
+                    <td>${selectedNumberText}</td>
+                </tr>
+            `;
+            }
+        });
+
+        if (!roomChangesExist) {
+            tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-muted">No changes have been made for room transfer.</td>
+            </tr>
+        `;
+        }
+
+        const reviewTable = document.getElementById('reviewChangesTable');
+        if (!changesExist) {
+            alert("No changes have been made for extend or transfer room!");
+            reviewTable.style.display = 'none';
+            extendedInfo.style.display = 'none';
+            return;
+        }
+
+        // Show table and modal
+        reviewTable.style.display = '';
+        extendedInfo.style.display = isExtended ? '' : 'none';
+
+        const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
+        reviewModal.show();
+    });
+
+    document.getElementById('confirmChangesBtn').addEventListener('click', () => {
+        processBooking('checkin'); // 'checkin' = extension
+    });
+
+
 
 </script>
 
@@ -842,9 +1057,6 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
     });
-
-
-
 </script>
 
 <script>
@@ -950,29 +1162,23 @@ while ($b = $bed_res->fetch_assoc()) {
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
-            roomsTotal += parseFloat(selectedOption.dataset.price);
+            roomsTotal += parseFloat(selectedOption.dataset.price) * nights; // multiply by nights
         });
 
-        let extraBedPrice = extraBedTotal;
+        let extraBedPrice = extraBedTotal * nights; // multiply by nights if applicable
 
-        let totalBeforeDiscount = (roomsTotal + extraBedPrice) * nights;
+        let totalBeforeDiscount = roomsTotal + extraBedPrice;
 
-        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value) || 0;
+        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value.replace('%', '')) || 0;
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
 
         const totalAmountNew = totalBeforeDiscount - discountAmount;
         document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
 
         const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
-
-        let totalDue;
-        if (totalAmountNew < downPayment) {
-            totalDue = 0;
-        } else {
-            totalDue = totalAmountNew - downPayment;
-        }
-
-        document.getElementById('totalDue').value = totalDue.toFixed(2);
+        let remainingBalance = totalAmountNew - downPayment;
+        if (remainingBalance < 0) remainingBalance = 0;
+        document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -987,13 +1193,13 @@ while ($b = $bed_res->fetch_assoc()) {
     });
 
     document.getElementById('paymentInput').addEventListener('input', function () {
+
         const payment = parseFloat(this.value) || 0;
-        const totalDue = parseFloat(document.getElementById('totalDue').value) || 0;
+        const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
 
-        let change = payment - totalDue;
-        if (change < 0) change = 0;
+        let change = payment - remainingBal;
 
-        document.getElementById('changeAmount').value = change.toFixed(2);
+        document.getElementById('changeAmount').value = "₱" + change.toFixed(2);
     });
 </script>
 

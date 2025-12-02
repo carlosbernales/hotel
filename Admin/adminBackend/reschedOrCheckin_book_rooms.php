@@ -12,6 +12,7 @@ $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
 $status = $data['status'];
 
+// Get current downpayment
 $currentDPQry = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
 $currentDPQry->bind_param("i", $booking_id);
 $currentDPQry->execute();
@@ -19,9 +20,18 @@ $currentDPQry->bind_result($currentDownpayment);
 $currentDPQry->fetch();
 $currentDPQry->close();
 
-$downpayment_amount = $currentDownpayment + $payment_input;
-$remaining_balance = max(0, $total_amount - $downpayment_amount);
+// Revised computation
+if ($payment_input >= ($total_amount - $currentDownpayment)) {
+    // Payment covers remaining balance
+    $downpayment_amount = $total_amount;
+    $remaining_balance = 0;
+} else {
+    // Partial payment
+    $downpayment_amount = $currentDownpayment + $payment_input;
+    $remaining_balance = $total_amount - $downpayment_amount;
+}
 
+// Update booking
 $updateBooking = $conn->prepare("
     UPDATE bookings
     SET 
@@ -37,6 +47,7 @@ $updateBooking = $conn->prepare("
 $updateBooking->bind_param("ssddsssi", $checkin, $checkout, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
 $updateBooking->execute();
 
+// Update booked rooms
 foreach ($rooms as $r) {
     $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
     $typeQry->bind_param("i", $r['room_type_id']);
@@ -59,5 +70,6 @@ foreach ($rooms as $r) {
 }
 
 echo "success";
+
 
 ?>
