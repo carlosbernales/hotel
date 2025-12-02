@@ -642,6 +642,91 @@ while ($b = $bed_res->fetch_assoc()) {
 
 </div>
 
+
+
+<div class="modal fade" id="reviewChangesModal" tabindex="-1" aria-labelledby="reviewChangesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+            <!-- Header -->
+            <div class="modal-header"
+                style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-bottom: 3px solid #c9a961;">
+                <h5 class="modal-title text-white" id="reviewChangesLabel">
+                    <i class="fas fa-clipboard-check me-2" style="color: #c9a961;"></i>
+                    Review Changes
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+
+            <!-- Body -->
+            <div class="modal-body" style="background-color: #f8f9fa; padding: 25px;">
+                <!-- Extension Info Alert -->
+                <div id="extendedInfo" class="alert alert-info border-0 shadow-sm mb-4"
+                    style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); display: none;">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-calendar-alt me-3 mt-1" style="color: #1976d2; font-size: 1.2rem;"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color: #1565c0;">Extension Details</h6>
+                            <p class="mb-0" style="color: #424242; font-size: 0.95rem;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Changes Table -->
+                <div class="table-responsive" id="reviewChangesTable"
+                    style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <table class="table table-hover mb-0" style="background-color: white;">
+                        <thead style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+                            <tr>
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-bed me-2"></i>Original Type
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-door-closed me-2"></i>Original #
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-info-circle me-2"></i>Status
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-bed me-2"></i>New Type
+                                </th>
+
+                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
+                                    <i class="fas fa-door-open me-2"></i>New #
+                                </th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="reviewRoomsBody">
+                            <!-- Dynamic content will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- No Changes Message -->
+                <div id="noChangesMessage" class="text-center py-4" style="display:none; color: #757575;">
+                    <i class="fas fa-info-circle fa-2x mb-2" style="color: #c9a961;"></i>
+                    <p class="mb-0">No changes detected.</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 2px solid #e0e0e0; padding: 20px;">
+                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal"
+                    style="background-color: #757575; border: none; font-weight: 500;">
+                    <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button type="button" id="confirmChangesBtn" class="btn btn-success px-4"
+                    style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; font-weight: 500; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">
+                    <i class="fas fa-check-circle me-2"></i>Confirm Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     function disableSelectedRoomNumbers() {
         const rows = document.querySelectorAll('#roomsTable tbody tr');
@@ -942,8 +1027,93 @@ while ($b = $bed_res->fetch_assoc()) {
             })
             .catch(err => console.error(err));
     }
-    document.getElementById('processCheckinBtn').addEventListener('click', () => processBooking('checkin'));
-    document.getElementById('processReschedBtn').addEventListener('click', () => processBooking('rescheduled'));
+    document.getElementById('processCheckinBtn')
+        .addEventListener('click', () => processBooking('checkin'));
+
+    document.getElementById('processReschedBtn').addEventListener('click', () => {
+
+        const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
+        const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
+        const newCheckOutRaw = document.getElementById('check_out').value;
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const originalCheckIn = new Date(originalCheckInRaw).toLocaleDateString('en-US', options);
+        const originalCheckOut = new Date(originalCheckOutRaw).toLocaleDateString('en-US', options);
+        const newCheckOut = new Date(newCheckOutRaw).toLocaleDateString('en-US', options);
+
+        const isExtended = originalCheckOutRaw !== newCheckOutRaw;
+
+        const tbody = document.getElementById('reviewRoomsBody');
+        tbody.innerHTML = '';
+
+        let roomChangesExist = false;
+        let changesExist = isExtended;
+
+        const extendedInfo = document.getElementById('extendedInfo');
+        const noChangesMessage = document.getElementById('noChangesMessage');
+        const reviewTable = document.getElementById('reviewChangesTable');
+
+        noChangesMessage.style.display = "none";
+        reviewTable.style.display = "";
+        extendedInfo.style.display = isExtended ? "" : "none";
+
+        if (isExtended) {
+            extendedInfo.querySelector('p').textContent =
+                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, you want to extend it to ${newCheckOut}.`;
+        }
+
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            const originalType = row.dataset.defaultRoomType;
+            const originalNumberId = row.dataset.defaultRoomNumber; // ID
+            const selectedType = row.querySelector('.roomTypeSelect').value;
+            const roomNumberSelect = row.querySelector('.roomNumberSelect');
+
+            const originalNumberText =
+                roomNumberSelect.querySelector(`option[value="${originalNumberId}"]`)?.textContent.trim() || '-';
+            const selectedNumberText =
+                roomNumberSelect.selectedOptions[0].textContent.trim();
+
+            if (originalType !== selectedType || originalNumberId !== roomNumberSelect.value) {
+                roomChangesExist = true;
+                changesExist = true;
+
+                const originalTypeText = row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
+                const selectedTypeText = row.querySelector(`.roomTypeSelect option[value="${selectedType}"]`)?.text || '-';
+
+                tbody.innerHTML += `
+                <tr>
+                    <td>${originalTypeText}</td>
+                    <td>${originalNumberText}</td>
+                    <td>Room Transfer</td>
+                    <td>${selectedTypeText}</td>
+                    <td>${selectedNumberText}</td>
+                </tr>
+            `;
+            }
+        });
+
+        if (!roomChangesExist) {
+            tbody.innerHTML = `
+            <tr>
+                <td colspan="5" class="text-center text-muted">
+                    No room transfer made.
+                </td>
+            </tr>
+        `;
+        }
+        if (!changesExist) {
+            const proceed = confirm("No changes detected. Do you still want to proceed?");
+            if (proceed) {
+                processBooking('rescheduled');
+            }
+            return;
+        }
+        const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
+        reviewModal.show();
+    });
+    document.getElementById('confirmChangesBtn').addEventListener('click', () => {
+        processBooking('rescheduled');
+    });
 </script>
 
 

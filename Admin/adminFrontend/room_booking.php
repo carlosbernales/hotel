@@ -1983,4 +1983,14 @@ while ($row = $bedQuery->fetch_assoc()) {
             }
         });
     });
+
+    document.getElementById('check_in').addEventListener('change', resetAvailability);
+    document.getElementById('check_out').addEventListener('change', resetAvailability);
+
+    function resetAvailability() {
+        availabilityChecked = false; // force re-check
+        cartItems = []; // clear cart because dates changed
+        updateCart(); // refresh UI/cart badge
+    }
+
 </script>

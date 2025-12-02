@@ -8,8 +8,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = floatval($_POST['price']);
     $capacity = intval($_POST['capacity']);
     $description = $conn->real_escape_string($_POST['description']);
-    $rating = floatval($_POST['rating']);
-    $rating_count = intval($_POST['rating_count']);
     $status = $conn->real_escape_string($_POST['status']);
 
 
@@ -38,11 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $sql = "INSERT INTO room_types 
-            (room_type, beds, price, capacity, description, image, image2, image3, rating, rating_count, status) 
+            (room_type, beds, price, capacity, description, image, image2, image3, status) 
             VALUES 
             ('$room_type', '$beds', '$price', '$capacity', '$description',
-            '{$imagePaths[0]}', '{$imagePaths[1]}', '{$imagePaths[2]}',
-            '$rating', '$rating_count', '$status')";
+            '{$imagePaths[0]}', '{$imagePaths[1]}', '{$imagePaths[2]}', '$status')";
 
     if ($conn->query($sql) === TRUE) {
         header("Location: ../../Admin/index.php?room_management");

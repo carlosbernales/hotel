@@ -9,8 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     $price = floatval($_POST['price']);
     $capacity = intval($_POST['capacity']);
     $description = $conn->real_escape_string($_POST['description']);
-    $rating = floatval($_POST['rating']);
-    $rating_count = intval($_POST['rating_count']);
+
     $status = $conn->real_escape_string($_POST['status']);
 
     $res = $conn->query("SELECT image, image2, image3 FROM room_types WHERE room_type_id = $room_type_id");
@@ -64,25 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
 
     $stmt = $conn->prepare("
         UPDATE room_types 
-        SET room_type=?, beds=?, price=?, capacity=?, description=?, rating=?, rating_count=?, image=?, image2=?, image3=?, status=?
+        SET room_type=?, beds=?, price=?, capacity=?, description=?, image=?, image2=?, image3=?, status=?
         WHERE room_type_id=?
     ");
 
     $stmt->bind_param(
-        "sididsissssi",
+        "sidisssssi",
         $room_type,
         $beds,
         $price,
         $capacity,
         $description,
-        $rating,
-        $rating_count,
         $newImages['image'],
         $newImages['image2'],
         $newImages['image3'],
         $status,
         $room_type_id
     );
+
 
     if ($stmt->execute()) {
         header("Location: ../../Admin/index.php?room_management");

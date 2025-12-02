@@ -889,6 +889,7 @@ while ($b = $bed_res->fetch_assoc()) {
     document.getElementById('processCheckOut').addEventListener('click', () => processBooking('finished'));
 
     document.getElementById('processExtendStay').addEventListener('click', () => {
+
         const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
         const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
         const newCheckOutRaw = document.getElementById('check_out').value;
@@ -903,33 +904,39 @@ while ($b = $bed_res->fetch_assoc()) {
         const tbody = document.getElementById('reviewRoomsBody');
         tbody.innerHTML = '';
 
-        let roomChangesExist = false; // tracks only room transfer changes
-        let changesExist = isExtended; // overall changes (extension or room transfer)
+        let roomChangesExist = false;
+        let changesExist = isExtended;
 
         const extendedInfo = document.getElementById('extendedInfo');
+        const noChangesMessage = document.getElementById('noChangesMessage');
+        const reviewTable = document.getElementById('reviewChangesTable');
+
+        noChangesMessage.style.display = "none";
+        reviewTable.style.display = "";
+        extendedInfo.style.display = isExtended ? "" : "none";
+
         if (isExtended) {
-            extendedInfo.querySelector('p').textContent = `This booking was originally booked from ${originalCheckIn} to ${originalCheckOut}, you want to extend it to ${newCheckOut}.`;
-            extendedInfo.style.display = '';
-        } else {
-            extendedInfo.textContent = '';
-            extendedInfo.style.display = 'none';
+            extendedInfo.querySelector('p').textContent =
+                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, you want to extend it to ${newCheckOut}.`;
         }
 
-        // Check rooms for transfers
-        document.querySelectorAll('#roomsTable tbody tr').forEach((row) => {
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const originalType = row.dataset.defaultRoomType;
-            const originalNumber = row.dataset.defaultRoomNumber;
+            const originalNumberId = row.dataset.defaultRoomNumber; // ID
             const selectedType = row.querySelector('.roomTypeSelect').value;
-            const selectedNumber = row.querySelector('.roomNumberSelect').value;
+            const roomNumberSelect = row.querySelector('.roomNumberSelect');
 
-            if (originalType !== selectedType || originalNumber !== selectedNumber) {
+            const originalNumberText =
+                roomNumberSelect.querySelector(`option[value="${originalNumberId}"]`)?.textContent.trim() || '-';
+            const selectedNumberText =
+                roomNumberSelect.selectedOptions[0].textContent.trim();
+
+            if (originalType !== selectedType || originalNumberId !== roomNumberSelect.value) {
                 roomChangesExist = true;
                 changesExist = true;
 
                 const originalTypeText = row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
                 const selectedTypeText = row.querySelector(`.roomTypeSelect option[value="${selectedType}"]`)?.text || '-';
-                const originalNumberText = originalNumber || '-';
-                const selectedNumberText = row.querySelector(`.roomNumberSelect option[value="${selectedNumber}"]`)?.text || '-';
 
                 tbody.innerHTML += `
                 <tr>
@@ -946,33 +953,24 @@ while ($b = $bed_res->fetch_assoc()) {
         if (!roomChangesExist) {
             tbody.innerHTML = `
             <tr>
-                <td colspan="5" class="text-center text-muted">No changes have been made for room transfer.</td>
+                <td colspan="5" class="text-center text-muted">
+                    No room transfer made.
+                </td>
             </tr>
         `;
         }
-
-        const reviewTable = document.getElementById('reviewChangesTable');
         if (!changesExist) {
             alert("No changes have been made for extend or transfer room!");
             reviewTable.style.display = 'none';
             extendedInfo.style.display = 'none';
             return;
         }
-
-        // Show table and modal
-        reviewTable.style.display = '';
-        extendedInfo.style.display = isExtended ? '' : 'none';
-
         const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
         reviewModal.show();
     });
-
     document.getElementById('confirmChangesBtn').addEventListener('click', () => {
-        processBooking('checkin'); // 'checkin' = extension
+        processBooking('checkin');
     });
-
-
-
 </script>
 
 <script>
