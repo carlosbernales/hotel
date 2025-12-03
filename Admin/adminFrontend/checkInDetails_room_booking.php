@@ -434,73 +434,6 @@ while ($b = $bed_res->fetch_assoc()) {
                     const extraBedTotal = <?= $extraBedTotal ?>;
                 </script>
 
-                <?php
-                // Fetch room transfers for this booking
-                $transfers_sql = "
-    SELECT *
-    FROM room_transfers
-    WHERE bookings_fk_id = $booking_id
-    ORDER BY transfer_date ASC
-";
-                $transfers_res = $conn->query($transfers_sql);
-
-                // Helper function to get room number and floor
-                function getRoomInfo($conn, $room_number_fk_id)
-                {
-                    if (!$room_number_fk_id)
-                        return null;
-
-                    $sql = "SELECT room_number, floor_number FROM room_numbers WHERE room_number_id = ?";
-                    $stmt = $conn->prepare($sql);
-                    $stmt->bind_param("i", $room_number_fk_id);
-                    $stmt->execute();
-                    $res = $stmt->get_result();
-
-                    if ($res->num_rows > 0) {
-                        return $res->fetch_assoc(); // ['room_number' => ..., 'floor_number' => ...]
-                    }
-                    return null;
-                }
-                ?>
-
-                <?php if ($transfers_res->num_rows > 0): ?>
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th>Old Room ID</th>
-                                    <th>Room Number</th>
-                                    <th>Floor</th>
-                                    <th>Room Type</th>
-                                    <th>Price</th>
-                                    <th>Transfer Date</th>
-                                    <th>Reason</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php while ($t = $transfers_res->fetch_assoc()): ?>
-                                    <?php
-                                    $roomInfo = getRoomInfo($conn, $t['room_number_fk_id']);
-                                    $roomNumber = $roomInfo['room_number'] ?? 'null';
-                                    $floorNumber = $roomInfo['floor_number'] ?? 'null';
-                                    ?>
-                                    <tr>
-                                        <td><?= $t['booked_room_fk_id'] ?></td>
-                                        <td><?= htmlspecialchars($roomNumber) ?></td>
-                                        <td><?= htmlspecialchars($floorNumber) ?></td>
-                                        <td><?= htmlspecialchars($t['room_type_name']) ?></td>
-                                        <td>₱<?= number_format($t['price'], 2) ?></td>
-                                        <td><?= $t['transfer_date'] ?></td>
-                                        <td><?= htmlspecialchars($t['reason']) ?></td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                <?php else: ?>
-                    <p class="text-muted">No room transfers found.</p>
-                <?php endif; ?>
-
                 <div class="row mt-3">
                     <div class="col-md-6 mb-3">
                         <label><i class="fas fa-calendar-check"></i> Check-in Date</label>
@@ -514,7 +447,106 @@ while ($b = $bed_res->fetch_assoc()) {
                             value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
                     </div>
                 </div>
+
+                <?php
+                $resched_sql = "
+                    SELECT *
+                    FROM reschedule_bookings
+                    WHERE booking_fk_id = {$booking['booking_id']}
+                    ORDER BY date_resched ASC
+                ";
+                $resched_res = $conn->query($resched_sql);
+
+                if ($resched_res->num_rows > 0):
+                    $newCI = date("F j, Y", strtotime($booking['check_in']));
+                    $newCO = date("F j, Y", strtotime($booking['check_out']));
+                    ?>
+                    <div class="amenities-section mt-3">
+                        <label><i class="fas fa-concierge-bell"></i> Reschedule Details</label>
+                        <textarea class="form-control" rows="2" readonly>
+                            <?php
+                            while ($r = $resched_res->fetch_assoc()) {
+                                $oldCI = date("F j, Y", strtotime($r['check_in']));
+                                $oldCO = date("F j, Y", strtotime($r['check_out']));
+                                $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                $reason = $r['reason'];
+
+                                echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                            }
+                            ?>
+                        </textarea>
+                    </div>
+                <?php endif; ?>
             </div>
+
+            <?php
+            $transfers_sql = "
+                SELECT *
+                FROM room_transfers
+                WHERE bookings_fk_id = $booking_id
+                ORDER BY transfer_date ASC
+            ";
+            $transfers_res = $conn->query($transfers_sql);
+
+            function getRoomInfo($conn, $room_number_fk_id)
+            {
+                if (!$room_number_fk_id)
+                    return null;
+
+                $sql = "SELECT room_number, floor_number FROM room_numbers WHERE room_number_id = ?";
+                $stmt = $conn->prepare($sql);
+                $stmt->bind_param("i", $room_number_fk_id);
+                $stmt->execute();
+                $res = $stmt->get_result();
+
+                if ($res->num_rows > 0) {
+                    return $res->fetch_assoc();
+                }
+                return null;
+            }
+            ?>
+
+            <?php if ($transfers_res->num_rows > 0): ?>
+                <div class="section-card mb-4">
+                    <h4 class="section-header">
+                        <i class="fas fa-bed"></i> Transfer Rooms (Old Rooms)
+                    </h4>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th><i class="fas fa-door-open"></i> Room Type</th>
+                                    <th><i class="fas fa-hashtag"></i> Room</th>
+                                    <th><i class="fas fa-layer-group"></i> Floor</th>
+                                    <th><i class="fas fa-tag"></i> Price</th>
+                                    <th><i class="fas fa-calendar-alt"></i> Transfer Date</th>
+                                    <th><i class="fas fa-comment"></i> Reason</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <?php while ($t = $transfers_res->fetch_assoc()): ?>
+                                    <?php
+                                    $roomInfo = getRoomInfo($conn, $t['room_number_fk_id']);
+                                    $roomNumber = $roomInfo['room_number'] ?? '-';
+                                    $floorNumber = $roomInfo['floor_number'] ?? '-';
+                                    ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($t['room_type_name']) ?></td>
+                                        <td><?= htmlspecialchars($roomNumber) ?></td>
+                                        <td><?= htmlspecialchars($floorNumber) ?></td>
+                                        <td>₱<?= number_format($t['price'], 2) ?></td>
+                                        <td><?= date("F j, Y g:i A", strtotime($t['transfer_date'])) ?></td>
+                                        <td><?= htmlspecialchars($t['reason']) ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php endif; ?>
+
 
             <?php
             $roomNumbers = [];
@@ -533,8 +565,6 @@ while ($b = $bed_res->fetch_assoc()) {
                 }
             }
             ?>
-
-            <!-- Booked Rooms Section -->
             <div class="section-card mb-4">
                 <h4 class="section-header">
                     <i class="fas fa-bed"></i> Booked Rooms
@@ -593,7 +623,6 @@ while ($b = $bed_res->fetch_assoc()) {
                     </table>
                 </div>
             </div>
-
             <!-- Guest Names Section -->
             <div class="section-card mb-4">
                 <h4 class="section-header">
@@ -624,7 +653,6 @@ while ($b = $bed_res->fetch_assoc()) {
                     </table>
                 </div>
             </div>
-
             <!-- Payment Details Section -->
             <div class="section-card mb-4">
                 <h4 class="section-header">
@@ -637,8 +665,10 @@ while ($b = $bed_res->fetch_assoc()) {
                         <select name="payment_method" class="form-control custom-input" required>
                             <option value="Cash" <?= ($booking['payment_method'] == 'Cash') ? 'selected' : '' ?>>Cash
                             </option>
-                            <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>Credit Card</option>
-                            <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>Debit Card</option>
+                            <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>
+                                Credit Card</option>
+                            <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>
+                                Debit Card</option>
                             <option value="GCash" <?= ($booking['payment_method'] == 'GCash') ? 'selected' : '' ?>>GCash
                             </option>
                             <option value="Paypal" <?= ($booking['payment_method'] == 'Paypal') ? 'selected' : '' ?>>Paypal
@@ -777,7 +807,7 @@ while ($b = $bed_res->fetch_assoc()) {
                         Reason for Reschedule
                     </label>
                     <textarea id="roomTransferReason" class="form-control" rows="3"
-                        placeholder="Enter reason for reschedule..." required></textarea>
+                        placeholder="Enter reason for transfer room..." required></textarea>
                 </div>
 
                 <!-- No Changes Message -->
@@ -789,10 +819,6 @@ while ($b = $bed_res->fetch_assoc()) {
 
             <!-- Footer -->
             <div class="modal-footer" style="background-color: #f8f9fa; border-top: 2px solid #e0e0e0; padding: 20px;">
-                <button type="button" class="btn btn-secondary px-4" data-bs-dismiss="modal"
-                    style="background-color: #757575; border: none; font-weight: 500;">
-                    <i class="fas fa-times me-2"></i>Cancel
-                </button>
                 <button type="button" id="confirmChangesBtn" class="btn btn-success px-4"
                     style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; font-weight: 500; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">
                     <i class="fas fa-check-circle me-2"></i>Confirm Changes

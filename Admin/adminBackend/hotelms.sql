@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 03, 2025 at 11:32 AM
+-- Generation Time: Dec 03, 2025 at 03:15 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -329,14 +329,6 @@ CREATE TABLE `booked_rooms` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `booked_rooms`
---
-
-INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
-(5, 3, 10, 4, 'Family', 4500.00, '2025-12-03 06:09:30'),
-(6, 3, 6, 2, 'Double Occupancy', 1000.00, '2025-12-03 06:09:30');
-
 -- --------------------------------------------------------
 
 --
@@ -375,13 +367,6 @@ CREATE TABLE `bookings` (
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`) VALUES
-(3, 'BK-6FXRGR4IWBY9', NULL, 'asd', 'asdasd', 'carlosbernales24@gmail.com', '99999999999', 'walkin', '2025-12-03 00:00:00', '2025-12-03 00:00:00', NULL, 2, NULL, 2, '0', 'Cash', 36000.00, '2025-12-03 06:09:30', 2, 2000.00, 34000.00, 'admin', 2, 0, NULL, '0', 20.00, 1880.00, 'checkin');
-
 -- --------------------------------------------------------
 
 --
@@ -397,13 +382,6 @@ CREATE TABLE `booking_amenities` (
   `amenity_name` varchar(255) NOT NULL,
   `price` double(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `booking_amenities`
---
-
-INSERT INTO `booking_amenities` (`id`, `amenities_fk_id`, `booking_fk_id`, `bedOrNot`, `quantity`, `amenity_name`, `price`) VALUES
-(4, 1, 3, 'yes', 2, 'single bed', 1000.00);
 
 -- --------------------------------------------------------
 
@@ -1251,14 +1229,6 @@ CREATE TABLE `guest_names` (
   `image_proof` varchar(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `guest_names`
---
-
-INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
-(5, 3, 'as', 'asd', 'Adult', NULL, NULL, '2025-12-03 06:09:30'),
-(6, 3, 'ad', 'adasd', 'Adult', NULL, NULL, '2025-12-03 06:09:30');
 
 -- --------------------------------------------------------
 
@@ -2206,13 +2176,6 @@ CREATE TABLE `reschedule_bookings` (
   `reason` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `reschedule_bookings`
---
-
-INSERT INTO `reschedule_bookings` (`id`, `booking_fk_id`, `check_in`, `check_out`, `date_resched`, `reason`) VALUES
-(1, 3, '2025-12-05', '2025-12-08', '2025-12-03 17:39:47', 'asdsada');
-
 -- --------------------------------------------------------
 
 --
@@ -2393,19 +2356,11 @@ CREATE TABLE `room_transfers` (
   `bookings_fk_id` int NOT NULL,
   `room_number_fk_id` int NOT NULL,
   `room_type_id` int NOT NULL,
-  `room_type_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `room_type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` double(10,2) NOT NULL,
   `transfer_date` datetime DEFAULT NULL,
   `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Dumping data for table `room_transfers`
---
-
-INSERT INTO `room_transfers` (`id`, `booked_room_fk_id`, `bookings_fk_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `transfer_date`, `reason`) VALUES
-(2, 5, 3, 8, 3, 'Triple Occupancy', 1700.00, '2025-12-03 19:17:53', 'Uncomfortable'),
-(3, 6, 3, 5, 2, 'Double Occupancy', 1000.00, '2025-12-03 19:17:53', 'Uncomfortable');
 
 -- --------------------------------------------------------
 
@@ -3352,19 +3307,19 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `booking_amenities`
 --
 ALTER TABLE `booking_amenities`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
@@ -3412,7 +3367,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
@@ -3490,7 +3445,7 @@ ALTER TABLE `payment_methods`
 -- AUTO_INCREMENT for table `reschedule_bookings`
 --
 ALTER TABLE `reschedule_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `resetpass`
@@ -3514,7 +3469,7 @@ ALTER TABLE `room_numbers`
 -- AUTO_INCREMENT for table `room_transfers`
 --
 ALTER TABLE `room_transfers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `room_types`

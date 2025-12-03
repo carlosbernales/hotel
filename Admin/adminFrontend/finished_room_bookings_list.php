@@ -105,8 +105,31 @@ while ($g = $resGuests->fetch_assoc()) {
     </div>
 </div>
 
+
 <?php foreach ($bookings as $id => $data): ?>
     <?php $b = $data['booking']; ?>
+
+    <?php
+    $transfers_res = null;
+    if (!empty($b['booking_id'])) {
+        $stmt = $conn->prepare("SELECT * FROM room_transfers WHERE bookings_fk_id = ? ORDER BY transfer_date ASC");
+        $stmt->bind_param("i", $b['booking_id']);
+        $stmt->execute();
+        $transfers_res = $stmt->get_result();
+    }
+
+    function getRoomInfo($conn, $room_number_fk_id)
+    {
+        if (!$room_number_fk_id)
+            return null;
+        $sql = "SELECT room_number, floor_number FROM room_numbers WHERE room_number_id = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $room_number_fk_id);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        return $res->num_rows > 0 ? $res->fetch_assoc() : null;
+    }
+    ?>
 
     <!-- MODAL HERE -->
     <div class="modal fade" id="viewModal<?= $id ?>" tabindex="-1">
@@ -158,14 +181,11 @@ while ($g = $resGuests->fetch_assoc()) {
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="text-muted small">Check-in</label>
-                                    <p class="mb-0 fw-semibold"><?= date('M d, Y', strtotime($b['check_in'])) ?>
-                                    </p>
+                                    <p class="mb-0 fw-semibold"><?= date('M d, Y', strtotime($b['check_in'])) ?></p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Check-out</label>
-                                    <p class="mb-0 fw-semibold">
-                                        <?= date('M d, Y', strtotime($b['check_out'])) ?>
-                                    </p>
+                                    <p class="mb-0 fw-semibold"><?= date('M d, Y', strtotime($b['check_out'])) ?></p>
                                 </div>
                                 <div class="col-md-2">
                                     <label class="text-muted small">Nights</label>
@@ -204,24 +224,20 @@ while ($g = $resGuests->fetch_assoc()) {
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="text-muted small">Total Amount</label>
-                                    <p class="mb-0 fw-bold text-success">
-                                        ₱<?= number_format($b['total_amount'], 2) ?></p>
+                                    <p class="mb-0 fw-bold text-success">₱<?= number_format($b['total_amount'], 2) ?></p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Downpayment</label>
-                                    <p class="mb-0 fw-semibold">
-                                        ₱<?= number_format($b['downpayment_amount'], 2) ?></p>
+                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['downpayment_amount'], 2) ?></p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Remaining Balance</label>
-                                    <p class="mb-0 fw-bold text-danger">
-                                        ₱<?= number_format($b['remaining_balance'], 2) ?>
+                                    <p class="mb-0 fw-bold text-danger">₱<?= number_format($b['remaining_balance'], 2) ?>
                                     </p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Discount</label>
-                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?>
-                                    </p>
+                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?></p>
                                 </div>
                             </div>
                         </div>
@@ -245,11 +261,86 @@ while ($g = $resGuests->fetch_assoc()) {
                                     </div>
                                     <div class="col-md-4">
                                         <label class="text-muted small">Discount Amount</label>
-                                        <p class="mb-0 fw-semibold text-success">
-                                            ₱<?= number_format($b['discount_amount'], 2) ?>
+                                        <p class="mb-0 fw-semibold text-success">₱<?= number_format($b['discount_amount'], 2) ?>
                                         </p>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($transfers_res && $transfers_res->num_rows > 0): ?>
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-header bg-dark text-warning">
+                                <h6 class="mb-0"><i class="fas fa-bed"></i> Transfer Rooms (Old Rooms)</h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Room Type</th>
+                                                <th>Room</th>
+                                                <th>Floor</th>
+                                                <th>Price</th>
+                                                <th>Transfer Date</th>
+                                                <th>Reason</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php while ($t = $transfers_res->fetch_assoc()): ?>
+                                                <?php
+                                                $roomInfo = getRoomInfo($conn, $t['room_number_fk_id']);
+                                                $roomNumber = $roomInfo['room_number'] ?? '-';
+                                                $floorNumber = $roomInfo['floor_number'] ?? '-';
+                                                ?>
+                                                <tr>
+                                                    <td><?= htmlspecialchars($t['room_type_name']) ?></td>
+                                                    <td><?= htmlspecialchars($roomNumber) ?></td>
+                                                    <td><?= htmlspecialchars($floorNumber) ?></td>
+                                                    <td>₱<?= number_format($t['price'], 2) ?></td>
+                                                    <td><?= date("F j, Y g:i A", strtotime($t['transfer_date'])) ?></td>
+                                                    <td><?= htmlspecialchars($t['reason']) ?></td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php
+                    // Fetch reschedules safely
+                    $resched_res = null;
+                    if (!empty($b['booking_id'])) {
+                        $stmt = $conn->prepare("SELECT * FROM reschedule_bookings WHERE booking_fk_id = ? ORDER BY date_resched ASC");
+                        $stmt->bind_param("i", $b['booking_id']);
+                        $stmt->execute();
+                        $resched_res = $stmt->get_result();
+                    }
+
+                    if ($resched_res && $resched_res->num_rows > 0):
+                        $newCI = date("F j, Y", strtotime($b['check_in']));
+                        $newCO = date("F j, Y", strtotime($b['check_out']));
+                        ?>
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-header bg-dark text-warning">
+                                <h6 class="mb-0"><i class="fas fa-concierge-bell"></i> Reschedule Details</h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <textarea class="form-control border-0" rows="3" readonly>
+                                    <?php
+                                    while ($r = $resched_res->fetch_assoc()) {
+                                        $oldCI = date("F j, Y", strtotime($r['check_in']));
+                                        $oldCO = date("F j, Y", strtotime($r['check_out']));
+                                        $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                        $reason = $r['reason'];
+
+                                        echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                                    }
+                                    ?>
+                                </textarea>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -282,8 +373,7 @@ while ($g = $resGuests->fetch_assoc()) {
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted py-3">No rooms found
-                                                </td>
+                                                <td colspan="4" class="text-center text-muted py-3">No rooms found</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -319,8 +409,7 @@ while ($g = $resGuests->fetch_assoc()) {
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="3" class="text-center text-muted py-3">No guests found
-                                                </td>
+                                                <td colspan="3" class="text-center text-muted py-3">No guests found</td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
