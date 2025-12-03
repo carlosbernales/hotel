@@ -11,13 +11,14 @@ $payment_input = $data['payment_input'];
 $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
 $status = $data['status'];
+$resched_reason = isset($data['resched_reason']) ? $data['resched_reason'] : null;
 
-$currentDPQry = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
-$currentDPQry->bind_param("i", $booking_id);
-$currentDPQry->execute();
-$currentDPQry->bind_result($currentDownpayment);
-$currentDPQry->fetch();
-$currentDPQry->close();
+$bookingQry = $conn->prepare("SELECT check_in, check_out, downpayment_amount FROM bookings WHERE booking_id = ?");
+$bookingQry->bind_param("i", $booking_id);
+$bookingQry->execute();
+$bookingQry->bind_result($oldCheckIn, $oldCheckOut, $currentDownpayment);
+$bookingQry->fetch();
+$bookingQry->close();
 
 if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $downpayment_amount = $total_amount;
@@ -41,6 +42,73 @@ $updateBooking = $conn->prepare("
 ");
 $updateBooking->bind_param("ssddsssi", $checkin, $checkout, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
 $updateBooking->execute();
+
+if ($status === "checkin") {
+
+    $changedRooms = [];
+    foreach ($rooms as $r) {
+        // Compare original vs updated room
+        if (
+            isset($r['original_room_number_fk_id'], $r['original_room_type_id']) &&
+            ($r['original_room_number_fk_id'] != $r['room_number_fk_id'] ||
+                $r['original_room_type_id'] != $r['room_type_id'])
+        ) {
+            $changedRooms[] = $r;
+        }
+    }
+
+    if (!empty($changedRooms)) {
+        date_default_timezone_set('Asia/Manila');
+        $transfer_date = date("Y-m-d H:i:s");
+        $reason = $resched_reason; // use the reason sent from JS
+
+        foreach ($changedRooms as $oldRoom) {
+
+            $booked_room_fk_id = $oldRoom['id'];  // booked_rooms.id
+            $bookings_fk_id = $booking_id;
+            $room_number_fk_id = $oldRoom['original_room_number_fk_id'];
+            $room_type_id = $oldRoom['original_room_type_id'];
+
+            // Fetch the old room type name and price from DB
+            $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
+            $typeQry->bind_param("i", $room_type_id);
+            $typeQry->execute();
+            $typeQry->bind_result($room_type_name, $price);
+            $typeQry->fetch();
+            $typeQry->close();
+
+            $insert_transfer = "
+                INSERT INTO room_transfers (
+                    booked_room_fk_id, 
+                    bookings_fk_id, 
+                    room_number_fk_id, 
+                    room_type_id, 
+                    room_type_name, 
+                    price, 
+                    transfer_date, 
+                    reason
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ";
+
+            $stmt = $conn->prepare($insert_transfer);
+            $stmt->bind_param(
+                "iiiissss",
+                $booked_room_fk_id,
+                $bookings_fk_id,
+                $room_number_fk_id,
+                $room_type_id,
+                $room_type_name,
+                $price,
+                $transfer_date,
+                $reason
+            );
+            $stmt->execute();
+        }
+    }
+}
+
+
+
 
 foreach ($rooms as $r) {
     $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");

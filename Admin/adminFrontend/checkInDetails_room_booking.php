@@ -282,7 +282,6 @@
         }
     }
 </style>
-
 <?php
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
@@ -310,7 +309,7 @@ $occupied_sql = "
     SELECT br.room_type_id
     FROM booked_rooms br
     JOIN bookings b ON br.booking_id = b.booking_id
-    WHERE b.status NOT IN ('finished','rejected', 'uncounted')
+    WHERE b.status NOT IN ('finished','rejected','uncounted')
       AND b.booking_id != $booking_id
       AND (
             (b.check_in <= '{$booking['check_out']}' AND b.check_out >= '{$booking['check_in']}')
@@ -342,10 +341,10 @@ while ($b = $bed_res->fetch_assoc()) {
     <div class="info-card" style="margin-bottom: 40px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
-                <i class="fas fa-sign-out-alt" style="color: var(--gold);"></i> Checked-In
+                <i class="fas fa-check-circle" style="color: var(--gold);"></i> Accepted Booking Details
             </h3>
-            <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Back to Bookings
+            <a href="../Admin/index.php?accepted_room_bookings_list" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
             </a>
         </div>
 
@@ -414,14 +413,11 @@ while ($b = $bed_res->fetch_assoc()) {
                 if ($res->num_rows > 0) {
                     $items = [];
                     while ($row = $res->fetch_assoc()) {
-                        $displayPrice = (strtolower($row['bedOrNot'] ?? '') === 'yes') ? "₱" . number_format($row['price'], 2) : "";
-                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . ($displayPrice ? " ($displayPrice)" : "");
-
+                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . " (₱" . number_format($row['price'], 2) . ")";
                         if (strtolower($row['bedOrNot'] ?? '') === 'yes') {
                             $extraBedTotal += $row['quantity'] * $row['price'];
                         }
                     }
-
                     $amenitiesDisplay = implode("\n", $items);
                 }
                 ?>
@@ -437,6 +433,73 @@ while ($b = $bed_res->fetch_assoc()) {
                 <script>
                     const extraBedTotal = <?= $extraBedTotal ?>;
                 </script>
+
+                <?php
+                // Fetch room transfers for this booking
+                $transfers_sql = "
+    SELECT *
+    FROM room_transfers
+    WHERE bookings_fk_id = $booking_id
+    ORDER BY transfer_date ASC
+";
+                $transfers_res = $conn->query($transfers_sql);
+
+                // Helper function to get room number and floor
+                function getRoomInfo($conn, $room_number_fk_id)
+                {
+                    if (!$room_number_fk_id)
+                        return null;
+
+                    $sql = "SELECT room_number, floor_number FROM room_numbers WHERE room_number_id = ?";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bind_param("i", $room_number_fk_id);
+                    $stmt->execute();
+                    $res = $stmt->get_result();
+
+                    if ($res->num_rows > 0) {
+                        return $res->fetch_assoc(); // ['room_number' => ..., 'floor_number' => ...]
+                    }
+                    return null;
+                }
+                ?>
+
+                <?php if ($transfers_res->num_rows > 0): ?>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Old Room ID</th>
+                                    <th>Room Number</th>
+                                    <th>Floor</th>
+                                    <th>Room Type</th>
+                                    <th>Price</th>
+                                    <th>Transfer Date</th>
+                                    <th>Reason</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($t = $transfers_res->fetch_assoc()): ?>
+                                    <?php
+                                    $roomInfo = getRoomInfo($conn, $t['room_number_fk_id']);
+                                    $roomNumber = $roomInfo['room_number'] ?? 'null';
+                                    $floorNumber = $roomInfo['floor_number'] ?? 'null';
+                                    ?>
+                                    <tr>
+                                        <td><?= $t['booked_room_fk_id'] ?></td>
+                                        <td><?= htmlspecialchars($roomNumber) ?></td>
+                                        <td><?= htmlspecialchars($floorNumber) ?></td>
+                                        <td><?= htmlspecialchars($t['room_type_name']) ?></td>
+                                        <td>₱<?= number_format($t['price'], 2) ?></td>
+                                        <td><?= $t['transfer_date'] ?></td>
+                                        <td><?= htmlspecialchars($t['reason']) ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <p class="text-muted">No room transfers found.</p>
+                <?php endif; ?>
 
                 <div class="row mt-3">
                     <div class="col-md-6 mb-3">
@@ -632,7 +695,6 @@ while ($b = $bed_res->fetch_assoc()) {
                 </div>
             </div>
 
-            <!-- Action Buttons -->
             <div class="action-buttons">
                 <button type="button" id="processExtendStay" class="btn btn-success">
                     <i class="fas fa-calendar-plus"></i> Extend Stay/ Transfer Room
@@ -644,7 +706,8 @@ while ($b = $bed_res->fetch_assoc()) {
         </div>
     </div>
 
-</div><!-- Review Changes Modal -->
+</div>
+
 
 
 <div class="modal fade" id="reviewChangesModal" tabindex="-1" aria-labelledby="reviewChangesLabel" aria-hidden="true">
@@ -709,6 +772,14 @@ while ($b = $bed_res->fetch_assoc()) {
                     </table>
                 </div>
 
+                <div class="mb-3 mt-3">
+                    <label for="roomTransferReason" class="form-label fw-bold" style="color: #424242;">
+                        Reason for Reschedule
+                    </label>
+                    <textarea id="roomTransferReason" class="form-control" rows="3"
+                        placeholder="Enter reason for reschedule..." required></textarea>
+                </div>
+
                 <!-- No Changes Message -->
                 <div id="noChangesMessage" class="text-center py-4" style="display:none; color: #757575;">
                     <i class="fas fa-info-circle fa-2x mb-2" style="color: #c9a961;"></i>
@@ -730,251 +801,7 @@ while ($b = $bed_res->fetch_assoc()) {
         </div>
     </div>
 </div>
-
-<style>
-    /* Custom styling for the review modal */
-    #reviewChangesModal .modal-content {
-        border-radius: 12px;
-        overflow: hidden;
-    }
-
-    #reviewChangesModal .table tbody tr {
-        transition: all 0.2s ease;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    #reviewChangesModal .table tbody tr:hover {
-        background-color: #f5f5f5;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    #reviewChangesModal .table tbody td {
-        padding: 12px 15px;
-        vertical-align: middle;
-        color: #424242;
-        border: none;
-    }
-
-    #reviewChangesModal .table tbody td:last-child {
-        font-weight: 600;
-    }
-
-    /* Status badge styling */
-    #reviewChangesModal .table tbody tr td:last-child {
-        color: #c9a961;
-    }
-
-    /* Alert styling */
-    #extendedInfo p {
-        line-height: 1.6;
-    }
-
-    /* Button hover effects */
-    #confirmChangesBtn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
-    }
-
-    .btn-secondary:hover {
-        background-color: #616161 !important;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 768px) {
-        #reviewChangesModal .modal-dialog {
-            margin: 10px;
-        }
-
-        #reviewChangesModal .table thead th {
-            font-size: 0.85rem;
-            padding: 10px 8px;
-        }
-
-        #reviewChangesModal .table tbody td {
-            font-size: 0.85rem;
-            padding: 10px 8px;
-        }
-    }
-</style>
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 <script>
-    function processBooking(status) {
-        const roomSelects = document.querySelectorAll('.roomNumberSelect');
-        let allSelected = true;
-
-        roomSelects.forEach(select => {
-            const selectedOption = select.selectedOptions[0];
-            if (
-                !selectedOption ||
-                selectedOption.value === "" ||
-                selectedOption.text.includes("Select room number") ||
-                selectedOption.text.includes("Please choose a room number") ||
-                selectedOption.text.includes("No available rooms")
-            ) {
-                select.classList.add('is-invalid');
-                allSelected = false;
-            } else {
-                select.classList.remove('is-invalid');
-            }
-        });
-
-        if (!allSelected) {
-            alert('Please select a room number for all booked rooms.');
-            return;
-        }
-
-        if (status === 'finished') {
-            const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
-            const paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
-
-            if (paymentInput < remainingBal) {
-                alert(`You still have (₱${remainingBal.toFixed(2)}) remaining balance!.`);
-                return;
-            }
-        }
-
-        const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'extend' : 'checkout'} this booking?`);
-        if (!confirmed) return;
-
-        const rooms = [];
-        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
-            rooms.push({
-                id: row.dataset.bookedRoomId,
-                room_type_id: parseInt(row.querySelector('.roomTypeSelect').value),
-                room_number_fk_id: parseInt(row.querySelector('.roomNumberSelect').value)
-            });
-        });
-
-        const bookingData = {
-            booking_id: <?= $booking['booking_id'] ?>,
-            check_out: status === 'finished'
-                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
-                : document.getElementById('check_out').value,
-            check_in: document.getElementById('check_in').value,
-            total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
-            payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
-            payment_method: document.querySelector('select[name="payment_method"]').value,
-            rooms: rooms,
-            status: status
-        };
-        fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
-
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(bookingData)
-        })
-            .then(res => res.text())
-            .then(res => {
-                if (res === "success") {
-                    alert(`Booking ${status === 'finished' ? 'checked out' : 'extended'} successfully!`);
-                    const reviewModalEl = document.getElementById('reviewChangesModal');
-                    const reviewModal = bootstrap.Modal.getInstance(reviewModalEl);
-                    reviewModal.hide();
-                    window.location.href = "../Admin/index.php?room_booking_list";
-                } else {
-                    alert('Something went wrong. Please try again.');
-                }
-            })
-
-
-            .catch(err => console.error(err));
-    }
-
-    document.getElementById('processCheckOut').addEventListener('click', () => processBooking('finished'));
-
-    document.getElementById('processExtendStay').addEventListener('click', () => {
-
-        const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
-        const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
-        const newCheckOutRaw = document.getElementById('check_out').value;
-
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const originalCheckIn = new Date(originalCheckInRaw).toLocaleDateString('en-US', options);
-        const originalCheckOut = new Date(originalCheckOutRaw).toLocaleDateString('en-US', options);
-        const newCheckOut = new Date(newCheckOutRaw).toLocaleDateString('en-US', options);
-
-        const isExtended = originalCheckOutRaw !== newCheckOutRaw;
-
-        const tbody = document.getElementById('reviewRoomsBody');
-        tbody.innerHTML = '';
-
-        let roomChangesExist = false;
-        let changesExist = isExtended;
-
-        const extendedInfo = document.getElementById('extendedInfo');
-        const noChangesMessage = document.getElementById('noChangesMessage');
-        const reviewTable = document.getElementById('reviewChangesTable');
-
-        noChangesMessage.style.display = "none";
-        reviewTable.style.display = "";
-        extendedInfo.style.display = isExtended ? "" : "none";
-
-        if (isExtended) {
-            extendedInfo.querySelector('p').textContent =
-                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, you want to extend it to ${newCheckOut}.`;
-        }
-
-        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
-            const originalType = row.dataset.defaultRoomType;
-            const originalNumberId = row.dataset.defaultRoomNumber; // ID
-            const selectedType = row.querySelector('.roomTypeSelect').value;
-            const roomNumberSelect = row.querySelector('.roomNumberSelect');
-
-            const originalNumberText =
-                roomNumberSelect.querySelector(`option[value="${originalNumberId}"]`)?.textContent.trim() || '-';
-            const selectedNumberText =
-                roomNumberSelect.selectedOptions[0].textContent.trim();
-
-            if (originalType !== selectedType || originalNumberId !== roomNumberSelect.value) {
-                roomChangesExist = true;
-                changesExist = true;
-
-                const originalTypeText = row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
-                const selectedTypeText = row.querySelector(`.roomTypeSelect option[value="${selectedType}"]`)?.text || '-';
-
-                tbody.innerHTML += `
-                <tr>
-                    <td>${originalTypeText}</td>
-                    <td>${originalNumberText}</td>
-                    <td>Room Transfer</td>
-                    <td>${selectedTypeText}</td>
-                    <td>${selectedNumberText}</td>
-                </tr>
-            `;
-            }
-        });
-
-        if (!roomChangesExist) {
-            tbody.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center text-muted">
-                    No room transfer made.
-                </td>
-            </tr>
-        `;
-        }
-        if (!changesExist) {
-            alert("No changes have been made for extend or transfer room!");
-            reviewTable.style.display = 'none';
-            extendedInfo.style.display = 'none';
-            return;
-        }
-        const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
-        reviewModal.show();
-    });
-    document.getElementById('confirmChangesBtn').addEventListener('click', () => {
-        processBooking('checkin');
-    });
-</script>
-
-<script>
-    // --- Optional: keep room selection intact and disable unavailable rooms ---
     function disableSelectedRoomNumbers() {
         const rows = document.querySelectorAll('#roomsTable tbody tr');
         const selectedRoomNumbers = new Set();
@@ -995,51 +822,63 @@ while ($b = $bed_res->fetch_assoc()) {
         });
     }
 
+
     function updateRoomNumbers(row, changedByType = false) {
+
         const roomTypeSelect = row.querySelector('.roomTypeSelect');
         const roomNumberSelect = row.querySelector('.roomNumberSelect');
+
         const checkIn = document.getElementById('check_in').value;
         const checkOut = document.getElementById('check_out').value;
         const bookingId = <?= $booking_id ?>;
+
         const defaultNumber = row.dataset.defaultRoomNumber;
 
         fetch(`../Admin/adminBackend/check_availability_rooms.php?check_in=${checkIn}&check_out=${checkOut}&booking_id=${bookingId}`)
             .then(res => res.json())
             .then(data => {
+
+                roomNumberSelect.innerHTML = '';
+
                 const type = roomTypeSelect.value;
+
                 if (data[type] && data[type].length > 0) {
-                    const currentValue = roomNumberSelect.value;
+
+                    if (changedByType) {
+                        let opt = document.createElement("option");
+                        opt.textContent = "Select room number";
+                        opt.disabled = true;
+                        opt.selected = true;
+                        roomNumberSelect.appendChild(opt);
+                    }
 
                     data[type].forEach(rn => {
-                        let option = roomNumberSelect.querySelector(`option[value='${rn.room_number_id}']`);
-                        if (!option) {
-                            option = document.createElement('option');
-                            option.value = rn.room_number_id;
-                            roomNumberSelect.appendChild(option);
-                        }
+                        const option = document.createElement('option');
+                        option.value = rn.room_number_id;
                         option.textContent = rn.room_number + (rn.note ? ` (${rn.note})` : '');
-                        option.disabled = !!rn.disabled;
-                        option.dataset.backendDisabled = rn.disabled ? "true" : "false";
+                        if (rn.disabled) {
+                            option.disabled = true;
+                            option.dataset.backendDisabled = "true"; // mark it
+                        }
 
-                        if (option.value == currentValue || (!currentValue && defaultNumber == option.value)) {
+                        if (!changedByType && defaultNumber == rn.room_number_id) {
                             option.selected = true;
                         }
+                        roomNumberSelect.appendChild(option);
                     });
 
-                    Array.from(roomNumberSelect.options).forEach(opt => {
-                        if (!data[type].some(rn => rn.room_number_id == opt.value)) {
-                            roomNumberSelect.removeChild(opt);
-                        }
-                    });
                 } else {
-                    Array.from(roomNumberSelect.options).forEach(opt => {
-                        if (!opt.selected) opt.disabled = true;
-                    });
+                    let opt = document.createElement("option");
+                    opt.textContent = "No available rooms";
+                    opt.disabled = true;
+                    opt.selected = true;
+                    roomNumberSelect.appendChild(opt);
                 }
 
                 disableSelectedRoomNumbers();
             });
     }
+
 
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => updateRoomNumbers(row));
@@ -1055,9 +894,7 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
     });
-</script>
 
-<script>
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => updateRoomNumbers(row));
 
@@ -1111,10 +948,8 @@ while ($b = $bed_res->fetch_assoc()) {
                 const roomNumberSelect = row.querySelector('.roomNumberSelect');
                 if (defaultNumber) roomNumberSelect.value = defaultNumber;
             });
-
             return false;
         }
-
         return true;
     }
 
@@ -1200,6 +1035,202 @@ while ($b = $bed_res->fetch_assoc()) {
         document.getElementById('changeAmount').value = "₱" + change.toFixed(2);
     });
 </script>
+<script>
+    const originalRoomNumbersMap = {};
+    document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+        const roomNumberSelect = row.querySelector('.roomNumberSelect');
+        Array.from(roomNumberSelect.options).forEach(opt => {
+            originalRoomNumbersMap[opt.value] = opt.textContent.trim();
+        });
+    });
+    function processBooking(status, reschedReason = null) {
+        const roomSelects = document.querySelectorAll('.roomNumberSelect');
+        let allSelected = true;
+
+        roomSelects.forEach(select => {
+            const selectedOption = select.selectedOptions[0];
+            if (!selectedOption || selectedOption.value === "" ||
+                selectedOption.text.includes("Select room number") ||
+                selectedOption.text.includes("Please choose a room number") ||
+                selectedOption.text.includes("No available rooms")
+            ) {
+                select.classList.add('is-invalid');
+                allSelected = false;
+            } else {
+                select.classList.remove('is-invalid');
+            }
+        });
+
+        if (!allSelected) {
+            alert('Please select a room number for all booked rooms.');
+            return;
+        }
+
+        const confirmed = confirm(`Are you sure you want to ${status === 'finished' ? 'finish' : 'extend/transfer'} this booking?`);
+        if (!confirmed) return;
+
+        const rooms = [];
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            const roomTypeSelect = row.querySelector('.roomTypeSelect');
+            const roomNumberSelect = row.querySelector('.roomNumberSelect');
+
+            rooms.push({
+                id: row.dataset.bookedRoomId, // booked_rooms.id
+                room_type_id: parseInt(roomTypeSelect.value),
+                room_number_fk_id: parseInt(roomNumberSelect.value),
+                // send original values for backend to detect changes
+                original_room_type_id: parseInt(row.dataset.defaultRoomType),
+                original_room_number_fk_id: parseInt(row.dataset.defaultRoomNumber),
+                // optional: for backend insert display info
+                room_type_name: roomTypeSelect.selectedOptions[0].textContent.trim(),
+                room_number_text: roomNumberSelect.selectedOptions[0].textContent.trim(),
+                price: parseFloat(row.dataset.price) || 0
+            });
+        });
+
+        const bookingData = {
+            booking_id: <?= $booking['booking_id'] ?>,
+            check_in: document.getElementById('check_in').value,
+            check_out: status === 'finished'
+                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+                : document.getElementById('check_out').value,
+            total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
+            payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
+            payment_method: document.querySelector('select[name="payment_method"]').value,
+            status: status,
+            rooms: rooms,
+            resched_reason: reschedReason
+        };
+
+        fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bookingData)
+        })
+            .then(res => res.text())
+            .then(res => {
+                if (res === "success") {
+                    alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
+                    window.location.href = "../Admin/index.php?room_booking_list";
+                } else {
+                    alert('Something went wrong. Please try again.');
+                }
+            })
+            .catch(err => console.error(err));
+    }
+
+    document.getElementById('processExtendStay').addEventListener('click', () => {
+
+        const roomSelects = document.querySelectorAll('.roomNumberSelect');
+        let allSelected = true;
+        roomSelects.forEach(select => {
+            const selectedOption = select.selectedOptions[0];
+            if (!selectedOption || selectedOption.value === "" ||
+                selectedOption.text.includes("Select room number") ||
+                selectedOption.text.includes("Please choose a room number") ||
+                selectedOption.text.includes("No available rooms")) {
+                select.classList.add('is-invalid');
+                allSelected = false;
+            } else select.classList.remove('is-invalid');
+        });
+
+        if (!allSelected) {
+            alert('Please select a room number for all booked rooms.');
+            return;
+        }
+        const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
+        const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
+        const newCheckInRaw = document.getElementById('check_in').value;
+        const newCheckOutRaw = document.getElementById('check_out').value;
+
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const originalCheckIn = new Date(originalCheckInRaw).toLocaleDateString('en-US', options);
+        const originalCheckOut = new Date(originalCheckOutRaw).toLocaleDateString('en-US', options);
+        const newCheckIn = new Date(newCheckInRaw).toLocaleDateString('en-US', options);
+        const newCheckOut = new Date(newCheckOutRaw).toLocaleDateString('en-US', options);
+
+        const checkInChanged = originalCheckInRaw !== newCheckInRaw;
+        const checkOutChanged = originalCheckOutRaw !== newCheckOutRaw;
+
+        const tbody = document.getElementById('reviewRoomsBody');
+        tbody.innerHTML = '';
+
+        let roomChangesExist = false;
+        let changesExist = checkInChanged || checkOutChanged;
+
+        const extendedInfo = document.getElementById('extendedInfo');
+        const reviewTable = document.getElementById('reviewChangesTable');
+        const noChangesMessage = document.getElementById('noChangesMessage');
+
+        noChangesMessage.style.display = "none";
+        reviewTable.style.display = "";
+        extendedInfo.style.display = changesExist ? "" : "none";
+
+        if (checkInChanged || checkOutChanged) {
+            extendedInfo.querySelector('p').textContent =
+                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, ` +
+                `you want to extend it to ${newCheckOut}?`;
+        }
+
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            const originalType = row.dataset.defaultRoomType;
+            const originalNumberId = row.dataset.defaultRoomNumber;
+            const selectedType = row.querySelector('.roomTypeSelect').value;
+            const roomNumberSelect = row.querySelector('.roomNumberSelect');
+
+            const originalNumberText = originalRoomNumbersMap[originalNumberId] || '-';
+            const selectedNumberText = roomNumberSelect.selectedOptions[0].textContent.trim();
+
+            if (originalType !== selectedType || originalNumberId != roomNumberSelect.value) {
+                roomChangesExist = true;
+                changesExist = true;
+
+                const originalTypeText = row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
+                const selectedTypeText = row.querySelector(`.roomTypeSelect option[value="${selectedType}"]`)?.text || '-';
+
+                tbody.innerHTML += `
+                <tr>
+                    <td>${originalTypeText}</td>
+                    <td>${originalNumberText}</td>
+                    <td>Room Transfer</td>
+                    <td>${selectedTypeText}</td>
+                    <td>${selectedNumberText}</td>
+                </tr>
+            `;
+            }
+        });
+
+        if (!roomChangesExist && !checkInChanged && !checkOutChanged) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No changes made.</td></tr>`;
+        }
+
+        if (!changesExist) {
+            const proceed = confirm("No changes detected. Do you still want to proceed?");
+            if (proceed) {
+                const reason = document.getElementById('roomTransferReason').value.trim();
+                processBooking('checkin', reason);
+            }
+            return;
+        }
+
+        const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
+        reviewModal.show();
+    });
+
+    document.getElementById('confirmChangesBtn').addEventListener('click', () => {
+        const transferReason = document.getElementById('roomTransferReason').value.trim();
+
+        if (!transferReason) {
+            alert("Please enter a reason for room transfer.");
+            return;
+        }
+
+        processBooking('checkin', transferReason);
+    });
+
+    document.getElementById('processCheckOut')
+        .addEventListener('click', () => processBooking('finished'));
+</script>
 
 
 <script>
@@ -1227,7 +1258,6 @@ while ($b = $bed_res->fetch_assoc()) {
             }
         });
     });
-
 </script>
 
 

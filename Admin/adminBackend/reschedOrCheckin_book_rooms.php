@@ -11,27 +11,23 @@ $payment_input = $data['payment_input'];
 $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
 $status = $data['status'];
+$resched_reason = isset($data['resched_reason']) ? $data['resched_reason'] : null;
 
-// Get current downpayment
-$currentDPQry = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
-$currentDPQry->bind_param("i", $booking_id);
-$currentDPQry->execute();
-$currentDPQry->bind_result($currentDownpayment);
-$currentDPQry->fetch();
-$currentDPQry->close();
+$bookingQry = $conn->prepare("SELECT check_in, check_out, downpayment_amount FROM bookings WHERE booking_id = ?");
+$bookingQry->bind_param("i", $booking_id);
+$bookingQry->execute();
+$bookingQry->bind_result($oldCheckIn, $oldCheckOut, $currentDownpayment);
+$bookingQry->fetch();
+$bookingQry->close();
 
-// Revised computation
 if ($payment_input >= ($total_amount - $currentDownpayment)) {
-    // Payment covers remaining balance
     $downpayment_amount = $total_amount;
     $remaining_balance = 0;
 } else {
-    // Partial payment
     $downpayment_amount = $currentDownpayment + $payment_input;
     $remaining_balance = $total_amount - $downpayment_amount;
 }
 
-// Update booking
 $updateBooking = $conn->prepare("
     UPDATE bookings
     SET 
@@ -47,7 +43,21 @@ $updateBooking = $conn->prepare("
 $updateBooking->bind_param("ssddsssi", $checkin, $checkout, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
 $updateBooking->execute();
 
-// Update booked rooms
+if ($status === 'rescheduled') {
+    $dtManila = new DateTime("now", new DateTimeZone("Asia/Manila"));
+    $dateResched = $dtManila->format("Y-m-d H:i:s");
+
+    $insertResched = $conn->prepare("
+        INSERT INTO reschedule_bookings (booking_fk_id, check_in, check_out, reason, date_resched)
+        VALUES (?, ?, ?, ?, ?)
+    ");
+    $insertResched->bind_param("issss", $booking_id, $oldCheckIn, $oldCheckOut, $resched_reason, $dateResched);
+    if (!$insertResched->execute()) {
+        die("Reschedule insert failed: " . $insertResched->error);
+    }
+}
+
+
 foreach ($rooms as $r) {
     $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
     $typeQry->bind_param("i", $r['room_type_id']);
@@ -70,6 +80,4 @@ foreach ($rooms as $r) {
 }
 
 echo "success";
-
-
 ?>

@@ -706,6 +706,14 @@ while ($b = $bed_res->fetch_assoc()) {
                     </table>
                 </div>
 
+                <div class="mb-3 mt-3">
+                    <label for="reschedReasonInput" class="form-label fw-bold" style="color: #424242;">
+                        Reason for Reschedule
+                    </label>
+                    <textarea id="reschedReasonInput" class="form-control" rows="3"
+                        placeholder="Enter reason for reschedule..." required></textarea>
+                </div>
+
                 <!-- No Changes Message -->
                 <div id="noChangesMessage" class="text-center py-4" style="display:none; color: #757575;">
                     <i class="fas fa-info-circle fa-2x mb-2" style="color: #c9a961;"></i>
@@ -962,15 +970,20 @@ while ($b = $bed_res->fetch_assoc()) {
     });
 </script>
 <script>
-    function processBooking(status) {
+    const originalRoomNumbersMap = {};
+    document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+        const roomNumberSelect = row.querySelector('.roomNumberSelect');
+        Array.from(roomNumberSelect.options).forEach(opt => {
+            originalRoomNumbersMap[opt.value] = opt.textContent.trim();
+        });
+    });
+    function processBooking(status, reschedReason = null) {
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
 
         roomSelects.forEach(select => {
             const selectedOption = select.selectedOptions[0];
-            if (
-                !selectedOption ||
-                selectedOption.value === "" ||
+            if (!selectedOption || selectedOption.value === "" ||
                 selectedOption.text.includes("Select room number") ||
                 selectedOption.text.includes("Please choose a room number") ||
                 selectedOption.text.includes("No available rooms")
@@ -981,12 +994,10 @@ while ($b = $bed_res->fetch_assoc()) {
                 select.classList.remove('is-invalid');
             }
         });
-
         if (!allSelected) {
             alert('Please select a room number for all booked rooms.');
             return;
         }
-
         const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'check in' : 'reserve'} this booking?`);
         if (!confirmed) return;
 
@@ -998,7 +1009,6 @@ while ($b = $bed_res->fetch_assoc()) {
                 room_number_fk_id: parseInt(row.querySelector('.roomNumberSelect').value)
             });
         });
-
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
             check_in: status === 'checkin'
@@ -1009,7 +1019,8 @@ while ($b = $bed_res->fetch_assoc()) {
             payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
             payment_method: document.querySelector('select[name="payment_method"]').value,
             rooms: rooms,
-            status: status
+            status: status,
+            resched_reason: reschedReason
         };
         fetch('../Admin/adminBackend/reschedOrCheckin_book_rooms.php', {
             method: 'POST',
@@ -1027,53 +1038,69 @@ while ($b = $bed_res->fetch_assoc()) {
             })
             .catch(err => console.error(err));
     }
-    document.getElementById('processCheckinBtn')
-        .addEventListener('click', () => processBooking('checkin'));
-
     document.getElementById('processReschedBtn').addEventListener('click', () => {
 
+        const roomSelects = document.querySelectorAll('.roomNumberSelect');
+        let allSelected = true;
+        roomSelects.forEach(select => {
+            const selectedOption = select.selectedOptions[0];
+            if (!selectedOption || selectedOption.value === "" ||
+                selectedOption.text.includes("Select room number") ||
+                selectedOption.text.includes("Please choose a room number") ||
+                selectedOption.text.includes("No available rooms")) {
+                select.classList.add('is-invalid');
+                allSelected = false;
+            } else select.classList.remove('is-invalid');
+        });
+
+        if (!allSelected) {
+            alert('Please select a room number for all booked rooms.');
+            return;
+        }
         const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
         const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
+        const newCheckInRaw = document.getElementById('check_in').value;
         const newCheckOutRaw = document.getElementById('check_out').value;
 
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const originalCheckIn = new Date(originalCheckInRaw).toLocaleDateString('en-US', options);
         const originalCheckOut = new Date(originalCheckOutRaw).toLocaleDateString('en-US', options);
+        const newCheckIn = new Date(newCheckInRaw).toLocaleDateString('en-US', options);
         const newCheckOut = new Date(newCheckOutRaw).toLocaleDateString('en-US', options);
 
-        const isExtended = originalCheckOutRaw !== newCheckOutRaw;
+        const checkInChanged = originalCheckInRaw !== newCheckInRaw;
+        const checkOutChanged = originalCheckOutRaw !== newCheckOutRaw;
 
         const tbody = document.getElementById('reviewRoomsBody');
         tbody.innerHTML = '';
 
         let roomChangesExist = false;
-        let changesExist = isExtended;
+        let changesExist = checkInChanged || checkOutChanged;
 
         const extendedInfo = document.getElementById('extendedInfo');
-        const noChangesMessage = document.getElementById('noChangesMessage');
         const reviewTable = document.getElementById('reviewChangesTable');
+        const noChangesMessage = document.getElementById('noChangesMessage');
 
         noChangesMessage.style.display = "none";
         reviewTable.style.display = "";
-        extendedInfo.style.display = isExtended ? "" : "none";
+        extendedInfo.style.display = changesExist ? "" : "none";
 
-        if (isExtended) {
+        if (checkInChanged || checkOutChanged) {
             extendedInfo.querySelector('p').textContent =
-                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, you want to extend it to ${newCheckOut}.`;
+                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, ` +
+                `you want to reschedule it to ${newCheckIn} to ${newCheckOut}.`;
         }
 
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const originalType = row.dataset.defaultRoomType;
-            const originalNumberId = row.dataset.defaultRoomNumber; // ID
+            const originalNumberId = row.dataset.defaultRoomNumber;
             const selectedType = row.querySelector('.roomTypeSelect').value;
             const roomNumberSelect = row.querySelector('.roomNumberSelect');
 
-            const originalNumberText =
-                roomNumberSelect.querySelector(`option[value="${originalNumberId}"]`)?.textContent.trim() || '-';
-            const selectedNumberText =
-                roomNumberSelect.selectedOptions[0].textContent.trim();
+            const originalNumberText = originalRoomNumbersMap[originalNumberId] || '-';
+            const selectedNumberText = roomNumberSelect.selectedOptions[0].textContent.trim();
 
-            if (originalType !== selectedType || originalNumberId !== roomNumberSelect.value) {
+            if (originalType !== selectedType || originalNumberId != roomNumberSelect.value) {
                 roomChangesExist = true;
                 changesExist = true;
 
@@ -1092,28 +1119,35 @@ while ($b = $bed_res->fetch_assoc()) {
             }
         });
 
-        if (!roomChangesExist) {
-            tbody.innerHTML = `
-            <tr>
-                <td colspan="5" class="text-center text-muted">
-                    No room transfer made.
-                </td>
-            </tr>
-        `;
+        if (!roomChangesExist && !checkInChanged && !checkOutChanged) {
+            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No changes made.</td></tr>`;
         }
+
         if (!changesExist) {
             const proceed = confirm("No changes detected. Do you still want to proceed?");
             if (proceed) {
-                processBooking('rescheduled');
+                const reason = document.getElementById('reschedReasonInput').value.trim();
+                processBooking('rescheduled', reason);
             }
             return;
         }
+
         const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
         reviewModal.show();
     });
+
     document.getElementById('confirmChangesBtn').addEventListener('click', () => {
-        processBooking('rescheduled');
+        const reschedReason = document.getElementById('reschedReasonInput').value.trim();
+
+        if (!reschedReason) {
+            alert("Please enter a reason for reschedule.");
+            return;
+        }
+
+        processBooking('rescheduled', reschedReason);
     });
+    document.getElementById('processCheckinBtn')
+        .addEventListener('click', () => processBooking('checkin'));
 </script>
 
 
