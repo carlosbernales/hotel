@@ -12,6 +12,7 @@ $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
 $status = $data['status'];
 $resched_reason = isset($data['resched_reason']) ? $data['resched_reason'] : null;
+$discount_amount = $data['discount_amount'];
 
 $bookingQry = $conn->prepare("SELECT check_in, check_out, downpayment_amount FROM bookings WHERE booking_id = ?");
 $bookingQry->bind_param("i", $booking_id);
@@ -43,10 +44,11 @@ $updateBooking = $conn->prepare("
         downpayment_amount = ?, 
         remaining_balance = ?, 
         payment_method = ?,  
-        status = ?
+        status = ?,
+        discount_amount = ?
     WHERE booking_id = ?
 ");
-$updateBooking->bind_param("ssiddsssi", $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
+$updateBooking->bind_param("ssiddsssdi", $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $discount_amount, $booking_id);
 $updateBooking->execute();
 
 

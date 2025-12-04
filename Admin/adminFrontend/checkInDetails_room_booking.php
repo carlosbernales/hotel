@@ -683,8 +683,9 @@ while ($b = $bed_res->fetch_assoc()) {
                     </div>
                     <div class="info-item">
                         <label><i class="fas fa-money-bill-wave"></i> Discount Amount</label>
-                        <input class="form-control" id="discount_amount" value="<?= $booking['discount_amount'] ?>"
-                            readonly>
+                        <input class="form-control" id="discountAmount" value="0" readonly>
+
+                        <input type="hidden" id="discount_amount" value="<?= $booking['discount_amount'] ?>">
                     </div>
                 </div>
 
@@ -1005,34 +1006,47 @@ while ($b = $bed_res->fetch_assoc()) {
 
 
     function calculateTotalAmount() {
+        // Get check-in and check-out dates
         const checkIn = new Date(document.getElementById('check_in').value);
         const checkOut = new Date(document.getElementById('check_out').value);
 
         if (isNaN(checkIn) || isNaN(checkOut) || checkOut <= checkIn) return;
 
+        // Calculate number of nights
         const timeDiff = checkOut - checkIn;
         const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
+        // Calculate total room price
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
             roomsTotal += parseFloat(selectedOption.dataset.price) * nights;
         });
 
-        let extraBedPrice = extraBedTotal * nights;
+        // Extra bed price
+        let extraBedPrice = extraBedTotal * nights; // make sure extraBedTotal is defined elsewhere
 
-        let totalBeforeDiscount = roomsTotal + extraBedPrice;
+        // Total before discount
+        const totalBeforeDiscount = roomsTotal + extraBedPrice;
 
+        // Discount
         const discountPercentage = parseFloat(document.getElementById('discountPercentage').value.replace('%', '')) || 0;
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
 
+        // Total after discount
         const totalAmountNew = totalBeforeDiscount - discountAmount;
-        document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
 
+        // Down payment & remaining balance
         const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
         let remainingBalance = totalAmountNew - downPayment;
         if (remainingBalance < 0) remainingBalance = 0;
+
+        // Update DOM
+        document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
         document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
+
+        // Store discountAmount for processBooking()
+        document.getElementById('discountAmount').value = discountAmount.toFixed(2);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1117,6 +1131,8 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
 
+        const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
+
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
             check_in: document.getElementById('check_in').value,
@@ -1128,7 +1144,8 @@ while ($b = $bed_res->fetch_assoc()) {
             payment_method: document.querySelector('select[name="payment_method"]').value,
             status: status,
             rooms: rooms,
-            resched_reason: reschedReason
+            resched_reason: reschedReason,
+            discount_amount: discountAmount
         };
 
         fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
