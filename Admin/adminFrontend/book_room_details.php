@@ -418,20 +418,21 @@ while ($b = $bed_res->fetch_assoc()) {
                 if ($res->num_rows > 0) {
                     $items = [];
                     while ($row = $res->fetch_assoc()) {
-                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . " (₱" . number_format($row['price'], 2) . ")";
-                        if (strtolower($row['bedOrNot'] ?? '') === 'yes') {
-                            $extraBedTotal += $row['quantity'] * $row['price'];
-                        }
+                        $priceDisplay = ($row['price'] > 0) ? " (₱" . number_format($row['price'], 2) . ")" : "";
+                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . $priceDisplay;
+                        $extraBedTotal += $row['quantity'] * $row['price'];
                     }
                     $amenitiesDisplay = implode("\n", $items);
                 }
                 ?>
 
-                <div class="amenities-section mt-3">
-                    <label><i class="fas fa-concierge-bell"></i> Booked Amenities</label>
-                    <textarea class="form-control" rows="4"
-                        readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
-                </div>
+                <?php if ($amenitiesDisplay !== "None"): ?>
+                    <div class="amenities-section mt-3">
+                        <label><i class="fas fa-concierge-bell"></i> Booked Amenities</label>
+                        <textarea class="form-control" rows="4"
+                            readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                    </div>
+                <?php endif; ?>
 
                 <script>
                     const extraBedTotal = <?= $extraBedTotal ?>;

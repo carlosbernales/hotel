@@ -383,6 +383,12 @@ while ($b = $bed_res->fetch_assoc()) {
                     </div>
 
                     <div class="info-item">
+                        <label><i class="fas fa-moon"></i> Number of Nights</label>
+                        <input class="form-control" value="<?= $booking['nights'] ?>" readonly>
+                    </div>
+
+
+                    <div class="info-item">
                         <label><i class="fas fa-door-open"></i> Room Quantity</label>
                         <input class="form-control" value="<?= $booking['room_quantity'] ?>" readonly>
                     </div>
@@ -413,10 +419,9 @@ while ($b = $bed_res->fetch_assoc()) {
                 if ($res->num_rows > 0) {
                     $items = [];
                     while ($row = $res->fetch_assoc()) {
-                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . " (₱" . number_format($row['price'], 2) . ")";
-                        if (strtolower($row['bedOrNot'] ?? '') === 'yes') {
-                            $extraBedTotal += $row['quantity'] * $row['price'];
-                        }
+                        $priceDisplay = ($row['price'] > 0) ? " (₱" . number_format($row['price'], 2) . ")" : "";
+                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . $priceDisplay;
+                        $extraBedTotal += $row['quantity'] * $row['price'];
                     }
                     $amenitiesDisplay = implode("\n", $items);
                 }
@@ -463,18 +468,16 @@ while ($b = $bed_res->fetch_assoc()) {
                     ?>
                     <div class="amenities-section mt-3">
                         <label><i class="fas fa-concierge-bell"></i> Reschedule Details</label>
-                        <textarea class="form-control" rows="2" readonly>
-                            <?php
-                            while ($r = $resched_res->fetch_assoc()) {
-                                $oldCI = date("F j, Y", strtotime($r['check_in']));
-                                $oldCO = date("F j, Y", strtotime($r['check_out']));
-                                $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                $reason = $r['reason'];
+                        <textarea class="form-control" rows="2" readonly><?php
+                        while ($r = $resched_res->fetch_assoc()) {
+                            $oldCI = date("F j, Y", strtotime($r['check_in']));
+                            $oldCO = date("F j, Y", strtotime($r['check_out']));
+                            $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                            $reason = $r['reason'];
 
-                                echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
-                            }
-                            ?>
-                        </textarea>
+                            echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                        }
+                        ?></textarea>
                     </div>
                 <?php endif; ?>
 

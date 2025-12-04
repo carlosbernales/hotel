@@ -28,11 +28,17 @@ if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $remaining_balance = $total_amount - $downpayment_amount;
 }
 
+$checkInDate = new DateTime($checkin);
+$checkOutDate = new DateTime($checkout);
+$interval = $checkInDate->diff($checkOutDate);
+$nights = (int) $interval->format('%a');
+
 $updateBooking = $conn->prepare("
     UPDATE bookings
     SET 
         check_in = ?, 
         check_out = ?, 
+        nights = ?, 
         total_amount = ?, 
         downpayment_amount = ?, 
         remaining_balance = ?, 
@@ -40,8 +46,9 @@ $updateBooking = $conn->prepare("
         status = ?
     WHERE booking_id = ?
 ");
-$updateBooking->bind_param("ssddsssi", $checkin, $checkout, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
+$updateBooking->bind_param("ssiddsssi", $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
 $updateBooking->execute();
+
 
 if ($status === 'rescheduled') {
     $dtManila = new DateTime("now", new DateTimeZone("Asia/Manila"));

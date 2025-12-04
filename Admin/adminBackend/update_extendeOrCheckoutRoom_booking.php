@@ -28,11 +28,17 @@ if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $remaining_balance = $total_amount - $downpayment_amount;
 }
 
+$checkInDate = new DateTime($checkin);
+$checkOutDate = new DateTime($checkout);
+$interval = $checkInDate->diff($checkOutDate);
+$nights = (int) $interval->format('%a');
+
 $updateBooking = $conn->prepare("
     UPDATE bookings
     SET 
         check_in = ?, 
         check_out = ?, 
+        nights = ?, 
         total_amount = ?, 
         downpayment_amount = ?, 
         remaining_balance = ?, 
@@ -40,14 +46,14 @@ $updateBooking = $conn->prepare("
         status = ?
     WHERE booking_id = ?
 ");
-$updateBooking->bind_param("ssddsssi", $checkin, $checkout, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
+$updateBooking->bind_param("ssiddsssi", $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $booking_id);
 $updateBooking->execute();
+
 
 if ($status === "checkin") {
 
     $changedRooms = [];
     foreach ($rooms as $r) {
-        // Compare original vs updated room
         if (
             isset($r['original_room_number_fk_id'], $r['original_room_type_id']) &&
             ($r['original_room_number_fk_id'] != $r['room_number_fk_id'] ||
@@ -60,16 +66,15 @@ if ($status === "checkin") {
     if (!empty($changedRooms)) {
         date_default_timezone_set('Asia/Manila');
         $transfer_date = date("Y-m-d H:i:s");
-        $reason = $resched_reason; // use the reason sent from JS
+        $reason = $resched_reason;
 
         foreach ($changedRooms as $oldRoom) {
 
-            $booked_room_fk_id = $oldRoom['id'];  // booked_rooms.id
+            $booked_room_fk_id = $oldRoom['id'];
             $bookings_fk_id = $booking_id;
             $room_number_fk_id = $oldRoom['original_room_number_fk_id'];
             $room_type_id = $oldRoom['original_room_type_id'];
 
-            // Fetch the old room type name and price from DB
             $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
             $typeQry->bind_param("i", $room_type_id);
             $typeQry->execute();
@@ -106,9 +111,6 @@ if ($status === "checkin") {
         }
     }
 }
-
-
-
 
 foreach ($rooms as $r) {
     $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");

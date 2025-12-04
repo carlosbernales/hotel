@@ -341,15 +341,14 @@ while ($b = $bed_res->fetch_assoc()) {
     <div class="info-card" style="margin-bottom: 40px;">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
-                <i class="fas fa-check-circle" style="color: var(--gold);"></i> Accepted Booking Details
+                <i class="fas fa-check-circle" style="color: var(--gold);"></i> Checked In Booking Details
             </h3>
-            <a href="../Admin/index.php?accepted_room_bookings_list" class="btn btn-secondary btn-sm">
+            <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to List
             </a>
         </div>
 
         <div class="container-fluid">
-            <!-- Booking Information Section -->
             <div class="section-card mb-4">
                 <h4 class="section-header">
                     <i class="fas fa-info-circle"></i> Booking Information
@@ -380,6 +379,10 @@ while ($b = $bed_res->fetch_assoc()) {
                         <label><i class="fas fa-users"></i> Number of Guests</label>
                         <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>"
                             readonly>
+                    </div>
+                    <div class="info-item">
+                        <label><i class="fas fa-moon"></i> Number of Nights</label>
+                        <input class="form-control" value="<?= $booking['nights'] ?>" readonly>
                     </div>
 
                     <div class="info-item">
@@ -413,10 +416,9 @@ while ($b = $bed_res->fetch_assoc()) {
                 if ($res->num_rows > 0) {
                     $items = [];
                     while ($row = $res->fetch_assoc()) {
-                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . " (₱" . number_format($row['price'], 2) . ")";
-                        if (strtolower($row['bedOrNot'] ?? '') === 'yes') {
-                            $extraBedTotal += $row['quantity'] * $row['price'];
-                        }
+                        $priceDisplay = ($row['price'] > 0) ? " (₱" . number_format($row['price'], 2) . ")" : "";
+                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . $priceDisplay;
+                        $extraBedTotal += $row['quantity'] * $row['price'];
                     }
                     $amenitiesDisplay = implode("\n", $items);
                 }
@@ -429,6 +431,7 @@ while ($b = $bed_res->fetch_assoc()) {
                             readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
                     </div>
                 <?php endif; ?>
+
 
                 <script>
                     const extraBedTotal = <?= $extraBedTotal ?>;
@@ -463,18 +466,16 @@ while ($b = $bed_res->fetch_assoc()) {
                     ?>
                     <div class="amenities-section mt-3">
                         <label><i class="fas fa-concierge-bell"></i> Reschedule Details</label>
-                        <textarea class="form-control" rows="2" readonly>
-                            <?php
-                            while ($r = $resched_res->fetch_assoc()) {
-                                $oldCI = date("F j, Y", strtotime($r['check_in']));
-                                $oldCO = date("F j, Y", strtotime($r['check_out']));
-                                $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                $reason = $r['reason'];
+                        <textarea class="form-control" rows="2" readonly><?php
+                        while ($r = $resched_res->fetch_assoc()) {
+                            $oldCI = date("F j, Y", strtotime($r['check_in']));
+                            $oldCO = date("F j, Y", strtotime($r['check_out']));
+                            $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                            $reason = $r['reason'];
 
-                                echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
-                            }
-                            ?>
-                        </textarea>
+                            echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                        }
+                        ?></textarea>
                     </div>
                 <?php endif; ?>
             </div>
@@ -754,9 +755,7 @@ while ($b = $bed_res->fetch_assoc()) {
                     aria-label="Close"></button>
             </div>
 
-            <!-- Body -->
             <div class="modal-body" style="background-color: #f8f9fa; padding: 25px;">
-                <!-- Extension Info Alert -->
                 <div id="extendedInfo" class="alert alert-info border-0 shadow-sm mb-4"
                     style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); display: none;">
                     <div class="d-flex align-items-start">
@@ -768,7 +767,6 @@ while ($b = $bed_res->fetch_assoc()) {
                     </div>
                 </div>
 
-                <!-- Changes Table -->
                 <div class="table-responsive" id="reviewChangesTable"
                     style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <table class="table table-hover mb-0" style="background-color: white;">
@@ -797,7 +795,6 @@ while ($b = $bed_res->fetch_assoc()) {
                             </tr>
                         </thead>
                         <tbody id="reviewRoomsBody">
-                            <!-- Dynamic content will be inserted here -->
                         </tbody>
                     </table>
                 </div>
@@ -810,14 +807,12 @@ while ($b = $bed_res->fetch_assoc()) {
                         placeholder="Enter reason for transfer room..." required></textarea>
                 </div>
 
-                <!-- No Changes Message -->
                 <div id="noChangesMessage" class="text-center py-4" style="display:none; color: #757575;">
                     <i class="fas fa-info-circle fa-2x mb-2" style="color: #c9a961;"></i>
                     <p class="mb-0">No changes detected.</p>
                 </div>
             </div>
 
-            <!-- Footer -->
             <div class="modal-footer" style="background-color: #f8f9fa; border-top: 2px solid #e0e0e0; padding: 20px;">
                 <button type="button" id="confirmChangesBtn" class="btn btn-success px-4"
                     style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; font-weight: 500; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">
@@ -1021,10 +1016,10 @@ while ($b = $bed_res->fetch_assoc()) {
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
-            roomsTotal += parseFloat(selectedOption.dataset.price) * nights; // multiply by nights
+            roomsTotal += parseFloat(selectedOption.dataset.price) * nights;
         });
 
-        let extraBedPrice = extraBedTotal * nights; // multiply by nights if applicable
+        let extraBedPrice = extraBedTotal * nights;
 
         let totalBeforeDiscount = roomsTotal + extraBedPrice;
 
@@ -1070,6 +1065,16 @@ while ($b = $bed_res->fetch_assoc()) {
         });
     });
     function processBooking(status, reschedReason = null) {
+
+        if (status === 'finished') {
+            const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
+            const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
+
+            if (payment < remainingBal) {
+                alert("Payment amount is not enough. Please enter an amount equal to or greater than the remaining balance.");
+                return;
+            }
+        }
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
 
@@ -1101,13 +1106,11 @@ while ($b = $bed_res->fetch_assoc()) {
             const roomNumberSelect = row.querySelector('.roomNumberSelect');
 
             rooms.push({
-                id: row.dataset.bookedRoomId, // booked_rooms.id
+                id: row.dataset.bookedRoomId,
                 room_type_id: parseInt(roomTypeSelect.value),
                 room_number_fk_id: parseInt(roomNumberSelect.value),
-                // send original values for backend to detect changes
                 original_room_type_id: parseInt(row.dataset.defaultRoomType),
                 original_room_number_fk_id: parseInt(row.dataset.defaultRoomNumber),
-                // optional: for backend insert display info
                 room_type_name: roomTypeSelect.selectedOptions[0].textContent.trim(),
                 room_number_text: roomNumberSelect.selectedOptions[0].textContent.trim(),
                 price: parseFloat(row.dataset.price) || 0
@@ -1137,7 +1140,13 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => {
                 if (res === "success") {
                     alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
-                    window.location.href = "../Admin/index.php?room_booking_list";
+
+                    if (status === 'finished') {
+                        window.location.href = `../Admin/index.php?room_booking_receipt&booking_id=<?= $booking['booking_id'] ?>`;
+                    } else {
+                        window.location.href = "../Admin/index.php?room_booking_list";
+                    }
+
                 } else {
                     alert('Something went wrong. Please try again.');
                 }

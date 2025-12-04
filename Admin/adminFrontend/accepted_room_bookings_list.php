@@ -354,18 +354,16 @@ function getRoomInfo($conn, $room_number_fk_id)
                                 <h6 class="mb-0"><i class="fas fa-concierge-bell"></i> Reschedule Details</h6>
                             </div>
                             <div class="card-body p-0">
-                                <textarea class="form-control border-0" rows="3" readonly>
-                                    <?php
-                                    while ($r = $resched_res->fetch_assoc()) {
-                                        $oldCI = date("F j, Y", strtotime($r['check_in']));
-                                        $oldCO = date("F j, Y", strtotime($r['check_out']));
-                                        $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                        $reason = $r['reason'];
+                                <textarea class="form-control border-0" rows="3" readonly><?php
+                                while ($r = $resched_res->fetch_assoc()) {
+                                    $oldCI = date("F j, Y", strtotime($r['check_in']));
+                                    $oldCO = date("F j, Y", strtotime($r['check_out']));
+                                    $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                    $reason = $r['reason'];
 
-                                        echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
-                                    }
-                                    ?>
-                                </textarea>
+                                    echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                                }
+                                ?></textarea>
                             </div>
                         </div>
                     <?php endif; ?>

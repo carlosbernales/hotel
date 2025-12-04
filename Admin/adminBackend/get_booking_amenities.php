@@ -9,10 +9,7 @@ if (!$booking_id) {
     exit;
 }
 
-$sql = "SELECT ba.*, al.amenity_name 
-        FROM booking_amenities ba
-        LEFT JOIN amenity_list al ON ba.amenities_fk_id = al.id
-        WHERE ba.booking_fk_id=? AND ba.bedOrNot='no'";
+$sql = "SELECT * FROM booking_amenities WHERE booking_fk_id=?";
 
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $booking_id);
