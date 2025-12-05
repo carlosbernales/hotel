@@ -460,20 +460,37 @@ while ($b = $bed_res->fetch_assoc()) {
                 ";
                 $resched_res = $conn->query($resched_sql);
 
+                // Fetch original check-in/out from booking_check_inout
+                $ci_co_sql = "
+                    SELECT check_in, check_out
+                    FROM booking_check_inout
+                    WHERE booking_fk_id = {$booking['booking_id']}
+                ";
+                $ci_co_res = $conn->query($ci_co_sql);
+                $original = $ci_co_res->fetch_assoc();
+
                 if ($resched_res->num_rows > 0):
-                    $newCI = date("F j, Y", strtotime($booking['check_in']));
-                    $newCO = date("F j, Y", strtotime($booking['check_out']));
                     ?>
                     <div class="amenities-section mt-3">
                         <label><i class="fas fa-concierge-bell"></i> Reschedule Details</label>
                         <textarea class="form-control" rows="2" readonly><?php
+                        $prevCI = $original['check_in'];
+                        $prevCO = $original['check_out'];
+
                         while ($r = $resched_res->fetch_assoc()) {
-                            $oldCI = date("F j, Y", strtotime($r['check_in']));
-                            $oldCO = date("F j, Y", strtotime($r['check_out']));
+                            $newCI = $r['check_in'];
+                            $newCO = $r['check_out'];
                             $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
                             $reason = $r['reason'];
 
-                            echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                            echo "On $dateRes, the guest requested a reschedule, changing the stay from "
+                                . date("F j, Y", strtotime($prevCI)) . " - "
+                                . date("F j, Y", strtotime($prevCO)) . " to "
+                                . date("F j, Y", strtotime($newCI)) . " - "
+                                . date("F j, Y", strtotime($newCO)) . " due to the reason: \"$reason\".\n";
+
+                            $prevCI = $newCI;
+                            $prevCO = $newCO;
                         }
                         ?></textarea>
                     </div>
@@ -575,7 +592,8 @@ while ($b = $bed_res->fetch_assoc()) {
                         <thead class="table-dark">
                             <tr>
                                 <th><i class="fas fa-door-closed"></i> Room Type</th>
-                                <th><i class="fas fa-hashtag"></i> Room Number</th>
+                                <th><i class="fas fa-hashtag"></i> Room</th>
+                                <th><i class="fas fa-hashtag"></i> Original Room</th>
                                 <th><i class="fas fa-tag"></i> Price</th>
                                 <th><i class="fas fa-users"></i> Capacity</th>
                             </tr>
@@ -611,6 +629,20 @@ while ($b = $bed_res->fetch_assoc()) {
                                                 <option value="" selected>Select room number</option>
                                             <?php endif; ?>
                                         </select>
+                                    </td>
+                                    <td>
+                                        <?php
+                                        $originalNumber = '-';
+                                        if (isset($roomNumbers[$bookedRoomTypeId])) {
+                                            foreach ($roomNumbers[$bookedRoomTypeId] as $rnItem) {
+                                                if ($rnItem['room_number_id'] == $r['room_number_fk_id']) {
+                                                    $originalNumber = $rnItem['room_number'];
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        echo $originalNumber;
+                                        ?>
                                     </td>
 
                                     <td class="roomPrice fw-semibold text-success">
@@ -728,101 +760,99 @@ while ($b = $bed_res->fetch_assoc()) {
             </div>
 
             <div class="action-buttons">
-                <button type="button" id="processExtendStay" class="btn btn-success">
-                    <i class="fas fa-calendar-plus"></i> Extend Stay/ Transfer Room
+                <button type="button" id="processTransferRoom" class="btn btn-success">
+                    <i class="fas fa-exchange-alt"></i> Transfer Room
                 </button>
+
+                <button type="button" id="processExtendStay" class="btn btn-success">
+                    <i class="fas fa-calendar-plus"></i> Extend Stay
+                </button>
+
                 <button type="button" id="processCheckOut" class="btn btn-warning">
                     <i class="fas fa-sign-out-alt"></i> Process Check-out
                 </button>
             </div>
+
+
         </div>
     </div>
 
 </div>
 
-
-
-<div class="modal fade" id="reviewChangesModal" tabindex="-1" aria-labelledby="reviewChangesLabel" aria-hidden="true">
+<!-- Transfer Room Modal -->
+<div class="modal fade" id="reviewTransferModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <!-- Header -->
-            <div class="modal-header"
-                style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); border-bottom: 3px solid #c9a961;">
-                <h5 class="modal-title text-white" id="reviewChangesLabel">
-                    <i class="fas fa-clipboard-check me-2" style="color: #c9a961;"></i>
-                    Review Changes
-                </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
+        <div class="modal-content">
 
-            <div class="modal-body" style="background-color: #f8f9fa; padding: 25px;">
-                <div id="extendedInfo" class="alert alert-info border-0 shadow-sm mb-4"
-                    style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); display: none;">
-                    <div class="d-flex align-items-start">
-                        <i class="fas fa-calendar-alt me-3 mt-1" style="color: #1976d2; font-size: 1.2rem;"></i>
-                        <div>
-                            <h6 class="fw-bold mb-1" style="color: #1565c0;">Extension Details</h6>
-                            <p class="mb-0" style="color: #424242; font-size: 0.95rem;"></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="table-responsive" id="reviewChangesTable"
-                    style="border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <table class="table table-hover mb-0" style="background-color: white;">
-                        <thead style="background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);">
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
                             <tr>
-                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
-                                    <i class="fas fa-bed me-2"></i>Original Type
-                                </th>
-
-                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
-                                    <i class="fas fa-door-closed me-2"></i>Original #
-                                </th>
-
-                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
-                                    <i class="fas fa-info-circle me-2"></i>Status
-                                </th>
-
-                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
-                                    <i class="fas fa-bed me-2"></i>New Type
-                                </th>
-
-                                <th style="color: #c9a961; font-weight: 600; padding: 15px; border: none;">
-                                    <i class="fas fa-door-open me-2"></i>New #
-                                </th>
-
+                                <th>Original Type</th>
+                                <th>Original #</th>
+                                <th>Status</th>
+                                <th>New Type</th>
+                                <th>New #</th>
                             </tr>
                         </thead>
-                        <tbody id="reviewRoomsBody">
-                        </tbody>
+                        <tbody id="reviewRoomsBodyTransfer"></tbody>
                     </table>
                 </div>
 
                 <div class="mb-3 mt-3">
-                    <label for="roomTransferReason" class="form-label fw-bold" style="color: #424242;">
-                        Reason for Reschedule
-                    </label>
-                    <textarea id="roomTransferReason" class="form-control" rows="3"
-                        placeholder="Enter reason for transfer room..." required></textarea>
-                </div>
-
-                <div id="noChangesMessage" class="text-center py-4" style="display:none; color: #757575;">
-                    <i class="fas fa-info-circle fa-2x mb-2" style="color: #c9a961;"></i>
-                    <p class="mb-0">No changes detected.</p>
+                    <label>Reason for Transfer Room</label>
+                    <textarea id="roomTransferReason" class="form-control" rows="3"></textarea>
                 </div>
             </div>
 
-            <div class="modal-footer" style="background-color: #f8f9fa; border-top: 2px solid #e0e0e0; padding: 20px;">
-                <button type="button" id="confirmChangesBtn" class="btn btn-success px-4"
-                    style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); border: none; font-weight: 500; box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);">
-                    <i class="fas fa-check-circle me-2"></i>Confirm Changes
-                </button>
+            <div class="modal-footer">
+                <button id="confirmTransferBtn" class="btn btn-success">Confirm Transfer</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<div class="modal fade" id="extendStayModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+
+            <div class="modal-header" style="background: linear-gradient(135deg,#1a1a1a,#2d2d2d);
+                       border-bottom:3px solid #c9a961;">
+                <h5 class="modal-title text-white">
+                    <i class="fas fa-calendar-plus me-2" style="color:#c9a961;"></i>
+                    Extend Stay Review
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body" style="background:#f8f9fa; padding:25px;">
+
+                <!-- DATE CHANGE INFO -->
+                <div id="extendInfoBox" class="alert alert-info border-0 shadow-sm mb-4"
+                    style="background:linear-gradient(135deg,#e3f2fd,#bbdefb); display:none;">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-calendar-alt me-3 mt-1" style="color:#1976d2; font-size:1.2rem;"></i>
+                        <div>
+                            <h6 class="fw-bold mb-1" style="color:#1565c0;">Extension Details</h6>
+                            <p id="extendInfoText" class="mb-0"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button id="confirmExtendBtn" class="btn btn-success px-4">
+                    <i class="fas fa-check-circle me-2"></i>Confirm Extension
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 <script>
     function disableSelectedRoomNumbers() {
         const rows = document.querySelectorAll('#roomsTable tbody tr');
@@ -1003,49 +1033,42 @@ while ($b = $bed_res->fetch_assoc()) {
             updateRoomNumbers(row, true);
         });
     });
-
-
     function calculateTotalAmount() {
-        // Get check-in and check-out dates
         const checkIn = new Date(document.getElementById('check_in').value);
         const checkOut = new Date(document.getElementById('check_out').value);
 
         if (isNaN(checkIn) || isNaN(checkOut) || checkOut <= checkIn) return;
 
-        // Calculate number of nights
         const timeDiff = checkOut - checkIn;
         const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-        // Calculate total room price
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
             roomsTotal += parseFloat(selectedOption.dataset.price) * nights;
         });
 
-        // Extra bed price
-        let extraBedPrice = extraBedTotal * nights; // make sure extraBedTotal is defined elsewhere
+        let extraBedPrice = extraBedTotal * nights;
 
-        // Total before discount
         const totalBeforeDiscount = roomsTotal + extraBedPrice;
 
-        // Discount
         const discountPercentage = parseFloat(document.getElementById('discountPercentage').value.replace('%', '')) || 0;
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
 
-        // Total after discount
         const totalAmountNew = totalBeforeDiscount - discountAmount;
 
-        // Down payment & remaining balance
         const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
         let remainingBalance = totalAmountNew - downPayment;
         if (remainingBalance < 0) remainingBalance = 0;
 
-        // Update DOM
-        document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
-        document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
 
-        // Store discountAmount for processBooking()
+        const originalTotal = <?= $booking['total_amount'] ?>;
+
+        const totalToUse = totalAmountNew >= originalTotal ? totalAmountNew : originalTotal;
+
+        document.getElementById('totalAmountNew').value = totalToUse.toFixed(2);
+        document.getElementById('remainingBal').value = (totalToUse - parseFloat(document.getElementById('downPayment').value.replace(/,/g, ''))).toFixed(2);
+
         document.getElementById('discountAmount').value = discountAmount.toFixed(2);
     }
 
@@ -1071,6 +1094,9 @@ while ($b = $bed_res->fetch_assoc()) {
     });
 </script>
 <script>
+    /* ===============================
+   MAP ORIGINAL ROOM NUMBERS
+================================= */
     const originalRoomNumbersMap = {};
     document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
         const roomNumberSelect = row.querySelector('.roomNumberSelect');
@@ -1078,17 +1104,24 @@ while ($b = $bed_res->fetch_assoc()) {
             originalRoomNumbersMap[opt.value] = opt.textContent.trim();
         });
     });
-    function processBooking(status, reschedReason = null) {
 
+    /* ===============================
+       BOOKING PROCESS FUNCTION
+    ================================= */
+    function processBooking(status, reason = null) {
+
+        // Checkout validation
         if (status === 'finished') {
             const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
             const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
 
             if (payment < remainingBal) {
-                alert("Payment amount is not enough. Please enter an amount equal to or greater than the remaining balance.");
+                alert("Payment amount is not enough.");
                 return;
             }
         }
+
+        // Validate room numbers
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
 
@@ -1097,8 +1130,7 @@ while ($b = $bed_res->fetch_assoc()) {
             if (!selectedOption || selectedOption.value === "" ||
                 selectedOption.text.includes("Select room number") ||
                 selectedOption.text.includes("Please choose a room number") ||
-                selectedOption.text.includes("No available rooms")
-            ) {
+                selectedOption.text.includes("No available rooms")) {
                 select.classList.add('is-invalid');
                 allSelected = false;
             } else {
@@ -1107,45 +1139,42 @@ while ($b = $bed_res->fetch_assoc()) {
         });
 
         if (!allSelected) {
-            alert('Please select a room number for all booked rooms.');
+            alert('Please select a room number for all rooms.');
             return;
         }
 
-        const confirmed = confirm(`Are you sure you want to ${status === 'finished' ? 'finish' : 'extend/transfer'} this booking?`);
+        // Confirmation
+        const confirmed = confirm(
+            `Are you sure you want to ${status === 'finished' ? 'finish' : 'extend/transfer'} this booking?`
+        );
         if (!confirmed) return;
 
+        // Collect room data
         const rooms = [];
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
-            const roomTypeSelect = row.querySelector('.roomTypeSelect');
-            const roomNumberSelect = row.querySelector('.roomNumberSelect');
-
             rooms.push({
                 id: row.dataset.bookedRoomId,
-                room_type_id: parseInt(roomTypeSelect.value),
-                room_number_fk_id: parseInt(roomNumberSelect.value),
+                room_type_id: parseInt(row.querySelector('.roomTypeSelect').value),
+                room_number_fk_id: parseInt(row.querySelector('.roomNumberSelect').value),
                 original_room_type_id: parseInt(row.dataset.defaultRoomType),
                 original_room_number_fk_id: parseInt(row.dataset.defaultRoomNumber),
-                room_type_name: roomTypeSelect.selectedOptions[0].textContent.trim(),
-                room_number_text: roomNumberSelect.selectedOptions[0].textContent.trim(),
+                room_type_name: row.querySelector('.roomTypeSelect').selectedOptions[0].textContent.trim(),
+                room_number_text: row.querySelector('.roomNumberSelect').selectedOptions[0].textContent.trim(),
                 price: parseFloat(row.dataset.price) || 0
             });
         });
 
-        const discountAmount = parseFloat(document.getElementById('discountAmount').value) || 0;
-
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
             check_in: document.getElementById('check_in').value,
-            check_out: status === 'finished'
-                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
-                : document.getElementById('check_out').value,
+            check_out: document.getElementById('check_out').value,
             total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
             payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
             payment_method: document.querySelector('select[name="payment_method"]').value,
             status: status,
             rooms: rooms,
-            resched_reason: reschedReason,
-            discount_amount: discountAmount
+            resched_reason: reason,
+            discount_amount: parseFloat(document.getElementById('discountAmount').value) || 0
         };
 
         fetch('../Admin/adminBackend/update_extendeOrCheckoutRoom_booking.php', {
@@ -1159,7 +1188,8 @@ while ($b = $bed_res->fetch_assoc()) {
                     alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
 
                     if (status === 'finished') {
-                        window.location.href = `../Admin/index.php?room_booking_receipt&booking_id=<?= $booking['booking_id'] ?>`;
+                        window.location.href =
+                            `../Admin/index.php?room_booking_receipt&booking_id=<?= $booking['booking_id'] ?>`;
                     } else {
                         window.location.href = "../Admin/index.php?room_booking_list";
                     }
@@ -1171,117 +1201,149 @@ while ($b = $bed_res->fetch_assoc()) {
             .catch(err => console.error(err));
     }
 
+    /* ======================================================
+       PROCESS EXTEND STAY → EXTEND MODAL ONLY
+    ======================================================= */
     document.getElementById('processExtendStay').addEventListener('click', () => {
 
-        const roomSelects = document.querySelectorAll('.roomNumberSelect');
-        let allSelected = true;
-        roomSelects.forEach(select => {
-            const selectedOption = select.selectedOptions[0];
-            if (!selectedOption || selectedOption.value === "" ||
-                selectedOption.text.includes("Select room number") ||
-                selectedOption.text.includes("Please choose a room number") ||
-                selectedOption.text.includes("No available rooms")) {
-                select.classList.add('is-invalid');
-                allSelected = false;
-            } else select.classList.remove('is-invalid');
-        });
+        const originalCheckIn = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
+        const originalCheckOut = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
+        const newCheckIn = document.getElementById('check_in').value;
+        const newCheckOut = document.getElementById('check_out').value;
 
-        if (!allSelected) {
-            alert('Please select a room number for all booked rooms.');
-            return;
+        const extendChanged = originalCheckOut !== newCheckOut || originalCheckIn !== newCheckIn;
+
+        // <-- Use correct IDs here
+        const extendInfo = document.getElementById("extendInfoBox");
+        const extendMessage = document.getElementById("extendInfoText");
+
+        if (extendChanged) {
+            extendInfo.style.display = "block";
+
+            const originalCheckInFormatted = originalCheckIn
+                ? new Date(originalCheckIn).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                : "N/A";
+            const originalCheckOutFormatted = originalCheckOut
+                ? new Date(originalCheckOut).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                : "N/A";
+            const newCheckOutFormatted = newCheckOut
+                ? new Date(newCheckOut).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                : "N/A";
+
+            extendMessage.textContent =
+                `Originally from ${originalCheckInFormatted} to ${originalCheckOutFormatted}. You want to extend until ${newCheckOutFormatted}.`;
+        } else {
+            extendInfo.style.display = "block"; // show the section even if no changes
+            extendMessage.textContent = "No changes for extension.";
         }
-        const originalCheckInRaw = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
-        const originalCheckOutRaw = '<?= date('Y-m-d', strtotime($booking['check_out'])) ?>';
-        const newCheckInRaw = document.getElementById('check_in').value;
-        const newCheckOutRaw = document.getElementById('check_out').value;
 
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const originalCheckIn = new Date(originalCheckInRaw).toLocaleDateString('en-US', options);
-        const originalCheckOut = new Date(originalCheckOutRaw).toLocaleDateString('en-US', options);
-        const newCheckIn = new Date(newCheckInRaw).toLocaleDateString('en-US', options);
-        const newCheckOut = new Date(newCheckOutRaw).toLocaleDateString('en-US', options);
 
-        const checkInChanged = originalCheckInRaw !== newCheckInRaw;
-        const checkOutChanged = originalCheckOutRaw !== newCheckOutRaw;
+        new bootstrap.Modal(document.getElementById('extendStayModal')).show();
+    });
 
-        const tbody = document.getElementById('reviewRoomsBody');
-        tbody.innerHTML = '';
 
-        let roomChangesExist = false;
-        let changesExist = checkInChanged || checkOutChanged;
+    /* ======================================================
+       PROCESS TRANSFER ROOM → TRANSFER MODAL ONLY
+    ======================================================= */
+    document.getElementById('processTransferRoom').addEventListener('click', () => {
+        const tbody = document.getElementById('reviewRoomsBodyTransfer');
+        tbody.innerHTML = "";
 
-        const extendedInfo = document.getElementById('extendedInfo');
-        const reviewTable = document.getElementById('reviewChangesTable');
-        const noChangesMessage = document.getElementById('noChangesMessage');
-
-        noChangesMessage.style.display = "none";
-        reviewTable.style.display = "";
-        extendedInfo.style.display = changesExist ? "" : "none";
-
-        if (checkInChanged || checkOutChanged) {
-            extendedInfo.querySelector('p').textContent =
-                `This booking was originally scheduled from ${originalCheckIn} to ${originalCheckOut}, ` +
-                `you want to extend it to ${newCheckOut}?`;
-        }
+        let roomChanges = false;
 
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const originalType = row.dataset.defaultRoomType;
-            const originalNumberId = row.dataset.defaultRoomNumber;
-            const selectedType = row.querySelector('.roomTypeSelect').value;
-            const roomNumberSelect = row.querySelector('.roomNumberSelect');
+            const originalNumber = row.dataset.defaultRoomNumber;
 
-            const originalNumberText = originalRoomNumbersMap[originalNumberId] || '-';
-            const selectedNumberText = roomNumberSelect.selectedOptions[0].textContent.trim();
+            const newType = row.querySelector('.roomTypeSelect').value;
+            const newNumber = row.querySelector('.roomNumberSelect').value;
 
-            if (originalType !== selectedType || originalNumberId != roomNumberSelect.value) {
-                roomChangesExist = true;
-                changesExist = true;
+            if (originalType !== newType || originalNumber !== newNumber) {
+                roomChanges = true;
 
-                const originalTypeText = row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
-                const selectedTypeText = row.querySelector(`.roomTypeSelect option[value="${selectedType}"]`)?.text || '-';
+                const originalTypeText =
+                    row.querySelector(`.roomTypeSelect option[value="${originalType}"]`)?.text || '-';
+
+                const newTypeText =
+                    row.querySelector(`.roomTypeSelect option[value="${newType}"]`)?.text || '-';
+
+                const originalNumText = originalRoomNumbersMap[originalNumber] || '-';
+                const newNumText =
+                    row.querySelector('.roomNumberSelect').selectedOptions[0].textContent.trim();
 
                 tbody.innerHTML += `
                 <tr>
                     <td>${originalTypeText}</td>
-                    <td>${originalNumberText}</td>
+                    <td>${originalNumText}</td>
                     <td>Room Transfer</td>
-                    <td>${selectedTypeText}</td>
-                    <td>${selectedNumberText}</td>
+                    <td>${newTypeText}</td>
+                    <td>${newNumText}</td>
                 </tr>
             `;
             }
         });
 
-        if (!roomChangesExist && !checkInChanged && !checkOutChanged) {
-            tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted">No changes made.</td></tr>`;
+        if (!roomChanges) {
+            tbody.innerHTML =
+                `<tr><td colspan="5" class="text-center text-muted">No room changes detected.</td></tr>`;
         }
 
-        if (!changesExist) {
-            const proceed = confirm("No changes detected. Do you still want to proceed?");
-            if (proceed) {
-                const reason = document.getElementById('roomTransferReason').value.trim();
-                processBooking('checkin', reason);
+        new bootstrap.Modal(document.getElementById('reviewTransferModal')).show();
+    });
+
+    /* ======================================================
+   CONFIRM EXTEND STAY
+======================================================= */
+    document.getElementById('confirmExtendBtn').addEventListener('click', () => {
+        const extendMessage = document.getElementById("extendInfoText");
+
+        if (extendMessage.textContent === "No changes for extension.") {
+            alert("No changes detected for extension. Nothing to process.");
+            return; // stop processing
+        }
+
+        processBooking('checkin', null);
+    });
+
+    /* ======================================================
+       CONFIRM ROOM TRANSFER
+    ======================================================= */
+    document.getElementById('confirmTransferBtn').addEventListener('click', () => {
+
+        let hasRoomChange = false;
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            if (
+                row.dataset.defaultRoomType !== row.querySelector('.roomTypeSelect').value ||
+                row.dataset.defaultRoomNumber !== row.querySelector('.roomNumberSelect').value
+            ) {
+                hasRoomChange = true;
             }
+        });
+
+        const reason = document.getElementById('roomTransferReason').value.trim();
+
+        // If no room changes AND no reason, do not allow confirm
+        if (!hasRoomChange && !reason) {
+            alert("No room changes detected and reason is required. Transfer cannot be processed.");
             return;
         }
 
-        const reviewModal = new bootstrap.Modal(document.getElementById('reviewChangesModal'));
-        reviewModal.show();
-    });
-
-    document.getElementById('confirmChangesBtn').addEventListener('click', () => {
-        const transferReason = document.getElementById('roomTransferReason').value.trim();
-
-        if (!transferReason) {
+        // If room changes exist but reason is empty, still require reason
+        if (hasRoomChange && !reason) {
             alert("Please enter a reason for room transfer.");
             return;
         }
 
-        processBooking('checkin', transferReason);
+        processBooking('checkin', reason);
     });
 
+
+    /* ======================================================
+       CHECK OUT (unchanged)
+    ======================================================= */
     document.getElementById('processCheckOut')
         .addEventListener('click', () => processBooking('finished'));
+
 </script>
 
 

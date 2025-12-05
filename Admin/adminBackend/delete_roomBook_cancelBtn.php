@@ -5,7 +5,7 @@ if (!isset($_GET['booking_id'])) {
     die("Booking ID is required.");
 }
 
-$booking_id = (int) $_GET['booking_id']; // ensure integer for safety
+$booking_id = (int) $_GET['booking_id'];
 
 $conn->begin_transaction();
 
@@ -21,6 +21,11 @@ try {
     $stmt->close();
 
     $stmt = $conn->prepare("DELETE FROM booking_amenities WHERE booking_fk_id = ?");
+    $stmt->bind_param("i", $booking_id);
+    $stmt->execute();
+    $stmt->close();
+
+    $stmt = $conn->prepare("DELETE FROM booking_check_inout WHERE booking_fk_id = ?");
     $stmt->bind_param("i", $booking_id);
     $stmt->execute();
     $stmt->close();

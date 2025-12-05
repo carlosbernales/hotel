@@ -865186,3 +865186,426 @@ Data: Array
 [2025-12-04 11:05:12] Database connection successful
 [2025-12-04 11:05:12] Action received
 Data: check_unread
+[2025-12-04 13:35:30] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:35:30] Database connection successful
+[2025-12-04 13:35:30] Action received
+Data: check_unread
+[2025-12-04 13:36:00] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:36:00] Database connection successful
+[2025-12-04 13:36:00] Action received
+Data: check_unread
+[2025-12-04 13:36:30] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:36:30] Database connection successful
+[2025-12-04 13:36:30] Action received
+Data: check_unread
+[2025-12-04 13:37:00] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:37:00] Database connection successful
+[2025-12-04 13:37:00] Action received
+Data: check_unread
+[2025-12-04 13:37:30] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:37:30] Database connection successful
+[2025-12-04 13:37:30] Action received
+Data: check_unread
+[2025-12-04 13:38:00] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:38:00] Database connection successful
+[2025-12-04 13:38:00] Action received
+Data: check_unread
+[2025-12-04 13:38:30] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:38:30] Database connection successful
+[2025-12-04 13:38:30] Action received
+Data: check_unread
+[2025-12-04 13:39:31] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:39:31] Database connection successful
+[2025-12-04 13:39:31] Action received
+Data: check_unread
+[2025-12-04 13:40:32] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:40:32] Database connection successful
+[2025-12-04 13:40:32] Action received
+Data: check_unread
+[2025-12-04 13:41:01] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:41:01] Database connection successful
+[2025-12-04 13:41:01] Action received
+Data: check_unread
+[2025-12-04 13:41:30] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:41:30] Database connection successful
+[2025-12-04 13:41:30] Action received
+Data: check_unread
+[2025-12-04 13:42:00] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:42:00] Database connection successful
+[2025-12-04 13:42:00] Action received
+Data: check_unread
+[2025-12-04 13:42:45] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:42:45] Database connection successful
+[2025-12-04 13:42:45] Action received
+Data: check_unread
+[2025-12-04 13:43:01] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:43:01] Database connection successful
+[2025-12-04 13:43:01] Action received
+Data: check_unread
+[2025-12-04 13:43:30] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:43:30] Database connection successful
+[2025-12-04 13:43:30] Action received
+Data: check_unread
+[2025-12-04 13:43:40] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:43:40] Database connection successful
+[2025-12-04 13:43:40] Action received
+Data: check_unread
+[2025-12-04 13:44:10] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:44:10] Database connection successful
+[2025-12-04 13:44:10] Action received
+Data: check_unread
+[2025-12-04 13:44:40] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-04 13:44:40] Database connection successful
+[2025-12-04 13:44:40] Action received
+Data: check_unread
+[2025-12-05 02:51:28] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 02:51:28] Database connection successful
+[2025-12-05 02:51:28] Action received
+Data: check_unread
+[2025-12-05 02:51:31] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 02:51:31] Database connection successful
+[2025-12-05 02:51:31] Action received
+Data: check_unread
+[2025-12-05 06:16:53] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 06:16:53] Database connection successful
+[2025-12-05 06:16:53] Action received
+Data: check_unread
+[2025-12-05 06:17:23] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 06:17:23] Database connection successful
+[2025-12-05 06:17:23] Action received
+Data: check_unread
+[2025-12-05 06:17:37] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 06:17:37] Database connection successful
+[2025-12-05 06:17:37] Action received
+Data: check_unread
+[2025-12-05 07:28:24] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 07:28:24] Database connection successful
+[2025-12-05 07:28:24] Action received
+Data: check_unread
+[2025-12-05 07:28:28] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 07:28:28] Database connection successful
+[2025-12-05 07:28:28] Action received
+Data: check_unread
+[2025-12-05 08:58:31] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 08:58:31] Database connection successful
+[2025-12-05 08:58:31] Action received
+Data: check_unread
+[2025-12-05 08:58:31] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 08:58:31] Database connection successful
+[2025-12-05 08:58:31] Action received
+Data: check_unread
+[2025-12-05 13:17:56] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:17:56] Database connection successful
+[2025-12-05 13:17:56] Action received
+Data: check_unread
+[2025-12-05 13:18:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:18:26] Database connection successful
+[2025-12-05 13:18:26] Action received
+Data: check_unread
+[2025-12-05 13:18:56] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:18:56] Database connection successful
+[2025-12-05 13:18:56] Action received
+Data: check_unread
+[2025-12-05 13:19:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:19:26] Database connection successful
+[2025-12-05 13:19:26] Action received
+Data: check_unread
+[2025-12-05 13:19:56] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:19:56] Database connection successful
+[2025-12-05 13:19:56] Action received
+Data: check_unread
+[2025-12-05 13:20:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:20:26] Database connection successful
+[2025-12-05 13:20:26] Action received
+Data: check_unread
+[2025-12-05 13:20:56] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:20:56] Database connection successful
+[2025-12-05 13:20:56] Action received
+Data: check_unread
+[2025-12-05 13:21:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:21:26] Database connection successful
+[2025-12-05 13:21:26] Action received
+Data: check_unread
+[2025-12-05 13:22:27] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:22:27] Database connection successful
+[2025-12-05 13:22:27] Action received
+Data: check_unread
+[2025-12-05 13:23:28] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:23:28] Database connection successful
+[2025-12-05 13:23:28] Action received
+Data: check_unread
+[2025-12-05 13:24:09] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:24:09] Database connection successful
+[2025-12-05 13:24:09] Action received
+Data: check_unread
+[2025-12-05 13:24:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:24:26] Database connection successful
+[2025-12-05 13:24:26] Action received
+Data: check_unread
+[2025-12-05 13:24:56] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:24:56] Database connection successful
+[2025-12-05 13:24:56] Action received
+Data: check_unread
+[2025-12-05 13:25:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:25:26] Database connection successful
+[2025-12-05 13:25:26] Action received
+Data: check_unread
+[2025-12-05 13:25:57] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:25:57] Database connection successful
+[2025-12-05 13:25:57] Action received
+Data: check_unread
+[2025-12-05 13:26:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:26:26] Database connection successful
+[2025-12-05 13:26:26] Action received
+Data: check_unread
+[2025-12-05 13:26:56] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:26:56] Database connection successful
+[2025-12-05 13:26:56] Action received
+Data: check_unread
+[2025-12-05 13:27:16] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:27:16] Database connection successful
+[2025-12-05 13:27:16] Action received
+Data: check_unread
+[2025-12-05 13:27:26] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:27:26] Database connection successful
+[2025-12-05 13:27:26] Action received
+Data: check_unread
+[2025-12-05 13:27:28] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-05 13:27:28] Database connection successful
+[2025-12-05 13:27:28] Action received
+Data: check_unread

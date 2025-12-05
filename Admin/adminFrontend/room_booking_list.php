@@ -597,11 +597,65 @@ if ($bedsResult->num_rows > 0) {
                                     </div>
                                 <?php endif; ?>
 
+                                <div class="card mb-3 border-0 shadow-sm">
+                                    <div class="card-header bg-dark text-warning">
+                                        <h6 class="mb-0"><i class="bi bi-door-open"></i> Amenities</h6>
+                                    </div>
+                                    <div class="card-body p-0">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover mb-0">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th>Amenity</th>
+                                                        <th>Quantity</th>
+                                                        <th>Price</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php
+                                                    if (!empty($b['booking_id'])) {
+                                                        $stmt = $conn->prepare("
+                                                            SELECT amenity_name, quantity, price
+                                                            FROM booking_amenities
+                                                            WHERE booking_fk_id = ?
+                                                        ");
+                                                        $stmt->bind_param("i", $b['booking_id']);
+                                                        $stmt->execute();
+                                                        $amenities_res = $stmt->get_result();
+
+                                                        if ($amenities_res->num_rows > 0) {
+                                                            while ($amenity = $amenities_res->fetch_assoc()) {
+                                                                echo "<tr>
+                                                                        <td>" . htmlspecialchars($amenity['amenity_name']) . "</td>
+                                                                        <td>" . htmlspecialchars($amenity['quantity']) . "</td>
+                                                                        <td>₱" . number_format($amenity['price'], 2) . "</td>
+                                                                    </tr>";
+                                                            }
+                                                        } else {
+                                                            echo '<tr><td colspan="3" class="text-center text-muted py-3">No amenities found</td></tr>';
+                                                        }
+                                                    }
+                                                    ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+
 
                                 <?php
                                 // Fetch reschedules safely
                                 $resched_res = null;
                                 if (!empty($b['booking_id'])) {
+                                    // Get original check-in/out from booking_check_inout
+                                    $ci_co_stmt = $conn->prepare("SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?");
+                                    $ci_co_stmt->bind_param("i", $b['booking_id']);
+                                    $ci_co_stmt->execute();
+                                    $ci_co_result = $ci_co_stmt->get_result();
+                                    $original = $ci_co_result->fetch_assoc();
+
+                                    // Fetch reschedules
                                     $stmt = $conn->prepare("SELECT * FROM reschedule_bookings WHERE booking_fk_id = ? ORDER BY date_resched ASC");
                                     $stmt->bind_param("i", $b['booking_id']);
                                     $stmt->execute();
@@ -609,26 +663,33 @@ if ($bedsResult->num_rows > 0) {
                                 }
 
                                 if ($resched_res && $resched_res->num_rows > 0):
-                                    $newCI = date("F j, Y", strtotime($b['check_in']));
-                                    $newCO = date("F j, Y", strtotime($b['check_out']));
                                     ?>
                                     <div class="card mb-3 border-0 shadow-sm">
                                         <div class="card-header bg-dark text-warning">
                                             <h6 class="mb-0"><i class="fas fa-concierge-bell"></i> Reschedule Details</h6>
                                         </div>
                                         <div class="card-body p-0">
-                                            <textarea class="form-control border-0" rows="3" readonly>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                <?php
-                                                                                                                                                                                                                                                                                                                                                                                                                                                while ($r = $resched_res->fetch_assoc()) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    $oldCI = date("F j, Y", strtotime($r['check_in']));
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    $oldCO = date("F j, Y", strtotime($r['check_out']));
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    $reason = $r['reason'];
+                                            <textarea class="form-control border-0" rows="3" readonly><?php
+                                            $prevCI = $original['check_in'];
+                                            $prevCO = $original['check_out'];
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
-                                                                                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                ?>
-                                                                                                                                                                                                                                                                                                                                                                                                                                            </textarea>
+                                            while ($r = $resched_res->fetch_assoc()) {
+                                                $newCI = $r['check_in'];
+                                                $newCO = $r['check_out'];
+                                                $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                                $reason = $r['reason'];
+
+                                                echo "On $dateRes, the guest requested a reschedule, changing the stay from "
+                                                    . date("F j, Y", strtotime($prevCI)) . " - "
+                                                    . date("F j, Y", strtotime($prevCO)) . " to "
+                                                    . date("F j, Y", strtotime($newCI)) . " - "
+                                                    . date("F j, Y", strtotime($newCO)) . " due to the reason: \"$reason\".\n";
+
+                                                // Update previous dates for next iteration
+                                                $prevCI = $newCI;
+                                                $prevCO = $newCO;
+                                            }
+                                            ?></textarea>
                                         </div>
                                     </div>
                                 <?php endif; ?>
@@ -786,6 +847,7 @@ if ($bedsResult->num_rows > 0) {
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 

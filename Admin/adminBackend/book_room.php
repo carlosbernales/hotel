@@ -98,6 +98,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt->execute()) {
         $booking_id = $conn->insert_id;
 
+        $stmtCheck = $conn->prepare("
+            INSERT INTO booking_check_inout (booking_fk_id, check_in, check_out)
+            VALUES (?, ?, ?)
+        ");
+
+        if ($stmtCheck) {
+            $stmtCheck->bind_param("iss", $booking_id, $check_in, $check_out);
+            $stmtCheck->execute();
+            $stmtCheck->close();
+        }
+
+
         $cartItems = json_decode($_POST['cart_items'], true);
         if ($cartItems && count($cartItems) > 0) {
             foreach ($cartItems as $item) {

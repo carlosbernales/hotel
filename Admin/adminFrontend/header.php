@@ -411,32 +411,11 @@ $currentPage = basename($page);
                         <i class="fas fa-users-cog"></i> Room Booking
                     </a>
                 </div>
-
-                <div class="sidebar-submenu">
-                    <a href="index.php?table_management"
-                        class="<?php echo ($currentPage == 'table_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-users-cog"></i> Table Booking
-                    </a>
-                </div>
-
-                <div class="sidebar-submenu">
-                    <a href="index.php?cafe_management"
-                        class="<?php echo ($currentPage == 'cafe_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-users-cog"></i> Cafe Management
-                    </a>
-                </div>
-
-                <div class="sidebar-submenu">
-                    <a href="index.php?event_management"
-                        class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-users-cog"></i> Event Management
-                    </a>
-                </div>
             </div>
 
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-user-tie"></i> Settings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -446,6 +425,13 @@ $currentPage = basename($page);
                     <a href="index.php?room_management"
                         class="<?php echo ($currentPage == 'room_management.php') ? 'active' : ''; ?>">
                         <i class="fas fa-users-cog"></i> Room Management
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?amenity_list"
+                        class="<?php echo ($currentPage == 'amenity_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Amenities
                     </a>
                 </div>
 

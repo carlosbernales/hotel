@@ -60,7 +60,7 @@ if ($status === 'rescheduled') {
         INSERT INTO reschedule_bookings (booking_fk_id, check_in, check_out, reason, date_resched)
         VALUES (?, ?, ?, ?, ?)
     ");
-    $insertResched->bind_param("issss", $booking_id, $oldCheckIn, $oldCheckOut, $resched_reason, $dateResched);
+    $insertResched->bind_param("issss", $booking_id, $checkin, $checkout, $resched_reason, $dateResched);
     if (!$insertResched->execute()) {
         die("Reschedule insert failed: " . $insertResched->error);
     }

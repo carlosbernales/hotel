@@ -115,6 +115,13 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['room_booking_receipt'])) {
     $page = "adminFrontend/room_booking_receipt.php";
 
+} elseif (isset($_GET['amenity_list'])) {
+    $page = "adminFrontend/amenity_list.php";
+
+    ///THIS IS TEST
+} elseif (isset($_GET['test'])) {
+    $page = "adminFrontend/test.php";
+    ///THIS IS TEST
 
 
 } elseif (isset($_GET['advance_checkin'])) {

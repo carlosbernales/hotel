@@ -38,7 +38,16 @@ $updateBooking->bind_param(
 );
 $updateBooking->execute();
 
-// Update rooms
+if ($status !== "checkin") {
+    $updateCI = $conn->prepare("
+        UPDATE booking_check_inout
+        SET check_in = ?, check_out = ?
+        WHERE booking_fk_id = ?
+    ");
+    $updateCI->bind_param("ssi", $checkin, $checkout, $booking_id);
+    $updateCI->execute();
+}
+
 foreach ($rooms as $r) {
 
     $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");

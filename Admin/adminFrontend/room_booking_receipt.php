@@ -163,15 +163,91 @@ if (isset($_GET['booking_id'])) {
                 </div>
 
                 <!-- Booking Information -->
+                <!-- Booking Information -->
                 <div class="section-title">Booking Information</div>
+
+                <?php
+                // Fetch original check-in/out from booking_check_inout
+                $checkin_sql = "SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?";
+                $stmt_checkin = $conn->prepare($checkin_sql);
+                $stmt_checkin->bind_param("i", $booking_id);
+                $stmt_checkin->execute();
+                $checkin_result = $stmt_checkin->get_result();
+
+                $original_check_in = $original_check_out = null;
+                if ($checkin_result->num_rows > 0) {
+                    $row = $checkin_result->fetch_assoc();
+                    $original_check_in = $row['check_in'];
+                    $original_check_out = $row['check_out'];
+                }
+
+                // Fetch latest reschedule check-in/out
+                $resched_sql = "SELECT check_in, check_out 
+                FROM reschedule_bookings 
+                WHERE booking_fk_id = ? 
+                ORDER BY date_resched DESC 
+                LIMIT 1";
+                $stmt_resched = $conn->prepare($resched_sql);
+                $stmt_resched->bind_param("i", $booking_id);
+                $stmt_resched->execute();
+                $resched_result = $stmt_resched->get_result();
+
+                $latest_resched_check_in = $latest_resched_check_out = null;
+                if ($resched_result->num_rows > 0) {
+                    $row = $resched_result->fetch_assoc();
+                    $latest_resched_check_in = $row['check_in'];
+                    $latest_resched_check_out = $row['check_out'];
+                }
+                ?>
+
+                <!-- Booked check-in/out -->
+                <div class="detail-row">
+                    <span class="detail-label">Booked Check-in:</span>
+                    <span><?= $original_check_in ? date("F j, Y", strtotime($original_check_in)) : 'N/A' ?></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Booked Check-out:</span>
+                    <span><?= $original_check_out ? date("F j, Y", strtotime($original_check_out)) : 'N/A' ?></span>
+                </div>
+
+
+
+                <!-- Latest reschedule check-in/out -->
+                <?php if ($latest_resched_check_in && $latest_resched_check_out): ?>
+                    <div class="detail-row" style="margin-top:10px;">
+                        <span class="detail-label">Reschedule Check-in:</span>
+                        <span><?= date("F j, Y", strtotime($latest_resched_check_in)) ?></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Reschedule Check-out:</span>
+                        <span><?= date("F j, Y", strtotime($latest_resched_check_out)) ?></span>
+                    </div>
+                <?php endif; ?>
+
                 <div class="detail-row">
                     <span class="detail-label">Check-in:</span>
-                    <span><?= date("F j, Y", strtotime($booking['check_in'])) ?></span>
+                    <span>
+                        <?= date("F j, Y", strtotime($booking['check_in'])) ?>
+                        <?php
+                        if ($original_check_in && strtotime($booking['check_in']) < strtotime($original_check_in)) {
+                            echo "<strong style='color: green;'> (Advance Check-in)</strong>";
+                        }
+                        ?>
+                    </span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Check-out:</span>
-                    <span><?= date("F j, Y", strtotime($booking['check_out'])) ?></span>
+                    <span>
+                        <?= date("F j, Y", strtotime($booking['check_out'])) ?>
+                        <?php
+                        if ($original_check_out && strtotime($booking['check_out']) > strtotime($original_check_out)) {
+                            echo "<strong style='color: orange;'> (Extended Booking)</strong>";
+                        }
+                        ?>
+                    </span>
                 </div>
+
+
                 <div class="detail-row">
                     <span class="detail-label">Number of Nights:</span>
                     <span><?= $booking['nights'] ?></span>
@@ -291,6 +367,19 @@ if (isset($_GET['booking_id'])) {
                     echo "</table>";
                 }
 
+                // Get original check-in/out from booking_check_inout
+                $original_sql = "SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?";
+                $stmt_orig = $conn->prepare($original_sql);
+                $stmt_orig->bind_param("i", $booking_id);
+                $stmt_orig->execute();
+                $orig_result = $stmt_orig->get_result();
+
+                if ($orig_result->num_rows > 0) {
+                    $orig = $orig_result->fetch_assoc();
+                    $original_check_in = date("F j, Y", strtotime($orig['check_in']));
+                    $original_check_out = date("F j, Y", strtotime($orig['check_out']));
+                }
+
                 // Reschedule Details
                 $reschedule_sql = "SELECT check_in, check_out, date_resched, reason FROM reschedule_bookings WHERE booking_fk_id = ?";
                 $stmt5 = $conn->prepare($reschedule_sql);
@@ -301,21 +390,20 @@ if (isset($_GET['booking_id'])) {
                 if ($reschedule_result->num_rows > 0) {
                     echo "<div class='section-title'>Reschedule History</div>";
                     while ($resched = $reschedule_result->fetch_assoc()) {
-                        $original_check_in = date("F j, Y", strtotime($resched['check_in']));
-                        $original_check_out = date("F j, Y", strtotime($resched['check_out']));
                         $resched_date = date("F j, Y", strtotime($resched['date_resched']));
-                        $new_check_in = date("F j, Y", strtotime($booking['check_in']));
-                        $new_check_out = date("F j, Y", strtotime($booking['check_out']));
+                        $new_check_in = date("F j, Y", strtotime($resched['check_in']));
+                        $new_check_out = date("F j, Y", strtotime($resched['check_out']));
                         $reason = htmlspecialchars($resched['reason']);
 
                         echo "<p style='font-size: 13px; line-height: 1.6; margin: 10px 0;'>
-                                Original booking: <strong>$original_check_in</strong> to <strong>$original_check_out</strong><br>
-                                Rescheduled on: <strong>$resched_date</strong><br>
-                                New dates: <strong>$new_check_in</strong> to <strong>$new_check_out</strong><br>
-                                Reason: <em>$reason</em>
-                              </p>";
+                            Original booking: <strong>$original_check_in</strong> to <strong>$original_check_out</strong><br>
+                            Rescheduled on: <strong>$resched_date</strong><br>
+                            New dates: <strong>$new_check_in</strong> to <strong>$new_check_out</strong><br>
+                            Reason: <em>$reason</em>
+                        </p>";
                     }
                 }
+
                 ?>
 
                 <!-- Payment Summary -->

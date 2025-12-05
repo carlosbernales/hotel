@@ -927,9 +927,10 @@ while ($b = $bed_res->fetch_assoc()) {
         // ------------------------------
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
-            check_in: status === 'checkin'
-                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
-                : document.getElementById('check_in').value,
+            // check_in: status === 'checkin'
+            //     ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+            //     : document.getElementById('check_in').value,
+            check_in: document.getElementById('check_in').value,
             check_out: document.getElementById('check_out').value,
             total_amount: totalAmountNew,
             downpayment_amount: newDownPayment,
