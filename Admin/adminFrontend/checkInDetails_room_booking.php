@@ -284,7 +284,7 @@
 </style>
 <?php
 include 'adminBackend/mydb.php';
-include 'adminFrontend/header.php';
+include 'adminFrontend/header_nosidebar.php';
 $booking_id = $_GET['id'];
 
 $booking_sql = "SELECT * FROM bookings WHERE booking_id = $booking_id";
@@ -331,453 +331,449 @@ while ($b = $bed_res->fetch_assoc()) {
     $beds[] = $b;
 }
 ?>
-<div class="main-content" id="mainContent">
-    <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
-        <div>
-            <i class="fas fa-home"> Booking Details</i>
-        </div>
+<div class="breadcrumb-custom d-flex justify-content-between align-items-center">
+    <div>
+        <i class="fas fa-home"> Booking Details</i>
+    </div>
+</div>
+
+<div class="info-card" style="margin-bottom: 40px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
+            <i class="fas fa-check-circle" style="color: var(--gold);"></i> Checked In Booking Details
+        </h3>
+        <a href="#" id="backProcess" class="btn btn-secondary btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
     </div>
 
-    <div class="info-card" style="margin-bottom: 40px;">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
-                <i class="fas fa-check-circle" style="color: var(--gold);"></i> Checked In Booking Details
-            </h3>
-            <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
-                <i class="fas fa-arrow-left"></i> Back to List
-            </a>
-        </div>
+    <div class="container-fluid">
+        <div class="section-card mb-4">
+            <h4 class="section-header">
+                <i class="fas fa-info-circle"></i> Booking Information
+            </h4>
 
-        <div class="container-fluid">
-            <div class="section-card mb-4">
-                <h4 class="section-header">
-                    <i class="fas fa-info-circle"></i> Booking Information
-                </h4>
-
-                <div class="info-grid">
-                    <div class="info-item">
-                        <label><i class="fas fa-receipt"></i> Booking Reference</label>
-                        <input class="form-control" value="<?= $booking['booking_reference'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-user"></i> First Name</label>
-                        <input class="form-control" value="<?= $booking['first_name'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-user"></i> Last Name</label>
-                        <input class="form-control" value="<?= $booking['last_name'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-phone-alt"></i> Contact Number</label>
-                        <input class="form-control" value="<?= $booking['contact'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-users"></i> Number of Guests</label>
-                        <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>"
-                            readonly>
-                    </div>
-                    <div class="info-item">
-                        <label><i class="fas fa-moon"></i> Number of Nights</label>
-                        <input class="form-control" value="<?= $booking['nights'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-door-open"></i> Room Quantity</label>
-                        <input class="form-control" value="<?= $booking['room_quantity'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-male"></i> Adults</label>
-                        <input class="form-control" value="<?= $booking['num_adults'] ?>" readonly>
-                    </div>
-
-                    <div class="info-item">
-                        <label><i class="fas fa-child"></i> Children</label>
-                        <input class="form-control" value="<?= $booking['num_children'] ?>" readonly>
-                    </div>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label><i class="fas fa-receipt"></i> Booking Reference</label>
+                    <input class="form-control" value="<?= $booking['booking_reference'] ?>" readonly>
                 </div>
 
-                <?php
-                $amenitiesDisplay = "None";
-                $bookingId = $booking['booking_id'];
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> First Name</label>
+                    <input class="form-control" value="<?= $booking['first_name'] ?>" readonly>
+                </div>
 
-                $amenities_sql = "SELECT * FROM booking_amenities WHERE booking_fk_id = ?";
-                $stmt = $conn->prepare($amenities_sql);
-                $stmt->bind_param("i", $bookingId);
-                $stmt->execute();
-                $res = $stmt->get_result();
+                <div class="info-item">
+                    <label><i class="fas fa-user"></i> Last Name</label>
+                    <input class="form-control" value="<?= $booking['last_name'] ?>" readonly>
+                </div>
 
-                $extraBedTotal = 0;
+                <div class="info-item">
+                    <label><i class="fas fa-phone-alt"></i> Contact Number</label>
+                    <input class="form-control" value="<?= $booking['contact'] ?>" readonly>
+                </div>
 
-                if ($res->num_rows > 0) {
-                    $items = [];
-                    while ($row = $res->fetch_assoc()) {
-                        $priceDisplay = ($row['price'] > 0) ? " (₱" . number_format($row['price'], 2) . ")" : "";
-                        $items[] = $row['amenity_name'] . " x" . $row['quantity'] . $priceDisplay;
-                        $extraBedTotal += $row['quantity'] * $row['price'];
-                    }
-                    $amenitiesDisplay = implode("\n", $items);
+                <div class="info-item">
+                    <label><i class="fas fa-users"></i> Number of Guests</label>
+                    <input class="form-control" id="numberGuest" value="<?= $booking['number_of_guests'] ?>" readonly>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-moon"></i> Number of Nights</label>
+                    <input class="form-control" value="<?= $booking['nights'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-door-open"></i> Room Quantity</label>
+                    <input class="form-control" value="<?= $booking['room_quantity'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-male"></i> Adults</label>
+                    <input class="form-control" value="<?= $booking['num_adults'] ?>" readonly>
+                </div>
+
+                <div class="info-item">
+                    <label><i class="fas fa-child"></i> Children</label>
+                    <input class="form-control" value="<?= $booking['num_children'] ?>" readonly>
+                </div>
+            </div>
+
+            <?php
+            $amenitiesDisplay = "None";
+            $bookingId = $booking['booking_id'];
+
+            $amenities_sql = "SELECT * FROM booking_amenities WHERE booking_fk_id = ?";
+            $stmt = $conn->prepare($amenities_sql);
+            $stmt->bind_param("i", $bookingId);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            $extraBedTotal = 0;
+
+            if ($res->num_rows > 0) {
+                $items = [];
+                while ($row = $res->fetch_assoc()) {
+                    $priceDisplay = ($row['price'] > 0) ? " (₱" . number_format($row['price'], 2) . ")" : "";
+                    $items[] = $row['amenity_name'] . " x" . $row['quantity'] . $priceDisplay;
+                    $extraBedTotal += $row['quantity'] * $row['price'];
                 }
-                ?>
+                $amenitiesDisplay = implode("\n", $items);
+            }
+            ?>
 
-                <?php if ($amenitiesDisplay !== "None"): ?>
-                    <div class="amenities-section mt-3">
-                        <label><i class="fas fa-concierge-bell"></i> Booked Amenities</label>
-                        <textarea class="form-control" rows="4"
-                            readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
-                    </div>
-                <?php endif; ?>
+            <?php if ($amenitiesDisplay !== "None"): ?>
+                <div class="amenities-section mt-3">
+                    <label><i class="fas fa-concierge-bell"></i> Booked Amenities</label>
+                    <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                </div>
+            <?php endif; ?>
 
 
-                <script>
-                    const extraBedTotal = <?= $extraBedTotal ?>;
-                </script>
+            <script>
+                const extraBedTotal = <?= $extraBedTotal ?>;
+            </script>
 
-                <div class="row mt-3">
-                    <div class="col-md-6 mb-3">
-                        <label><i class="fas fa-calendar-check"></i> Check-in Date</label>
-                        <input type="date" id="check_in" class="form-control"
-                            value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
-                    </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label><i class="fas fa-calendar-times"></i> Check-out Date</label>
-                        <input type="date" id="check_out" class="form-control"
-                            value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
-                    </div>
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <label><i class="fas fa-calendar-check"></i> Check-in Date</label>
+                    <input type="date" id="check_in" class="form-control"
+                        value="<?= date('Y-m-d', strtotime($booking['check_in'])) ?>" disabled>
                 </div>
 
-                <?php
-                $resched_sql = "
+                <div class="col-md-6 mb-3">
+                    <label><i class="fas fa-calendar-times"></i> Check-out Date</label>
+                    <input type="date" id="check_out" class="form-control"
+                        value="<?= date('Y-m-d', strtotime($booking['check_out'])) ?>">
+                </div>
+            </div>
+
+            <?php
+            $resched_sql = "
                     SELECT *
                     FROM reschedule_bookings
                     WHERE booking_fk_id = {$booking['booking_id']}
                     ORDER BY date_resched ASC
                 ";
-                $resched_res = $conn->query($resched_sql);
+            $resched_res = $conn->query($resched_sql);
 
-                // Fetch original check-in/out from booking_check_inout
-                $ci_co_sql = "
+            // Fetch original check-in/out from booking_check_inout
+            $ci_co_sql = "
                     SELECT check_in, check_out
                     FROM booking_check_inout
                     WHERE booking_fk_id = {$booking['booking_id']}
                 ";
-                $ci_co_res = $conn->query($ci_co_sql);
-                $original = $ci_co_res->fetch_assoc();
+            $ci_co_res = $conn->query($ci_co_sql);
+            $original = $ci_co_res->fetch_assoc();
 
-                if ($resched_res->num_rows > 0):
-                    ?>
-                    <div class="amenities-section mt-3">
-                        <label><i class="fas fa-concierge-bell"></i> Reschedule Details</label>
-                        <textarea class="form-control" rows="2" readonly><?php
-                        $prevCI = $original['check_in'];
-                        $prevCO = $original['check_out'];
+            if ($resched_res->num_rows > 0):
+                ?>
+                <div class="amenities-section mt-3">
+                    <label><i class="fas fa-concierge-bell"></i> Reschedule Details</label>
+                    <textarea class="form-control" rows="2" readonly><?php
+                    $prevCI = $original['check_in'];
+                    $prevCO = $original['check_out'];
 
-                        while ($r = $resched_res->fetch_assoc()) {
-                            $newCI = $r['check_in'];
-                            $newCO = $r['check_out'];
-                            $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                            $reason = $r['reason'];
+                    while ($r = $resched_res->fetch_assoc()) {
+                        $newCI = $r['check_in'];
+                        $newCO = $r['check_out'];
+                        $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                        $reason = $r['reason'];
 
-                            echo "On $dateRes, the guest requested a reschedule, changing the stay from "
-                                . date("F j, Y", strtotime($prevCI)) . " - "
-                                . date("F j, Y", strtotime($prevCO)) . " to "
-                                . date("F j, Y", strtotime($newCI)) . " - "
-                                . date("F j, Y", strtotime($newCO)) . " due to the reason: \"$reason\".\n";
+                        echo "On $dateRes, the guest requested a reschedule, changing the stay from "
+                            . date("F j, Y", strtotime($prevCI)) . " - "
+                            . date("F j, Y", strtotime($prevCO)) . " to "
+                            . date("F j, Y", strtotime($newCI)) . " - "
+                            . date("F j, Y", strtotime($newCO)) . " due to the reason: \"$reason\".\n";
 
-                            $prevCI = $newCI;
-                            $prevCO = $newCO;
-                        }
-                        ?></textarea>
-                    </div>
-                <?php endif; ?>
-            </div>
+                        $prevCI = $newCI;
+                        $prevCO = $newCO;
+                    }
+                    ?></textarea>
+                </div>
+            <?php endif; ?>
+        </div>
 
-            <?php
-            $transfers_sql = "
+        <?php
+        $transfers_sql = "
                 SELECT *
                 FROM room_transfers
                 WHERE bookings_fk_id = $booking_id
                 ORDER BY transfer_date ASC
             ";
-            $transfers_res = $conn->query($transfers_sql);
+        $transfers_res = $conn->query($transfers_sql);
 
-            function getRoomInfo($conn, $room_number_fk_id)
-            {
-                if (!$room_number_fk_id)
-                    return null;
-
-                $sql = "SELECT room_number, floor_number FROM room_numbers WHERE room_number_id = ?";
-                $stmt = $conn->prepare($sql);
-                $stmt->bind_param("i", $room_number_fk_id);
-                $stmt->execute();
-                $res = $stmt->get_result();
-
-                if ($res->num_rows > 0) {
-                    return $res->fetch_assoc();
-                }
+        function getRoomInfo($conn, $room_number_fk_id)
+        {
+            if (!$room_number_fk_id)
                 return null;
+
+            $sql = "SELECT room_number, floor_number FROM room_numbers WHERE room_number_id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("i", $room_number_fk_id);
+            $stmt->execute();
+            $res = $stmt->get_result();
+
+            if ($res->num_rows > 0) {
+                return $res->fetch_assoc();
             }
-            ?>
+            return null;
+        }
+        ?>
 
-            <?php if ($transfers_res->num_rows > 0): ?>
-                <div class="section-card mb-4">
-                    <h4 class="section-header">
-                        <i class="fas fa-bed"></i> Transfer Rooms (Old Rooms)
-                    </h4>
-
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle">
-                            <thead class="table-dark">
-                                <tr>
-                                    <th><i class="fas fa-door-open"></i> Room Type</th>
-                                    <th><i class="fas fa-hashtag"></i> Room</th>
-                                    <th><i class="fas fa-layer-group"></i> Floor</th>
-                                    <th><i class="fas fa-tag"></i> Price</th>
-                                    <th><i class="fas fa-calendar-alt"></i> Transfer Date</th>
-                                    <th><i class="fas fa-comment"></i> Reason</th>
-                                </tr>
-                            </thead>
-
-                            <tbody>
-                                <?php while ($t = $transfers_res->fetch_assoc()): ?>
-                                    <?php
-                                    $roomInfo = getRoomInfo($conn, $t['room_number_fk_id']);
-                                    $roomNumber = $roomInfo['room_number'] ?? '-';
-                                    $floorNumber = $roomInfo['floor_number'] ?? '-';
-                                    ?>
-                                    <tr>
-                                        <td><?= htmlspecialchars($t['room_type_name']) ?></td>
-                                        <td><?= htmlspecialchars($roomNumber) ?></td>
-                                        <td><?= htmlspecialchars($floorNumber) ?></td>
-                                        <td>₱<?= number_format($t['price'], 2) ?></td>
-                                        <td><?= date("F j, Y g:i A", strtotime($t['transfer_date'])) ?></td>
-                                        <td><?= htmlspecialchars($t['reason']) ?></td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            <?php endif; ?>
-
-
-            <?php
-            $roomNumbers = [];
-            $rn_sql = "SELECT * FROM room_numbers WHERE status='active'";
-            $rn_res = $conn->query($rn_sql);
-            while ($rn = $rn_res->fetch_assoc()) {
-                $roomNumbers[$rn['room_type_id']][] = $rn;
-            }
-
-            $roomTypes = [];
-            $rt_sql = "SELECT * FROM room_types";
-            $rt_res = $conn->query($rt_sql);
-            while ($rt = $rt_res->fetch_assoc()) {
-                if (isset($roomNumbers[$rt['room_type_id']]) && count($roomNumbers[$rt['room_type_id']]) > 0) {
-                    $roomTypes[$rt['room_type_id']] = $rt;
-                }
-            }
-            ?>
+        <?php if ($transfers_res->num_rows > 0): ?>
             <div class="section-card mb-4">
                 <h4 class="section-header">
-                    <i class="fas fa-bed"></i> Booked Rooms
+                    <i class="fas fa-bed"></i> Transfer Rooms (Old Rooms)
                 </h4>
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle" id="roomsTable">
-                        <thead class="table-dark">
-                            <tr>
-                                <th><i class="fas fa-door-closed"></i> Room Type</th>
-                                <th><i class="fas fa-hashtag"></i> Room</th>
-                                <th><i class="fas fa-hashtag"></i> Original Room</th>
-                                <th><i class="fas fa-tag"></i> Price</th>
-                                <th><i class="fas fa-users"></i> Capacity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($r = $rooms->fetch_assoc()): ?>
-                                <?php $bookedRoomTypeId = $r['room_type_id']; ?>
-                                <tr data-booked-room-id="<?= $r['id'] ?>" data-default-room-type="<?= $bookedRoomTypeId ?>"
-                                    data-default-room-number="<?= $r['room_number_fk_id'] ?>">
-                                    <td>
-                                        <select class="form-select roomTypeSelect">
-                                            <?php foreach ($roomTypes as $rtid => $rt): ?>
-                                                <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
-                                                    data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
-                                                    <?= $rt['room_type'] ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </td>
 
-                                    <td>
-                                        <select class="form-select roomNumberSelect">
-                                            <?php
-                                            if ($r['room_number_fk_id'] && isset($roomNumbers[$bookedRoomTypeId])):
-                                                foreach ($roomNumbers[$bookedRoomTypeId] as $rn):
-                                                    $selectedRN = ($rn['room_number_id'] == $r['room_number_fk_id']) ? 'selected' : '';
-                                                    ?>
-                                                    <option value="<?= $rn['room_number_id'] ?>" <?= $selectedRN ?>>
-                                                        <?= $rn['room_number'] ?>
-                                                    </option>
-                                                <?php endforeach;
-                                            else: ?>
-                                                <option value="" selected>Select room number</option>
-                                            <?php endif; ?>
-                                        </select>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $originalNumber = '-';
-                                        if (isset($roomNumbers[$bookedRoomTypeId])) {
-                                            foreach ($roomNumbers[$bookedRoomTypeId] as $rnItem) {
-                                                if ($rnItem['room_number_id'] == $r['room_number_fk_id']) {
-                                                    $originalNumber = $rnItem['room_number'];
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        echo $originalNumber;
-                                        ?>
-                                    </td>
-
-                                    <td class="roomPrice fw-semibold text-success">
-                                        ₱<?= number_format($roomTypes[$bookedRoomTypeId]['price'], 2) ?></td>
-                                    <td class="roomCapacity"><span
-                                            class="badge bg-secondary"><?= $roomTypes[$bookedRoomTypeId]['capacity'] ?></span>
-                                    </td>
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <!-- Guest Names Section -->
-            <div class="section-card mb-4">
-                <h4 class="section-header">
-                    <i class="fas fa-address-book"></i> Guest List
-                </h4>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead class="table-dark">
                             <tr>
-                                <th><i class="fas fa-id-card"></i> First Name</th>
-                                <th><i class="fas fa-id-card"></i> Last Name</th>
-                                <th><i class="fas fa-user-tag"></i> Guest Type</th>
+                                <th><i class="fas fa-door-open"></i> Room Type</th>
+                                <th><i class="fas fa-hashtag"></i> Room</th>
+                                <th><i class="fas fa-layer-group"></i> Floor</th>
+                                <th><i class="fas fa-tag"></i> Price</th>
+                                <th><i class="fas fa-calendar-alt"></i> Transfer Date</th>
+                                <th><i class="fas fa-comment"></i> Reason</th>
                             </tr>
                         </thead>
+
                         <tbody>
-                            <?php while ($g = $guests->fetch_assoc()): ?>
+                            <?php while ($t = $transfers_res->fetch_assoc()): ?>
+                                <?php
+                                $roomInfo = getRoomInfo($conn, $t['room_number_fk_id']);
+                                $roomNumber = $roomInfo['room_number'] ?? '-';
+                                $floorNumber = $roomInfo['floor_number'] ?? '-';
+                                ?>
                                 <tr>
-                                    <td><?= $g['first_name'] ?></td>
-                                    <td><?= $g['last_name'] ?></td>
-                                    <td>
-                                        <span class="badge badge-info">
-                                            <i class="fas fa-user"></i> <?= ucfirst($g['guest_type']) ?>
-                                        </span>
-                                    </td>
+                                    <td><?= htmlspecialchars($t['room_type_name']) ?></td>
+                                    <td><?= htmlspecialchars($roomNumber) ?></td>
+                                    <td><?= htmlspecialchars($floorNumber) ?></td>
+                                    <td>₱<?= number_format($t['price'], 2) ?></td>
+                                    <td><?= date("F j, Y g:i A", strtotime($t['transfer_date'])) ?></td>
+                                    <td><?= htmlspecialchars($t['reason']) ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
-            <!-- Payment Details Section -->
-            <div class="section-card mb-4">
-                <h4 class="section-header">
-                    <i class="fas fa-file-invoice-dollar"></i> Payment Details
-                </h4>
+        <?php endif; ?>
 
+
+        <?php
+        $roomNumbers = [];
+        $rn_sql = "SELECT * FROM room_numbers WHERE status='active'";
+        $rn_res = $conn->query($rn_sql);
+        while ($rn = $rn_res->fetch_assoc()) {
+            $roomNumbers[$rn['room_type_id']][] = $rn;
+        }
+
+        $roomTypes = [];
+        $rt_sql = "SELECT * FROM room_types";
+        $rt_res = $conn->query($rt_sql);
+        while ($rt = $rt_res->fetch_assoc()) {
+            if (isset($roomNumbers[$rt['room_type_id']]) && count($roomNumbers[$rt['room_type_id']]) > 0) {
+                $roomTypes[$rt['room_type_id']] = $rt;
+            }
+        }
+        ?>
+        <div class="section-card mb-4">
+            <h4 class="section-header">
+                <i class="fas fa-bed"></i> Booked Rooms
+            </h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle" id="roomsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="fas fa-door-closed"></i> Room Type</th>
+                            <th><i class="fas fa-hashtag"></i> Room</th>
+                            <th><i class="fas fa-hashtag"></i> Original Room</th>
+                            <th><i class="fas fa-tag"></i> Price</th>
+                            <th><i class="fas fa-users"></i> Capacity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($r = $rooms->fetch_assoc()): ?>
+                            <?php $bookedRoomTypeId = $r['room_type_id']; ?>
+                            <tr data-booked-room-id="<?= $r['id'] ?>" data-default-room-type="<?= $bookedRoomTypeId ?>"
+                                data-default-room-number="<?= $r['room_number_fk_id'] ?>">
+                                <td>
+                                    <select class="form-select roomTypeSelect">
+                                        <?php foreach ($roomTypes as $rtid => $rt): ?>
+                                            <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
+                                                data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
+                                                <?= $rt['room_type'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </td>
+
+                                <td>
+                                    <select class="form-select roomNumberSelect">
+                                        <?php
+                                        if ($r['room_number_fk_id'] && isset($roomNumbers[$bookedRoomTypeId])):
+                                            foreach ($roomNumbers[$bookedRoomTypeId] as $rn):
+                                                $selectedRN = ($rn['room_number_id'] == $r['room_number_fk_id']) ? 'selected' : '';
+                                                ?>
+                                                <option value="<?= $rn['room_number_id'] ?>" <?= $selectedRN ?>>
+                                                    <?= $rn['room_number'] ?>
+                                                </option>
+                                            <?php endforeach;
+                                        else: ?>
+                                            <option value="" selected>Select room number</option>
+                                        <?php endif; ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <?php
+                                    $originalNumber = '-';
+                                    if (isset($roomNumbers[$bookedRoomTypeId])) {
+                                        foreach ($roomNumbers[$bookedRoomTypeId] as $rnItem) {
+                                            if ($rnItem['room_number_id'] == $r['room_number_fk_id']) {
+                                                $originalNumber = $rnItem['room_number'];
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    echo $originalNumber;
+                                    ?>
+                                </td>
+
+                                <td class="roomPrice fw-semibold text-success">
+                                    ₱<?= number_format($roomTypes[$bookedRoomTypeId]['price'], 2) ?></td>
+                                <td class="roomCapacity"><span
+                                        class="badge bg-secondary"><?= $roomTypes[$bookedRoomTypeId]['capacity'] ?></span>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Guest Names Section -->
+        <div class="section-card mb-4">
+            <h4 class="section-header">
+                <i class="fas fa-address-book"></i> Guest List
+            </h4>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th><i class="fas fa-id-card"></i> First Name</th>
+                            <th><i class="fas fa-id-card"></i> Last Name</th>
+                            <th><i class="fas fa-user-tag"></i> Guest Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($g = $guests->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= $g['first_name'] ?></td>
+                                <td><?= $g['last_name'] ?></td>
+                                <td>
+                                    <span class="badge badge-info">
+                                        <i class="fas fa-user"></i> <?= ucfirst($g['guest_type']) ?>
+                                    </span>
+                                </td>
+                            </tr>
+                        <?php endwhile; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Payment Details Section -->
+        <div class="section-card mb-4">
+            <h4 class="section-header">
+                <i class="fas fa-file-invoice-dollar"></i> Payment Details
+            </h4>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <label><i class="fas fa-credit-card"></i> Payment Method</label>
+                    <select name="payment_method" class="form-control custom-input" required>
+                        <option value="Cash" <?= ($booking['payment_method'] == 'Cash') ? 'selected' : '' ?>>Cash
+                        </option>
+                        <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>
+                            Credit Card</option>
+                        <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>
+                            Debit Card</option>
+                        <option value="GCash" <?= ($booking['payment_method'] == 'GCash') ? 'selected' : '' ?>>GCash
+                        </option>
+                        <option value="Paypal" <?= ($booking['payment_method'] == 'Paypal') ? 'selected' : '' ?>>Paypal
+                        </option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-percent"></i> Discount Applied</label>
+                    <input class="form-control" id="discountPercentage"
+                        value="<?= (int) $booking['discount_percentage'] ?>%" readonly>
+                </div>
+                <div class="info-item">
+                    <label><i class="fas fa-money-bill-wave"></i> Discount Amount</label>
+                    <input class="form-control" id="discountAmount" value="0" readonly>
+
+                    <input type="hidden" id="discount_amount" value="<?= $booking['discount_amount'] ?>">
+                </div>
+            </div>
+
+            <div class="payment-summary mt-4">
                 <div class="info-grid">
                     <div class="info-item">
-                        <label><i class="fas fa-credit-card"></i> Payment Method</label>
-                        <select name="payment_method" class="form-control custom-input" required>
-                            <option value="Cash" <?= ($booking['payment_method'] == 'Cash') ? 'selected' : '' ?>>Cash
-                            </option>
-                            <option value="Credit Card" <?= ($booking['payment_method'] == 'Credit Card') ? 'selected' : '' ?>>
-                                Credit Card</option>
-                            <option value="Debit Card" <?= ($booking['payment_method'] == 'Debit Card') ? 'selected' : '' ?>>
-                                Debit Card</option>
-                            <option value="GCash" <?= ($booking['payment_method'] == 'GCash') ? 'selected' : '' ?>>GCash
-                            </option>
-                            <option value="Paypal" <?= ($booking['payment_method'] == 'Paypal') ? 'selected' : '' ?>>Paypal
-                            </option>
-                        </select>
+                        <label><i class="fas fa-calculator"></i> Total Amount</label>
+                        <input type="text" id="totalAmountNew" class="form-control fw-bold"
+                            value="<?= number_format($booking['total_amount'], 2) ?>" readonly>
                     </div>
+
                     <div class="info-item">
-                        <label><i class="fas fa-percent"></i> Discount Applied</label>
-                        <input class="form-control" id="discountPercentage"
-                            value="<?= (int) $booking['discount_percentage'] ?>%" readonly>
+                        <label><i class="fas fa-hand-holding-usd"></i> Down Payment</label>
+                        <input type="text" id="downPayment" class="form-control"
+                            value="<?= number_format($booking['downpayment_amount'], 2) ?>" readonly>
                     </div>
+
                     <div class="info-item">
-                        <label><i class="fas fa-money-bill-wave"></i> Discount Amount</label>
-                        <input class="form-control" id="discountAmount" value="0" readonly>
-
-                        <input type="hidden" id="discount_amount" value="<?= $booking['discount_amount'] ?>">
-                    </div>
-                </div>
-
-                <div class="payment-summary mt-4">
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <label><i class="fas fa-calculator"></i> Total Amount</label>
-                            <input type="text" id="totalAmountNew" class="form-control fw-bold"
-                                value="<?= number_format($booking['total_amount'], 2) ?>" readonly>
-                        </div>
-
-                        <div class="info-item">
-                            <label><i class="fas fa-hand-holding-usd"></i> Down Payment</label>
-                            <input type="text" id="downPayment" class="form-control"
-                                value="<?= number_format($booking['downpayment_amount'], 2) ?>" readonly>
-                        </div>
-
-                        <div class="info-item">
-                            <label><i class="fas fa-file-invoice-dollar"></i> Remaining Balance</label>
-                            <input type="text" id="remainingBal" class="form-control fw-bold text-danger-emphasis"
-                                value="<?= number_format($booking['remaining_balance'], 2) ?>" readonly>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="payment-card">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label><i class="fas fa-wallet"></i> Payment Amount / Downpayment</label>
-                            <input type="number" id="paymentInput" class="form-control" min="0"
-                                placeholder="Enter payment amount">
-                        </div>
-
-                        <div class="col-md-6 mb-3">
-                            <label><i class="fas fa-coins"></i> Change</label>
-                            <input type="text" id="changeAmount" class="form-control" value="₱0.00" readonly>
-                        </div>
+                        <label><i class="fas fa-file-invoice-dollar"></i> Remaining Balance</label>
+                        <input type="text" id="remainingBal" class="form-control fw-bold text-danger-emphasis"
+                            value="<?= number_format($booking['remaining_balance'], 2) ?>" readonly>
                     </div>
                 </div>
             </div>
 
-            <div class="action-buttons">
-                <button type="button" id="processTransferRoom" class="btn btn-success">
-                    <i class="fas fa-exchange-alt"></i> Transfer Room
-                </button>
+            <div class="payment-card">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label><i class="fas fa-wallet"></i> Payment Amount / Downpayment</label>
+                        <input type="number" id="paymentInput" class="form-control" min="0"
+                            placeholder="Enter payment amount">
+                    </div>
 
-                <button type="button" id="processExtendStay" class="btn btn-success">
-                    <i class="fas fa-calendar-plus"></i> Extend Stay
-                </button>
-
-                <button type="button" id="processCheckOut" class="btn btn-warning">
-                    <i class="fas fa-sign-out-alt"></i> Process Check-out
-                </button>
+                    <div class="col-md-6 mb-3">
+                        <label><i class="fas fa-coins"></i> Change</label>
+                        <input type="text" id="changeAmount" class="form-control" value="₱0.00" readonly>
+                    </div>
+                </div>
             </div>
-
-
         </div>
-    </div>
 
+        <div class="action-buttons">
+            <button type="button" id="processTransferRoom" class="btn btn-success">
+                <i class="fas fa-exchange-alt"></i> Transfer Room
+            </button>
+
+            <button type="button" id="processExtendStay" class="btn btn-success">
+                <i class="fas fa-calendar-plus"></i> Extend Stay
+            </button>
+
+            <button type="button" id="processCheckOut" class="btn btn-warning">
+                <i class="fas fa-sign-out-alt"></i> Process Check-out
+            </button>
+        </div>
+
+
+    </div>
 </div>
+
 
 <!-- Transfer Room Modal -->
 <div class="modal fade" id="reviewTransferModal" tabindex="-1">
@@ -1093,10 +1089,10 @@ while ($b = $bed_res->fetch_assoc()) {
         document.getElementById('changeAmount').value = "₱" + change.toFixed(2);
     });
 </script>
+
+
+
 <script>
-    /* ===============================
-   MAP ORIGINAL ROOM NUMBERS
-================================= */
     const originalRoomNumbersMap = {};
     document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
         const roomNumberSelect = row.querySelector('.roomNumberSelect');
@@ -1105,12 +1101,8 @@ while ($b = $bed_res->fetch_assoc()) {
         });
     });
 
-    /* ===============================
-       BOOKING PROCESS FUNCTION
-    ================================= */
-    function processBooking(status, reason = null) {
-
-        // Checkout validation
+    function processBooking(status, reason = null, silent = false) {
+        // If finished, validate payment
         if (status === 'finished') {
             const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
             const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
@@ -1121,10 +1113,9 @@ while ($b = $bed_res->fetch_assoc()) {
             }
         }
 
-        // Validate room numbers
+        // Validate room selection
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
-
         roomSelects.forEach(select => {
             const selectedOption = select.selectedOptions[0];
             if (!selectedOption || selectedOption.value === "" ||
@@ -1143,13 +1134,13 @@ while ($b = $bed_res->fetch_assoc()) {
             return;
         }
 
-        // Confirmation
-        const confirmed = confirm(
-            `Are you sure you want to ${status === 'finished' ? 'finish' : 'extend/transfer'} this booking?`
-        );
-        if (!confirmed) return;
+        // Confirm action for finished only, otherwise skip alert
+        if (status === 'finished') {
+            const confirmed = confirm('Are you sure you want to check out this booking?');
+            if (!confirmed) return;
+        }
 
-        // Collect room data
+        // Gather room data
         const rooms = [];
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             rooms.push({
@@ -1185,15 +1176,18 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => res.text())
             .then(res => {
                 if (res === "success") {
-                    alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
+                    if (!silent) {
+                        // Show alert only if not silent
+                        alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
+                    }
 
+                    // Redirect after success
                     if (status === 'finished') {
                         window.location.href =
                             `../Admin/index.php?room_booking_receipt&booking_id=<?= $booking['booking_id'] ?>`;
                     } else {
                         window.location.href = "../Admin/index.php?room_booking_list";
                     }
-
                 } else {
                     alert('Something went wrong. Please try again.');
                 }
@@ -1201,9 +1195,7 @@ while ($b = $bed_res->fetch_assoc()) {
             .catch(err => console.error(err));
     }
 
-    /* ======================================================
-       PROCESS EXTEND STAY → EXTEND MODAL ONLY
-    ======================================================= */
+    //////   PROCESS EXTEND STAY → EXTEND MODAL ONLY
     document.getElementById('processExtendStay').addEventListener('click', () => {
 
         const originalCheckIn = '<?= date('Y-m-d', strtotime($booking['check_in'])) ?>';
@@ -1213,7 +1205,6 @@ while ($b = $bed_res->fetch_assoc()) {
 
         const extendChanged = originalCheckOut !== newCheckOut || originalCheckIn !== newCheckIn;
 
-        // <-- Use correct IDs here
         const extendInfo = document.getElementById("extendInfoBox");
         const extendMessage = document.getElementById("extendInfoText");
 
@@ -1236,15 +1227,9 @@ while ($b = $bed_res->fetch_assoc()) {
             extendInfo.style.display = "block"; // show the section even if no changes
             extendMessage.textContent = "No changes for extension.";
         }
-
-
         new bootstrap.Modal(document.getElementById('extendStayModal')).show();
     });
-
-
-    /* ======================================================
-       PROCESS TRANSFER ROOM → TRANSFER MODAL ONLY
-    ======================================================= */
+    ///// PROCESS TRANSFER ROOM → TRANSFER MODAL ONLY
     document.getElementById('processTransferRoom').addEventListener('click', () => {
         const tbody = document.getElementById('reviewRoomsBodyTransfer');
         tbody.innerHTML = "";
@@ -1287,13 +1272,9 @@ while ($b = $bed_res->fetch_assoc()) {
             tbody.innerHTML =
                 `<tr><td colspan="5" class="text-center text-muted">No room changes detected.</td></tr>`;
         }
-
         new bootstrap.Modal(document.getElementById('reviewTransferModal')).show();
     });
-
-    /* ======================================================
-   CONFIRM EXTEND STAY
-======================================================= */
+    /////CONFIRM EXTEND STAY
     document.getElementById('confirmExtendBtn').addEventListener('click', () => {
         const extendMessage = document.getElementById("extendInfoText");
 
@@ -1304,10 +1285,7 @@ while ($b = $bed_res->fetch_assoc()) {
 
         processBooking('checkin', null);
     });
-
-    /* ======================================================
-       CONFIRM ROOM TRANSFER
-    ======================================================= */
+    ///// CONFIRM ROOM TRANSFER
     document.getElementById('confirmTransferBtn').addEventListener('click', () => {
 
         let hasRoomChange = false;
@@ -1319,30 +1297,29 @@ while ($b = $bed_res->fetch_assoc()) {
                 hasRoomChange = true;
             }
         });
-
         const reason = document.getElementById('roomTransferReason').value.trim();
 
-        // If no room changes AND no reason, do not allow confirm
         if (!hasRoomChange && !reason) {
             alert("No room changes detected and reason is required. Transfer cannot be processed.");
             return;
         }
-
-        // If room changes exist but reason is empty, still require reason
         if (hasRoomChange && !reason) {
             alert("Please enter a reason for room transfer.");
             return;
         }
-
         processBooking('checkin', reason);
     });
+    //// CHECK OUT 
 
-
-    /* ======================================================
-       CHECK OUT (unchanged)
-    ======================================================= */
     document.getElementById('processCheckOut')
         .addEventListener('click', () => processBooking('finished'));
+
+    document.getElementById('backProcess')
+        .addEventListener('click', (e) => {
+            e.preventDefault(); // prevent default link behavior
+            processBooking('checkin', null, true); // third parameter = silent
+        });
+
 
 </script>
 

@@ -52,3 +52,18 @@ Check in List
 displaying of room transfers
 checkInDetails_room_booking.php
 
+
+////FOR TESTING////
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE bookings;
+TRUNCATE TABLE booking_amenities;
+TRUNCATE TABLE guest_names;
+TRUNCATE TABLE room_transfers;
+TRUNCATE TABLE reschedule_bookings;
+TRUNCATE TABLE booked_rooms;
+TRUNCATE TABLE booking_check_inout;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
+

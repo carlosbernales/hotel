@@ -99,6 +99,8 @@ while ($g = $resGuests->fetch_assoc()) {
                                     echo '<span class="badge bg-warning text-dark">Reserved</span>';
                                 } elseif ($status === 'accepted') {
                                     echo '<span class="badge bg-success">Accepted</span>';
+                                } elseif ($status === 'rescheduled') {
+                                    echo '<span class="badge bg-primary">Rescheduled</span>';
                                 } else {
                                     echo '<span class="badge bg-secondary">' . htmlspecialchars($status) . '</span>';
                                 }

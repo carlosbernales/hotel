@@ -781,7 +781,7 @@ if ($bedsResult->num_rows > 0) {
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addAmenitiesModalLabel">Manage Bed Amenities</h5>
+                            <h5 class="modal-title" id="addAmenitiesModalLabel">Manage Amenities</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
 
@@ -802,7 +802,7 @@ if ($bedsResult->num_rows > 0) {
                                 <div class="mb-3">
                                     <label for="amenitySelect" class="form-label">Select Bed Type</label>
                                     <select class="form-select" id="amenitySelect" name="amenity_id">
-                                        <option value="">-- Choose a Bed --</option>
+                                        <option value="">-- Choose a Amenities --</option>
                                         <?php foreach ($beds as $bed): ?>
                                             <option value="<?= $bed['id'] ?>" data-price="<?= $bed['price'] ?>">
                                                 <?= $bed['item_type'] ?> (₱<?= number_format($bed['price'], 2) ?>)
@@ -819,7 +819,6 @@ if ($bedsResult->num_rows > 0) {
                                         <th>Price per Night</th>
                                         <th>Quantity</th>
                                         <th>Total Amount</th>
-                                        <th>Action</th>
                                     </tr>
                                 </thead>
 
@@ -889,9 +888,8 @@ if ($bedsResult->num_rows > 0) {
         row.innerHTML = `
             <td>${name}</td>
             <td>₱${parseFloat(price).toFixed(2)}</td>
-            <td><input type="number" class="form-control quantity" value="${quantity}" min="1" style="width:80px;"></td>
+            <td><input type="number" class="form-control quantity" value="${quantity}" min="1" style="width:80px;"disabled></td>
             <td class="total">₱${(parseFloat(price) * quantity * nights).toFixed(2)}</td>
-            <td><button type="button" class="btn btn-sm btn-danger remove-amenity">Remove</button></td>
         `;
         amenitiesTableBody.appendChild(row);
 

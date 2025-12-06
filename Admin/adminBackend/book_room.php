@@ -36,14 +36,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $arrival_time = null;
     $extra_beds = $_POST['extra_beds'] ?? [];
 
-    $discounts = [];
+    $discount_types = [];
+    $discount_percents = [];
+
     for ($i = 1; $i <= $num_adults + $num_children; $i++) {
         $guestDiscount = $_POST["guest_discount_$i"] ?? '';
-        if ($guestDiscount && !in_array($guestDiscount, $discounts)) {
-            $discounts[] = $guestDiscount;
+        if (!empty($guestDiscount)) {
+            $discount_types[] = $guestDiscount;
         }
     }
-    $discount_type = implode(' & ', $discounts) ?: 'none';
+
+    $discount_types = array_unique($discount_types);
+    $discount_types = array_values($discount_types);
+
+    $allowed = ['PWD', 'Senior'];
+    $discount_types = array_intersect($discount_types, $allowed);
+
+    $discount_percents = [];
+    foreach ($discount_types as $d) {
+        if ($d === 'PWD' || $d === 'Senior') {
+            $discount_percents[] = 20;
+        }
+    }
+
+    $discount_type = !empty($discount_types) ? implode(', ', $discount_types) : 'none';
+    $discount_percentage = !empty($discount_percents) ? implode(', ', $discount_percents) : '0';
 
     $nights = (new DateTime($check_out))->diff(new DateTime($check_in))->days ?: 1;
     $downpayment_amount = 0.0;
@@ -66,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt->bind_param(
-        "sisssssssiiiiisssddssiiiss",
+        "sisssssssiiiiisssddssisiss",
         $booking_reference,
         $user_id,
         $first_name,
@@ -90,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $num_adults,
         $num_children,
         $discount_type,
-        $total_discount_percent,
+        $discount_percentage,
         $total_discount_amount,
         $status
     );
