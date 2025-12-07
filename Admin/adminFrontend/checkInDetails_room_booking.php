@@ -282,6 +282,89 @@
         }
     }
 </style>
+
+<style>
+    /* Custom Styles for Amenities Modal */
+
+    /* Primary Button using Gold Theme */
+    .btn-gold {
+        background: linear-gradient(135deg, var(--gold) 0%, #B8924A 100%);
+        color: var(--dark-bg);
+    }
+
+    .btn-gold:hover {
+        background: linear-gradient(135deg, #B8924A 0%, #A38241 100%);
+        color: var(--dark-bg);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(201, 169, 97, 0.4);
+    }
+
+    /* Modal Header Styling */
+    .modal-header-custom {
+        background-color: var(--dark-bg);
+        /* Dark background for modal header */
+        color: white;
+        /* White text */
+        border-bottom: 3px solid var(--gold);
+        /* Gold accent line */
+        padding: 15px 20px;
+    }
+
+    .modal-header-custom .modal-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .modal-header-custom .modal-title i {
+        color: var(--gold);
+        /* Gold icon */
+    }
+
+    .modal-header-custom .btn-close {
+        background-color: white;
+        /* Make close button visible on dark background */
+        opacity: 0.8;
+    }
+
+    .modal-header-custom .btn-close:hover {
+        opacity: 1;
+    }
+
+    /* Modal Footer Styling */
+    .modal-footer {
+        border-top: 1px solid var(--border-color);
+        padding: 15px 20px;
+        justify-content: flex-end;
+        /* Align buttons to the right */
+    }
+
+    /* Small section header for selected items */
+    .section-header-small {
+        border-left: 4px solid var(--secondary);
+        padding-left: 12px;
+        margin-bottom: 15px;
+        color: var(--dark-bg);
+        font-weight: 600;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .section-header-small i {
+        color: var(--secondary);
+    }
+
+    /* Table in Modal - Action Button */
+    .table .btn-action-delete {
+        padding: 5px 10px;
+        font-size: 12px;
+        border-radius: 6px;
+    }
+</style>
 <?php
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header_nosidebar.php';
@@ -330,6 +413,16 @@ $bed_res = $conn->query($bed_sql);
 while ($b = $bed_res->fetch_assoc()) {
     $beds[] = $b;
 }
+///////////////////
+$amenitiesQuery = "SELECT id, item_type, price FROM beds ORDER BY item_type ASC";
+$amenitiesResult = $conn->query($amenitiesQuery);
+
+$amenities = [];
+if ($amenitiesResult->num_rows > 0) {
+    while ($row = $amenitiesResult->fetch_assoc()) {
+        $amenities[] = $row;
+    }
+}
 ?>
 <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
     <div>
@@ -342,9 +435,107 @@ while ($b = $bed_res->fetch_assoc()) {
         <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
             <i class="fas fa-check-circle" style="color: var(--gold);"></i> Checked In Booking Details
         </h3>
-        <a href="#" id="backProcess" class="btn btn-secondary btn-sm">
-            <i class="fas fa-arrow-left"></i> Back to List
-        </a>
+
+        <div class="d-flex gap-2">
+            <a href="#" id="backProcess" class="btn btn-secondary btn-sm">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
+
+            <a href="#" class="btn btn-gold btn-sm add-amenities-btn" data-id="<?= $booking['booking_id'] ?>"
+                data-bs-toggle="modal" data-bs-target="#addAmenitiesModal">
+                <i class="fas fa-plus"></i> Add Amenities
+            </a>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="addAmenitiesModal" tabindex="-1" aria-labelledby="addAmenitiesModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header modal-header-custom">
+                    <h5 class="modal-title" id="addAmenitiesModalLabel"><i class="fas fa-bed"></i> Manage Amenities
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <div class="section-card mb-4 p-3">
+                        <p class="mb-0">
+                            <strong>Check-in:</strong>
+                            <span id="checkInDate" class="fw-semibold">
+                                <?= date("F j, Y", strtotime($booking['check_in'])) ?>
+                            </span><br>
+
+                            <strong>Check-out:</strong>
+                            <span id="checkOutDate" class="fw-semibold">
+                                <?= date("F j, Y", strtotime($booking['check_out'])) ?>
+                            </span><br>
+
+                            <strong>Total Nights:</strong>
+                            <span id="numNights" class="badge bg-secondary"><?= $booking['nights'] ?></span>
+                        </p>
+                    </div>
+
+
+                    <form id="amenitiesForm">
+                        <div class="mb-3">
+                            <label for="amenitySelect" class="form-label"><i class="fas fa-mattress-pillow"></i> Select
+                                Bed Type</label>
+                            <select class="form-select" id="amenitySelect" name="amenity_id">
+                                <option value="">-- Choose a Bed Type --</option>
+                                <?php foreach ($amenities as $amenity): ?>
+                                    <option value="<?= $amenity['id'] ?>" data-price="<?= $amenity['price'] ?>">
+                                        <?= $amenity['item_type'] ?> (₱<?= number_format($amenity['price'], 2) ?>)
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </form>
+
+                    <h6 class="section-header-small mt-4 mb-3"><i class="fas fa-clipboard-list"></i> Selected Beds &
+                        Charges</h6>
+
+                    <table class="table table-bordered table-hover mt-3" id="selectedAmenitiesTable">
+                        <thead class="table-dark">
+                            <tr>
+                                <th><i class="fas fa-bed"></i> Bed Type</th>
+                                <th><i class="fas fa-tags"></i> Price per Night</th>
+                                <th><i class="fas fa-cubes"></i> Quantity</th>
+                                <th><i class="fas fa-money-bill-wave"></i> Total Amount</th>
+                                <th><i class="fas fa-cogs"></i> Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td colspan="5">
+                                    <div id="noAmenitiesMessage" class="text-center text-muted p-3"
+                                        style="display:block;">
+                                        No beds have been added yet.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-end">Total:</th>
+                                <th id="subtotal" class="fw-bold text-success">₱0.00</th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-gold" id="saveAmenitiesBtn">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="container-fluid">
@@ -1348,6 +1539,201 @@ while ($b = $bed_res->fetch_assoc()) {
                 checkOut.value = checkIn.value;
             }
         });
+    });
+</script>
+
+<script>
+    const amenitySelect = document.getElementById('amenitySelect');
+    const amenitiesTableBody = document.querySelector('#selectedAmenitiesTable tbody');
+    const amenitiesTable = document.getElementById('selectedAmenitiesTable');
+    const noAmenitiesMessage = document.getElementById('noAmenitiesMessage');
+
+    let CURRENT_BOOKING_ID = null;
+
+    /* ---------------------------
+        CALCULATE TOTAL NIGHTS
+    ---------------------------- */
+    function updateNights() {
+        const checkIn = new Date('<?= $booking['check_in'] ?>');
+        const checkOut = new Date('<?= $booking['check_out'] ?>');
+        const diffTime = checkOut - checkIn;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        document.getElementById('numNights').textContent = diffDays;
+        return diffDays;
+    }
+
+    /* ---------------------------
+        ADD ROW TO TABLE
+    ---------------------------- */
+    function addAmenityRow(id, name, price, quantity = 1) {
+        const nights = updateNights();
+
+        // If already exists → update qty
+        const existingRow = amenitiesTableBody.querySelector(`tr[data-id="${id}"]`);
+        if (existingRow) {
+            const qtyInput = existingRow.querySelector('.quantity');
+            qtyInput.value = parseInt(qtyInput.value) + quantity;
+
+            const totalCell = existingRow.querySelector('.total');
+            totalCell.textContent = '₱' + (price * qtyInput.value * nights).toFixed(2);
+
+            updateSubtotal();
+            return;
+        }
+
+        // Create new row
+        const row = document.createElement('tr');
+        row.setAttribute('data-id', id);
+
+        row.innerHTML = `
+            <td>${name}</td>
+            <td>₱${parseFloat(price).toFixed(2)}</td>
+
+            <td>
+                <input type="number" class="form-control quantity" value="${quantity}"
+                min="1" style="width:80px;">
+            </td>
+
+            <td class="total">₱${(price * quantity * nights).toFixed(2)}</td>
+
+            <td>
+                <button class="btn btn-danger btn-sm remove-amenity">&times;</button>
+            </td>
+        `;
+
+        amenitiesTableBody.appendChild(row);
+
+        // Quantity change
+        row.querySelector('.quantity').addEventListener('input', (e) => {
+            let qty = parseInt(e.target.value);
+            if (qty < 1) qty = 1;
+
+            row.querySelector('.total').textContent =
+                '₱' + (price * qty * nights).toFixed(2);
+
+            updateSubtotal();
+        });
+
+        // Remove row
+        row.querySelector('.remove-amenity').addEventListener('click', () => {
+            row.remove();
+            checkNoAmenities();
+            updateSubtotal();
+        });
+
+        updateSubtotal();
+    }
+
+    /* ---------------------------
+        SUBTOTAL CALCULATION
+    ---------------------------- */
+    function updateSubtotal() {
+        const nights = updateNights();
+        let subtotal = 0;
+
+        amenitiesTableBody.querySelectorAll('tr').forEach(row => {
+            const price = parseFloat(row.querySelector('td:nth-child(2)').textContent.replace('₱', '')) || 0;
+            const qty = parseInt(row.querySelector('.quantity').value) || 0;
+            subtotal += price * qty * nights;
+        });
+
+        document.getElementById('subtotal').textContent = '₱' + subtotal.toFixed(2);
+    }
+
+    /* ---------------------------
+        SHOW / HIDE MESSAGE
+    ---------------------------- */
+    function checkNoAmenities() {
+        if (amenitiesTableBody.querySelectorAll('tr').length === 0) {
+            noAmenitiesMessage.style.display = 'block';
+            amenitiesTable.style.display = 'none';
+        } else {
+            noAmenitiesMessage.style.display = 'none';
+            amenitiesTable.style.display = 'table';
+        }
+    }
+
+    /* ---------------------------
+        ADD SELECTED AMENITY
+    ---------------------------- */
+    amenitySelect.addEventListener('change', () => {
+        const opt = amenitySelect.selectedOptions[0];
+        if (!opt.value) return;
+
+        const id = opt.value;
+        const name = opt.text.split(" (₱")[0];
+        const price = parseFloat(opt.dataset.price);
+
+        addAmenityRow(id, name, price);
+
+        amenitySelect.value = '';
+        checkNoAmenities();
+    });
+
+    /* ---------------------------
+        OPEN MODAL → LOAD AMENITIES
+    ---------------------------- */
+    document.querySelectorAll(".add-amenities-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+
+            CURRENT_BOOKING_ID = btn.getAttribute("data-id");
+
+            amenitiesTableBody.innerHTML = '';
+            checkNoAmenities();
+            updateNights();
+
+            fetch(`../Admin/adminBackend/get_booking_amenities.php?booking_id=${CURRENT_BOOKING_ID}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (!data || data.length === 0) {
+                        checkNoAmenities();
+                    } else {
+                        amenitiesTable.style.display = 'table';
+                        noAmenitiesMessage.style.display = 'none';
+
+                        data.forEach(item => {
+                            addAmenityRow(
+                                item.amenities_fk_id,
+                                item.amenity_name,
+                                parseFloat(item.price),
+                                parseInt(item.quantity)
+                            );
+                        });
+                    }
+                });
+        });
+    });
+
+    /* ---------------------------
+        SAVE AMENITIES
+    ---------------------------- */
+    document.getElementById("saveAmenitiesBtn").addEventListener("click", () => {
+
+        const items = [];
+
+        amenitiesTableBody.querySelectorAll("tr").forEach(row => {
+            items.push({
+                amenity_id: row.getAttribute("data-id"),
+                quantity: row.querySelector(".quantity").value
+            });
+        });
+
+        fetch("../Admin/adminBackend/booking_add_amenities.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                booking_id: CURRENT_BOOKING_ID,
+                items: items
+            })
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert("Error saving amenities");
+                }
+            });
     });
 </script>
 

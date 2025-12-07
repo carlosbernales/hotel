@@ -57752,3 +57752,322 @@ Stack trace:
 [06-Dec-2025 11:21:54 UTC] Database connected successfully to: hotelms
 [06-Dec-2025 11:25:02 UTC] Database connected successfully to: hotelms
 [06-Dec-2025 11:25:09 UTC] Database connected successfully to: hotelms
+[06-Dec-2025 11:26:18 UTC] Database connected successfully to: hotelms
+[06-Dec-2025 11:26:22 UTC] Database connected successfully to: hotelms
+[06-Dec-2025 11:26:23 UTC] Database connected successfully to: hotelms
+[06-Dec-2025 11:26:33 UTC] Database connected successfully to: hotelms
+[06-Dec-2025 11:26:53 UTC] Database connected successfully to: hotelms
+[06-Dec-2025 11:26:54 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:24:33 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:25:40 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:27:26 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:27:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Data truncated for column 'capacity' at row 1 in C:\laragon\www\hotel\Admin\db.php:138
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\db.php(138): mysqli_multi_query(Object(mysqli), 'INSERT INTO tab...')
+#1 C:\laragon\www\hotel\Admin\index.php(2): require_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\db.php on line 138
+[07-Dec-2025 05:29:30 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:29:30 Asia/Manila] Redirecting user with role: admin
+[07-Dec-2025 05:43:47 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:43:52 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:43:52 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 189
+[07-Dec-2025 13:43:52 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 313
+[07-Dec-2025 13:43:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 313
+[07-Dec-2025 05:44:03 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:44:04 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 189
+[07-Dec-2025 13:44:04 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 313
+[07-Dec-2025 13:44:04 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 313
+[07-Dec-2025 05:44:07 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:44:07 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 189
+[07-Dec-2025 13:44:07 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 313
+[07-Dec-2025 13:44:07 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 313
+[07-Dec-2025 05:44:15 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:44:16 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 312
+[07-Dec-2025 13:44:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 312
+[07-Dec-2025 05:44:29 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:44:29 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 311
+[07-Dec-2025 13:44:29 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 311
+[07-Dec-2025 05:44:39 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:44:39 Asia/Manila] PHP Warning:  Undefined array key "price" in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 309
+[07-Dec-2025 13:44:39 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_management.php on line 309
+[07-Dec-2025 05:45:07 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:46:04 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:46:06 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:47:01 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:47:02 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:47:37 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:47:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:47:42 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:48:31 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:48:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:49:39 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:49:40 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:49:49 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:49:58 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:57:53 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:57:55 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:57:55 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:57:55 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:58:15 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:58:16 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:58:16 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:58:16 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:58:31 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:58:31 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:58:31 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:58:32 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:58:32 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:58:32 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:58:33 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:58:34 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:58:34 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:58:34 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:59:04 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:59:04 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:59:04 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:59:05 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:59:06 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:59:06 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:59:06 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:59:07 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:59:09 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 13:59:09 Asia/Manila] PHP Warning:  include_once(table_booking.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 13:59:09 Asia/Manila] PHP Warning:  include_once(): Failed opening 'table_booking.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 136
+[07-Dec-2025 05:59:20 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 05:59:21 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:00:46 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:00:57 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:01:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:01:17 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:01:24 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:14:52 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:24:23 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:24:25 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:24:26 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:24:48 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:24:52 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:05 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:16 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:20 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:27 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:28 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:30 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:40 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:25:41 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:27:00 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:27:14 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:28:14 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:28:14 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 346
+[07-Dec-2025 06:28:32 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:28:32 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 346
+[07-Dec-2025 06:28:41 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:28:41 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 351
+[07-Dec-2025 06:29:04 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:29:05 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 350
+[07-Dec-2025 14:29:05 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 371
+[07-Dec-2025 14:29:05 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 371
+[07-Dec-2025 14:29:05 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 373
+[07-Dec-2025 14:29:05 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 373
+[07-Dec-2025 06:29:52 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 350
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 371
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 371
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 373
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 373
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1443
+[07-Dec-2025 14:29:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1444
+[07-Dec-2025 06:30:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 360
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 381
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 381
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 383
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 383
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1453
+[07-Dec-2025 14:30:50 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1454
+[07-Dec-2025 06:33:27 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 360
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 381
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 381
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 383
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 383
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1452
+[07-Dec-2025 14:33:27 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1453
+[07-Dec-2025 06:34:42 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:34:43 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 360
+[07-Dec-2025 14:34:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1448
+[07-Dec-2025 14:34:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1449
+[07-Dec-2025 06:35:04 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:35:04 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 351
+[07-Dec-2025 06:35:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:35:13 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 351
+[07-Dec-2025 06:36:21 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 360
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 381
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 381
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 383
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 383
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1450
+[07-Dec-2025 14:36:22 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1451
+[07-Dec-2025 06:38:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:38:38 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 360
+[07-Dec-2025 14:38:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1458
+[07-Dec-2025 14:38:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1459
+[07-Dec-2025 06:39:30 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:39:30 Asia/Manila] PHP Warning:  Undefined variable $id in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 360
+[07-Dec-2025 14:39:30 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1458
+[07-Dec-2025 14:39:30 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 1459
+[07-Dec-2025 06:43:25 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:43:36 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:44:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:44:15 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:44:45 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:44:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:44:53 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:45:02 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:45:08 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:45:40 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:45:59 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:46:11 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:46:11 Asia/Manila] PHP Warning:  Undefined variable $amenities in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 395
+[07-Dec-2025 14:46:11 Asia/Manila] PHP Warning:  foreach() argument must be of type array|object, null given in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 395
+[07-Dec-2025 06:46:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:46:22 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:46:22 Asia/Manila] PHP Warning:  Undefined variable $amenities in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 395
+[07-Dec-2025 14:46:22 Asia/Manila] PHP Warning:  foreach() argument must be of type array|object, null given in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 395
+[07-Dec-2025 06:46:25 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:46:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:46:41 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:47:28 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 14:47:28 Asia/Manila] PHP Warning:  Undefined variable $amenities in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 395
+[07-Dec-2025 14:47:28 Asia/Manila] PHP Warning:  foreach() argument must be of type array|object, null given in C:\laragon\www\hotel\Admin\adminFrontend\room_booking_list.php on line 395
+[07-Dec-2025 06:48:09 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:48:58 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:48:59 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:49:01 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:49:09 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:49:10 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:49:17 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 06:49:18 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:00:16 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:00:20 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:01:04 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:01:05 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:01:22 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:01:34 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:01:58 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:02:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:02:21 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:02:45 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:02:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:03:02 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:03:08 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:03:14 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:03:19 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:03:35 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:03:40 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:06:53 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:07:01 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:07:07 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:07:15 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:07:41 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:08:34 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:08:35 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:09:03 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:09:14 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:09:20 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:10:19 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:12:35 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:12:59 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:13:03 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:13:54 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:14:11 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:14:12 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:14:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:14:52 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:15:02 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:15:32 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:15:44 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:15:46 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:16:25 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:16:42 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:16:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:16:51 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:17:02 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:18:01 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:18:27 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:18:34 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:18:36 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:18:48 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:18:56 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:19:05 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:19:07 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:19:10 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:24:34 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:24:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:24:43 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:24:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:24:55 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:26:53 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:27:00 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:27:17 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:27:27 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:28:03 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:28:35 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:28:52 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:29:00 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:29:08 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:29:17 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:29:18 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:29:33 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:29:36 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:31:24 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:54:08 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:54:11 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 07:54:26 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 08:31:20 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 08:31:21 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 08:46:33 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 16:46:33 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'u763377220_casaestela'@'localhost' (using password: YES) in C:\laragon\www\hotel\Admin\adminBackend\mydb.php:8
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminBackend\mydb.php(8): mysqli->__construct('localhost', 'u763377220_casa...', 'Casaestela@2025', 'u763377220_hote...')
+#1 C:\laragon\www\hotel\Admin\adminFrontend\table_management.php(2): include('C:\\laragon\\www\\...')
+#2 C:\laragon\www\hotel\Admin\index.php(136): include_once('C:\\laragon\\www\\...')
+#3 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminBackend\mydb.php on line 8
+[07-Dec-2025 08:46:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:01:36 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:01:37 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:03:21 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:03:22 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:03:48 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:03:50 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:12 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:13 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:16 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:28 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:34 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:39 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:42 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:04:49 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:05:38 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:07:05 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:07:17 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:08:35 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:08:37 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:08:40 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 09:09:03 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:09:39 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:09:41 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:43:43 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:57:23 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:57:23 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:57:26 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:57:32 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:59:20 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:59:21 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:59:22 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 10:59:22 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 11:01:33 UTC] Database connected successfully to: hotelms
+[07-Dec-2025 11:01:38 UTC] Database connected successfully to: hotelms

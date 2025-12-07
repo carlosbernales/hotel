@@ -170,9 +170,7 @@ if ($result) {
                     <tr>
                         <th>Table Type</th>
                         <th>Capacity</th>
-                        <th>Price</th>
                         <th>Available Tables</th>
-                        <th>Description</th>
                         <th>Status</th>
                         <th>Image</th>
                         <th></th>
@@ -184,9 +182,7 @@ if ($result) {
                             <td><?php echo $table_types['package_name']; ?></td>
                             <td><?php echo $table_types['capacity']; ?></td>
                             <td><?php echo $table_types['available_tables']; ?></td>
-                            <td><?php echo $table_types['description']; ?></td>
                             <td><?php echo $table_types['status']; ?></td>
-                            <td><?php echo $table_types['price']; ?></td>
 
                             <td>
                                 <button type="button" class="btn btn-sm table-action-btn table-action-view"
@@ -296,21 +292,13 @@ if ($result) {
                                         </div>
 
                                         <div class="modal-body package-modal-body">
-                                            <!-- Package Name (single row) -->
-                                            <div class="mb-3">
-                                                <label class="form-label package-label">Package Name</label>
-                                                <input type="text" name="package_name" class="form-control package-input"
-                                                    value="<?php echo htmlspecialchars($table_types['package_name']); ?>"
-                                                    required>
-                                            </div>
-
                                             <!-- Price and Capacity (two per row) -->
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Price</label>
-                                                    <input type="number" step="0.01" name="price"
+                                                    <label class="form-label package-label">Package Name</label>
+                                                    <input type="text" name="package_name"
                                                         class="form-control package-input"
-                                                        value="<?php echo htmlspecialchars($table_types['price']); ?>"
+                                                        value="<?php echo htmlspecialchars($table_types['package_name']); ?>"
                                                         required>
                                                 </div>
 
@@ -392,17 +380,11 @@ if ($result) {
                     <form id="addPackageForm" method="POST" action="../Admin/adminBackend/add_table_package.php"
                         enctype="multipart/form-data">
 
-                        <div class="mb-3">
-                            <label for="packageName" class="form-label package-label">Package Name</label>
-                            <input type="text" class="form-control package-input" id="packageName" name="package_name"
-                                required>
-                        </div>
-
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="price" class="form-label package-label">Price</label>
-                                <input type="number" class="form-control package-input" id="price" name="price"
-                                    step="0.01" min="0" required>
+                                <label for="packageName" class="form-label package-label">Package Name</label>
+                                <input type="text" class="form-control package-input" id="packageName"
+                                    name="package_name" required>
                             </div>
 
                             <div class="col-md-6">

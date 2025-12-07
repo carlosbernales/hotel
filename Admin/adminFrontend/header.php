@@ -411,6 +411,13 @@ $currentPage = basename($page);
                         <i class="fas fa-users-cog"></i> Room Booking
                     </a>
                 </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table-booking"
+                        class="<?php echo ($currentPage == 'table_booking.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Table Booking
+                    </a>
+                </div>
             </div>
 
 

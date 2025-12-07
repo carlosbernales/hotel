@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
     $package_name = $conn->real_escape_string($_POST['package_name']);
-    $price = floatval($_POST['price']);
     $capacity = intval($_POST['capacity']);
     $description = $conn->real_escape_string($_POST['description']);
     $available_tables = intval($_POST['available_tables']);
@@ -48,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
 
     $updateSql = "UPDATE table_packages SET 
         package_name = '$package_name',
-        price = $price,
         capacity = $capacity,
         description = '$description',
         available_tables = $available_tables,

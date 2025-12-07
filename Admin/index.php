@@ -118,6 +118,9 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['amenity_list'])) {
     $page = "adminFrontend/amenity_list.php";
 
+} elseif (isset($_GET['table-booking'])) {
+    $page = "adminFrontend/table_booking.php";
+
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {
     $page = "adminFrontend/test.php";

@@ -4,7 +4,6 @@ include '../adminBackend/mydb.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $package_name = $conn->real_escape_string($_POST['package_name']);
-    $price = floatval($_POST['price']);
     $capacity = intval($_POST['capacity']);
     $description = $conn->real_escape_string($_POST['description']);
     $available_tables = intval($_POST['available_tables']);
@@ -38,9 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $sql = "INSERT INTO table_packages 
-            (package_name, price, capacity, description, available_tables, status, image1, image2, image3, image4, image5) 
+            (package_name, capacity, description, available_tables, status, image1, image2, image3, image4, image5) 
             VALUES 
-            ('$package_name', $price, $capacity, '$description', $available_tables, '$status', 
+            ('$package_name', $capacity, '$description', $available_tables, '$status', 
              '{$image_paths[0]}', '{$image_paths[1]}', '{$image_paths[2]}', '{$image_paths[3]}', '{$image_paths[4]}')";
 
     if ($conn->query($sql) === TRUE) {
