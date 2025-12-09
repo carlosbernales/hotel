@@ -4,7 +4,7 @@ include '../adminBackend/mydb.php';
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
 
-    $stmt = $conn->prepare("SELECT image1, image2, image3, image4, image5 FROM table_packages WHERE id = ?");
+    $stmt = $conn->prepare("SELECT img1, img2, img3, img4, img5 FROM table_types WHERE id = ?");
     $stmt->bind_param("i", $id);
     $stmt->execute();
     $stmt->bind_result($image1, $image2, $image3, $image4, $image5);
@@ -12,7 +12,7 @@ if (isset($_GET['id'])) {
     $stmt->close();
 
     $images = [$image1, $image2, $image3, $image4, $image5];
-    $path = "../../Admin/adminBackend/table_packages_image/";
+    $path = "../../Admin/adminBackend/table_types_images/";
 
     foreach ($images as $img) {
         if (!empty($img) && file_exists($path . $img)) {
@@ -20,7 +20,7 @@ if (isset($_GET['id'])) {
         }
     }
 
-    $stmt = $conn->prepare("DELETE FROM table_packages WHERE id = ?");
+    $stmt = $conn->prepare("DELETE FROM table_types WHERE id = ?");
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {

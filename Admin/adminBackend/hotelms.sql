@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 07, 2025 at 11:02 AM
+-- Generation Time: Dec 09, 2025 at 11:26 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -2733,27 +2733,24 @@ INSERT INTO `table_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `can
 CREATE TABLE `table_number` (
   `id` int NOT NULL,
   `table_number` int NOT NULL,
-  `status` enum('available','occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available',
-  `occupied_at` timestamp NULL DEFAULT NULL,
-  `order_id` int DEFAULT NULL,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `status` enum('available','occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `table_number`
 --
 
-INSERT INTO `table_number` (`id`, `table_number`, `status`, `occupied_at`, `order_id`, `updated_at`) VALUES
-(1, 1, 'occupied', '2025-11-11 19:53:09', NULL, '2025-11-11 11:53:09'),
-(2, 2, 'occupied', '2025-06-02 02:25:31', 27, '2025-06-02 02:25:31'),
-(3, 3, 'available', NULL, NULL, '2025-05-29 11:44:22'),
-(4, 4, 'occupied', '2025-11-13 11:23:22', NULL, '2025-11-13 03:23:22'),
-(5, 5, 'occupied', '2025-06-12 23:50:04', NULL, '2025-06-12 23:50:04'),
-(6, 6, 'occupied', '2025-06-02 02:25:23', 25, '2025-06-02 02:25:23'),
-(7, 7, 'occupied', '2025-06-02 02:25:27', 26, '2025-06-02 02:25:27'),
-(8, 8, 'occupied', '2025-06-13 00:07:47', 2, '2025-06-13 00:07:47'),
-(9, 9, 'available', NULL, NULL, '2025-06-02 02:15:07'),
-(10, 10, 'available', NULL, NULL, '2025-06-02 02:15:12');
+INSERT INTO `table_number` (`id`, `table_number`, `status`) VALUES
+(1, 1, 'available'),
+(2, 2, 'occupied'),
+(3, 3, 'available'),
+(4, 4, 'occupied'),
+(5, 5, 'occupied'),
+(6, 6, 'occupied'),
+(7, 7, 'occupied'),
+(8, 8, 'occupied'),
+(9, 9, 'available'),
+(10, 10, 'available');
 
 -- --------------------------------------------------------
 
@@ -2784,7 +2781,6 @@ CREATE TABLE `table_packages` (
 --
 
 INSERT INTO `table_packages` (`id`, `package_name`, `price`, `capacity`, `description`, `menu_items`, `available_tables`, `image_path`, `image1`, `image2`, `image3`, `image4`, `image5`, `status`, `reason`) VALUES
-(1, 'Couples', 0, 5, 'Perfect for couples\r\n', '', 2, 'uploads/table_packages/6823f400cf4c2.jpg', '', '', '', '', '', 'inactive', 'Under Maintenance'),
 (2, 'Friends', 0, 10, 'Ideal for small groups', '', 0, 'uploads/table_packages/67fb0cd104e49.webp', NULL, NULL, NULL, NULL, NULL, 'active', NULL),
 (3, 'Family', 0, 10, 'Great for family gatherings', '', 0, 'uploads/table_packages/67fb10c391a74.png', NULL, NULL, NULL, NULL, NULL, 'active', NULL),
 (7, 'Package A', 20000, 30, 'Basic package for large groups', '1 Appetizer, 2 Pasta, 2 Mains, Salad Bar, Rice, Drinks', 2, 'uploads/table_packages/67fb10116989f.png', 'uploads/tables/package1.jpg', 'uploads/tables/package2.jpg', 'uploads/tables/package3.jpg', 'uploads/tables/package4.jpg', 'uploads/tables/package5.jpg', 'active', NULL),
@@ -2808,6 +2804,35 @@ CREATE TABLE `table_reservations` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_types`
+--
+
+CREATE TABLE `table_types` (
+  `id` int NOT NULL,
+  `table_name` varchar(255) NOT NULL,
+  `capacity` int NOT NULL,
+  `available_tables` int NOT NULL,
+  `img1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `img2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `img3` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `img4` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `img5` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `description` text NOT NULL,
+  `status` varchar(255) NOT NULL,
+  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `table_types`
+--
+
+INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `available_tables`, `img1`, `img2`, `img3`, `img4`, `img5`, `description`, `status`, `reason`) VALUES
+(2, 'dasd', 2, 1, '45ba47ab107dd405.png', 'a48a4f4a38e7ebf0.PNG', '', '', '', 'adasd', 'active', NULL),
+(3, 'GAS', 2, 3, 'ace5dc84b33f90b2.png', '7904ce70b71572a6.png', '', '', '', 'adsad', 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -3243,6 +3268,12 @@ ALTER TABLE `table_packages`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `table_types`
+--
+ALTER TABLE `table_types`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `userss`
 --
 ALTER TABLE `userss`
@@ -3476,13 +3507,19 @@ ALTER TABLE `table_bookings`
 -- AUTO_INCREMENT for table `table_number`
 --
 ALTER TABLE `table_number`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `table_packages`
 --
 ALTER TABLE `table_packages`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `table_types`
+--
+ALTER TABLE `table_types`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `userss`

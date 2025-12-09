@@ -658,9 +658,9 @@ if ($result) {
             pageLength: 10,
             lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
             language: {
-                search: "Search bookings:",
+                search: "Search:",
                 lengthMenu: "Show _MENU_ entries",
-                info: "Showing _START_ to _END_ of _TOTAL_ bookings",
+                info: "Showing _START_ to _END_ of _TOTAL_",
                 paginate: {
                     first: "First",
                     last: "Last",

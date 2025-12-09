@@ -3,11 +3,12 @@ include '../adminBackend/mydb.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    $package_name = $conn->real_escape_string($_POST['package_name']);
+    $table_name = $conn->real_escape_string($_POST['table_name']);
     $capacity = intval($_POST['capacity']);
-    $description = $conn->real_escape_string($_POST['description']);
     $available_tables = intval($_POST['available_tables']);
     $status = $conn->real_escape_string($_POST['status']);
+    $reason = $conn->real_escape_string($_POST['reason']);
+    $description = $conn->real_escape_string($_POST['description']);
 
     $image_paths = [];
 
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $randomName = bin2hex(random_bytes(8)) . "." . $extension;
 
-            $targetDir = "../../Admin/adminBackend/table_packages_image/";
+            $targetDir = "../../Admin/adminBackend/table_types_images/";
             $targetFile = $targetDir . $randomName;
 
             if (move_uploaded_file($tmp_name, $targetFile)) {
@@ -31,19 +32,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-
     for ($i = count($image_paths); $i < 5; $i++) {
         $image_paths[$i] = NULL;
     }
 
-    $sql = "INSERT INTO table_packages 
-            (package_name, capacity, description, available_tables, status, image1, image2, image3, image4, image5) 
+    $sql = "INSERT INTO table_types 
+            (table_name, capacity, available_tables, img1, img2, img3, img4, img5, status, reason, description)
             VALUES 
-            ('$package_name', $capacity, '$description', $available_tables, '$status', 
-             '{$image_paths[0]}', '{$image_paths[1]}', '{$image_paths[2]}', '{$image_paths[3]}', '{$image_paths[4]}')";
+            ('$table_name', $capacity, $available_tables,
+             '{$image_paths[0]}', '{$image_paths[1]}', '{$image_paths[2]}',
+             '{$image_paths[3]}', '{$image_paths[4]}',
+             '$status', " . ($reason ? "'$reason'" : "NULL") . ",
+             " . ($description ? "'$description'" : "NULL") . ")";
 
     if ($conn->query($sql) === TRUE) {
-        header("Location: ../../Admin/index.php?table_management");
+        header('Location: ../../Admin/index.php?table_management');
         exit();
     } else {
         echo "Error: " . $conn->error;
