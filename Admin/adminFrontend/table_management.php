@@ -14,6 +14,7 @@ if ($result) {
     $table_number = $result->fetch_all(MYSQLI_ASSOC);
 }
 
+$tableTypes = $conn->query("SELECT * FROM table_types");
 
 ?>
 <style>
@@ -177,7 +178,6 @@ if ($result) {
                     <tr>
                         <th>Table Type</th>
                         <th>Capacity</th>
-                        <th>Available Tables</th>
                         <th>Status</th>
                         <th>Reason</th>
                         <th>Image</th>
@@ -189,7 +189,6 @@ if ($result) {
                         <tr>
                             <td><?php echo $table_types['table_name']; ?></td>
                             <td><?php echo $table_types['capacity']; ?></td>
-                            <td><?php echo $table_types['available_tables']; ?></td>
                             <td><?php echo $table_types['status']; ?></td>
                             <td><?php echo $table_types['reason']; ?></td>
 
@@ -304,29 +303,20 @@ if ($result) {
                                         <div class="modal-body package-modal-body">
 
                                             <!-- Table Name + Capacity -->
-                                            <div class="row">
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Table Name</label>
-                                                    <input type="text" name="table_name" class="form-control package-input"
-                                                        value="<?php echo htmlspecialchars($table_types['table_name']); ?>"
-                                                        required>
-                                                </div>
 
-                                                <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Capacity</label>
-                                                    <input type="number" name="capacity" class="form-control package-input"
-                                                        value="<?php echo htmlspecialchars($table_types['capacity']); ?>"
-                                                        required>
-                                                </div>
+                                            <div class="mb-4">
+                                                <label class="form-label package-label">Table Name</label>
+                                                <input type="text" name="table_name" class="form-control package-input"
+                                                    value="<?php echo htmlspecialchars($table_types['table_name']); ?>"
+                                                    required>
                                             </div>
 
                                             <!-- Available Tables + Status -->
                                             <div class="row">
                                                 <div class="col-md-6 mb-3">
-                                                    <label class="form-label package-label">Available Tables</label>
-                                                    <input type="number" name="available_tables"
-                                                        class="form-control package-input"
-                                                        value="<?php echo htmlspecialchars($table_types['available_tables']); ?>"
+                                                    <label class="form-label package-label">Capacity</label>
+                                                    <input type="number" name="capacity" class="form-control package-input"
+                                                        value="<?php echo htmlspecialchars($table_types['capacity']); ?>"
                                                         required>
                                                 </div>
 
@@ -398,25 +388,18 @@ if ($result) {
                     <form id="addPackageForm" method="POST" action="../Admin/adminBackend/table_type_add.php"
                         enctype="multipart/form-data">
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="table_name" class="form-label package-label">Table Name</label>
-                                <input type="text" class="form-control package-input" id="table_name" name="table_name"
-                                    required>
-                            </div>
 
-                            <div class="col-md-6">
-                                <label for="capacity" class="form-label package-label">Capacity</label>
-                                <input type="number" class="form-control package-input" id="capacity" name="capacity"
-                                    min="1" required>
-                            </div>
+                        <div class="mb-4">
+                            <label for="table_name" class="form-label package-label">Table Name</label>
+                            <input type="text" class="form-control package-input" id="table_name" name="table_name"
+                                required>
                         </div>
 
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label for="available_tables" class="form-label package-label">Available Tables</label>
-                                <input type="number" class="form-control package-input" id="available_tables"
-                                    name="available_tables" min="1" required>
+                                <label for="capacity" class="form-label package-label">Capacity</label>
+                                <input type="number" class="form-control package-input" id="capacity" name="capacity"
+                                    min="1" required>
                             </div>
 
                             <div class="col-md-6">
@@ -516,7 +499,7 @@ if ($result) {
                                         action="../Admin/adminBackend/table_number_edit.php?id=<?php echo $table_numbers['id']; ?>">
 
                                         <div class="modal-header package-modal-header">
-                                            <h5 class="modal-title fw-bold">Edit Room</h5>
+                                            <h5 class="modal-title fw-bold">Edit Table</h5>
                                             <button type="button" class="btn-close package-modal-close"
                                                 data-bs-dismiss="modal"></button>
                                         </div>
@@ -524,24 +507,37 @@ if ($result) {
                                         <div class="modal-body package-modal-body">
 
                                             <div class="mb-3">
-                                                <label class="form-label package-label">Room Number</label>
+                                                <label class="form-label package-label">Table Number</label>
                                                 <input type="text" name="table_number" class="form-control package-input"
                                                     value="<?php echo htmlspecialchars($table_numbers['table_number']); ?>"
                                                     required>
                                             </div>
 
                                             <div class="mb-3">
+                                                <label class="form-label package-label">Table Type</label>
+                                                <select name="table_type_fk_id" class="form-control package-input" required>
+                                                    <option value="">Select Table Type</option>
+
+                                                    <?php while ($row = $tableTypes->fetch_assoc()): ?>
+                                                        <option value="<?= $row['id']; ?>"
+                                                            <?= ($row['id'] == $table_numbers['table_type_fk_id']) ? 'selected' : ''; ?>>
+                                                            <?= htmlspecialchars($row['table_name']); ?>
+                                                        </option>
+                                                    <?php endwhile; ?>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
                                                 <label class="form-label package-label">Status</label>
                                                 <select name="status" class="form-control package-input" required>
-                                                    <option value="available" <?php echo ($table_numbers['status'] === 'available') ? 'selected' : ''; ?>>
+                                                    <option value="available" <?= ($table_numbers['status'] === 'available') ? 'selected' : ''; ?>>
                                                         Available
                                                     </option>
-                                                    <option value="occupied" <?php echo ($table_numbers['status'] === 'occupied') ? 'selected' : ''; ?>>
+                                                    <option value="occupied" <?= ($table_numbers['status'] === 'occupied') ? 'selected' : ''; ?>>
                                                         Occupied
                                                     </option>
                                                 </select>
                                             </div>
-
                                         </div>
 
                                         <div class="modal-footer">
@@ -551,7 +547,9 @@ if ($result) {
                                                 </button>
                                             </div>
                                         </div>
+
                                     </form>
+
 
                                 </div>
                             </div>
@@ -576,6 +574,23 @@ if ($result) {
                 </div>
                 <div class="modal-body package-modal-body">
                     <form id="addRoomForm" method="POST" action="../Admin/adminBackend/table_number_add.php">
+
+                        <div class="mb-3">
+                            <label for="tableNumber" class="form-label package-label">Table Number</label>
+                            <select class="form-control package-input" id="table_type_fk_id" name="table_type_fk_id"
+                                required>
+                                <option value="">Select Table Type</option>
+
+                                <?php while ($row = $tableTypes->fetch_assoc()): ?>
+                                    <option value="<?= $row['id']; ?>">
+                                        <?= $row['table_name']; ?>
+                                    </option>
+                                <?php endwhile; ?>
+                            </select>
+
+                        </div>
+
+
                         <div class="mb-3">
                             <label for="tableNumber" class="form-label package-label">Table Number</label>
                             <input type="text" class="form-control package-input" id="tableNumber" name="table_number"

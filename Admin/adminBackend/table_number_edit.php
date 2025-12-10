@@ -2,9 +2,11 @@
 include '../adminBackend/mydb.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
-    $id = intval($_GET['id']); // current record ID
+
+    $id = intval($_GET['id']);
     $table_number = intval($_POST['table_number']);
     $status = $conn->real_escape_string($_POST['status']);
+    $table_type_fk_id = intval($_POST['table_type_fk_id']);
 
     $check_sql = "SELECT id FROM table_number WHERE table_number = ? AND id != ?";
     $stmt_check = $conn->prepare($check_sql);
@@ -17,9 +19,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
     if ($stmt_check->num_rows > 0) {
         $message = 'Table number already exists.';
     } else {
-        $update_sql = "UPDATE table_number SET table_number = ?, status = ? WHERE id = ?";
+
+        $update_sql = "UPDATE table_number 
+                       SET table_number = ?, status = ?, table_type_fk_id = ? 
+                       WHERE id = ?";
+
         $stmt_update = $conn->prepare($update_sql);
-        $stmt_update->bind_param("isi", $table_number, $status, $id);
+        $stmt_update->bind_param("isii", $table_number, $status, $table_type_fk_id, $id);
 
         if ($stmt_update->execute()) {
             $message = 'Table number updated successfully!';

@@ -5,6 +5,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $table_number = intval($_POST['table_number']);
     $status = $conn->real_escape_string($_POST['status']);
+    $table_type_fk_id = intval($_POST['table_type_fk_id']);
 
     $check_sql = "SELECT id FROM table_number WHERE table_number = ?";
     $stmt_check = $conn->prepare($check_sql);
@@ -17,9 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($stmt_check->num_rows > 0) {
         $message = 'Table number already exists.';
     } else {
-        $sql = "INSERT INTO table_number (table_number, status) VALUES (?, ?)";
+
+        $sql = "INSERT INTO table_number (table_number, status, table_type_fk_id) 
+                VALUES (?, ?, ?)";
+
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("is", $table_number, $status);
+        $stmt->bind_param("isi", $table_number, $status, $table_type_fk_id);
 
         if ($stmt->execute()) {
             $message = 'Table number added successfully!';

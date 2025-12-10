@@ -5,7 +5,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $table_name = $conn->real_escape_string($_POST['table_name']);
     $capacity = intval($_POST['capacity']);
-    $available_tables = intval($_POST['available_tables']);
     $status = $conn->real_escape_string($_POST['status']);
     $reason = $conn->real_escape_string($_POST['reason']);
     $description = $conn->real_escape_string($_POST['description']);
@@ -37,9 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $sql = "INSERT INTO table_types 
-            (table_name, capacity, available_tables, img1, img2, img3, img4, img5, status, reason, description)
+            (table_name, capacity, img1, img2, img3, img4, img5, status, reason, description)
             VALUES 
-            ('$table_name', $capacity, $available_tables,
+            ('$table_name', $capacity,
              '{$image_paths[0]}', '{$image_paths[1]}', '{$image_paths[2]}',
              '{$image_paths[3]}', '{$image_paths[4]}',
              '$status', " . ($reason ? "'$reason'" : "NULL") . ",

@@ -7,7 +7,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
 
     $table_name = $conn->real_escape_string($_POST['table_name']);
     $capacity = intval($_POST['capacity']);
-    $available_tables = intval($_POST['available_tables']);
     $status = $conn->real_escape_string($_POST['status']);
     $reason = isset($_POST['reason']) ? $conn->real_escape_string($_POST['reason']) : null;
     $description = isset($_POST['description']) ? $conn->real_escape_string($_POST['description']) : null;
@@ -52,7 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['id'])) {
         UPDATE table_types SET
             table_name = '$table_name',
             capacity = $capacity,
-            available_tables = $available_tables,
             status = '$status',
             reason = " . ($reason ? "'$reason'" : "NULL") . ",
             description = " . ($description ? "'$description'" : "NULL") . ",

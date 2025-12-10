@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 09, 2025 at 11:26 AM
+-- Generation Time: Dec 10, 2025 at 09:10 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -305,6 +305,14 @@ CREATE TABLE `booked_rooms` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `booked_rooms`
+--
+
+INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
+(1, 1, NULL, 2, 'Double Occupancy', 1000.00, '2025-12-10 03:15:16'),
+(2, 1, NULL, 3, 'Triple Occupancy', 1700.00, '2025-12-10 03:15:16');
+
 -- --------------------------------------------------------
 
 --
@@ -342,6 +350,13 @@ CREATE TABLE `bookings` (
   `discount_amount` decimal(10,2) DEFAULT NULL,
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`) VALUES
+(1, 'BK-8HQIBUC156L3', NULL, 'asda', 'sdad', 'carlosbernales24@gmail.com', '99999999999', 'walkin', '2025-12-17 00:00:00', '2025-12-19 00:00:00', NULL, 2, NULL, 2, '0', 'Cash', 4320.00, '2025-12-10 03:15:16', 2, 0.00, 4320.00, 'admin', 2, 0, NULL, 'PWD', 20.00, 1080.00, 'uncounted');
 
 -- --------------------------------------------------------
 
@@ -399,6 +414,13 @@ CREATE TABLE `booking_check_inout` (
   `check_in` datetime NOT NULL,
   `check_out` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking_check_inout`
+--
+
+INSERT INTO `booking_check_inout` (`id`, `booking_fk_id`, `check_in`, `check_out`) VALUES
+(1, 1, '2025-12-17 00:00:00', '2025-12-19 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1218,6 +1240,14 @@ CREATE TABLE `guest_names` (
   `image_proof` varchar(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `guest_names`
+--
+
+INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
+(1, 1, 'asd', 'asdas', 'Adult', NULL, NULL, '2025-12-10 03:15:16'),
+(2, 1, 'asd', 'adas', 'Adult', NULL, NULL, '2025-12-10 03:15:16');
 
 -- --------------------------------------------------------
 
@@ -2732,6 +2762,7 @@ INSERT INTO `table_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `can
 
 CREATE TABLE `table_number` (
   `id` int NOT NULL,
+  `table_type_fk_id` int NOT NULL,
   `table_number` int NOT NULL,
   `status` enum('available','occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -2740,17 +2771,18 @@ CREATE TABLE `table_number` (
 -- Dumping data for table `table_number`
 --
 
-INSERT INTO `table_number` (`id`, `table_number`, `status`) VALUES
-(1, 1, 'available'),
-(2, 2, 'occupied'),
-(3, 3, 'available'),
-(4, 4, 'occupied'),
-(5, 5, 'occupied'),
-(6, 6, 'occupied'),
-(7, 7, 'occupied'),
-(8, 8, 'occupied'),
-(9, 9, 'available'),
-(10, 10, 'available');
+INSERT INTO `table_number` (`id`, `table_type_fk_id`, `table_number`, `status`) VALUES
+(1, 2, 1, 'available'),
+(2, 0, 2, 'occupied'),
+(3, 0, 3, 'available'),
+(4, 0, 4, 'occupied'),
+(5, 0, 5, 'occupied'),
+(6, 0, 6, 'occupied'),
+(7, 0, 7, 'occupied'),
+(8, 0, 8, 'occupied'),
+(9, 0, 9, 'available'),
+(10, 0, 10, 'available'),
+(12, 2, 11, 'available');
 
 -- --------------------------------------------------------
 
@@ -2815,7 +2847,6 @@ CREATE TABLE `table_types` (
   `id` int NOT NULL,
   `table_name` varchar(255) NOT NULL,
   `capacity` int NOT NULL,
-  `available_tables` int NOT NULL,
   `img1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `img2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `img3` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
@@ -2830,9 +2861,10 @@ CREATE TABLE `table_types` (
 -- Dumping data for table `table_types`
 --
 
-INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `available_tables`, `img1`, `img2`, `img3`, `img4`, `img5`, `description`, `status`, `reason`) VALUES
-(2, 'dasd', 2, 1, '45ba47ab107dd405.png', 'a48a4f4a38e7ebf0.PNG', '', '', '', 'adasd', 'active', NULL),
-(3, 'GAS', 2, 3, 'ace5dc84b33f90b2.png', '7904ce70b71572a6.png', '', '', '', 'adsad', 'active', NULL);
+INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `img1`, `img2`, `img3`, `img4`, `img5`, `description`, `status`, `reason`) VALUES
+(2, 'dasd', 2, '45ba47ab107dd405.png', 'a48a4f4a38e7ebf0.PNG', '', '', '', 'adasd', 'active', NULL),
+(3, 'GAS', 2, 'ace5dc84b33f90b2.png', '7904ce70b71572a6.png', '', '', '', 'adsad', 'active', NULL),
+(4, 'dasd', 1, '05d03160e72e03c1.png', '', '', '', '', 'ad', 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -3321,13 +3353,13 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `booking_amenities`
@@ -3339,7 +3371,7 @@ ALTER TABLE `booking_amenities`
 -- AUTO_INCREMENT for table `booking_check_inout`
 --
 ALTER TABLE `booking_check_inout`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
@@ -3387,7 +3419,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
@@ -3507,7 +3539,7 @@ ALTER TABLE `table_bookings`
 -- AUTO_INCREMENT for table `table_number`
 --
 ALTER TABLE `table_number`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `table_packages`
@@ -3519,7 +3551,7 @@ ALTER TABLE `table_packages`
 -- AUTO_INCREMENT for table `table_types`
 --
 ALTER TABLE `table_types`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `userss`
