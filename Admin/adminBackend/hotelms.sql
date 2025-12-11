@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 10, 2025 at 09:10 AM
+-- Generation Time: Dec 11, 2025 at 03:21 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -1993,26 +1993,58 @@ INSERT INTO `orders` (`id`, `user_id`, `table_id`, `customer_name`, `contact_num
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `orders_table`
+--
+
+CREATE TABLE `orders_table` (
+  `id` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `order_id` varchar(255) DEFAULT NULL,
+  `firstname` varchar(255) DEFAULT NULL,
+  `lastname` varchar(255) DEFAULT NULL,
+  `contact` varchar(255) DEFAULT NULL,
+  `date_time` datetime DEFAULT NULL,
+  `discount_type` varchar(255) DEFAULT NULL,
+  `discount_percentage` int DEFAULT NULL,
+  `discount_amount` double(10,2) DEFAULT NULL,
+  `total` double(10,2) DEFAULT NULL,
+  `balance` double(10,2) DEFAULT NULL,
+  `downpayment` double(10,2) DEFAULT NULL,
+  `change_amount` double(10,2) DEFAULT NULL,
+  `remaining_balance` double(10,2) DEFAULT NULL,
+  `payment` varchar(255) DEFAULT NULL,
+  `payment_method` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders_table_type`
+--
+
+CREATE TABLE `orders_table_type` (
+  `id` int NOT NULL,
+  `table_booking_fk_id` int NOT NULL,
+  `table_type_fk_id` int NOT NULL,
+  `table_number_fk_id` int NOT NULL,
+  `table_name` varchar(255) NOT NULL,
+  `table_number` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `order_items`
 --
 
 CREATE TABLE `order_items` (
   `id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `order_fk_id` int NOT NULL,
   `item_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `quantity` int NOT NULL,
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`id`, `order_id`, `item_name`, `quantity`, `unit_price`) VALUES
-(1, 1, 'Chicken Wings', 1, 180.00),
-(2, 2, 'Carbonara', 1, 120.00),
-(3, 2, 'Chicken Wings', 1, 180.00),
-(4, 3, 'Chicken Wings', 1, 180.00);
 
 -- --------------------------------------------------------
 
@@ -2022,25 +2054,10 @@ INSERT INTO `order_items` (`id`, `order_id`, `item_name`, `quantity`, `unit_pric
 
 CREATE TABLE `order_item_addons` (
   `id` int NOT NULL,
-  `order_item_id` int NOT NULL,
+  `order_item_fk_id` int NOT NULL,
   `addon_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `addon_price` decimal(10,2) NOT NULL
+  `price` double(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `order_item_addons`
---
-
-INSERT INTO `order_item_addons` (`id`, `order_item_id`, `addon_name`, `addon_price`) VALUES
-(1, 1, 'HAtdog', 15.00),
-(2, 1, 'cheese', 20.00),
-(3, 1, 'Gravy', 20.00),
-(4, 3, 'HAtdog', 15.00),
-(5, 3, 'cheese', 20.00),
-(6, 3, 'Gravy', 20.00),
-(7, 4, 'HAtdog', 15.00),
-(8, 4, 'cheese', 20.00),
-(9, 4, 'Gravy', 20.00);
 
 -- --------------------------------------------------------
 
@@ -2695,43 +2712,22 @@ CREATE TABLE `tables` (
 CREATE TABLE `table_bookings` (
   `id` int NOT NULL,
   `user_id` int DEFAULT NULL,
-  `package_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `contact_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email_address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `booking_date` date NOT NULL,
-  `booking_time` time NOT NULL,
   `num_guests` int NOT NULL,
-  `special_requests` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `payment_method` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
   `downpayment_amount` decimal(10,2) DEFAULT '0.00',
   `amount_paid` decimal(10,2) DEFAULT '0.00',
   `change_amount` decimal(10,2) DEFAULT '0.00',
-  `payment_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Pending',
   `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `package_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `payment_reference` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `payment_proof` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `cancellation_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `cancelled_at` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `payment_option` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `amount_to_pay` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `reservation_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `table_bookings`
---
-
-INSERT INTO `table_bookings` (`id`, `user_id`, `package_name`, `contact_number`, `email_address`, `booking_date`, `booking_time`, `num_guests`, `special_requests`, `payment_method`, `total_amount`, `downpayment_amount`, `amount_paid`, `change_amount`, `payment_status`, `status`, `package_type`, `payment_reference`, `payment_proof`, `cancellation_reason`, `cancelled_at`, `created_at`, `payment_option`, `amount_to_pay`, `name`, `reservation_type`) VALUES
-(1, 40, 'Package A', '', '', '2025-06-10', '16:04:00', 41, NULL, 'gcash ?payment=succe', 31000.00, 15500.00, 15500.00, 0.00, 'Paid', 'Confirmed', 'Standard', 'BOOK-68486E61DC5E7', NULL, NULL, NULL, '2025-06-10 17:41:53', 'partial', NULL, NULL, 'Online'),
-(2, 40, 'Package A', '', '', '2025-06-10', '16:04:00', 41, NULL, 'gcash ?payment=succe', 31000.00, 15500.00, 15500.00, 0.00, 'Paid', 'Pending', 'Standard', 'BOOK-684882D67CC27', NULL, NULL, NULL, '2025-06-10 19:09:10', 'partial', NULL, NULL, 'Online'),
-(3, 40, 'Package A', '', '', '2025-06-10', '16:04:00', 41, NULL, 'gcash ?payment=succe', 31000.00, 15500.00, 15500.00, 0.00, 'Paid', 'Pending', 'Standard', 'BOOK-6848830E94E2B', NULL, NULL, NULL, '2025-06-10 19:10:06', 'partial', NULL, NULL, 'Online'),
-(4, 40, 'Package A', '', '', '2025-06-10', '16:04:00', 41, NULL, 'gcash ?payment=succe', 31000.00, 15500.00, 15500.00, 0.00, 'Paid', 'Pending', 'Standard', 'BOOK-6848834B6F71E', NULL, NULL, NULL, '2025-06-10 19:11:07', 'partial', NULL, NULL, 'Online'),
-(5, 40, 'Package A', '', '', '2025-06-10', '16:04:00', 41, NULL, 'gcash ?payment=succe', 31000.00, 15500.00, 15500.00, 0.00, 'Paid', 'Pending', 'Standard', 'BOOK-684883A2C92CC', NULL, NULL, NULL, '2025-06-10 19:12:34', 'partial', NULL, NULL, 'Online'),
-(6, 40, 'Package A', '', '', '2025-06-10', '16:04:00', 41, NULL, 'gcash ?payment=succe', 31000.00, 15500.00, 15500.00, 0.00, 'Paid', 'Pending', 'Standard', 'BOOK-684883F36B111', NULL, NULL, NULL, '2025-06-10 19:13:55', 'partial', NULL, NULL, 'Online');
 
 -- --------------------------------------------------------
 
@@ -3217,6 +3213,18 @@ ALTER TABLE `orders`
   ADD KEY `cashier_id` (`cashier_id`);
 
 --
+-- Indexes for table `orders_table`
+--
+ALTER TABLE `orders_table`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `orders_table_type`
+--
+ALTER TABLE `orders_table_type`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `order_items`
 --
 ALTER TABLE `order_items`
@@ -3470,16 +3478,28 @@ ALTER TABLE `orders`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `orders_table`
+--
+ALTER TABLE `orders_table`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `orders_table_type`
+--
+ALTER TABLE `orders_table_type`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -3533,7 +3553,7 @@ ALTER TABLE `room_types`
 -- AUTO_INCREMENT for table `table_bookings`
 --
 ALTER TABLE `table_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `table_number`

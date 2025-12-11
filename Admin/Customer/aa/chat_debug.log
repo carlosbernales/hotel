@@ -865831,3 +865831,21 @@ Data: Array
 [2025-12-10 02:10:10] Database connection successful
 [2025-12-10 02:10:10] Action received
 Data: check_unread
+[2025-12-11 01:52:08] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-11 01:52:08] Database connection successful
+[2025-12-11 01:52:08] Action received
+Data: check_unread
+[2025-12-11 01:52:11] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-11 01:52:11] Database connection successful
+[2025-12-11 01:52:11] Action received
+Data: check_unread
