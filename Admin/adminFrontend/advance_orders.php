@@ -1,3 +1,22 @@
+<?php
+session_start();
+$advanceOrder = $_SESSION['advance_order'] ?? null;
+
+$tableNames = [];
+if ($advanceOrder && !empty($advanceOrder['tables'])) {
+    include __DIR__ . '/../adminBackend/mydb.php'; // DB connection
+
+    // Convert tableTypes IDs to integers
+    $typeIds = array_map('intval', $advanceOrder['tableTypes']);
+    $result = $conn->query("SELECT id, table_name FROM table_types WHERE id IN (" . implode(',', $typeIds) . ")");
+
+    while ($row = $result->fetch_assoc()) {
+        $tableNames[$row['id']] = $row['table_name'];
+    }
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -455,11 +474,9 @@
     </nav>
 
     <?php
-    session_start();
 
     include __DIR__ . '/../adminBackend/mydb.php';
 
-    $advanceOrder = $_SESSION['advance_order'] ?? null;
 
     $categories = $conn->query("SELECT id, display_name FROM menu_categories ORDER BY display_name");
 
@@ -570,6 +587,7 @@
 
 
     <!-- Advance Order Modal -->
+    <!-- Advance Order Modal -->
     <div class="modal fade" id="advanceOrderModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -578,7 +596,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="advanceOrderContent">
-                    <!-- Cart details will be injected here -->
+                    <!-- Content will be injected dynamically when Proceed to Checkout is clicked -->
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -589,8 +607,8 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const itemAddons = <?= json_encode($addons); ?>;
         let cart = [];
@@ -654,7 +672,10 @@
         function confirmAddons() {
             const addons = itemAddons[pendingItem.id];
             let selected = [];
-            addons.forEach(a => { const qty = parseInt(document.getElementById('addonQty_' + a.id).innerText); if (qty > 0) selected.push({ addon_id: a.id, name: a.name, price: parseFloat(a.price), qty }); });
+            addons.forEach(a => {
+                const qty = parseInt(document.getElementById('addonQty_' + a.id).innerText);
+                if (qty > 0) selected.push({ addon_id: a.id, name: a.name, price: parseFloat(a.price), qty });
+            });
             addMainItem(pendingItem, selected);
             closeAddonModal();
         }
@@ -673,9 +694,8 @@
             checkoutBtn.disabled = false;
             cartBody.innerHTML = cart.map(item => `
             <div class="cart-item">
-                <h6>Item ID: ${item.id}</h6>
                 <div>${item.name} – ₱${item.price.toFixed(2)}</div>
-                ${item.addons.length > 0 ? `<ul class="mb-1">${item.addons.map(a => `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
+                ${item.addons.length > 0 ? `<ul>${item.addons.map(a => `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
                 <div class="d-flex align-items-center mb-2">
                     <button class="btn btn-sm btn-outline-secondary me-2" onclick="decreaseQty(${item.id})">-</button>
                     <span>${item.qty}</span>
@@ -697,20 +717,51 @@
         document.getElementById('checkoutBtn').addEventListener('click', () => {
             <?php if ($advanceOrder): ?>
                 const order = <?= json_encode($advanceOrder); ?>;
-                let html = `<p><strong>Name:</strong> ${order.first} ${order.last}</p>
+                const tableNames = <?= json_encode($tableNames ?? []) ?>;
+
+                let html = `
+                    <h6 class="fw-bold mb-2">Customer Info</h6>
+                    <p><strong>Name:</strong> ${order.first} ${order.last}</p>
                     <p><strong>Contact:</strong> ${order.contact}</p>
                     <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
                     <hr>
-                    <h6>Tables:</h6>
-                    <ul>
-                        ${order.tables.map((t, i) => `<li>Table #${t} (Type ID: ${order.tableTypes[i]})</li>`).join('')}
-                    </ul>`;
+                    <h6 class="fw-bold mb-2">Selected Tables</h6>
+                    <ul class="mb-3">
+                        ${order.tables.map((t, i) => `
+                            <li>Table #${t} - ${tableNames[order.tableTypes[i]] ?? 'Unknown'}</li>`).join('')}
+                    </ul>
+                    <hr>
+                    <h6 class="fw-bold mb-2">Items in Cart</h6>
+                `;
+
+                if (cart.length === 0) {
+                    html += '<p class="text-muted">No items in cart.</p>';
+                } else {
+                    html += '<ul>';
+                    cart.forEach(item => {
+                        html += `<li>${item.name} x${item.qty} – ₱${(item.price * item.qty).toFixed(2)}`;
+                        if (item.addons.length > 0) {
+                            html += '<ul>';
+                            item.addons.forEach(a => {
+                                html += `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`;
+                            });
+                            html += '</ul>';
+                        }
+                        html += '</li>';
+                    });
+                    html += '</ul>';
+                    let subtotal = 0;
+                    cart.forEach(item => { subtotal += item.price * item.qty; item.addons.forEach(a => subtotal += a.price * a.qty); });
+                    html += `<p><strong>Subtotal:</strong> ₱${subtotal.toFixed(2)}</p>`;
+                }
+
                 document.getElementById('advanceOrderContent').innerHTML = html;
                 bootstrapAdvanceModal.show();
             <?php else: ?>
                 alert('No advance order in session!');
             <?php endif; ?>
         });
+
 
         // ---------------- CONFIRM ADVANCE ORDER ----------------
         document.getElementById('confirmAdvanceOrder').addEventListener('click', () => {
@@ -723,6 +774,9 @@
             order.tables.forEach((t, i) => {
                 formData.append('tableTypes[]', order.tableTypes[i]);
                 formData.append('tables[]', t);
+            });
+            cart.forEach(item => {
+                formData.append('cartItems[]', JSON.stringify(item));
             });
 
             fetch('../Admin/adminBackend/booking_save_order.php', {
@@ -739,6 +793,7 @@
                 })
                 .catch(err => console.error(err));
         });
+
     </script>
 
 
