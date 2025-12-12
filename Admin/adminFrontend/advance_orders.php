@@ -455,7 +455,11 @@
     </nav>
 
     <?php
-    include 'adminBackend/mydb.php';
+    session_start();
+
+    include __DIR__ . '/../adminBackend/mydb.php';
+
+    $advanceOrder = $_SESSION['advance_order'] ?? null;
 
     $categories = $conn->query("SELECT id, display_name FROM menu_categories ORDER BY display_name");
 
@@ -564,6 +568,27 @@
         </div>
     </div>
 
+
+    <!-- Advance Order Modal -->
+    <div class="modal fade" id="advanceOrderModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Advance Order Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="advanceOrderContent">
+                    <!-- Cart details will be injected here -->
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="confirmAdvanceOrder">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -571,118 +596,73 @@
         let cart = [];
         let pendingItem = null;
         let bootstrapAddonModal = new bootstrap.Modal(document.getElementById('addonModal'), {});
+        let bootstrapAdvanceModal = new bootstrap.Modal(document.getElementById('advanceOrderModal'));
 
+        // ---------------- FILTER ----------------
         function filterByCategory(cat, e) {
             document.querySelectorAll('#categoryFilters button').forEach(btn => btn.classList.remove('active'));
-            e.currentTarget.classList.add('active');
-
+            if (e) e.currentTarget.classList.add('active');
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.style.display = (cat === 'all' || item.dataset.category == cat) ? 'block' : 'none';
             });
         }
 
+        // ---------------- ADD TO CART ----------------
         function addToCart(id) {
-            const name = document.querySelector(`button[onclick="addToCart(${id})"]`).closest('.menu-card')
-                .querySelector('.menu-name').innerText;
-
-            const price = parseFloat(
-                document.querySelector(`button[onclick="addToCart(${id})"]`).closest('.menu-card')
-                    .querySelector('.menu-price-badge').innerText.replace('₱', '')
-            );
+            const card = document.querySelector(`button[onclick="addToCart(${id})"]`).closest('.menu-card');
+            const name = card.querySelector('.menu-name').innerText;
+            const price = parseFloat(card.querySelector('.menu-price-badge').innerText.replace('₱', ''));
 
             if (itemAddons[id] && itemAddons[id].length > 0) {
                 pendingItem = { id, name, price };
                 openAddonModal(id);
                 return;
             }
-
             addMainItem({ id, name, price }, []);
         }
 
         function addMainItem(itemData, selectedAddons = []) {
-            const existing = cart.find(i =>
-                i.id === itemData.id &&
-                JSON.stringify(i.addons) === JSON.stringify(selectedAddons)
-            );
-
+            const existing = cart.find(i => i.id === itemData.id && JSON.stringify(i.addons) === JSON.stringify(selectedAddons));
             if (existing) existing.qty++;
-            else cart.push({
-                id: itemData.id,
-                name: itemData.name,
-                price: itemData.price,
-                qty: 1,
-                addons: selectedAddons
-            });
-
+            else cart.push({ id: itemData.id, name: itemData.name, price: itemData.price, qty: 1, addons: selectedAddons });
             updateCart();
             document.getElementById('cartSidebar').classList.add('open');
         }
 
-        /* ---------------- ADDON MODAL ---------------- */
-
+        // ---------------- ADDON MODAL ----------------
         function openAddonModal(id) {
             const content = document.getElementById('addonContent');
             const addons = itemAddons[id];
-
             let html = '';
             addons.forEach(a => {
-                html += `
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <div><strong>${a.name}</strong> – ₱${parseFloat(a.price).toFixed(2)}</div>
-            <div>
-                <button class="btn btn-sm btn-outline-secondary" onclick="addonMinus(${a.id})">-</button>
-                <span id="addonQty_${a.id}" class="mx-2">0</span>
-                <button class="btn btn-sm btn-outline-secondary" onclick="addonPlus(${a.id})">+</button>
-            </div>
-        </div>`;
+                html += `<div class="d-flex justify-content-between align-items-center mb-2">
+                        <div><strong>${a.name}</strong> – ₱${parseFloat(a.price).toFixed(2)}</div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="addonMinus(${a.id})">-</button>
+                            <span id="addonQty_${a.id}" class="mx-2">0</span>
+                            <button class="btn btn-sm btn-outline-secondary" onclick="addonPlus(${a.id})">+</button>
+                        </div>
+                    </div>`;
             });
-
             content.innerHTML = html;
             bootstrapAddonModal.show();
         }
 
-
-        function closeAddonModal() {
-            bootstrapAddonModal.hide();
-            pendingItem = null;
-        }
-
-        function addonPlus(id) {
-            const el = document.getElementById('addonQty_' + id);
-            el.innerText = parseInt(el.innerText) + 1;
-        }
-        function addonMinus(id) {
-            const el = document.getElementById('addonQty_' + id);
-            if (parseInt(el.innerText) > 0) el.innerText = parseInt(el.innerText) - 1;
-        }
-
+        function closeAddonModal() { bootstrapAddonModal.hide(); pendingItem = null; }
+        function addonPlus(id) { document.getElementById('addonQty_' + id).innerText = parseInt(document.getElementById('addonQty_' + id).innerText) + 1; }
+        function addonMinus(id) { const el = document.getElementById('addonQty_' + id); if (parseInt(el.innerText) > 0) el.innerText = parseInt(el.innerText) - 1; }
         function confirmAddons() {
             const addons = itemAddons[pendingItem.id];
             let selected = [];
-
-            addons.forEach(a => {
-                const qty = parseInt(document.getElementById('addonQty_' + a.id).innerText);
-                if (qty > 0) {
-                    selected.push({
-                        addon_id: a.id,
-                        name: a.name,
-                        price: parseFloat(a.price),
-                        qty
-                    });
-                }
-            });
-
+            addons.forEach(a => { const qty = parseInt(document.getElementById('addonQty_' + a.id).innerText); if (qty > 0) selected.push({ addon_id: a.id, name: a.name, price: parseFloat(a.price), qty }); });
             addMainItem(pendingItem, selected);
             closeAddonModal();
         }
 
-
-        /* ------------- UPDATE CART DISPLAY ------------- */
-
+        // ---------------- UPDATE CART ----------------
         function updateCart() {
             const cartBody = document.getElementById('cartBody');
             const checkoutBtn = document.getElementById('checkoutBtn');
-
             if (cart.length === 0) {
                 cartBody.innerHTML = `<div class="text-center text-muted"><p>Your cart is empty</p></div>`;
                 checkoutBtn.disabled = true;
@@ -690,62 +670,77 @@
                 document.getElementById('total').innerText = '₱0.00';
                 return;
             }
-
             checkoutBtn.disabled = false;
-
             cartBody.innerHTML = cart.map(item => `
-        <div class="cart-item">
-            <h6>Item ID: ${item.id}</h6>
-            <div>${item.name} – ₱${item.price.toFixed(2)}</div>
+            <div class="cart-item">
+                <h6>Item ID: ${item.id}</h6>
+                <div>${item.name} – ₱${item.price.toFixed(2)}</div>
+                ${item.addons.length > 0 ? `<ul class="mb-1">${item.addons.map(a => `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
+                <div class="d-flex align-items-center mb-2">
+                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="decreaseQty(${item.id})">-</button>
+                    <span>${item.qty}</span>
+                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="increaseQty(${item.id})">+</button>
+                </div>
+            </div>`).join('');
 
-            ${item.addons.length > 0 ? `
-            <ul class="mb-1">
-                ${item.addons.map(a =>
-                `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`
-            ).join('')}
-            </ul>` : ''}
-
-            <div class="d-flex align-items-center mb-2">
-                <button class="btn btn-sm btn-outline-secondary me-2" onclick="decreaseQty(${item.id})">-</button>
-                <span>${item.qty}</span>
-                <button class="btn btn-sm btn-outline-secondary ms-2" onclick="increaseQty(${item.id})">+</button>
-            </div>
-        </div>
-    `).join('');
-
-            /* ---- TOTALS ---- */
             let subtotal = 0;
-
-            cart.forEach(item => {
-                subtotal += item.price * item.qty;
-                item.addons.forEach(a => subtotal += a.price * a.qty);
-            });
-
+            cart.forEach(item => { subtotal += item.price * item.qty; item.addons.forEach(a => subtotal += a.price * a.qty); });
             document.getElementById('subtotal').innerText = '₱' + subtotal.toFixed(2);
             document.getElementById('total').innerText = '₱' + subtotal.toFixed(2);
         }
 
-        function increaseQty(id) {
-            const item = cart.find(i => i.id === id);
-            item.qty++;
-            updateCart();
-        }
+        function increaseQty(id) { const item = cart.find(i => i.id === id); item.qty++; updateCart(); }
+        function decreaseQty(id) { const item = cart.find(i => i.id === id); if (item.qty > 1) item.qty--; else cart = cart.filter(i => i.id !== id); updateCart(); }
+        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
 
-        function decreaseQty(id) {
-            const item = cart.find(i => i.id === id);
-            if (item.qty > 1) item.qty--;
-            else cart = cart.filter(i => i.id !== id);
-            updateCart();
-        }
+        // ---------------- ADVANCE ORDER MODAL ----------------
+        document.getElementById('checkoutBtn').addEventListener('click', () => {
+            <?php if ($advanceOrder): ?>
+                const order = <?= json_encode($advanceOrder); ?>;
+                let html = `<p><strong>Name:</strong> ${order.first} ${order.last}</p>
+                    <p><strong>Contact:</strong> ${order.contact}</p>
+                    <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
+                    <hr>
+                    <h6>Tables:</h6>
+                    <ul>
+                        ${order.tables.map((t, i) => `<li>Table #${t} (Type ID: ${order.tableTypes[i]})</li>`).join('')}
+                    </ul>`;
+                document.getElementById('advanceOrderContent').innerHTML = html;
+                bootstrapAdvanceModal.show();
+            <?php else: ?>
+                alert('No advance order in session!');
+            <?php endif; ?>
+        });
 
-        function toggleCart() {
-            document.getElementById('cartSidebar').classList.toggle('open');
-        }
+        // ---------------- CONFIRM ADVANCE ORDER ----------------
+        document.getElementById('confirmAdvanceOrder').addEventListener('click', () => {
+            const order = <?= json_encode($advanceOrder); ?>;
+            const formData = new URLSearchParams();
+            formData.append('first', order.first);
+            formData.append('last', order.last);
+            formData.append('contact', order.contact);
+            formData.append('datetime', order.datetime);
+            order.tables.forEach((t, i) => {
+                formData.append('tableTypes[]', order.tableTypes[i]);
+                formData.append('tables[]', t);
+            });
 
-        function checkout() {
-            alert("Checkout logic here");
-        }
+            fetch('../Admin/adminBackend/booking_save_order.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.status === 'success') {
+                        alert('Advance order saved successfully!');
+                        bootstrapAdvanceModal.hide();
+                        location.reload();
+                    } else alert('Error saving advance order.');
+                })
+                .catch(err => console.error(err));
+        });
     </script>
+
 
 
 

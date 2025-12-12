@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 11, 2025 at 03:21 AM
+-- Generation Time: Dec 12, 2025 at 11:43 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -2017,6 +2017,14 @@ CREATE TABLE `orders_table` (
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `orders_table`
+--
+
+INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `status`) VALUES
+(1, NULL, 'ORD-1765525734', 'asdas', 'dasdasd', 'asd', '2025-12-12 15:46:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Accepted'),
+(2, NULL, 'ORD-1765525809', 'asdas', 'dasd', 'asd', '2025-12-12 15:50:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Accepted');
+
 -- --------------------------------------------------------
 
 --
@@ -2031,6 +2039,15 @@ CREATE TABLE `orders_table_type` (
   `table_name` varchar(255) NOT NULL,
   `table_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders_table_type`
+--
+
+INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
+(1, 1, 2, 1, 'dasd', 1),
+(2, 2, 4, 8, 'dasd', 8),
+(3, 2, 2, 1, 'dasd', 1);
 
 -- --------------------------------------------------------
 
@@ -2769,13 +2786,13 @@ CREATE TABLE `table_number` (
 
 INSERT INTO `table_number` (`id`, `table_type_fk_id`, `table_number`, `status`) VALUES
 (1, 2, 1, 'available'),
-(2, 0, 2, 'occupied'),
-(3, 0, 3, 'available'),
+(2, 3, 2, 'available'),
+(3, 2, 3, 'available'),
 (4, 0, 4, 'occupied'),
-(5, 0, 5, 'occupied'),
+(5, 3, 5, 'available'),
 (6, 0, 6, 'occupied'),
 (7, 0, 7, 'occupied'),
-(8, 0, 8, 'occupied'),
+(8, 4, 8, 'available'),
 (9, 0, 9, 'available'),
 (10, 0, 10, 'available'),
 (12, 2, 11, 'available');
@@ -3481,13 +3498,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `order_items`

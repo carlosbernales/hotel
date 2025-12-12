@@ -498,8 +498,9 @@
                     $mainImage = (!empty($row['img1'])) ? $imageDir . $row['img1'] : "default.jpg";
                     ?>
                     <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="table-card" data-table-id="<?= $row['id'] ?>" data-status="<?= $row['status'] ?>"
-                            data-capacity="<?= $row['capacity'] ?>">
+                        <div class="table-card" data-table-id="<?= $row['id'] ?>" data-type-id="<?= $row['id'] ?>"
+                            data-status="<?= $row['status'] ?>" data-capacity="<?= $row['capacity'] ?>">
+
 
                             <!-- IMAGE -->
                             <div class="table-image-container">
@@ -572,21 +573,54 @@
                 <i class="fas fa-check-circle"></i> Confirm Booking
             </button>
 
-
             <button class="btn-advance-orders" id="advanceOrdersBtn" disabled>
                 <i class="fas fa-list-alt"></i> Advance Orders
             </button>
 
-
         </div>
     </div>
 
+
+    <!-- Booking Info Modal -->
+    <div class="modal fade" id="bookingInfoModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title">Customer Information</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" id="bookingTablesContainer">
+                    <label class="form-label">First Name</label>
+                    <input type="text" id="firstName" class="form-control mb-2">
+
+                    <label class="form-label">Last Name</label>
+                    <input type="text" id="lastName" class="form-control mb-2">
+
+                    <label class="form-label">Contact Number</label>
+                    <input type="text" id="contactNumber" class="form-control mb-2">
+
+                    <label class="form-label">Booking Date & Time</label>
+                    <input type="datetime-local" id="bookingDateTime" class="form-control mb-3">
+
+                    <!-- Available tables for each type will be inserted here dynamically -->
+                    <div id="availableTablesWrapper"></div>
+                </div>
+
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" id="submitBookingInfo">Submit</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-
-        document.getElementById('advanceOrdersBtn').addEventListener('click', function () {
-            window.location.href = "../Admin/index.php?advance-orders";
-        });
-
         let cart = [];
 
         function init() {
@@ -601,18 +635,9 @@
                 id: parseInt(tableId),
                 name: card.querySelector('.table-name').textContent,
                 capacity: parseInt(card.dataset.capacity),
-                status: card.dataset.status
+                status: card.dataset.status,
+                typeId: parseInt(card.dataset.typeId)
             };
-        }
-
-        function getAllTables() {
-            const tableCards = document.querySelectorAll('.table-card');
-            return Array.from(tableCards).map(card => ({
-                id: parseInt(card.dataset.tableId),
-                name: card.querySelector('.table-name').textContent,
-                capacity: parseInt(card.dataset.capacity),
-                status: card.dataset.status
-            }));
         }
 
         function addToCart(tableId) {
@@ -649,9 +674,8 @@
                 <p>Your booking cart is empty</p>
             </div>
         `;
-
                 checkoutBtn.disabled = true;
-                advanceBtn.disabled = true;   // 🔥 disable Advance Orders when empty
+                advanceBtn.disabled = true;
             } else {
                 cartBody.innerHTML = cart.map(table => `
             <div class="cart-item">
@@ -666,12 +690,11 @@
         `).join('');
 
                 checkoutBtn.disabled = false;
-                advanceBtn.disabled = false;   // 🔥 enable Advance Orders when there are items
+                advanceBtn.disabled = false;
             }
 
             updateCartSummary();
         }
-
 
         function updateCartSummary() {
             const totalTables = cart.length;
@@ -683,7 +706,9 @@
         }
 
         function updateCartCount() {
-            document.getElementById('cartCount').textContent = cart.length;
+            if (document.getElementById('cartCount')) {
+                document.getElementById('cartCount').textContent = cart.length;
+            }
         }
 
         function filterTables(filter) {
@@ -695,22 +720,54 @@
 
                 let show = true;
 
-                if (filter === 'available') {
-                    show = status === 'available';
-                } else if (filter === 'unavailable') {
-                    show = status === 'unavailable';
-                }
+                if (filter === 'available') show = status === 'active';
+                if (filter === 'unavailable') show = status === 'inactive';
+
                 parent.style.display = show ? 'block' : 'none';
             });
         }
 
-        function setupEventListeners() {
-            document.getElementById('cartToggle').addEventListener('click', function (e) {
-                e.preventDefault();
-                document.getElementById('cartSidebar').classList.add('open');
-            });
+        /* LOAD AVAILABLE REAL TABLE NUMBERS */
+        function loadAvailableTableNumbers() {
+            const wrapper = document.getElementById("availableTablesWrapper");
+            wrapper.innerHTML = '';
 
-            document.getElementById('closeCart').addEventListener('click', function () {
+            const typeIds = cart.map(t => t.typeId);
+
+            fetch("../Admin/adminBackend/booking_fetch_table_numbers.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: typeIds.map(id => `type_ids[]=${id}`).join("&")
+            })
+                .then(res => res.json())
+                .then(data => {
+                    cart.forEach(table => {
+                        const available = data.filter(d => d.table_type_fk_id == table.typeId);
+
+                        const div = document.createElement('div');
+                        div.classList.add('mb-3');
+
+                        div.innerHTML = `
+                <label class="form-label">Available Table for ${table.name}</label>
+                <select class="form-control availableTableSelect" data-table-type="${table.typeId}">
+                    ${available.length ?
+                                available.map(item => `<option value="${item.id}">Table #${item.table_number}</option>`).join('')
+                                :
+                                `<option value="">No available table numbers</option>`
+                            }
+                </select>
+            `;
+
+                        wrapper.appendChild(div);
+                    });
+                });
+        }
+
+        function setupEventListeners() {
+            const bookingModalEl = document.getElementById("bookingInfoModal");
+            const bookingModal = new bootstrap.Modal(bookingModalEl);
+
+            document.getElementById('closeCart').addEventListener('click', () => {
                 document.getElementById('cartSidebar').classList.remove('open');
             });
 
@@ -722,22 +779,92 @@
                 });
             });
 
-            document.getElementById('checkoutBtn').addEventListener('click', function () {
+            document.getElementById("checkoutBtn").addEventListener("click", function () {
                 if (cart.length > 0) {
-                    alert(`Booking confirmed for ${cart.length} table(s)!\nTotal capacity: ${cart.reduce((sum, t) => sum + t.capacity, 0)} people`);
-                    cart = [];
-                    updateCart();
-                    updateCartCount();
-                    document.getElementById('cartSidebar').classList.remove('open');
+                    loadAvailableTableNumbers();
+                    bookingModal.show();
+                    bookingModalEl.dataset.action = "checkout";
                 }
+            });
+
+            document.getElementById("advanceOrdersBtn").addEventListener("click", function () {
+                if (cart.length > 0) {
+                    loadAvailableTableNumbers();
+                    bookingModal.show();
+                    bookingModalEl.dataset.action = "advance";
+                }
+            });
+
+            document.getElementById("submitBookingInfo").addEventListener("click", function () {
+
+                const first = document.getElementById("firstName").value.trim();
+                const last = document.getElementById("lastName").value.trim();
+                const contact = document.getElementById("contactNumber").value.trim();
+                const dt = document.getElementById("bookingDateTime").value.trim();
+
+                const selectedTableNumbers = Array.from(document.querySelectorAll('.availableTableSelect'))
+                    .map(sel => sel.value)
+                    .filter(v => v !== "");
+
+                const typeIds = cart.map(t => t.typeId);
+
+                if (!first || !last || !contact || !dt || selectedTableNumbers.length !== cart.length) {
+                    alert("Complete all fields and select available tables.");
+                    return;
+                }
+
+                const action = bookingModalEl.dataset.action;
+
+                let bodyData =
+                    `first=${encodeURIComponent(first)}` +
+                    `&last=${encodeURIComponent(last)}` +
+                    `&contact=${encodeURIComponent(contact)}` +
+                    `&datetime=${encodeURIComponent(dt)}` +
+                    typeIds.map(id => `&tableTypes[]=${id}`).join('') +
+                    selectedTableNumbers.map(num => `&tables[]=${num}`).join('');
+
+                if (action === "checkout") {
+                    fetch("../Admin/adminBackend/booking_save_order.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: bodyData
+                    })
+                        .then(async res => {
+                            const text = await res.text();
+                            console.log("RAW RESPONSE:", text); // ← SEE THE ERROR
+                            return JSON.parse(text); // Try to parse manually
+                        })
+                        .then(res => {
+                            console.log(res);
+                        });
+
+                }
+
+                if (action === "advance") {
+                    fetch("../Admin/adminBackend/booking_store_advance.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: bodyData
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.status === "success") {
+                                window.location.href = res.redirect;
+                            } else {
+                                alert("Error storing advance order.");
+                            }
+                        });
+                }
+
             });
         }
 
         init();
+
     </script>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
 </body>
 
