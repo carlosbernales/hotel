@@ -865966,3 +865966,12 @@ Data: Array
 [2025-12-12 12:55:38] Database connection successful
 [2025-12-12 12:55:38] Action received
 Data: check_unread
+[2025-12-13 08:06:12] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-13 08:06:12] Database connection successful
+[2025-12-13 08:06:12] Action received
+Data: check_unread

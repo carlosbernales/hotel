@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 12, 2025 at 11:43 AM
+-- Generation Time: Dec 13, 2025 at 08:06 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -2022,8 +2022,7 @@ CREATE TABLE `orders_table` (
 --
 
 INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `status`) VALUES
-(1, NULL, 'ORD-1765525734', 'asdas', 'dasdasd', 'asd', '2025-12-12 15:46:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Accepted'),
-(2, NULL, 'ORD-1765525809', 'asdas', 'dasd', 'asd', '2025-12-12 15:50:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Accepted');
+(1, NULL, NULL, 'sad', 'asdasd', '32', '2025-12-13 10:47:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2040,15 +2039,6 @@ CREATE TABLE `orders_table_type` (
   `table_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `orders_table_type`
---
-
-INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
-(1, 1, 2, 1, 'dasd', 1),
-(2, 2, 4, 8, 'dasd', 8),
-(3, 2, 2, 1, 'dasd', 1);
-
 -- --------------------------------------------------------
 
 --
@@ -2063,6 +2053,15 @@ CREATE TABLE `order_items` (
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
+(1, 1, 'Spaghetti maccaroni', 1, 270.00),
+(2, 1, 'Chicken Wings', 1, 180.00),
+(3, 1, 'Coconut Salad', 1, 200.00);
+
 -- --------------------------------------------------------
 
 --
@@ -2073,8 +2072,18 @@ CREATE TABLE `order_item_addons` (
   `id` int NOT NULL,
   `order_item_fk_id` int NOT NULL,
   `addon_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `price` double(10,2) NOT NULL
+  `price` double(10,2) NOT NULL,
+  `quantity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_item_addons`
+--
+
+INSERT INTO `order_item_addons` (`id`, `order_item_fk_id`, `addon_name`, `price`, `quantity`) VALUES
+(1, 2, 'HAtdog', 15.00, 1),
+(2, 2, 'cheese', 20.00, 1),
+(3, 2, 'Gravy', 20.00, 1);
 
 -- --------------------------------------------------------
 
@@ -3498,25 +3507,25 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `payments`
