@@ -765,21 +765,27 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
         // ---------------- CONFIRM ADVANCE ORDER ----------------
         document.getElementById('confirmAdvanceOrder').addEventListener('click', () => {
+
             const order = <?= json_encode($advanceOrder); ?>;
-            const formData = new URLSearchParams();
+            const formData = new FormData();
+
             formData.append('first', order.first);
             formData.append('last', order.last);
             formData.append('contact', order.contact);
             formData.append('datetime', order.datetime);
-            order.tables.forEach((t, i) => {
-                formData.append('tableTypes[]', order.tableTypes[i]);
-                formData.append('tables[]', t);
-            });
+
             cart.forEach(item => {
-                formData.append('cartItems[]', JSON.stringify(item));
+                formData.append('cartItems[]', JSON.stringify({
+                    id: item.id,
+                    qty: item.qty,
+                    addons: item.addons.map(a => ({
+                        addon_id: a.addon_id,
+                        qty: a.qty
+                    }))
+                }));
             });
 
-            fetch('../Admin/adminBackend/booking_save_order.php', {
+            fetch('../Admin/adminBackend/booking_save_order_advance.php', {
                 method: 'POST',
                 body: formData
             })
@@ -789,10 +795,16 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                         alert('Advance order saved successfully!');
                         bootstrapAdvanceModal.hide();
                         location.reload();
-                    } else alert('Error saving advance order.');
+                    } else {
+                        alert(res.message || 'Error saving order');
+                    }
                 })
-                .catch(err => console.error(err));
+                .catch(err => {
+                    console.error(err);
+                    alert('Server error');
+                });
         });
+
 
     </script>
 

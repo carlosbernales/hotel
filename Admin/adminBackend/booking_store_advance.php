@@ -17,4 +17,4 @@ $_SESSION['advance_order'] = [
     'tables' => $tables
 ];
 
-echo json_encode(['status' => 'success', 'redirect' => '../Admin/adminFrontend/advance_orders.php']);
+echo json_encode(['status' => 'success', 'redirect' => '../Admin/index.php?advance-orders']);
