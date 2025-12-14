@@ -2,6 +2,26 @@
 header('Content-Type: application/json');
 include '../adminBackend/mydb.php';
 
+
+function generateOrderId($conn)
+{
+    do {
+        $randomNumber = random_int(10000000000, 99999999999);
+        $orderId = 'ORD' . $randomNumber;
+
+        $stmt = $conn->prepare("SELECT id FROM orders_table WHERE order_id = ?");
+        $stmt->bind_param("s", $orderId);
+        $stmt->execute();
+        $stmt->store_result();
+        $exists = $stmt->num_rows > 0;
+        $stmt->close();
+
+    } while ($exists);
+
+    return $orderId;
+}
+
+
 $conn->begin_transaction();
 
 try {
@@ -12,21 +32,43 @@ try {
     $contact = $_POST['contact'] ?? '';
     $datetime = $_POST['datetime'] ?? '';
 
+    $orderCode = generateOrderId($conn);
+
+    $total = isset($_POST['total']) ? (float) $_POST['total'] : 0;
+
+    if ($total <= 0) {
+        throw new Exception('Invalid order total');
+    }
+
+
     if (!$first || !$last || !$contact || !$datetime) {
         throw new Exception('Missing customer info');
     }
 
     $stmt = $conn->prepare("
-        INSERT INTO orders_table (firstname, lastname, contact, date_time)
-        VALUES (?, ?, ?, ?)
+        INSERT INTO orders_table 
+        (order_id, firstname, lastname, contact, date_time, total, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
     ");
-    $stmt->bind_param("ssss", $first, $last, $contact, $datetime);
+    $status = 'Cashier';
+    $stmt->bind_param(
+        "sssssds",
+        $orderCode,
+        $first,
+        $last,
+        $contact,
+        $datetime,
+        $total,
+        $status
+    );
+
     $stmt->execute();
+
+
 
     $orderId = $stmt->insert_id;
     $stmt->close();
 
-    // ------------------ ORDER ITEMS ------------------
     if (!isset($_POST['cartItems'])) {
         throw new Exception('No cart items');
     }
@@ -37,7 +79,6 @@ try {
         $menuItemId = (int) $item['id'];
         $qty = (int) $item['qty'];
 
-        // get item details from DB
         $stmt = $conn->prepare("
             SELECT name, price 
             FROM menu_items 
@@ -51,7 +92,6 @@ try {
         if (!$menu)
             throw new Exception('Menu item not found');
 
-        // insert order item
         $stmt = $conn->prepare("
             INSERT INTO order_items
             (order_fk_id, item_name, quantity, unit_price)
@@ -70,14 +110,12 @@ try {
         $stmt->close();
 
         // ------------------ ADDONS ------------------
-        // ------------------ ADDONS ------------------
         if (!empty($item['addons'])) {
             foreach ($item['addons'] as $addon) {
 
                 $addonId = (int) $addon['addon_id'];
                 $addonQty = (int) $addon['qty'];
 
-                // fetch addon from menu_items_addons
                 $stmt = $conn->prepare("
             SELECT name, price 
             FROM menu_items_addons
@@ -91,7 +129,6 @@ try {
                 if (!$addonRow)
                     continue;
 
-                // insert into order_item_addons
                 $stmt = $conn->prepare("
                     INSERT INTO order_item_addons
                     (order_item_fk_id, addon_name, price, quantity)
@@ -112,58 +149,51 @@ try {
     }
 
     // ------------------ TABLE TYPE + NUMBER ------------------
-    // assumes advance booking stored in session
-    // ------------------ TABLE TYPE + NUMBER ------------------
     session_start();
 
-    if (!empty($_SESSION['advance_booking'])) {
+    if (!empty($_SESSION['advance_order'])) {
 
-        $booking = $_SESSION['advance_booking'];
+        $booking = $_SESSION['advance_order'];
 
         foreach ($booking['tables'] as $i => $tableNumberId) {
 
             $tableNumberId = (int) $tableNumberId;
             $tableTypeId = (int) $booking['tableTypes'][$i];
 
-            // get table type name
             $stmt = $conn->prepare("
-            SELECT table_name
-            FROM table_types
+            SELECT table_name 
+            FROM table_types 
             WHERE id = ?
         ");
             $stmt->bind_param("i", $tableTypeId);
             $stmt->execute();
             $typeRow = $stmt->get_result()->fetch_assoc();
             $stmt->close();
-
             if (!$typeRow)
                 continue;
 
-            // get table number
             $stmt = $conn->prepare("
-            SELECT table_number
-            FROM table_number
+            SELECT table_number 
+            FROM table_number 
             WHERE id = ?
         ");
             $stmt->bind_param("i", $tableNumberId);
             $stmt->execute();
             $numRow = $stmt->get_result()->fetch_assoc();
             $stmt->close();
-
             if (!$numRow)
                 continue;
 
-            // ✅ CORRECT INSERT
             $stmt = $conn->prepare("
             INSERT INTO orders_table_type
             (table_booking_fk_id, table_type_fk_id, table_number_fk_id, table_name, table_number)
             VALUES (?, ?, ?, ?, ?)
         ");
             $stmt->bind_param(
-                "iiisi",            // ✅ correct types & order
-                $orderId,           // orders_table.id
-                $tableTypeId,       // table_types.id
-                $tableNumberId,     // table_number.id
+                "iiiss",
+                $orderId,
+                $tableTypeId,
+                $tableNumberId,
                 $typeRow['table_name'],
                 $numRow['table_number']
             );
@@ -171,7 +201,6 @@ try {
             $stmt->close();
         }
     }
-
 
     $conn->commit();
 

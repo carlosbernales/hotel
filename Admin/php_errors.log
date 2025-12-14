@@ -58550,3 +58550,127 @@ Stack trace:
 [13-Dec-2025 10:47:51 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
 [13-Dec-2025 02:48:01 UTC] Database connected successfully to: hotelms
 [13-Dec-2025 10:48:01 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 00:57:37 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 00:57:38 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 00:59:55 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 08:59:55 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:07:36 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:07:36 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:08:11 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:08:12 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:08:42 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:08:42 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:09:02 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:09:02 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:14:08 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:14:09 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:14:17 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:14:17 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:15:42 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:15:42 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:17:35 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:17:35 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:19:53 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:19:53 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:21:08 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:21:08 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:21:51 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:21:51 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:22:02 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:22:02 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:26:23 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:26:23 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:26:34 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:26:34 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:32:16 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:32:16 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:32:49 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:32:50 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:33:02 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:33:02 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:33:42 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:33:42 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:33:55 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:33:55 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:36:15 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:36:15 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:37:47 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:37:47 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:38:22 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:38:22 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:38:28 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:38:28 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:39:11 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:39:11 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:39:38 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:39:38 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:39:39 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:39:40 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:39:46 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:39:46 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:41:48 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:41:48 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:41:50 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:41:50 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:42:05 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:43:36 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:43:42 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:43:43 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:43:51 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:43:51 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:48:43 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:48:43 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:49:03 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:49:04 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:49:11 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:49:11 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:49:20 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:49:20 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:49:51 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 09:49:51 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 01:49:54 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:49:55 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 01:52:06 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:22:20 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 10:22:20 Asia/Manila] PHP Warning:  Undefined variable $table_types_data in C:\laragon\www\hotel\Admin\adminFrontend\table_booking.php on line 626
+[14-Dec-2025 02:34:30 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:37:59 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:44:47 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:49:17 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:49:25 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:52:50 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:54:41 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:55:04 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:56:02 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 02:57:20 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:03:46 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:04:40 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:06:06 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:06:45 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:07:08 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:14:43 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:15:22 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:15:27 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:15:41 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:17:16 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:17:42 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:17:54 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:34:29 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:35:04 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:35:46 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:36:49 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:38:10 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:38:30 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:41:14 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:41:51 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:42:03 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:42:32 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:45:32 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:46:14 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:47:46 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:48:37 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:49:07 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:56:06 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:57:24 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:58:53 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 03:59:27 UTC] Database connected successfully to: hotelms

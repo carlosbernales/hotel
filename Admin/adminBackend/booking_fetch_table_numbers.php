@@ -2,31 +2,71 @@
 header('Content-Type: application/json');
 include '../adminBackend/mydb.php';
 
-// Receive multiple table type IDs
 $typeIds = $_POST['type_ids'] ?? [];
+$datetime = $_POST['datetime'] ?? null;
+$cartTableIds = $_POST['cart_table_ids'] ?? []; // array of table_number ids already selected
 
 if (empty($typeIds)) {
     echo json_encode([]);
     exit;
 }
 
-// Prepare placeholders for IN clause
+// Convert cart IDs to integers
+$cartTableIds = array_map('intval', $cartTableIds);
+
+// Step 1: Fetch all tables for the selected types
 $placeholders = implode(',', array_fill(0, count($typeIds), '?'));
 $types = str_repeat('i', count($typeIds));
 
-$sql = "SELECT id, table_number, table_type_fk_id 
-        FROM table_number 
-        WHERE table_type_fk_id IN ($placeholders) 
-          AND status = 'available'";
-
+$sql = "SELECT id, table_type_fk_id, table_number, status FROM table_number WHERE table_type_fk_id IN ($placeholders)";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param($types, ...$typeIds);
 $stmt->execute();
 $result = $stmt->get_result();
 
-$rows = [];
+$tables = [];
 while ($row = $result->fetch_assoc()) {
-    $rows[] = $row;
+    $tables[$row['id']] = [
+        'id' => $row['id'],
+        'table_type_fk_id' => $row['table_type_fk_id'],
+        'table_number' => $row['table_number'],
+        'is_available' => $row['status'] === 'available'
+    ];
 }
 
-echo json_encode($rows);
+if ($datetime) {
+    $bookingTime = strtotime($datetime);
+
+    $placeholders2 = implode(',', array_fill(0, count($typeIds), '?'));
+    $types2 = str_repeat('i', count($typeIds));
+
+    $sql2 = "
+        SELECT tn.id AS table_number_id, ot.date_time
+        FROM table_number tn
+        INNER JOIN orders_table_type ott ON tn.id = ott.table_number_fk_id
+        INNER JOIN orders_table ot ON ott.table_booking_fk_id = ot.id
+        WHERE tn.table_type_fk_id IN ($placeholders2)
+    ";
+    $stmt2 = $conn->prepare($sql2);
+    $stmt2->bind_param($types2, ...$typeIds);
+    $stmt2->execute();
+    $res2 = $stmt2->get_result();
+
+    while ($row = $res2->fetch_assoc()) {
+        $existingTime = strtotime($row['date_time']);
+        $diffHours = abs($bookingTime - $existingTime) / 3600;
+
+        // If conflict <5 hours, mark unavailable
+        if ($diffHours < 5 && isset($tables[$row['table_number_id']])) {
+            $tables[$row['table_number_id']]['is_available'] = false;
+        }
+    }
+}
+
+foreach ($cartTableIds as $id) {
+    if (isset($tables[$id])) {
+        $tables[$id]['is_available'] = true;
+    }
+}
+
+echo json_encode(array_values($tables));

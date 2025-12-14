@@ -66,4 +66,15 @@ TRUNCATE TABLE booking_check_inout;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
+//////////////////////
+
+SET FOREIGN_KEY_CHECKS = 0;
+
+TRUNCATE TABLE orders_table;
+TRUNCATE TABLE orders_table_type;
+TRUNCATE TABLE order_items;
+TRUNCATE TABLE order_item_addons;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 

@@ -587,7 +587,6 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
 
     <!-- Advance Order Modal -->
-    <!-- Advance Order Modal -->
     <div class="modal fade" id="advanceOrderModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
@@ -774,7 +773,13 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             formData.append('contact', order.contact);
             formData.append('datetime', order.datetime);
 
+            let subtotal = 0;
             cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                item.addons.forEach(a => {
+                    subtotal += a.price * a.qty;
+                });
+
                 formData.append('cartItems[]', JSON.stringify({
                     id: item.id,
                     qty: item.qty,
@@ -785,6 +790,9 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 }));
             });
 
+            // ✅ SEND SUBTOTAL AS TOTAL
+            formData.append('total', subtotal.toFixed(2));
+
             fetch('../Admin/adminBackend/booking_save_order_advance.php', {
                 method: 'POST',
                 body: formData
@@ -793,22 +801,16 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 .then(res => {
                     if (res.status === 'success') {
                         alert('Advance order saved successfully!');
-                        bootstrapAdvanceModal.hide();
                         location.reload();
                     } else {
                         alert(res.message || 'Error saving order');
                     }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert('Server error');
                 });
         });
 
 
+
     </script>
-
-
 
 
 

@@ -7,7 +7,6 @@
     <title>Casa Estela - Table Booking</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --gold: #D4AF37;
@@ -436,6 +435,16 @@
         }
     </style>
 
+    <style>
+        .btn-disabled {
+            background-color: gray !important;
+            color: #fff !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+    </style>
+
+
 
 </head>
 
@@ -460,8 +469,6 @@
             </div>
         </div>
     </nav>
-
-
     <?php
     include 'adminBackend/mydb.php';
     $sql = "SELECT * 
@@ -475,16 +482,22 @@
         <div class="page-header">
             <div class="d-flex justify-content-between align-items-center flex-wrap">
                 <div class="text-end">
-                    <!-- Removed Available / Occupied badges -->
                 </div>
             </div>
         </div>
 
-        <div class="filter-section">
+        <div class="filter-section d-flex flex-wrap align-items-center gap-2 mb-3">
             <button class="filter-btn active" data-filter="all">All Tables</button>
             <button class="filter-btn" data-filter="available">Available Only</button>
             <button class="filter-btn" data-filter="unavailable">Unavailable</button>
+
+            <!-- Added: Global date-time input + check availability -->
+            <div class="d-flex align-items-center gap-2 ms-auto">
+                <input type="datetime-local" id="globalBookingDateTime" class="form-control" style="max-width: 250px;">
+                <button class="btn btn-info" id="checkGlobalAvailabilityBtn">Check Availability</button>
+            </div>
         </div>
+
 
 
         <div class="row" id="tablesContainer">
@@ -522,10 +535,21 @@
                                 <p class="table-description">
                                     <?= $row['description'] ?>
                                 </p>
+                                <!-- Added: Available tables count -->
+                                <div class="available-tables-count mb-2" id="available-count-<?= $row['id'] ?>">
+                                    Loading available tables...
+                                </div>
 
-                                <button class="btn-add-to-cart" onclick="addToCart(<?= $row['id'] ?>)">
+
+                                <?php
+                                $btnDisabled = ($row['status'] !== 'active') ? 'disabled' : '';
+                                $btnClass = ($row['status'] !== 'active') ? 'btn-disabled' : '';
+                                ?>
+                                <button class="btn-add-to-cart <?= $btnClass ?>" onclick="addToCart(<?= $row['id'] ?>)"
+                                    <?= $btnDisabled ?>>
                                     <i class="fas fa-plus-circle"></i> Add to Booking
                                 </button>
+
                             </div>
                         </div>
                     </div>
@@ -607,8 +631,6 @@
                     <!-- Available tables for each type will be inserted here dynamically -->
                     <div id="availableTablesWrapper"></div>
                 </div>
-
-
 
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -728,40 +750,51 @@
         }
 
         /* LOAD AVAILABLE REAL TABLE NUMBERS */
-        function loadAvailableTableNumbers() {
+        function loadAvailableTableNumbers(datetime = null) {
             const wrapper = document.getElementById("availableTablesWrapper");
             wrapper.innerHTML = '';
 
             const typeIds = cart.map(t => t.typeId);
 
+            const formData = new URLSearchParams();
+            typeIds.forEach(id => formData.append("type_ids[]", id));
+            if (datetime) formData.append("datetime", datetime);
+
             fetch("../Admin/adminBackend/booking_fetch_table_numbers.php", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: typeIds.map(id => `type_ids[]=${id}`).join("&")
+                body: formData
             })
                 .then(res => res.json())
                 .then(data => {
                     cart.forEach(table => {
-                        const available = data.filter(d => d.table_type_fk_id == table.typeId);
+                        const tableOptions = data.filter(d => d.table_type_fk_id == table.typeId);
 
                         const div = document.createElement('div');
                         div.classList.add('mb-3');
 
                         div.innerHTML = `
-                <label class="form-label">Available Table for ${table.name}</label>
+                <label class="form-label">Select Table for ${table.name}</label>
                 <select class="form-control availableTableSelect" data-table-type="${table.typeId}">
-                    ${available.length ?
-                                available.map(item => `<option value="${item.id}">Table #${item.table_number}</option>`).join('')
-                                :
-                                `<option value="">No available table numbers</option>`
+                    ${tableOptions.length ?
+                                tableOptions.map(item => {
+                                    // Enable if either available OR already in cart
+                                    const inCart = cart.find(c => c.selectedTableId == item.id);
+                                    const disabled = (!item.is_available && !inCart) ? 'disabled' : '';
+                                    const label = (!item.is_available && !inCart) ? '(Unavailable)' : '';
+                                    return `<option value="${item.id}" ${disabled}>Table #${item.table_number} ${label}</option>`;
+                                }).join('') :
+                                `<option value="">No tables available</option>`
                             }
                 </select>
             `;
 
                         wrapper.appendChild(div);
                     });
-                });
+                })
+                .catch(err => console.error(err));
         }
+
+
 
         function setupEventListeners() {
             const bookingModalEl = document.getElementById("bookingInfoModal");
@@ -781,7 +814,13 @@
 
             document.getElementById("checkoutBtn").addEventListener("click", function () {
                 if (cart.length > 0) {
-                    loadAvailableTableNumbers();
+                    // Set booking datetime from global input
+                    const globalDT = document.getElementById("globalBookingDateTime").value;
+                    if (globalDT) {
+                        document.getElementById("bookingDateTime").value = globalDT;
+                    }
+
+                    loadAvailableTableNumbers(globalDT); // Pass datetime
                     bookingModal.show();
                     bookingModalEl.dataset.action = "checkout";
                 }
@@ -789,7 +828,12 @@
 
             document.getElementById("advanceOrdersBtn").addEventListener("click", function () {
                 if (cart.length > 0) {
-                    loadAvailableTableNumbers();
+                    const globalDT = document.getElementById("globalBookingDateTime").value;
+                    if (globalDT) {
+                        document.getElementById("bookingDateTime").value = globalDT;
+                    }
+
+                    loadAvailableTableNumbers(globalDT);
                     bookingModal.show();
                     bookingModalEl.dataset.action = "advance";
                 }
@@ -861,11 +905,120 @@
 
         init();
 
+        document.getElementById("checkAvailabilityBtn").addEventListener("click", function () {
+            const dt = document.getElementById("bookingDateTime").value.trim();
+            if (!dt) {
+                alert("Please select a booking date & time first.");
+                return;
+            }
+
+            const typeIds = cart.map(t => t.typeId);
+            if (!typeIds.length) {
+                alert("No table types selected in your cart.");
+                return;
+            }
+
+            const formData = new URLSearchParams();
+            formData.append("datetime", dt);
+            typeIds.forEach(id => formData.append("type_ids[]", id));
+
+            fetch("../Admin/adminBackend/table_check_availability.php", {
+                method: "POST",
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    const wrapper = document.getElementById("availabilityResult");
+                    if (data.available.length) {
+                        wrapper.innerHTML = `<span class="text-success">Tables available: ${data.available.join(", ")}</span>`;
+                    } else {
+                        wrapper.innerHTML = `<span class="text-danger">No tables available at the selected time.</span>`;
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Error checking availability.");
+                });
+        });
+
+
     </script>
 
 
+    <script>
+        function loadAvailableCounts(datetime = null) {
+            const cards = document.querySelectorAll("#tablesContainer .table-card");
+            const typeIds = Array.from(cards).map(c => parseInt(c.dataset.typeId));
+            if (!typeIds.length) return;
+
+            const formData = new URLSearchParams();
+            typeIds.forEach(id => formData.append("type_ids[]", id));
+            if (datetime) formData.append("datetime", datetime);
+
+            fetch("../Admin/adminBackend/table_check_availability.php", {
+                method: "POST",
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    cards.forEach(card => {
+                        const typeId = parseInt(card.dataset.typeId);
+                        const countDiv = document.getElementById(`available-count-${typeId}`);
+                        const count = data.counts?.[typeId] ?? data.available?.length ?? 0;
+                        countDiv.innerHTML = `<strong>Available Tables:</strong> ${count}`;
+
+                        const badge = card.querySelector(".table-status-badge");
+                        const btn = card.querySelector(".btn-add-to-cart");
+
+                        if (count > 0) {
+                            card.dataset.status = 'active';
+                            badge.textContent = 'AVAILABLE';
+                            badge.classList.remove("status-unavailable");
+                            badge.classList.add("status-available");
+
+                            btn.disabled = false;
+                            btn.classList.remove('btn-disabled');
+                        } else {
+                            card.dataset.status = 'inactive';
+                            badge.textContent = 'UNAVAILABLE';
+                            badge.classList.remove("status-available");
+                            badge.classList.add("status-unavailable");
+
+                            btn.disabled = true;
+                            btn.classList.add('btn-disabled');
+                        }
+                    });
 
 
+                    const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
+                    filterTables(activeFilter);
+                })
+                .catch(err => console.error(err));
+        }
+
+        loadAvailableCounts();
+
+        document.getElementById("checkGlobalAvailabilityBtn").addEventListener("click", function () {
+            const dt = document.getElementById("globalBookingDateTime").value.trim();
+            if (!dt) { alert("Select date & time"); return; }
+            loadAvailableCounts(dt);
+        });
+
+    </script>
+
+
+    <script>
+        wrapper.querySelectorAll('.availableTableSelect').forEach(select => {
+            select.addEventListener('change', function () {
+                const tableTypeId = parseInt(this.dataset.tableType);
+                const selectedId = parseInt(this.value);
+                // Save selected table in cart
+                const cartItem = cart.find(c => c.typeId === tableTypeId);
+                if (cartItem) cartItem.selectedTableId = selectedId;
+            });
+        });
+
+    </script>
 </body>
 
 </html>
