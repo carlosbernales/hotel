@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 13, 2025 at 08:06 AM
+-- Generation Time: Dec 14, 2025 at 08:02 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -2022,7 +2022,7 @@ CREATE TABLE `orders_table` (
 --
 
 INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `status`) VALUES
-(1, NULL, NULL, 'sad', 'asdasd', '32', '2025-12-13 10:47:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(1, NULL, 'ORD83716369160', 'dsad', 'asda', '32', '2025-12-14 16:00:00', NULL, NULL, NULL, 820.00, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier');
 
 -- --------------------------------------------------------
 
@@ -2038,6 +2038,13 @@ CREATE TABLE `orders_table_type` (
   `table_name` varchar(255) NOT NULL,
   `table_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders_table_type`
+--
+
+INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
+(1, 1, 2, 12, 'dasd', 11);
 
 -- --------------------------------------------------------
 
@@ -2058,9 +2065,9 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
-(1, 1, 'Spaghetti maccaroni', 1, 270.00),
-(2, 1, 'Chicken Wings', 1, 180.00),
-(3, 1, 'Coconut Salad', 1, 200.00);
+(1, 1, 'Chicken Wings', 1, 180.00),
+(2, 1, 'Coconut Salad', 2, 200.00),
+(3, 1, 'Salad', 1, 200.00);
 
 -- --------------------------------------------------------
 
@@ -2081,9 +2088,8 @@ CREATE TABLE `order_item_addons` (
 --
 
 INSERT INTO `order_item_addons` (`id`, `order_item_fk_id`, `addon_name`, `price`, `quantity`) VALUES
-(1, 2, 'HAtdog', 15.00, 1),
-(2, 2, 'cheese', 20.00, 1),
-(3, 2, 'Gravy', 20.00, 1);
+(1, 1, 'cheese', 20.00, 1),
+(2, 1, 'Gravy', 20.00, 1);
 
 -- --------------------------------------------------------
 
@@ -2886,7 +2892,7 @@ CREATE TABLE `table_types` (
 INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `img1`, `img2`, `img3`, `img4`, `img5`, `description`, `status`, `reason`) VALUES
 (2, 'dasd', 2, '45ba47ab107dd405.png', 'a48a4f4a38e7ebf0.PNG', '', '', '', 'adasd', 'active', NULL),
 (3, 'GAS', 2, 'ace5dc84b33f90b2.png', '7904ce70b71572a6.png', '', '', '', 'adsad', 'active', NULL),
-(4, 'dasd', 1, '05d03160e72e03c1.png', '', '', '', '', 'ad', 'active', NULL);
+(4, 'DAD', 1, '05d03160e72e03c1.png', '', '', '', '', 'ad', 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -3513,7 +3519,7 @@ ALTER TABLE `orders_table`
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `order_items`
@@ -3525,7 +3531,7 @@ ALTER TABLE `order_items`
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `payments`

@@ -58674,3 +58674,31 @@ Stack trace:
 [14-Dec-2025 03:57:24 UTC] Database connected successfully to: hotelms
 [14-Dec-2025 03:58:53 UTC] Database connected successfully to: hotelms
 [14-Dec-2025 03:59:27 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:33:32 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:35:53 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:36:17 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:41:34 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:44:05 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:45:18 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:46:00 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:46:19 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:47:10 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:47:19 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 15:47:19 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 07:47:25 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:48:07 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:51:50 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:54:44 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:56:02 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:56:21 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 15:56:21 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 07:56:32 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 15:56:32 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[14-Dec-2025 07:56:34 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:56:35 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:57:35 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:58:29 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:58:47 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 07:59:08 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 08:00:15 UTC] Database connected successfully to: hotelms
+[14-Dec-2025 08:01:18 UTC] Database connected successfully to: hotelms
