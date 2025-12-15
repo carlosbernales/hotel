@@ -4,17 +4,15 @@ include '../adminBackend/mydb.php';
 
 $typeIds = $_POST['type_ids'] ?? [];
 $datetime = $_POST['datetime'] ?? null;
-$cartTableIds = $_POST['cart_table_ids'] ?? []; // array of table_number ids already selected
+$cartTableIds = $_POST['cart_table_ids'] ?? [];
 
 if (empty($typeIds)) {
     echo json_encode([]);
     exit;
 }
 
-// Convert cart IDs to integers
 $cartTableIds = array_map('intval', $cartTableIds);
 
-// Step 1: Fetch all tables for the selected types
 $placeholders = implode(',', array_fill(0, count($typeIds), '?'));
 $types = str_repeat('i', count($typeIds));
 
@@ -56,11 +54,11 @@ if ($datetime) {
         $existingTime = strtotime($row['date_time']);
         $diffHours = abs($bookingTime - $existingTime) / 3600;
 
-        // If conflict <5 hours, mark unavailable
-        if ($diffHours < 5 && isset($tables[$row['table_number_id']])) {
+        if ($diffHours < 4 && isset($tables[$row['table_number_id']])) {
             $tables[$row['table_number_id']]['is_available'] = false;
         }
     }
+
 }
 
 foreach ($cartTableIds as $id) {

@@ -15,7 +15,6 @@ $bookingTime = $datetime ? strtotime($datetime) : null;
 $placeholders = implode(',', array_fill(0, count($typeIds), '?'));
 $types = str_repeat('i', count($typeIds));
 
-// Step 1: Find booked tables with conflicting datetime
 $sql = "
     SELECT tn.id AS table_number_id, tn.table_type_fk_id, ot.date_time
     FROM table_number tn
@@ -34,13 +33,14 @@ while ($row = $result->fetch_assoc()) {
     if ($row['date_time'] && $bookingTime) {
         $existingTime = strtotime($row['date_time']);
         $diffHours = abs($bookingTime - $existingTime) / 3600;
-        if ($diffHours < 5 && !in_array($row['table_number_id'], $unavailableTableIds)) {
+
+        if ($diffHours < 4 && !in_array($row['table_number_id'], $unavailableTableIds)) {
             $unavailableTableIds[] = $row['table_number_id'];
         }
     }
 }
 
-// Step 2: Count available tables per type
+
 $counts = [];
 $availableTypeIds = [];
 

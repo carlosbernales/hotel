@@ -4,9 +4,8 @@ $advanceOrder = $_SESSION['advance_order'] ?? null;
 
 $tableNames = [];
 if ($advanceOrder && !empty($advanceOrder['tables'])) {
-    include __DIR__ . '/../adminBackend/mydb.php'; // DB connection
+    include __DIR__ . '/../adminBackend/mydb.php';
 
-    // Convert tableTypes IDs to integers
     $typeIds = array_map('intval', $advanceOrder['tableTypes']);
     $result = $conn->query("SELECT id, table_name FROM table_types WHERE id IN (" . implode(',', $typeIds) . ")");
 
@@ -104,14 +103,20 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
         .filter-section {
             background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .filter-section h5 {
+            color: #2c2c2c;
+            font-weight: 600;
+            margin-bottom: 15px;
         }
 
         .filter-btn {
-            padding: 8px 20px;
+            padding: 10px 24px;
             border-radius: 25px;
             border: 2px solid var(--gold);
             background: white;
@@ -120,55 +125,64 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             margin: 5px;
             transition: all 0.3s;
             cursor: pointer;
+            font-size: 0.95rem;
         }
 
         .filter-btn:hover,
         .filter-btn.active {
             background: var(--gold);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
         }
 
         .menu-card {
             background: white;
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             transition: all 0.3s;
             margin-bottom: 20px;
             height: 100%;
             cursor: pointer;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
 
         .menu-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
         .menu-image-container {
             position: relative;
             width: 100%;
-            height: 200px;
+            height: 220px;
             overflow: hidden;
-            background: #f0f0f0;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
         }
 
         .menu-image {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .menu-card:hover .menu-image {
+            transform: scale(1.05);
         }
 
         .menu-price-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 1rem;
+            top: 12px;
+            right: 12px;
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-size: 1.1rem;
             font-weight: 700;
             background: var(--gold);
             color: white;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
         .menu-body {
@@ -176,10 +190,11 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         }
 
         .menu-name {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: 600;
             color: #2c2c2c;
             margin-bottom: 10px;
+            line-height: 1.3;
         }
 
         .menu-description {
@@ -187,6 +202,7 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             font-size: 0.9rem;
             margin-bottom: 15px;
             min-height: 40px;
+            line-height: 1.5;
         }
 
         .btn-add-to-cart {
@@ -196,24 +212,32 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             border: none;
             color: white;
             font-weight: 600;
-            border-radius: 8px;
+            border-radius: 10px;
             transition: all 0.3s;
             cursor: pointer;
+            font-size: 1rem;
         }
 
-        .btn-add-to-cart:hover {
+        .btn-add-to-cart:hover:not(:disabled) {
             background: #b8941f;
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-add-to-cart:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .cart-sidebar {
             position: fixed;
-            right: -400px;
+            right: -420px;
             top: 50px;
-            width: 400px;
+            width: 420px;
             height: calc(100vh - 50px);
             background: white;
-            box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: -4px 0 20px rgba(0, 0, 0, 0.15);
             transition: right 0.3s ease;
             z-index: 1025;
             display: flex;
@@ -236,14 +260,21 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         .cart-header h4 {
             margin: 0;
             font-size: 1.3rem;
+            font-weight: 600;
         }
 
         .close-cart {
             background: none;
             border: none;
             color: white;
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             cursor: pointer;
+            transition: transform 0.2s;
+            line-height: 1;
+        }
+
+        .close-cart:hover {
+            transform: scale(1.1);
         }
 
         .cart-body {
@@ -254,70 +285,69 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
         .cart-item {
             background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 12px;
             margin-bottom: 15px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+        }
+
+        .cart-item:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .cart-item-header {
             display: flex;
             justify-content: space-between;
             align-items: start;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .cart-item-info h6 {
             margin: 0 0 5px 0;
             color: #2c2c2c;
-            font-size: 1rem;
+            font-size: 1.05rem;
+            font-weight: 600;
         }
 
         .cart-item-info small {
             color: #666;
-        }
-
-        .remove-item {
-            background: #dc3545;
-            color: white;
-            border: none;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 0.8rem;
-        }
-
-        .remove-item:hover {
-            background: #c82333;
+            font-size: 0.9rem;
         }
 
         .cart-item-controls {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-top: 12px;
         }
 
         .quantity-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 25px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .qty-btn {
             background: var(--gold);
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s;
+            font-size: 1rem;
         }
 
         .qty-btn:hover {
             background: #b8941f;
+            transform: scale(1.1);
         }
 
         .quantity {
@@ -325,17 +355,19 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             font-size: 1.1rem;
             min-width: 30px;
             text-align: center;
+            color: #2c2c2c;
         }
 
         .item-total {
             font-weight: 700;
             color: var(--gold);
-            font-size: 1.1rem;
+            font-size: 1.15rem;
         }
 
         .cart-footer {
             padding: 20px;
             border-top: 2px solid #f0f0f0;
+            background: #fafafa;
         }
 
         .cart-summary {
@@ -347,23 +379,24 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             justify-content: space-between;
             margin-bottom: 10px;
             color: #2c2c2c;
+            font-size: 1rem;
         }
 
         .cart-summary-row.total {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: 700;
-            padding-top: 10px;
-            border-top: 2px solid #f0f0f0;
+            padding-top: 12px;
+            border-top: 2px solid #e0e0e0;
             color: var(--gold);
         }
 
         .btn-checkout {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background: #28a745;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             font-size: 1.1rem;
             transition: all 0.3s;
@@ -372,23 +405,31 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
         .btn-checkout:hover:not(:disabled) {
             background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.4);
         }
 
         .btn-checkout:disabled {
             background: #ccc;
             cursor: not-allowed;
+            opacity: 0.6;
         }
 
         .empty-cart {
             text-align: center;
-            padding: 40px 20px;
+            padding: 60px 20px;
             color: #999;
         }
 
         .empty-cart i {
-            font-size: 4rem;
+            font-size: 4.5rem;
             margin-bottom: 20px;
             color: #ddd;
+        }
+
+        .empty-cart p {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
         }
 
         .cart-icon-container {
@@ -411,6 +452,116 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             align-items: center;
             justify-content: center;
             font-weight: bold;
+        }
+
+        /* Modal Improvements */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            border-top-left-radius: 16px;
+            border-top-right-radius: 16px;
+            padding: 20px 24px;
+            background: var(--gold);
+            color: white;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.3rem;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+        .addon-item {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .addon-item strong {
+            color: #2c2c2c;
+            font-size: 1rem;
+        }
+
+        .addon-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .addon-controls button {
+            background: var(--gold);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .addon-controls button:hover {
+            background: #b8941f;
+            transform: scale(1.1);
+        }
+
+        .addon-controls span {
+            min-width: 30px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .order-info-section {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 10px;
+            margin-bottom: 16px;
+        }
+
+        .order-info-section h6 {
+            color: var(--gold);
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .order-info-section p,
+        .order-info-section ul {
+            margin-bottom: 8px;
+            color: #2c2c2c;
+        }
+
+        .order-info-section ul {
+            padding-left: 20px;
+        }
+
+        .cart-addons {
+            margin-left: 20px;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .cart-addons li {
+            margin-bottom: 4px;
         }
 
         .loading {
@@ -444,12 +595,20 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         }
 
         .cart-body::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+        }
+
+        .cart-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
         }
 
         .cart-body::-webkit-scrollbar-thumb {
             background: var(--gold);
-            border-radius: 3px;
+            border-radius: 4px;
+        }
+
+        .cart-body::-webkit-scrollbar-thumb:hover {
+            background: #b8941f;
         }
     </style>
 </head>
@@ -474,7 +633,6 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
     </nav>
 
     <?php
-
     include __DIR__ . '/../adminBackend/mydb.php';
 
 
@@ -491,7 +649,7 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
     <main class="main-content">
         <div class="filter-section">
-            <h5 class="mb-3"><i class="fas fa-filter"></i> Filter by Category</h5>
+            <h5><i class="fas fa-filter"></i> Filter by Category</h5>
 
             <div id="categoryFilters">
                 <button class="filter-btn active" onclick="filterByCategory('all')">All Items</button>
@@ -536,7 +694,6 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         </div>
     </main>
 
-
     <!-- Cart Sidebar -->
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
@@ -567,19 +724,23 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         </div>
     </div>
 
+    <!-- Addon Modal -->
     <div class="modal fade" id="addonModal" tabindex="-1" aria-labelledby="addonModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="addonModalLabel">Select Addons</h5>
-                    <button type="button" class="btn-close" onclick="closeAddonModal()" aria-label="Close"></button>
+                    <h5 class="modal-title" id="addonModalLabel"><i class="fas fa-plus-circle"></i> Select Addons</h5>
+                    <button type="button" class="btn-close btn-close-white" onclick="closeAddonModal()"
+                        aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="addonContent">
                     <!-- Addons injected by JS -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="closeAddonModal()">Cancel</button>
-                    <button type="button" class="btn btn-primary" onclick="confirmAddons()">Confirm</button>
+                    <button type="button" class="btn btn-primary"
+                        style="background: var(--gold); border-color: var(--gold);"
+                        onclick="confirmAddons()">Confirm</button>
                 </div>
             </div>
         </div>
@@ -588,18 +749,20 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
     <!-- Advance Order Modal -->
     <div class="modal fade" id="advanceOrderModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title">Advance Order Details</h5>
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="fas fa-calendar-check"></i> Advance Order Details</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="advanceOrderContent">
-                    <!-- Content will be injected dynamically when Proceed to Checkout is clicked -->
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" id="confirmAdvanceOrder">Confirm</button>
+                    <button class="btn btn-primary" style="background: var(--gold); border-color: var(--gold);"
+                        id="confirmAdvanceOrder">
+                        <i class="fas fa-check-circle"></i> Confirm Order
+                    </button>
                 </div>
             </div>
         </div>
@@ -619,6 +782,9 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         function filterByCategory(cat, e) {
             document.querySelectorAll('#categoryFilters button').forEach(btn => btn.classList.remove('active'));
             if (e) e.currentTarget.classList.add('active');
+            else {
+                if (cat === 'all') document.querySelector('#categoryFilters button').classList.add('active');
+            }
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.style.display = (cat === 'all' || item.dataset.category == cat) ? 'block' : 'none';
             });
@@ -626,9 +792,9 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
         // ---------------- ADD TO CART ----------------
         function addToCart(id) {
-            const card = document.querySelector(`button[onclick="addToCart(${id})"]`).closest('.menu-card');
+            const card = document.querySelector(`button[onclick = "addToCart(${id})"]`).closest('.menu-card');
             const name = card.querySelector('.menu-name').innerText;
-            const price = parseFloat(card.querySelector('.menu-price-badge').innerText.replace('₱', ''));
+            const price = parseFloat(card.querySelector('.menu-price-badge').innerText.replace('₱', '').replace(',', ''));
 
             if (itemAddons[id] && itemAddons[id].length > 0) {
                 pendingItem = { id, name, price };
@@ -652,22 +818,36 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             const addons = itemAddons[id];
             let html = '';
             addons.forEach(a => {
-                html += `<div class="d-flex justify-content-between align-items-center mb-2">
-                        <div><strong>${a.name}</strong> – ₱${parseFloat(a.price).toFixed(2)}</div>
-                        <div>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addonMinus(${a.id})">-</button>
-                            <span id="addonQty_${a.id}" class="mx-2">0</span>
-                            <button class="btn btn-sm btn-outline-secondary" onclick="addonPlus(${a.id})">+</button>
-                        </div>
-                    </div>`;
+                html += `<div class="addon-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>${a.name}</strong>
+                    <div class="text-muted">₱${parseFloat(a.price).toFixed(2)}</div>
+                </div>
+                <div class="addon-controls">
+                    <button onclick="addonMinus(${a.id})">−</button>
+                    <span id="addonQty_${a.id}">0</span>
+                    <button onclick="addonPlus(${a.id})">+</button>
+                </div>
+            </div > `;
             });
             content.innerHTML = html;
             bootstrapAddonModal.show();
         }
 
-        function closeAddonModal() { bootstrapAddonModal.hide(); pendingItem = null; }
-        function addonPlus(id) { document.getElementById('addonQty_' + id).innerText = parseInt(document.getElementById('addonQty_' + id).innerText) + 1; }
-        function addonMinus(id) { const el = document.getElementById('addonQty_' + id); if (parseInt(el.innerText) > 0) el.innerText = parseInt(el.innerText) - 1; }
+        function closeAddonModal() {
+            bootstrapAddonModal.hide();
+            pendingItem = null;
+        }
+
+        function addonPlus(id) {
+            document.getElementById('addonQty_' + id).innerText = parseInt(document.getElementById('addonQty_' + id).innerText) + 1;
+        }
+
+        function addonMinus(id) {
+            const el = document.getElementById('addonQty_' + id);
+            if (parseInt(el.innerText) > 0) el.innerText = parseInt(el.innerText) - 1;
+        }
+
         function confirmAddons() {
             const addons = itemAddons[pendingItem.id];
             let selected = [];
@@ -683,34 +863,80 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
         function updateCart() {
             const cartBody = document.getElementById('cartBody');
             const checkoutBtn = document.getElementById('checkoutBtn');
+            const cartCount = document.getElementById('cartCount');
+
+            let totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+            cartCount.innerText = totalItems;
+
             if (cart.length === 0) {
-                cartBody.innerHTML = `<div class="text-center text-muted"><p>Your cart is empty</p></div>`;
+                cartBody.innerHTML = `< div class="empty-cart" >
+            <i class="fas fa-shopping-cart"></i>
+            <p>Your cart is empty</p>
+            <small>Add items to get started</small>
+        </div > `;
                 checkoutBtn.disabled = true;
                 document.getElementById('subtotal').innerText = '₱0.00';
                 document.getElementById('total').innerText = '₱0.00';
+                cartCount.style.display = 'none';
                 return;
             }
+
+            cartCount.style.display = 'flex';
             checkoutBtn.disabled = false;
-            cartBody.innerHTML = cart.map(item => `
+
+            let html = '';
+            cart.forEach((item, idx) => {
+                let itemSubtotal = item.price * item.qty;
+                item.addons.forEach(a => itemSubtotal += a.price * a.qty * item.qty);
+
+                html += `
             <div class="cart-item">
-                <div>${item.name} – ₱${item.price.toFixed(2)}</div>
-                ${item.addons.length > 0 ? `<ul>${item.addons.map(a => `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
-                <div class="d-flex align-items-center mb-2">
-                    <button class="btn btn-sm btn-outline-secondary me-2" onclick="decreaseQty(${item.id})">-</button>
-                    <span>${item.qty}</span>
-                    <button class="btn btn-sm btn-outline-secondary ms-2" onclick="increaseQty(${item.id})">+</button>
+                <div class="cart-item-header">
+                    <div class="cart-item-info">
+                        <h6>${item.name}</h6>
+                        <small>₱${item.price.toFixed(2)} each</small>
+                    </div>
                 </div>
-            </div>`).join('');
+            ${item.addons.length > 0 ? `<ul class="cart-addons">${item.addons.map(a => `<li>${a.name} × ${a.qty} – ₱${(a.price * a.qty * item.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
+        <div class="cart-item-controls">
+            <div class="quantity-controls">
+                <button class="qty-btn" onclick="decreaseQty(${idx})">−</button>
+                <span class="quantity">${item.qty}</span>
+                <button class="qty-btn" onclick="increaseQty(${idx})">+</button>
+            </div>
+            <div class="item-total">₱${itemSubtotal.toFixed(2)}</div>
+        </div>
+        </div > `;
+            });
+
+            cartBody.innerHTML = html;
 
             let subtotal = 0;
-            cart.forEach(item => { subtotal += item.price * item.qty; item.addons.forEach(a => subtotal += a.price * a.qty); });
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                item.addons.forEach(a => subtotal += a.price * a.qty * item.qty);
+            });
             document.getElementById('subtotal').innerText = '₱' + subtotal.toFixed(2);
             document.getElementById('total').innerText = '₱' + subtotal.toFixed(2);
         }
 
-        function increaseQty(id) { const item = cart.find(i => i.id === id); item.qty++; updateCart(); }
-        function decreaseQty(id) { const item = cart.find(i => i.id === id); if (item.qty > 1) item.qty--; else cart = cart.filter(i => i.id !== id); updateCart(); }
-        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('open'); }
+        function increaseQty(idx) {
+            cart[idx].qty++;
+            updateCart();
+        }
+
+        function decreaseQty(idx) {
+            if (cart[idx].qty > 1) {
+                cart[idx].qty--;
+            } else {
+                cart.splice(idx, 1);
+            }
+            updateCart();
+        }
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('open');
+        }
 
         // ---------------- ADVANCE ORDER MODAL ----------------
         document.getElementById('checkoutBtn').addEventListener('click', () => {
@@ -719,40 +945,51 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 const tableNames = <?= json_encode($tableNames ?? []) ?>;
 
                 let html = `
-                    <h6 class="fw-bold mb-2">Customer Info</h6>
-                    <p><strong>Name:</strong> ${order.first} ${order.last}</p>
-                    <p><strong>Contact:</strong> ${order.contact}</p>
-                    <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
-                    <hr>
-                    <h6 class="fw-bold mb-2">Selected Tables</h6>
-                    <ul class="mb-3">
-                        ${order.tables.map((t, i) => `
-                            <li>Table #${t} - ${tableNames[order.tableTypes[i]] ?? 'Unknown'}</li>`).join('')}
-                    </ul>
-                    <hr>
-                    <h6 class="fw-bold mb-2">Items in Cart</h6>
+                <div class="order-info-section">
+                        <h6><i class="fas fa-user"></i> Customer Information</h6>
+                        <p><strong>Name:</strong> ${order.first} ${order.last}</p>
+                        <p><strong>Contact:</strong> ${order.contact}</p>
+                        <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
+                    </div >
+            
+                    <div class="order-info-section">
+                        <h6><i class="fas fa-table"></i> Selected Tables</h6>
+                        <ul>
+                            ${order.tables.map((t, i) => `
+                        <li>Table #${t} - ${tableNames[order.tableTypes[i]] ?? 'Unknown'}</li>`).join('')}
+                        </ul>
+                    </div>
+            
+                    <div class="order-info-section">
+                        <h6><i class="fas fa-utensils"></i> Order Items</h6>
                 `;
 
                 if (cart.length === 0) {
                     html += '<p class="text-muted">No items in cart.</p>';
                 } else {
                     html += '<ul>';
+                    let subtotal = 0;
                     cart.forEach(item => {
-                        html += `<li>${item.name} x${item.qty} – ₱${(item.price * item.qty).toFixed(2)}`;
+                        let itemTotal = item.price * item.qty;
+                        html += `<li><strong>${item.name}</strong> × ${item.qty} – ₱${itemTotal.toFixed(2)}`;
                         if (item.addons.length > 0) {
-                            html += '<ul>';
+                            html += '<ul style="margin-top: 5px;">';
                             item.addons.forEach(a => {
-                                html += `<li>${a.name} x${a.qty} – ₱${(a.price * a.qty).toFixed(2)}</li>`;
+                                let addonTotal = a.price * a.qty * item.qty;
+                                itemTotal += addonTotal;
+                                html += `<li>${a.name} × ${a.qty} – ₱${addonTotal.toFixed(2)}</li>`;
                             });
                             html += '</ul>';
                         }
                         html += '</li>';
+                        subtotal += itemTotal;
                     });
                     html += '</ul>';
-                    let subtotal = 0;
-                    cart.forEach(item => { subtotal += item.price * item.qty; item.addons.forEach(a => subtotal += a.price * a.qty); });
-                    html += `<p><strong>Subtotal:</strong> ₱${subtotal.toFixed(2)}</p>`;
+                    html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #e0e0e0;">
+                        <h5 style="color: var(--gold); margin: 0;"><strong>Total: ₱${subtotal.toFixed(2)}</strong></h5>
+                    </div>`;
                 }
+                html += '</div>';
 
                 document.getElementById('advanceOrderContent').innerHTML = html;
                 bootstrapAdvanceModal.show();
@@ -760,7 +997,6 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 alert('No advance order in session!');
             <?php endif; ?>
         });
-
 
         // ---------------- CONFIRM ADVANCE ORDER ----------------
         document.getElementById('confirmAdvanceOrder').addEventListener('click', () => {
@@ -775,10 +1011,11 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
             let subtotal = 0;
             cart.forEach(item => {
-                subtotal += item.price * item.qty;
+                let itemTotal = item.price * item.qty;
                 item.addons.forEach(a => {
-                    subtotal += a.price * a.qty;
+                    itemTotal += a.price * a.qty * item.qty;
                 });
+                subtotal += itemTotal;
 
                 formData.append('cartItems[]', JSON.stringify({
                     id: item.id,
@@ -790,7 +1027,7 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 }));
             });
 
-            // ✅ SEND SUBTOTAL AS TOTAL
+            // SEND SUBTOTAL AS TOTAL
             formData.append('total', subtotal.toFixed(2));
 
             fetch('../Admin/adminBackend/booking_save_order_advance.php', {
@@ -801,18 +1038,19 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 .then(res => {
                     if (res.status === 'success') {
                         alert('Advance order saved successfully!');
-                        location.reload();
+                        window.location.href = '../Admin/index.php?table-booking';
                     } else {
                         alert(res.message || 'Error saving order');
                     }
+                })
+                .catch(err => {
+                    alert('An error occurred while saving the order.');
+                    console.error(err);
                 });
         });
 
 
-
     </script>
-
-
 
 </body>
 

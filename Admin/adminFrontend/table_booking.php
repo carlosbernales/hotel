@@ -836,7 +836,7 @@
                     <input type="text" id="contactNumber" class="form-control mb-2">
 
                     <label class="form-label">Booking Date & Time</label>
-                    <input type="datetime-local" id="bookingDateTime" class="form-control mb-3">
+                    <input type="datetime-local" id="bookingDateTime" class="form-control mb-3" readonly>
 
                     <!-- Available tables for each type will be inserted here dynamically -->
                     <div id="availableTablesWrapper"></div>
@@ -854,6 +854,7 @@
 
     <script>
         let cart = [];
+        let availabilityChecked = false;
 
         function init() {
             setupEventListeners();
@@ -873,6 +874,12 @@
         }
 
         function addToCart(tableId) {
+
+            if (!availabilityChecked) {
+                alert("Please check availability first before adding to cart.");
+                return;
+            }
+
             const table = getTableData(tableId);
             if (!table || table.status === 'unavailable') return;
 
@@ -893,7 +900,6 @@
             updateCart();
             updateCartCount();
         }
-
         function updateCart() {
             const cartBody = document.getElementById('cartBody');
             const checkoutBtn = document.getElementById('checkoutBtn');
@@ -901,25 +907,25 @@
 
             if (cart.length === 0) {
                 cartBody.innerHTML = `
-            <div class="empty-cart">
-                <i class="fas fa-shopping-cart"></i>
-                <p>Your booking cart is empty</p>
-            </div>
-        `;
+                    <div class="empty-cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <p>Your booking cart is empty</p>
+                    </div>
+                `;
                 checkoutBtn.disabled = true;
                 advanceBtn.disabled = true;
             } else {
                 cartBody.innerHTML = cart.map(table => `
-            <div class="cart-item">
-                <div class="cart-item-info">
-                    <h6>${table.name}</h6>
-                    <small><i class="fas fa-users"></i> ${table.capacity} people</small>
-                </div>
-                <button class="remove-item" onclick="removeFromCart(${table.id})">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-        `).join('');
+                    <div class="cart-item">
+                        <div class="cart-item-info">
+                            <h6>${table.name}</h6>
+                            <small><i class="fas fa-users"></i> ${table.capacity} people</small>
+                        </div>
+                        <button class="remove-item" onclick="removeFromCart(${table.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
 
                 checkoutBtn.disabled = false;
                 advanceBtn.disabled = false;
@@ -927,7 +933,6 @@
 
             updateCartSummary();
         }
-
         function updateCartSummary() {
             const totalTables = cart.length;
             const totalCapacity = cart.reduce((sum, table) => sum + table.capacity, 0);
@@ -936,13 +941,11 @@
             document.getElementById('totalCapacity').textContent = `${totalCapacity} people`;
             document.getElementById('totalItems').textContent = totalTables;
         }
-
         function updateCartCount() {
             if (document.getElementById('cartCount')) {
                 document.getElementById('cartCount').textContent = cart.length;
             }
         }
-
         function filterTables(filter) {
             const allCards = document.querySelectorAll('.table-card');
 
@@ -959,7 +962,6 @@
             });
         }
 
-        /* LOAD AVAILABLE REAL TABLE NUMBERS */
         function loadAvailableTableNumbers(datetime = null) {
             const wrapper = document.getElementById("availableTablesWrapper");
             wrapper.innerHTML = '';
@@ -983,11 +985,10 @@
                         div.classList.add('mb-3');
 
                         div.innerHTML = `
-                <label class="form-label">Select Table for ${table.name}</label>
-                <select class="form-control availableTableSelect" data-table-type="${table.typeId}">
-                    ${tableOptions.length ?
+                            <label class="form-label">Select Table for ${table.name}</label>
+                            <select class="form-control availableTableSelect" data-table-type="${table.typeId}">
+                                ${tableOptions.length ?
                                 tableOptions.map(item => {
-                                    // Enable if either available OR already in cart
                                     const inCart = cart.find(c => c.selectedTableId == item.id);
                                     const disabled = (!item.is_available && !inCart) ? 'disabled' : '';
                                     const label = (!item.is_available && !inCart) ? '(Unavailable)' : '';
@@ -995,20 +996,22 @@
                                 }).join('') :
                                 `<option value="">No tables available</option>`
                             }
-                </select>
-            `;
-
+                            </select>
+                        `;
                         wrapper.appendChild(div);
                     });
                 })
                 .catch(err => console.error(err));
         }
 
-
-
         function setupEventListeners() {
             const bookingModalEl = document.getElementById("bookingInfoModal");
             const bookingModal = new bootstrap.Modal(bookingModalEl);
+
+            document.getElementById('cartToggle').addEventListener('click', function (e) {
+                e.preventDefault();
+                document.getElementById('cartSidebar').classList.toggle('open');
+            });
 
             document.getElementById('closeCart').addEventListener('click', () => {
                 document.getElementById('cartSidebar').classList.remove('open');
@@ -1024,13 +1027,11 @@
 
             document.getElementById("checkoutBtn").addEventListener("click", function () {
                 if (cart.length > 0) {
-                    // Set booking datetime from global input
                     const globalDT = document.getElementById("globalBookingDateTime").value;
                     if (globalDT) {
                         document.getElementById("bookingDateTime").value = globalDT;
                     }
-
-                    loadAvailableTableNumbers(globalDT); // Pass datetime
+                    loadAvailableTableNumbers(globalDT);
                     bookingModal.show();
                     bookingModalEl.dataset.action = "checkout";
                 }
@@ -1048,69 +1049,74 @@
                     bookingModalEl.dataset.action = "advance";
                 }
             });
-
             document.getElementById("submitBookingInfo").addEventListener("click", function () {
-
                 const first = document.getElementById("firstName").value.trim();
                 const last = document.getElementById("lastName").value.trim();
                 const contact = document.getElementById("contactNumber").value.trim();
                 const dt = document.getElementById("bookingDateTime").value.trim();
 
+                // Get selected table numbers from the modal selects
                 const selectedTableNumbers = Array.from(document.querySelectorAll('.availableTableSelect'))
-                    .map(sel => sel.value)
-                    .filter(v => v !== "");
+                    .map(sel => parseInt(sel.value))
+                    .filter(v => !isNaN(v));
 
                 const typeIds = cart.map(t => t.typeId);
 
+                // Validate required fields
                 if (!first || !last || !contact || !dt || selectedTableNumbers.length !== cart.length) {
                     alert("Complete all fields and select available tables.");
                     return;
                 }
 
-                const action = bookingModalEl.dataset.action;
+                const action = document.getElementById("bookingInfoModal").dataset.action; // "checkout" or "advance"
 
-                let bodyData =
-                    `first=${encodeURIComponent(first)}` +
-                    `&last=${encodeURIComponent(last)}` +
-                    `&contact=${encodeURIComponent(contact)}` +
-                    `&datetime=${encodeURIComponent(dt)}` +
-                    typeIds.map(id => `&tableTypes[]=${id}`).join('') +
-                    selectedTableNumbers.map(num => `&tables[]=${num}`).join('');
+                // Build URL-encoded POST data
+                const formData = new URLSearchParams();
+                formData.append("first", first);
+                formData.append("last", last);
+                formData.append("contact", contact);
+                formData.append("datetime", dt);
+                typeIds.forEach(id => formData.append("tableTypes[]", id));
+                selectedTableNumbers.forEach(num => formData.append("tables[]", num));
 
+                // Handle checkout booking
                 if (action === "checkout") {
                     fetch("../Admin/adminBackend/booking_save_order.php", {
                         method: "POST",
                         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: bodyData
-                    })
-                        .then(async res => {
-                            const text = await res.text();
-                            console.log("RAW RESPONSE:", text); // ← SEE THE ERROR
-                            return JSON.parse(text); // Try to parse manually
-                        })
-                        .then(res => {
-                            console.log(res);
-                        });
-
-                }
-
-                if (action === "advance") {
-                    fetch("../Admin/adminBackend/booking_store_advance.php", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: bodyData
+                        body: formData
                     })
                         .then(res => res.json())
                         .then(res => {
                             if (res.status === "success") {
-                                window.location.href = res.redirect;
+                                alert(`Booking successful! Order ID: ${res.order_id}`);
+                                location.reload(); // or close modal and reset cart
                             } else {
-                                alert("Error storing advance order.");
+                                alert("Booking failed: " + res.msg);
                             }
-                        });
+                        })
+                        .catch(err => console.error("Checkout error:", err));
                 }
 
+                // Handle advance orders
+                if (action === "advance") {
+                    fetch("../Admin/adminBackend/booking_store_advance.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.status === "success") {
+                                window.location.href = res.redirect || "/";
+                            } else {
+                                alert("Error storing advance order: " + res.msg);
+                            }
+                        })
+                        .catch(err => console.error("Advance order error:", err));
+                }
             });
+
         }
 
         init();
@@ -1150,11 +1156,7 @@
                     alert("Error checking availability.");
                 });
         });
-
-
     </script>
-
-
     <script>
         function loadAvailableCounts(datetime = null) {
             const cards = document.querySelectorAll("#tablesContainer .table-card");
@@ -1180,7 +1182,18 @@
                         const badge = card.querySelector(".table-status-badge");
                         const btn = card.querySelector(".btn-add-to-cart");
 
-                        if (count > 0) {
+                        const originalStatus = card.dataset.originalStatus || card.dataset.status; // PHP initial status
+                        card.dataset.originalStatus = originalStatus;
+
+                        if (originalStatus !== 'active') {
+                            card.dataset.status = 'inactive';
+                            badge.textContent = 'UNAVAILABLE';
+                            badge.classList.remove("status-available");
+                            badge.classList.add("status-unavailable");
+
+                            btn.disabled = true;
+                            btn.classList.add('btn-disabled');
+                        } else if (count > 0) {
                             card.dataset.status = 'active';
                             badge.textContent = 'AVAILABLE';
                             badge.classList.remove("status-unavailable");
@@ -1197,26 +1210,43 @@
                             btn.disabled = true;
                             btn.classList.add('btn-disabled');
                         }
+
                     });
-
-
                     const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
                     filterTables(activeFilter);
                 })
                 .catch(err => console.error(err));
         }
-
         loadAvailableCounts();
 
         document.getElementById("checkGlobalAvailabilityBtn").addEventListener("click", function () {
             const dt = document.getElementById("globalBookingDateTime").value.trim();
-            if (!dt) { alert("Select date & time"); return; }
+            if (!dt) {
+                alert("Select date & time");
+                return;
+            }
+
+            availabilityChecked = true;
+            loadAvailableCounts(dt);
+        });
+        document.getElementById("globalBookingDateTime").addEventListener("change", function () {
+            const dt = this.value.trim();
+            if (!dt) return;
+
+            availabilityChecked = false;
+            resetCart();
             loadAvailableCounts(dt);
         });
 
+
+        function resetCart() {
+            cart = [];
+            updateCart();
+            updateCartCount();
+            document.getElementById('cartSidebar').classList.remove('open');
+        }
+
     </script>
-
-
     <script>
         wrapper.querySelectorAll('.availableTableSelect').forEach(select => {
             select.addEventListener('change', function () {
@@ -1227,7 +1257,6 @@
                 if (cartItem) cartItem.selectedTableId = selectedId;
             });
         });
-
     </script>
 </body>
 

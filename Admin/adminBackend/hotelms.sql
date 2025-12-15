@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 14, 2025 at 08:02 AM
+-- Generation Time: Dec 15, 2025 at 03:39 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -2022,7 +2022,10 @@ CREATE TABLE `orders_table` (
 --
 
 INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `status`) VALUES
-(1, NULL, 'ORD83716369160', 'dsad', 'asda', '32', '2025-12-14 16:00:00', NULL, NULL, NULL, 820.00, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier');
+(1, NULL, 'ORD-1765768467', 'Carlos', 'Bernales', '9951776920', '2025-12-15 13:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier'),
+(2, NULL, 'ORD52566148884', 'Carlos', 'Bernales', '9951776920', '2025-12-15 13:00:00', NULL, NULL, NULL, 890.00, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier'),
+(3, NULL, 'ORD48235622012', 'Carlos', 'Bernales', '9951776920', '2025-12-15 13:00:00', NULL, NULL, NULL, 800.00, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier'),
+(4, NULL, 'ORD53017294261', 'Carlos', 'Bernales', '9951776920', '2025-12-15 10:00:00', NULL, NULL, NULL, 815.00, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier');
 
 -- --------------------------------------------------------
 
@@ -2044,7 +2047,13 @@ CREATE TABLE `orders_table_type` (
 --
 
 INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
-(1, 1, 2, 12, 'dasd', 11);
+(1, 1, 2, 3, 'dasd', 3),
+(2, 2, 3, 2, 'GAS', 2),
+(3, 2, 2, 1, 'dasd', 1),
+(4, 3, 3, 2, 'GAS', 2),
+(5, 3, 2, 1, 'dasd', 1),
+(6, 4, 2, 12, 'dasd', 11),
+(7, 4, 3, 5, 'GAS', 5);
 
 -- --------------------------------------------------------
 
@@ -2065,9 +2074,15 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
-(1, 1, 'Chicken Wings', 1, 180.00),
-(2, 1, 'Coconut Salad', 2, 200.00),
-(3, 1, 'Salad', 1, 200.00);
+(1, 2, 'Chicken Wings', 1, 180.00),
+(2, 2, 'Spaghetti maccaroni', 1, 270.00),
+(3, 2, 'Coconut Salad', 2, 200.00),
+(4, 3, 'Chicken Wings', 1, 180.00),
+(5, 3, 'Coconut Salad', 1, 200.00),
+(6, 3, 'Salad', 2, 200.00),
+(7, 4, 'Coconut Salad', 1, 200.00),
+(8, 4, 'Chicken Wings', 1, 180.00),
+(9, 4, 'Salad', 2, 200.00);
 
 -- --------------------------------------------------------
 
@@ -2089,7 +2104,10 @@ CREATE TABLE `order_item_addons` (
 
 INSERT INTO `order_item_addons` (`id`, `order_item_fk_id`, `addon_name`, `price`, `quantity`) VALUES
 (1, 1, 'cheese', 20.00, 1),
-(2, 1, 'Gravy', 20.00, 1);
+(2, 1, 'Gravy', 20.00, 1),
+(3, 4, 'cheese', 20.00, 1),
+(4, 8, 'HAtdog', 15.00, 1),
+(5, 8, 'cheese', 20.00, 1);
 
 -- --------------------------------------------------------
 
@@ -2792,7 +2810,7 @@ CREATE TABLE `table_number` (
   `id` int NOT NULL,
   `table_type_fk_id` int NOT NULL,
   `table_number` int NOT NULL,
-  `status` enum('available','occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
+  `status` enum('available','unavailable') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2803,10 +2821,10 @@ INSERT INTO `table_number` (`id`, `table_type_fk_id`, `table_number`, `status`) 
 (1, 2, 1, 'available'),
 (2, 3, 2, 'available'),
 (3, 2, 3, 'available'),
-(4, 0, 4, 'occupied'),
+(4, 0, 4, 'available'),
 (5, 3, 5, 'available'),
-(6, 0, 6, 'occupied'),
-(7, 0, 7, 'occupied'),
+(6, 0, 6, 'available'),
+(7, 0, 7, 'available'),
 (8, 4, 8, 'available'),
 (9, 0, 9, 'available'),
 (10, 0, 10, 'available'),
@@ -3513,25 +3531,25 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `payments`

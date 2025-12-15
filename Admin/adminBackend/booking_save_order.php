@@ -3,10 +3,6 @@ header("Content-Type: application/json");
 include '../adminBackend/mydb.php';
 
 try {
-
-    // =============================
-    // GET POST DATA
-    // =============================
     $first = $_POST['first'] ?? '';
     $last = $_POST['last'] ?? '';
     $contact = $_POST['contact'] ?? '';
@@ -19,69 +15,40 @@ try {
         exit;
     }
 
-    // must match table count
     if (count($tableTypes) !== count($tables)) {
         echo json_encode(["status" => "error", "msg" => "Mismatch table count"]);
         exit;
     }
 
-    // =============================
-    // INSERT INTO orders_table
-    // =============================
-    $orderId = "ORD-" . time(); // simple unique order id
+    $orderId = "ORD-" . time();
 
-    $sql = "INSERT INTO orders_table 
-            (order_id, firstname, lastname, contact, date_time, status)
-            VALUES (?, ?, ?, ?, ?, 'Accepted')";
-
-    $stmt = $conn->prepare($sql);
+    $stmt = $conn->prepare("INSERT INTO orders_table 
+        (order_id, firstname, lastname, contact, date_time, status)
+        VALUES (?, ?, ?, ?, ?, 'Cashier')");
     $stmt->bind_param("sssss", $orderId, $first, $last, $contact, $datetime);
 
     if (!$stmt->execute()) {
-        echo json_encode(["status" => "error", "msg" => "Insert main failed"]);
+        echo json_encode(["status" => "error", "msg" => "Insert main order failed"]);
         exit;
     }
 
-    $bookingId = $stmt->insert_id; // new booking ID
+    $bookingId = $stmt->insert_id;
 
-
-    // =============================
-    // INSERT INTO orders_table_type
-    // =============================
     for ($i = 0; $i < count($tableTypes); $i++) {
-
         $typeId = $tableTypes[$i];
         $tableNumId = $tables[$i];
 
-        // ---- fetch table_name
-        $q1 = $conn->prepare("SELECT table_name FROM table_types WHERE id = ?");
-        $q1->bind_param("i", $typeId);
-        $q1->execute();
-        $r1 = $q1->get_result()->fetch_assoc();
-        $tableName = $r1['table_name'];
+        $tableName = $conn->query("SELECT table_name FROM table_types WHERE id = $typeId")->fetch_assoc()['table_name'];
+        $tableNumber = $conn->query("SELECT table_number FROM table_number WHERE id = $tableNumId")->fetch_assoc()['table_number'];
 
-        // ---- fetch table_number
-        $q2 = $conn->prepare("SELECT table_number FROM table_number WHERE id = ?");
-        $q2->bind_param("i", $tableNumId);
-        $q2->execute();
-        $r2 = $q2->get_result()->fetch_assoc();
-        $tableNumber = $r2['table_number'];
-
-        // insert into orders_table_type
-        $ins = $conn->prepare("
-            INSERT INTO orders_table_type
+        $ins = $conn->prepare("INSERT INTO orders_table_type
             (table_booking_fk_id, table_type_fk_id, table_number_fk_id, table_name, table_number)
-            VALUES (?, ?, ?, ?, ?)
-        ");
+            VALUES (?, ?, ?, ?, ?)");
         $ins->bind_param("iiiss", $bookingId, $typeId, $tableNumId, $tableName, $tableNumber);
         $ins->execute();
     }
 
-    echo json_encode([
-        "status" => "success",
-        "order_id" => $orderId,
-        "booking_id" => $bookingId
-    ]);
+    echo json_encode(["status" => "success", "order_id" => $orderId, "booking_id" => $bookingId]);
 
 } catch (Exception $e) {
     echo json_encode(["status" => "error", "msg" => $e->getMessage()]);
