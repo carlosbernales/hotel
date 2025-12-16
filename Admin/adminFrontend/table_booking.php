@@ -714,16 +714,31 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <div class="filter-section d-flex flex-wrap align-items-center gap-2 mb-3">
-            <button class="filter-btn active" data-filter="all">All Tables</button>
-            <button class="filter-btn" data-filter="available">Available Only</button>
-            <button class="filter-btn" data-filter="unavailable">Unavailable</button>
+        <div class="position-relative">
 
-            <div class="d-flex align-items-center gap-2 ms-auto">
-                <input type="datetime-local" id="globalBookingDateTime" class="form-control" style="max-width: 250px;">
-                <button class="btn btn-info" id="checkGlobalAvailabilityBtn">Check Availability</button>
+            <!-- Close / Back Button -->
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-3" aria-label="Close"
+                onclick="window.location.href='../Admin/index.php?room_booking'">
+            </button>
+
+            <!-- Existing filter section -->
+            <div class="filter-section d-flex flex-wrap align-items-center gap-2 mb-3">
+                <button class="filter-btn active" data-filter="all">All Tables</button>
+                <button class="filter-btn" data-filter="available">Available Only</button>
+                <button class="filter-btn" data-filter="unavailable">Unavailable</button>
+
+                <div class="d-flex align-items-center gap-3 ms-auto">
+                    <input type="datetime-local" id="globalBookingDateTime" class="form-control"
+                        style="max-width: 250px;">
+
+                    <button class="btn btn-info me-5" id="checkGlobalAvailabilityBtn" style="width: 200px;">
+                        Check Availability
+                    </button>
+                </div>
             </div>
+
         </div>
+
 
         <div class="row" id="tablesContainer">
             <?php
@@ -822,7 +837,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg">
                 <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title">Customer Information</h5>
+                    <h5 class="modal-title">Booking Information</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body" id="bookingTablesContainer">
@@ -843,8 +858,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button class="btn btn-primary" id="submitBookingInfo">Submit</button>
+                    <button class="btn btn-primary" id="submitBookingInfo">Confirm Booking</button>
                 </div>
 
             </div>
@@ -990,19 +1004,40 @@
                                 ${tableOptions.length ?
                                 tableOptions.map(item => {
                                     const inCart = cart.find(c => c.selectedTableId == item.id);
-                                    const disabled = (!item.is_available && !inCart) ? 'disabled' : '';
-                                    const label = (!item.is_available && !inCart) ? '(Unavailable)' : '';
-                                    return `<option value="${item.id}" ${disabled}>Table #${item.table_number} ${label}</option>`;
+                                    let label = `Table #${item.table_number}`;
+                                    let disabled = '';
+
+                                    if (item.status === 'unavailable') {
+                                        label += ' (Unavailable)';
+                                        disabled = 'disabled';
+                                    }
+                                    else if (!item.is_available && !inCart) {
+                                        if (item.next_available_datetime) {
+                                            const dt = new Date(item.next_available_datetime);
+                                            let hours = dt.getHours();
+                                            const minutes = String(dt.getMinutes()).padStart(2, '0');
+                                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                                            hours = hours % 12;
+                                            hours = hours ? hours : 12; // convert 0 to 12
+                                            label += ` (Available at ${hours}:${minutes} ${ampm})`;
+                                        } else {
+                                            label += ' (Unavailable)';
+                                        }
+                                        disabled = 'disabled';
+                                    }
+
+                                    return `<option value="${item.id}" ${disabled}>${label}</option>`;
                                 }).join('') :
                                 `<option value="">No tables available</option>`
                             }
-                            </select>
-                        `;
+                                </select>
+                            `;
                         wrapper.appendChild(div);
                     });
                 })
                 .catch(err => console.error(err));
         }
+
 
         function setupEventListeners() {
             const bookingModalEl = document.getElementById("bookingInfoModal");
@@ -1230,13 +1265,20 @@
             loadAvailableCounts(dt);
         });
         document.getElementById("globalBookingDateTime").addEventListener("change", function () {
-            const dt = this.value.trim();
-            if (!dt) return;
+            const selected = new Date(this.value);
+            const now = new Date();
+
+            if (selected < now) {
+                alert("You cannot select a past date or time.");
+                this.value = "";
+                return;
+            }
 
             availabilityChecked = false;
             resetCart();
-            loadAvailableCounts(dt);
+            loadAvailableCounts(this.value);
         });
+
 
 
         function resetCart() {
@@ -1258,6 +1300,28 @@
             });
         });
     </script>
+
+    <script>
+        function setMinGlobalDateTime() {
+            const input = document.getElementById("globalBookingDateTime");
+
+            const now = new Date();
+
+            // Convert to local datetime-local format (YYYY-MM-DDTHH:MM)
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+
+            const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+            input.min = minDateTime;
+        }
+
+        setMinGlobalDateTime();
+    </script>
+
 </body>
 
 </html>

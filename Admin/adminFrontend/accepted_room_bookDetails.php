@@ -918,7 +918,6 @@ while ($b = $bed_res->fetch_assoc()) {
                         opt.selected = true;
                         roomNumberSelect.appendChild(opt);
                     }
-
                     data[type].forEach(rn => {
                         const option = document.createElement('option');
                         option.value = rn.room_number_id;
@@ -933,7 +932,6 @@ while ($b = $bed_res->fetch_assoc()) {
                         }
                         roomNumberSelect.appendChild(option);
                     });
-
                 } else {
                     let opt = document.createElement("option");
                     opt.textContent = "No available rooms";
@@ -941,7 +939,6 @@ while ($b = $bed_res->fetch_assoc()) {
                     opt.selected = true;
                     roomNumberSelect.appendChild(opt);
                 }
-
                 disableSelectedRoomNumbers();
             });
     }
@@ -1051,17 +1048,14 @@ while ($b = $bed_res->fetch_assoc()) {
 
 
     function calculateTotalAmount() {
-        // Get check-in and check-out dates
         const checkIn = new Date(document.getElementById('check_in').value);
         const checkOut = new Date(document.getElementById('check_out').value);
 
         if (isNaN(checkIn) || isNaN(checkOut) || checkOut <= checkIn) return;
 
-        // Calculate number of nights
         const timeDiff = checkOut - checkIn;
         const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
 
-        // Calculate total room price
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
@@ -1069,28 +1063,21 @@ while ($b = $bed_res->fetch_assoc()) {
         });
 
         // Extra bed price
-        let extraBedPrice = extraBedTotal * nights; // make sure extraBedTotal is defined elsewhere
+        let extraBedPrice = extraBedTotal * nights;
 
-        // Total before discount
         const totalBeforeDiscount = roomsTotal + extraBedPrice;
 
-        // Discount
         const discountPercentage = parseFloat(document.getElementById('discountPercentage').value.replace('%', '')) || 0;
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
 
-        // Total after discount
         const totalAmountNew = totalBeforeDiscount - discountAmount;
 
-        // Down payment & remaining balance
         const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
         let remainingBalance = totalAmountNew - downPayment;
         if (remainingBalance < 0) remainingBalance = 0;
 
-        // Update DOM
         document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
         document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
-
-        // Store discountAmount for processBooking()
         document.getElementById('discountAmount').value = discountAmount.toFixed(2);
     }
 
@@ -1145,7 +1132,7 @@ while ($b = $bed_res->fetch_assoc()) {
             alert('Please select a room number for all booked rooms.');
             return;
         }
-        const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'check in' : 'reschedule'} this booking? Kindly enter any amount for downpayment`);
+        const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'check in' : 'reschedule'} this booking? Have you enter any amount for payment?`);
         if (!confirmed) return;
 
         const rooms = [];

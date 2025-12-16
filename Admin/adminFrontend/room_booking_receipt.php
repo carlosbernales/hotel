@@ -137,7 +137,6 @@ if (isset($_GET['booking_id'])) {
 
         <body>
             <div class="receipt-container">
-                <!-- Header -->
                 <div class="header">
                     <h1>Casa Estela Boutique Hotel & Cafe</h1>
                     <p>Gov B Marasigan St, Calapan City, Oriental Mindoro</p>
@@ -147,7 +146,6 @@ if (isset($_GET['booking_id'])) {
                     <p>Date Issued: <?= date("F j, Y") ?></p>
                 </div>
 
-                <!-- Guest Information -->
                 <div class="section-title">Guest Information</div>
                 <div class="detail-row">
                     <span class="detail-label">Name:</span>
@@ -163,84 +161,103 @@ if (isset($_GET['booking_id'])) {
                 </div>
 
                 <!-- Booking Information -->
-                <!-- Booking Information -->
                 <div class="section-title">Booking Information</div>
 
                 <?php
-                // Fetch original check-in/out from booking_check_inout
-                $checkin_sql = "SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?";
-                $stmt_checkin = $conn->prepare($checkin_sql);
-                $stmt_checkin->bind_param("i", $booking_id);
-                $stmt_checkin->execute();
-                $checkin_result = $stmt_checkin->get_result();
+                /* ============================
+                   FETCH ORIGINAL CHECK-IN/OUT
+                ============================ */
+                $stmt = $conn->prepare("SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?");
+                $stmt->bind_param("i", $booking_id);
+                $stmt->execute();
+                $res = $stmt->get_result();
 
                 $original_check_in = $original_check_out = null;
-                if ($checkin_result->num_rows > 0) {
-                    $row = $checkin_result->fetch_assoc();
+                if ($res->num_rows > 0) {
+                    $row = $res->fetch_assoc();
                     $original_check_in = $row['check_in'];
                     $original_check_out = $row['check_out'];
                 }
 
-                // Fetch latest reschedule check-in/out
-                $resched_sql = "SELECT check_in, check_out 
-                FROM reschedule_bookings 
-                WHERE booking_fk_id = ? 
-                ORDER BY date_resched DESC 
-                LIMIT 1";
-                $stmt_resched = $conn->prepare($resched_sql);
-                $stmt_resched->bind_param("i", $booking_id);
-                $stmt_resched->execute();
-                $resched_result = $stmt_resched->get_result();
+                ///  FETCH LATEST RESCHEDULE
+                $stmt = $conn->prepare("
+                    SELECT check_in, check_out 
+                    FROM reschedule_bookings 
+                    WHERE booking_fk_id = ? 
+                    ORDER BY date_resched DESC 
+                    LIMIT 1
+                ");
+                $stmt->bind_param("i", $booking_id);
+                $stmt->execute();
+                $res = $stmt->get_result();
 
                 $latest_resched_check_in = $latest_resched_check_out = null;
-                if ($resched_result->num_rows > 0) {
-                    $row = $resched_result->fetch_assoc();
+                if ($res->num_rows > 0) {
+                    $row = $res->fetch_assoc();
                     $latest_resched_check_in = $row['check_in'];
                     $latest_resched_check_out = $row['check_out'];
                 }
+
+                /////   NORMALIZE DATES FOR COMPARISON
+                $actualCheckIn = date('Y-m-d', strtotime($booking['check_in']));
+                $actualCheckOut = date('Y-m-d', strtotime($booking['check_out']));
+
+                $bookedCheckIn = $original_check_in ? date('Y-m-d', strtotime($original_check_in)) : null;
+                $bookedCheckOut = $original_check_out ? date('Y-m-d', strtotime($original_check_out)) : null;
+
+                $reschedCheckIn = $latest_resched_check_in ? date('Y-m-d', strtotime($latest_resched_check_in)) : null;
+                $reschedCheckOut = $latest_resched_check_out ? date('Y-m-d', strtotime($latest_resched_check_out)) : null;
                 ?>
 
-                <!-- Booked check-in/out -->
-                <div class="detail-row">
-                    <span class="detail-label">Booked Check-in:</span>
-                    <span><?= $original_check_in ? date("F j, Y", strtotime($original_check_in)) : 'N/A' ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Booked Check-out:</span>
-                    <span><?= $original_check_out ? date("F j, Y", strtotime($original_check_out)) : 'N/A' ?></span>
-                </div>
-
-
-
-                <!-- Latest reschedule check-in/out -->
-                <?php if ($latest_resched_check_in && $latest_resched_check_out): ?>
-                    <div class="detail-row" style="margin-top:10px;">
-                        <span class="detail-label">Reschedule Check-in:</span>
-                        <span><?= date("F j, Y", strtotime($latest_resched_check_in)) ?></span>
-                    </div>
+                <!-- SHOW BOOKED DATES ONLY IF DIFFERENT -->
+                <?php if ($bookedCheckIn && $bookedCheckIn !== $actualCheckIn): ?>
                     <div class="detail-row">
-                        <span class="detail-label">Reschedule Check-out:</span>
-                        <span><?= date("F j, Y", strtotime($latest_resched_check_out)) ?></span>
+                        <span class="detail-label">Booked Check-in:</span>
+                        <span><?= date("F j, Y", strtotime($bookedCheckIn)) ?></span>
                     </div>
                 <?php endif; ?>
 
+                <?php if ($bookedCheckOut && $bookedCheckOut !== $actualCheckOut): ?>
+                    <div class="detail-row">
+                        <span class="detail-label">Booked Check-out:</span>
+                        <span><?= date("F j, Y", strtotime($bookedCheckOut)) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <!-- SHOW RESCHEDULE ONLY IF DIFFERENT -->
+                <?php if ($reschedCheckIn && $reschedCheckIn !== $actualCheckIn): ?>
+                    <div class="detail-row" style="margin-top:10px;">
+                        <span class="detail-label">Reschedule Check-in:</span>
+                        <span><?= date("F j, Y", strtotime($reschedCheckIn)) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($reschedCheckOut && $reschedCheckOut !== $actualCheckOut): ?>
+                    <div class="detail-row">
+                        <span class="detail-label">Reschedule Check-out:</span>
+                        <span><?= date("F j, Y", strtotime($reschedCheckOut)) ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <!-- FINAL CHECK-IN / CHECK-OUT (ALWAYS SHOW) -->
                 <div class="detail-row">
                     <span class="detail-label">Check-in:</span>
                     <span>
                         <?= date("F j, Y", strtotime($booking['check_in'])) ?>
                         <?php
-                        if ($original_check_in && strtotime($booking['check_in']) < strtotime($original_check_in)) {
+                        if ($bookedCheckIn && $actualCheckIn < $bookedCheckIn) {
                             echo "<strong style='color: green;'> (Advance Check-in)</strong>";
                         }
                         ?>
                     </span>
                 </div>
+
                 <div class="detail-row">
                     <span class="detail-label">Check-out:</span>
                     <span>
                         <?= date("F j, Y", strtotime($booking['check_out'])) ?>
                         <?php
-                        if ($original_check_out && strtotime($booking['check_out']) > strtotime($original_check_out)) {
+                        if ($bookedCheckOut && $actualCheckOut > $bookedCheckOut) {
                             echo "<strong style='color: orange;'> (Extended Booking)</strong>";
                         }
                         ?>
@@ -444,54 +461,53 @@ if (isset($_GET['booking_id'])) {
             </div>
 
             <div id="loadingOverlay" style="
-        position: fixed;
-        top: 0; left: 0; 
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.6);
-        display: none;
-        justify-content: center;
-        align-items: center;
-        z-index: 9999;
-    ">
-                <!-- Spinner -->
+                    position: fixed;
+                    top: 0; left: 0; 
+                    width: 100%; height: 100%;
+                    background: rgba(0,0,0,0.6);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                ">
                 <div id="loadingBox" style="text-align:center; color: white; font-size: 22px;">
                     <div class="spinner" style="
-                border: 6px solid #f3f3f3;
-                border-top: 6px solid #ffffff;
-                border-radius: 50%;
-                width: 60px;
-                height: 60px;
-                animation: spin 1s linear infinite;
-                margin: auto;
-                margin-bottom: 20px;
-            ">
+                            border: 6px solid #f3f3f3;
+                            border-top: 6px solid #ffffff;
+                            border-radius: 50%;
+                            width: 60px;
+                            height: 60px;
+                            animation: spin 1s linear infinite;
+                            margin: auto;
+                            margin-bottom: 20px;
+                        ">
                     </div>
                     <div id="loadingText">Please wait... processing your request</div>
                 </div>
 
                 <div id="successBox" style="
-            display:none;
-            background:#2ecc71;
-            padding:25px 40px;
-            border-radius:10px;
-            color:white;
-            text-align:center;
-            font-size:22px;
-            animation: fadein 0.4s ease-out;
-        ">
+                            display:none;
+                            background:#2ecc71;
+                            padding:25px 40px;
+                            border-radius:10px;
+                            color:white;
+                            text-align:center;
+                            font-size:22px;
+                            animation: fadein 0.4s ease-out;
+                        ">
                     <div style="font-size:26px; font-weight:bold; margin-bottom:10px;">
                         Request done!
                     </div>
                     <button id="okBtn" style="
-                background:white;
-                color:#2ecc71;
-                padding:10px 25px;
-                border:none;
-                border-radius:5px;
-                font-size:18px;
-                cursor:pointer;
-                margin-top:15px;
-            ">OK</button>
+                        background:white;
+                        color:#2ecc71;
+                        padding:10px 25px;
+                        border:none;
+                        border-radius:5px;
+                        font-size:18px;
+                        cursor:pointer;
+                        margin-top:15px;
+                    ">OK</button>
                 </div>
             </div>
 

@@ -621,7 +621,7 @@ while ($b = $bed_res->fetch_assoc()) {
                         <div class="col-md-6 mb-3">
                             <label><i class="fas fa-wallet"></i> Payment Amount / Downpayment</label>
                             <input type="number" id="paymentInput" class="form-control" min="0"
-                                placeholder="Enter payment amount">
+                                placeholder="Enter payment amount" required>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -889,17 +889,29 @@ while ($b = $bed_res->fetch_assoc()) {
             return;
         }
 
-        const confirmed = confirm(`Are you sure you want to ${status === 'checkin' ? 'check in' : 'reserve'} this booking?`);
+        const paymentField = document.getElementById('paymentInput');
+        const paymentValue = parseFloat(paymentField.value);
+
+        if (!paymentField.value || isNaN(paymentValue) || paymentValue <= 0) {
+            alert('Please enter a downpayment amount before proceeding.');
+            paymentField.focus();
+            paymentField.classList.add('is-invalid');
+            return;
+        } else {
+            paymentField.classList.remove('is-invalid');
+        }
+
+
+        const confirmed = confirm(
+            `Are you sure you want to ${status === 'checkin' ? 'check in' : 'reserve'} this booking?`
+        );
         if (!confirmed) return;
 
-        // ------------------------------
-        //  PAYMENT LOGIC (FULL FIX)
-        // ------------------------------
+
         const totalAmountNew = parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')) || 0;
         const oldDownpayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
         const paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
 
-        // Compute new DP
         let newDownPayment = oldDownpayment + paymentInput;
         let remainingBal = 0;
 
@@ -910,9 +922,6 @@ while ($b = $bed_res->fetch_assoc()) {
             remainingBal = totalAmountNew - newDownPayment;
         }
 
-        // ------------------------------
-        // COLLECT ROOM DATA
-        // ------------------------------
         const rooms = [];
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             rooms.push({
@@ -922,9 +931,6 @@ while ($b = $bed_res->fetch_assoc()) {
             });
         });
 
-        // ------------------------------
-        // SEND TO BACKEND
-        // ------------------------------
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
             // check_in: status === 'checkin'
@@ -957,11 +963,8 @@ while ($b = $bed_res->fetch_assoc()) {
             })
             .catch(err => console.error(err));
     }
-
-
     document.getElementById('processCheckinBtn').addEventListener('click', () => processBooking('checkin'));
     document.getElementById('processReserveBtn').addEventListener('click', () => processBooking('reserved'));
-
 </script>
 
 

@@ -28,7 +28,8 @@ while ($row = $result->fetch_assoc()) {
         'id' => $row['id'],
         'table_type_fk_id' => $row['table_type_fk_id'],
         'table_number' => $row['table_number'],
-        'is_available' => $row['status'] === 'available'
+        'is_available' => $row['status'] === 'available',
+        'next_available_datetime' => null,
     ];
 }
 
@@ -44,6 +45,7 @@ if ($datetime) {
         INNER JOIN orders_table_type ott ON tn.id = ott.table_number_fk_id
         INNER JOIN orders_table ot ON ott.table_booking_fk_id = ot.id
         WHERE tn.table_type_fk_id IN ($placeholders2)
+        ORDER BY ot.date_time ASC
     ";
     $stmt2 = $conn->prepare($sql2);
     $stmt2->bind_param($types2, ...$typeIds);
@@ -56,14 +58,20 @@ if ($datetime) {
 
         if ($diffHours < 4 && isset($tables[$row['table_number_id']])) {
             $tables[$row['table_number_id']]['is_available'] = false;
+
+            $nextAvailable = $existingTime + 4 * 3600;
+            $currentNext = $tables[$row['table_number_id']]['next_available_datetime'];
+            if (!$currentNext || strtotime($currentNext) < $nextAvailable) {
+                $tables[$row['table_number_id']]['next_available_datetime'] = date('Y-m-d\TH:i', $nextAvailable);
+            }
         }
     }
-
 }
 
 foreach ($cartTableIds as $id) {
     if (isset($tables[$id])) {
         $tables[$id]['is_available'] = true;
+        $tables[$id]['next_available_datetime'] = null;
     }
 }
 

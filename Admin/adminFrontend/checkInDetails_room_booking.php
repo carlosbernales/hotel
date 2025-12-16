@@ -1097,7 +1097,7 @@ if ($amenitiesResult->num_rows > 0) {
                         option.textContent = rn.room_number + (rn.note ? ` (${rn.note})` : '');
                         if (rn.disabled) {
                             option.disabled = true;
-                            option.dataset.backendDisabled = "true"; // mark it
+                            option.dataset.backendDisabled = "true";
                         }
 
                         if (!changedByType && defaultNumber == rn.room_number_id) {
@@ -1293,7 +1293,6 @@ if ($amenitiesResult->num_rows > 0) {
     });
 
     function processBooking(status, reason = null, silent = false) {
-        // If finished, validate payment
         if (status === 'finished') {
             const payment = parseFloat(document.getElementById('paymentInput').value) || 0;
             const remainingBal = parseFloat(document.getElementById('remainingBal').value.replace(/,/g, '')) || 0;
@@ -1304,7 +1303,6 @@ if ($amenitiesResult->num_rows > 0) {
             }
         }
 
-        // Validate room selection
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
         roomSelects.forEach(select => {
@@ -1325,13 +1323,11 @@ if ($amenitiesResult->num_rows > 0) {
             return;
         }
 
-        // Confirm action for finished only, otherwise skip alert
         if (status === 'finished') {
             const confirmed = confirm('Are you sure you want to check out this booking?');
             if (!confirmed) return;
         }
 
-        // Gather room data
         const rooms = [];
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             rooms.push({
@@ -1368,11 +1364,9 @@ if ($amenitiesResult->num_rows > 0) {
             .then(res => {
                 if (res === "success") {
                     if (!silent) {
-                        // Show alert only if not silent
                         alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
                     }
 
-                    // Redirect after success
                     if (status === 'finished') {
                         window.location.href =
                             `../Admin/index.php?room_booking_receipt&booking_id=<?= $booking['booking_id'] ?>`;
@@ -1471,12 +1465,11 @@ if ($amenitiesResult->num_rows > 0) {
 
         if (extendMessage.textContent === "No changes for extension.") {
             alert("No changes detected for extension. Nothing to process.");
-            return; // stop processing
+            return;
         }
 
         processBooking('checkin', null);
     });
-    ///// CONFIRM ROOM TRANSFER
     document.getElementById('confirmTransferBtn').addEventListener('click', () => {
 
         let hasRoomChange = false;
@@ -1500,15 +1493,14 @@ if ($amenitiesResult->num_rows > 0) {
         }
         processBooking('checkin', reason);
     });
-    //// CHECK OUT 
 
     document.getElementById('processCheckOut')
         .addEventListener('click', () => processBooking('finished'));
 
     document.getElementById('backProcess')
         .addEventListener('click', (e) => {
-            e.preventDefault(); // prevent default link behavior
-            processBooking('checkin', null, true); // third parameter = silent
+            e.preventDefault();
+            processBooking('checkin', null, true);
         });
 
 
@@ -1550,9 +1542,6 @@ if ($amenitiesResult->num_rows > 0) {
 
     let CURRENT_BOOKING_ID = null;
 
-    /* ---------------------------
-        CALCULATE TOTAL NIGHTS
-    ---------------------------- */
     function updateNights() {
         const checkIn = new Date('<?= $booking['check_in'] ?>');
         const checkOut = new Date('<?= $booking['check_out'] ?>');
@@ -1562,13 +1551,10 @@ if ($amenitiesResult->num_rows > 0) {
         return diffDays;
     }
 
-    /* ---------------------------
-        ADD ROW TO TABLE
-    ---------------------------- */
+
     function addAmenityRow(id, name, price, quantity = 1) {
         const nights = updateNights();
 
-        // If already exists → update qty
         const existingRow = amenitiesTableBody.querySelector(`tr[data-id="${id}"]`);
         if (existingRow) {
             const qtyInput = existingRow.querySelector('.quantity');
@@ -1581,7 +1567,6 @@ if ($amenitiesResult->num_rows > 0) {
             return;
         }
 
-        // Create new row
         const row = document.createElement('tr');
         row.setAttribute('data-id', id);
 
@@ -1603,7 +1588,6 @@ if ($amenitiesResult->num_rows > 0) {
 
         amenitiesTableBody.appendChild(row);
 
-        // Quantity change
         row.querySelector('.quantity').addEventListener('input', (e) => {
             let qty = parseInt(e.target.value);
             if (qty < 1) qty = 1;
@@ -1614,7 +1598,6 @@ if ($amenitiesResult->num_rows > 0) {
             updateSubtotal();
         });
 
-        // Remove row
         row.querySelector('.remove-amenity').addEventListener('click', () => {
             row.remove();
             checkNoAmenities();
@@ -1624,9 +1607,7 @@ if ($amenitiesResult->num_rows > 0) {
         updateSubtotal();
     }
 
-    /* ---------------------------
-        SUBTOTAL CALCULATION
-    ---------------------------- */
+
     function updateSubtotal() {
         const nights = updateNights();
         let subtotal = 0;
@@ -1640,9 +1621,7 @@ if ($amenitiesResult->num_rows > 0) {
         document.getElementById('subtotal').textContent = '₱' + subtotal.toFixed(2);
     }
 
-    /* ---------------------------
-        SHOW / HIDE MESSAGE
-    ---------------------------- */
+
     function checkNoAmenities() {
         if (amenitiesTableBody.querySelectorAll('tr').length === 0) {
             noAmenitiesMessage.style.display = 'block';
@@ -1653,9 +1632,7 @@ if ($amenitiesResult->num_rows > 0) {
         }
     }
 
-    /* ---------------------------
-        ADD SELECTED AMENITY
-    ---------------------------- */
+
     amenitySelect.addEventListener('change', () => {
         const opt = amenitySelect.selectedOptions[0];
         if (!opt.value) return;
@@ -1670,9 +1647,6 @@ if ($amenitiesResult->num_rows > 0) {
         checkNoAmenities();
     });
 
-    /* ---------------------------
-        OPEN MODAL → LOAD AMENITIES
-    ---------------------------- */
     document.querySelectorAll(".add-amenities-btn").forEach(btn => {
         btn.addEventListener("click", () => {
 
@@ -1704,9 +1678,6 @@ if ($amenitiesResult->num_rows > 0) {
         });
     });
 
-    /* ---------------------------
-        SAVE AMENITIES
-    ---------------------------- */
     document.getElementById("saveAmenitiesBtn").addEventListener("click", () => {
 
         const items = [];

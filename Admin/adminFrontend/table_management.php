@@ -533,8 +533,9 @@ $tableTypes = $conn->query("SELECT * FROM table_types");
                                                     <option value="available" <?= ($table_numbers['status'] === 'available') ? 'selected' : ''; ?>>
                                                         Available
                                                     </option>
-                                                    <option value="occupied" <?= ($table_numbers['status'] === 'occupied') ? 'selected' : ''; ?>>
-                                                        Occupied
+                                                    <option value="unavailable"
+                                                        <?= ($table_numbers['status'] === 'unavailable') ? 'selected' : ''; ?>>
+                                                        Unavailable
                                                     </option>
                                                 </select>
                                             </div>
@@ -601,7 +602,7 @@ $tableTypes = $conn->query("SELECT * FROM table_types");
                             <label for="status" class="form-label package-label">Status</label>
                             <select class="form-select package-input" id="status" name="status" required>
                                 <option value="available" selected>Available</option>
-                                <option value="occupied">Occupied</option>
+                                <option value="unavailable">Unavailable</option>
                             </select>
 
                         </div>
