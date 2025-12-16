@@ -58952,3 +58952,12 @@ Stack trace:
 [16-Dec-2025 03:01:42 UTC] Database connected successfully to: hotelms
 [16-Dec-2025 03:04:48 UTC] Database connected successfully to: hotelms
 [16-Dec-2025 03:05:22 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 03:42:23 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 03:42:25 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 03:42:37 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 11:42:37 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[16-Dec-2025 03:42:45 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 11:42:45 Asia/Manila] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in C:\laragon\www\hotel\Admin\adminFrontend\advance_orders.php on line 2
+[16-Dec-2025 03:43:39 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 03:43:41 UTC] Database connected successfully to: hotelms
+[16-Dec-2025 03:55:32 UTC] Database connected successfully to: hotelms

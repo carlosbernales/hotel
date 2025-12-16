@@ -1,5 +1,4 @@
 <?php
-session_start();
 $advanceOrder = $_SESSION['advance_order'] ?? null;
 
 $tableNames = [];
@@ -869,7 +868,7 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             cartCount.innerText = totalItems;
 
             if (cart.length === 0) {
-                cartBody.innerHTML = `< div class="empty-cart" >
+                cartBody.innerHTML = `<div class="empty-cart">
             <i class="fas fa-shopping-cart"></i>
             <p>Your cart is empty</p>
             <small>Add items to get started</small>
