@@ -124,6 +124,9 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['advance-orders'])) {
     $page = "adminFrontend/advance_orders.php";
 
+} elseif (isset($_GET['table-booking-acptd'])) {
+    $page = "adminFrontend/table_booking_accepted.php";
+
 
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {

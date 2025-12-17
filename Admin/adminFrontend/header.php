@@ -395,11 +395,27 @@ $currentPage = basename($page);
                         <i class="fas fa-users-cog"></i> Finished
                     </a>
                 </div>
+            </div>
+
+
+            <div
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['table_booking_accepted.php']) ? 'active' : ''; ?>">
+                <a href="#" class="dropdown-toggle">
+                    <span><i class="fas fa-user-tie"></i> Table Bookings</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table-booking-acptd"
+                        class="<?php echo ($currentPage == 'table_booking_accepted.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-users-cog"></i> Accepted
+                    </a>
+                </div>
 
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking.php', 'table_management.php', 'cafe_management.php', 'event_management.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking.php', 'table_booking.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-user-tie"></i> Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>

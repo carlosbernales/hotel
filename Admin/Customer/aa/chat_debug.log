@@ -866101,3 +866101,30 @@ Data: Array
 [2025-12-16 03:42:16] Database connection successful
 [2025-12-16 03:42:16] Action received
 Data: check_unread
+[2025-12-17 00:54:42] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-17 00:54:42] Database connection successful
+[2025-12-17 00:54:42] Action received
+Data: check_unread
+[2025-12-17 00:54:47] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-17 00:54:47] Database connection successful
+[2025-12-17 00:54:47] Action received
+Data: check_unread
+[2025-12-17 00:54:57] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2025-12-17 00:54:57] Database connection successful
+[2025-12-17 00:54:57] Action received
+Data: check_unread

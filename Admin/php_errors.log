@@ -58961,3 +58961,125 @@ Stack trace:
 [16-Dec-2025 03:43:39 UTC] Database connected successfully to: hotelms
 [16-Dec-2025 03:43:41 UTC] Database connected successfully to: hotelms
 [16-Dec-2025 03:55:32 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:55:09 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:55:18 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:55:20 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:56:47 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:56:49 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:56:51 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:56:52 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:56:53 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:59:36 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 00:59:40 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 08:59:40 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[17-Dec-2025 08:59:40 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[17-Dec-2025 08:59:40 Asia/Manila] Index idx_messages_status already exists on table messages
+[17-Dec-2025 08:59:40 Asia/Manila] Index idx_activities_type already exists on table activities
+[17-Dec-2025 08:59:40 Asia/Manila] Index idx_customers_vip already exists on table customers
+[17-Dec-2025 08:59:40 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[17-Dec-2025 08:59:40 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[17-Dec-2025 08:59:40 Asia/Manila] Current date: 2025-12-17
+[17-Dec-2025 08:59:40 Asia/Manila] Week start: 2025-12-15
+[17-Dec-2025 08:59:40 Asia/Manila] Week end: 2025-12-21
+[17-Dec-2025 08:59:40 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[17-Dec-2025 08:59:40 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[17-Dec-2025 08:59:40 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[17-Dec-2025 08:59:40 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => -100
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[17-Dec-2025 08:59:40 Asia/Manila] Weekly labels: Array
+(
+    [0] => 11
+    [1] => 12
+    [2] => 13
+    [3] => 14
+    [4] => 15
+    [5] => 16
+    [6] => 17
+)
+
+[17-Dec-2025 08:59:40 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 0.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 7720.00
+    [6] => 0.00
+)
+
+[17-Dec-2025 08:59:40 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(142): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[17-Dec-2025 01:00:02 UTC] Database connected successfully to: hotelms
+[17-Dec-2025 01:00:05 UTC] Database connected successfully to: hotelms
