@@ -869,10 +869,10 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
             if (cart.length === 0) {
                 cartBody.innerHTML = `<div class="empty-cart">
-            <i class="fas fa-shopping-cart"></i>
-            <p>Your cart is empty</p>
-            <small>Add items to get started</small>
-        </div > `;
+                                        <i class="fas fa-shopping-cart"></i>
+                                        <p>Your cart is empty</p>
+                                        <small>Add items to get started</small>
+                                    </div > `;
                 checkoutBtn.disabled = true;
                 document.getElementById('subtotal').innerText = '₱0.00';
                 document.getElementById('total').innerText = '₱0.00';
@@ -889,23 +889,23 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 item.addons.forEach(a => itemSubtotal += a.price * a.qty * item.qty);
 
                 html += `
-            <div class="cart-item">
-                <div class="cart-item-header">
-                    <div class="cart-item-info">
-                        <h6>${item.name}</h6>
-                        <small>₱${item.price.toFixed(2)} each</small>
+                        <div class="cart-item">
+                            <div class="cart-item-header">
+                                <div class="cart-item-info">
+                                    <h6>${item.name}</h6>
+                                    <small>₱${item.price.toFixed(2)} each</small>
+                                </div>
+                            </div>
+                        ${item.addons.length > 0 ? `<ul class="cart-addons">${item.addons.map(a => `<li>${a.name} × ${a.qty} – ₱${(a.price * a.qty * item.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
+                    <div class="cart-item-controls">
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="decreaseQty(${idx})">−</button>
+                            <span class="quantity">${item.qty}</span>
+                            <button class="qty-btn" onclick="increaseQty(${idx})">+</button>
+                        </div>
+                        <div class="item-total">₱${itemSubtotal.toFixed(2)}</div>
                     </div>
-                </div>
-            ${item.addons.length > 0 ? `<ul class="cart-addons">${item.addons.map(a => `<li>${a.name} × ${a.qty} – ₱${(a.price * a.qty * item.qty).toFixed(2)}</li>`).join('')}</ul>` : ''}
-        <div class="cart-item-controls">
-            <div class="quantity-controls">
-                <button class="qty-btn" onclick="decreaseQty(${idx})">−</button>
-                <span class="quantity">${item.qty}</span>
-                <button class="qty-btn" onclick="increaseQty(${idx})">+</button>
-            </div>
-            <div class="item-total">₱${itemSubtotal.toFixed(2)}</div>
-        </div>
-        </div > `;
+                </div > `;
             });
 
             cartBody.innerHTML = html;
@@ -945,34 +945,37 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
 
                 let html = `
                 <div class="order-info-section">
-                        <h6><i class="fas fa-user"></i> Customer Information</h6>
-                        <p><strong>Name:</strong> ${order.first} ${order.last}</p>
-                        <p><strong>Contact:</strong> ${order.contact}</p>
-                        <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
-                    </div >
-            
-                    <div class="order-info-section">
-                        <h6><i class="fas fa-table"></i> Selected Tables</h6>
-                        <ul>
-                            ${order.tables.map((t, i) => `
-                        <li>Table #${t} - ${tableNames[order.tableTypes[i]] ?? 'Unknown'}</li>`).join('')}
-                        </ul>
-                    </div>
-            
-                    <div class="order-info-section">
-                        <h6><i class="fas fa-utensils"></i> Order Items</h6>
+                    <h6><i class="fas fa-user"></i> Customer Information</h6>
+                    <p><strong>Name:</strong> ${order.first} ${order.last}</p>
+                    <p><strong>Contact:</strong> ${order.contact}</p>
+                    <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
+                </div>
+
+                <div class="order-info-section">
+                    <h6><i class="fas fa-table"></i> Selected Tables</h6>
+                    <ul>
+                        ${order.tables.map((t, i) => `
+                            <li>Table #${t} - ${tableNames[order.tableTypes[i]] ?? 'Unknown'}</li>
+                        `).join('')}
+                    </ul>
+                </div>
+
+                <div class="order-info-section">
+                    <h6><i class="fas fa-utensils"></i> Order Items</h6>
                 `;
+
+                let subtotal = 0;
 
                 if (cart.length === 0) {
                     html += '<p class="text-muted">No items in cart.</p>';
                 } else {
                     html += '<ul>';
-                    let subtotal = 0;
                     cart.forEach(item => {
                         let itemTotal = item.price * item.qty;
                         html += `<li><strong>${item.name}</strong> × ${item.qty} – ₱${itemTotal.toFixed(2)}`;
+
                         if (item.addons.length > 0) {
-                            html += '<ul style="margin-top: 5px;">';
+                            html += '<ul style="margin-top:5px;">';
                             item.addons.forEach(a => {
                                 let addonTotal = a.price * a.qty * item.qty;
                                 itemTotal += addonTotal;
@@ -980,25 +983,78 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                             });
                             html += '</ul>';
                         }
+
                         html += '</li>';
                         subtotal += itemTotal;
                     });
                     html += '</ul>';
-                    html += `<div style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #e0e0e0;">
-                        <h5 style="color: var(--gold); margin: 0;"><strong>Total: ₱${subtotal.toFixed(2)}</strong></h5>
-                    </div>`;
                 }
-                html += '</div>';
+
+                const defaultDownpayment = subtotal / 2;
+
+                html += `
+                    <div style="margin-top:15px;padding-top:15px;border-top:2px solid #e0e0e0;">
+                        <h5 style="color: var(--gold);">
+                            <strong>Total: ₱<span id="orderTotal">${subtotal.toFixed(2)}</span></strong>
+                        </h5>
+                    </div>
+                </div>
+
+                <div class="order-info-section mt-3">
+                    <h6><i class="fas fa-credit-card"></i> Payment Details</h6>
+
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Payment Method</strong></label>
+                        <select class="form-select" id="paymentMethod">
+                            <option value="" disabled selected>Select payment method</option>
+                            <option value="cash">Cash</option>
+                            <option value="gcash">GCash</option>
+                            <option value="maya">Maya</option>
+                            <option value="bank">Bank Transfer</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label"><strong>Downpayment (₱)</strong></label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="downpayment"
+                            min="0"
+                            max="${subtotal}"
+                            step="0.01"
+                            value="${defaultDownpayment.toFixed(2)}"
+                        >
+                        <small class="text-muted">Default is 50% of total</small>
+                    </div>
+                </div>
+                `;
 
                 document.getElementById('advanceOrderContent').innerHTML = html;
                 bootstrapAdvanceModal.show();
+
             <?php else: ?>
                 alert('No advance order in session!');
             <?php endif; ?>
         });
 
+
         // ---------------- CONFIRM ADVANCE ORDER ----------------
         document.getElementById('confirmAdvanceOrder').addEventListener('click', () => {
+
+            const paymentMethod = document.getElementById('paymentMethod')?.value;
+            const downpayment = parseFloat(document.getElementById('downpayment')?.value || 0);
+            const total = parseFloat(document.getElementById('orderTotal')?.textContent || 0);
+
+            if (!paymentMethod) {
+                alert('Please select a payment method.');
+                return;
+            }
+
+            if (downpayment <= 0 || downpayment > total) {
+                alert('Invalid downpayment amount.');
+                return;
+            }
 
             const order = <?= json_encode($advanceOrder); ?>;
             const formData = new FormData();
@@ -1007,6 +1063,9 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             formData.append('last', order.last);
             formData.append('contact', order.contact);
             formData.append('datetime', order.datetime);
+
+            formData.append('downpayment', downpayment.toFixed(2));
+            formData.append('dp_payment_method', paymentMethod);
 
             let subtotal = 0;
             cart.forEach(item => {
@@ -1026,7 +1085,6 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                 }));
             });
 
-            // SEND SUBTOTAL AS TOTAL
             formData.append('total', subtotal.toFixed(2));
 
             fetch('../Admin/adminBackend/booking_save_order_advance.php', {
@@ -1047,8 +1105,6 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                     console.error(err);
                 });
         });
-
-
     </script>
 
 </body>

@@ -36,6 +36,18 @@ try {
 
     $total = isset($_POST['total']) ? (float) $_POST['total'] : 0;
 
+    $downpayment = isset($_POST['downpayment']) ? (float) $_POST['downpayment'] : 0;
+    $dpPaymentMethod = $_POST['dp_payment_method'] ?? '';
+
+    if ($downpayment <= 0 || $downpayment > $total) {
+        throw new Exception('Invalid downpayment amount');
+    }
+
+    if (!$dpPaymentMethod) {
+        throw new Exception('Missing downpayment payment method');
+    }
+
+
     if ($total <= 0) {
         throw new Exception('Invalid order total');
     }
@@ -47,18 +59,22 @@ try {
 
     $stmt = $conn->prepare("
         INSERT INTO orders_table 
-        (order_id, firstname, lastname, contact, date_time, total, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (order_id, firstname, lastname, contact, date_time, total, downpayment, dp_payment_method, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     ");
+
     $status = 'Cashier';
+
     $stmt->bind_param(
-        "sssssds",
+        "sssssddss",
         $orderCode,
         $first,
         $last,
         $contact,
         $datetime,
         $total,
+        $downpayment,
+        $dpPaymentMethod,
         $status
     );
 
