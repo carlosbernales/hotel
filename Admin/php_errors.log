@@ -59093,3 +59093,1727 @@ Stack trace:
 [18-Dec-2025 02:48:36 UTC] Database connected successfully to: hotelms
 [18-Dec-2025 02:48:59 UTC] Database connected successfully to: hotelms
 [18-Dec-2025 02:49:59 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 04:54:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 04:54:22 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 04:54:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:14:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:17:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:17:18 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:22:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:22:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 140
+[20-Dec-2025 05:22:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:22:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 147
+[20-Dec-2025 05:23:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:23:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 147
+[20-Dec-2025 05:23:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:23:19 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 67
+[20-Dec-2025 13:23:19 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 67
+[20-Dec-2025 13:23:19 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 147
+[20-Dec-2025 05:28:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:29:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:29:07 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:29:16 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:29:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:29:42 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 81
+[20-Dec-2025 05:31:18 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:31:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 50
+[20-Dec-2025 13:31:18 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 50
+[20-Dec-2025 05:31:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:31:25 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 50
+[20-Dec-2025 13:31:25 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 50
+[20-Dec-2025 05:31:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:31:29 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 50
+[20-Dec-2025 13:31:29 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 50
+[20-Dec-2025 05:31:34 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:32:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:32:09 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 67
+[20-Dec-2025 13:32:09 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 67
+[20-Dec-2025 13:32:09 Asia/Manila] PHP Warning:  Undefined array key "id" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 81
+[20-Dec-2025 05:32:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:32:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:32:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:34:18 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:35:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:35:34 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:36:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:37:22 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:37:23 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:37:23 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 13:37:23 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 13:37:23 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 13:37:23 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 13:37:23 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 13:37:23 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 13:37:23 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 13:37:23 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 13:37:23 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 13:37:23 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 13:37:23 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 13:37:23 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 13:37:23 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 13:37:23 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 13:37:23 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 13:37:23 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 13:37:23 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(142): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 05:37:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:37:25 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 13:37:25 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 13:37:25 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 13:37:25 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 13:37:25 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 13:37:25 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 13:37:25 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 13:37:25 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 13:37:25 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 13:37:25 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 13:37:25 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 13:37:25 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 13:37:25 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 13:37:25 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 13:37:25 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 13:37:25 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 13:37:25 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(142): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 05:37:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:37:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:37:54 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 13:37:54 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 13:37:54 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 13:37:54 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 13:37:54 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 13:37:54 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 13:37:54 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 13:37:54 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 13:37:54 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 13:37:54 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 13:37:54 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 13:37:54 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 13:37:54 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 13:37:54 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 13:37:54 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 13:37:54 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 13:37:54 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(142): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 05:44:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 13:44:02 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 13:44:02 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 13:44:02 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 13:44:02 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 13:44:02 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 13:44:02 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 13:44:02 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 13:44:02 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 13:44:02 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 13:44:02 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 13:44:02 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 13:44:02 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 13:44:02 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 13:44:02 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 13:44:02 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 13:44:02 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 13:44:02 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(142): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 05:44:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:44:06 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:45:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:45:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:45:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:47:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:48:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:49:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:50:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:50:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:55:07 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:55:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:03 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:08 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:10 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:13 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:16 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:18 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:24 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 05:58:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:00:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:00:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:06:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:06:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:12:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:12:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:12:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:13:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:13:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:14:24 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:14:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:14:31 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:14:31 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:14:31 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:14:31 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:14:31 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:14:31 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:14:31 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:14:31 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:14:31 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:14:31 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:14:31 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:14:31 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:14:31 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:14:31 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:14:31 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:14:31 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:14:31 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:14:31 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:14:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:14:42 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:14:42 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:14:42 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:14:42 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:14:42 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:14:42 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:14:42 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:14:42 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:14:42 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:14:42 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:14:42 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:14:42 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:14:42 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:14:42 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:14:42 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:14:42 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:14:42 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:15:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:15:02 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:15:02 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:15:02 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:15:02 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:15:02 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:15:02 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:15:02 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:15:02 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:15:02 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:15:02 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:15:02 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:15:02 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:15:02 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:15:02 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:15:02 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:15:02 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:15:02 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:15:03 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:15:03 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:15:03 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:15:03 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:15:03 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:15:03 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:15:03 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:15:03 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:15:03 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:15:03 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:15:03 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:15:03 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:15:03 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:15:03 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:15:03 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:15:03 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:15:03 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:15:03 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:15:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:15:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:15:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:16:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:16:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:16:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:16:36 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:16:36 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:16:36 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:16:36 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:16:36 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:16:36 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:16:36 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:16:36 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:16:36 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:16:36 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:16:36 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:16:36 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:16:36 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:16:36 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:16:36 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:16:36 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:16:36 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:18:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:19:13 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:19:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:20:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:20:16 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:20:16 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:20:16 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:20:16 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:20:16 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:20:16 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:20:16 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:20:16 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:20:16 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:20:16 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:20:16 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:20:16 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:20:16 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:20:16 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:20:16 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:20:16 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:20:16 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:20:16 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:20:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:20:19 Asia/Manila] PHP Warning:  Undefined variable $page in C:\laragon\www\hotel\Admin\index.php on line 144
+[20-Dec-2025 14:20:19 Asia/Manila] PHP Warning:  include_once(C:\laragon\www\hotel\Admin): Failed to open stream: Permission denied in C:\laragon\www\hotel\Admin\index.php on line 144
+[20-Dec-2025 14:20:19 Asia/Manila] PHP Warning:  include_once(): Failed opening '' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 144
+[20-Dec-2025 06:20:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:20:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:20:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:20:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:20:49 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:20:49 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[20-Dec-2025 14:20:49 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[20-Dec-2025 14:20:49 Asia/Manila] Index idx_messages_status already exists on table messages
+[20-Dec-2025 14:20:49 Asia/Manila] Index idx_activities_type already exists on table activities
+[20-Dec-2025 14:20:49 Asia/Manila] Index idx_customers_vip already exists on table customers
+[20-Dec-2025 14:20:49 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[20-Dec-2025 14:20:49 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[20-Dec-2025 14:20:49 Asia/Manila] Current date: 2025-12-20
+[20-Dec-2025 14:20:49 Asia/Manila] Week start: 2025-12-15
+[20-Dec-2025 14:20:49 Asia/Manila] Week end: 2025-12-21
+[20-Dec-2025 14:20:49 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[20-Dec-2025 14:20:49 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[20-Dec-2025 14:20:49 Asia/Manila] Updated Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 0
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+)
+
+[20-Dec-2025 14:20:49 Asia/Manila] Metrics: Array
+(
+    [bookings_today] => 0
+    [bookings_trend] => 0
+    [occupied_rooms] => 0
+    [total_rooms] => 9
+    [revenue_today] => 0.00
+    [revenue_trend] => 0
+    [checkins_today] => 0
+    [pending_checkins] => 0
+    [checkouts_today] => 0
+    [pending_checkouts] => 0
+    [new_messages] => 0
+    [pending_requests] => 0
+    [pending_payments] => 0.00
+    [pending_transactions] => 0
+    [guest_count] => 0
+    [vip_guests] => 0
+    [total_pending_bookings] => 0
+    [todays_guests] => 0
+    [event_reservations] => 0
+    [cafe_revenue] => 0
+    [total_hotel_revenue] => 0
+    [arrivals] => 1
+    [departures] => 0
+    [rooms_occupied] => 0
+    [booked_today] => 0
+    [revenue] => 0.00
+    [available_rooms] => 0
+)
+
+[20-Dec-2025 14:20:49 Asia/Manila] Weekly labels: Array
+(
+    [0] => 14
+    [1] => 15
+    [2] => 16
+    [3] => 17
+    [4] => 18
+    [5] => 19
+    [6] => 20
+)
+
+[20-Dec-2025 14:20:49 Asia/Manila] Weekly revenue: Array
+(
+    [0] => 0.00
+    [1] => 0.00
+    [2] => 7720.00
+    [3] => 0.00
+    [4] => 0.00
+    [5] => 0.00
+    [6] => 0.00
+)
+
+[20-Dec-2025 14:20:49 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'name' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1389
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1389): mysqli_query(Object(mysqli), 'SELECT \r\n    id...')
+#1 C:\laragon\www\hotel\Admin\index.php(145): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1389
+[20-Dec-2025 06:21:03 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:21:03 Asia/Manila] PHP Warning:  Undefined variable $page in C:\laragon\www\hotel\Admin\index.php on line 144
+[20-Dec-2025 14:21:03 Asia/Manila] PHP Warning:  include_once(C:\laragon\www\hotel\Admin): Failed to open stream: Permission denied in C:\laragon\www\hotel\Admin\index.php on line 144
+[20-Dec-2025 14:21:03 Asia/Manila] PHP Warning:  include_once(): Failed opening '' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 144
+[20-Dec-2025 06:21:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:22:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:22:37 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:22:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:22:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:22:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:22:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:08 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:13 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:14 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:23:43 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:28:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:29:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:30:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:31:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:32:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:36:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:37:43 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:37:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:39:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:39:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:40:31 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:41:10 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:41:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:41:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:42:22 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 14:42:22 Asia/Manila] PHP Warning:  Undefined array key "total_amount" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 222
+[20-Dec-2025 14:42:22 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 222
+[20-Dec-2025 14:42:22 Asia/Manila] PHP Warning:  Undefined array key "total_amount" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 222
+[20-Dec-2025 14:42:22 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 222
+[20-Dec-2025 06:42:33 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:42:56 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:43:06 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:43:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:43:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:43:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:44:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 06:45:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:13:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:15:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:17:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:21:23 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:22:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:23:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:24:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:24:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:25:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:26:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:27:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:27:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:49:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:50:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:54:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:54:35 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:55:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:56:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:56:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:59:00 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:59:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:59:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 07:59:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:00:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:00:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:00:56 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:01:00 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:03:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:03:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:03:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:04:49 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:05:00 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:05:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:06:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:06:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:07:06 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:07:07 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:07:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:07:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:10:35 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 172
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 173
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "total_amount" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "downpayment" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 172
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 173
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "total_amount" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "downpayment" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 16:10:35 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 08:10:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 172
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 173
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "total" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "downpayment" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 172
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 173
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "total" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 188
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "downpayment" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Warning:  Undefined array key "remaining_balance" in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 16:10:47 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 205
+[20-Dec-2025 08:11:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 16:11:29 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\table_booking_accepted.php on line 194
+[20-Dec-2025 08:12:12 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:13:10 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:13:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:13:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:13:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:14:05 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:14:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:15:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:15:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:15:21 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:15:33 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:20:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 16:20:11 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'u763377220_casaestela'@'localhost' (using password: YES) in C:\laragon\www\hotel\Admin\adminBackend\mydb.php:8
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminBackend\mydb.php(8): mysqli->__construct('localhost', 'u763377220_casa...', 'Casaestela@2025', 'u763377220_hote...')
+#1 C:\laragon\www\hotel\Admin\adminFrontend\table_booking.php(710): include('C:\\laragon\\www\\...')
+#2 C:\laragon\www\hotel\Admin\index.php(147): include_once('C:\\laragon\\www\\...')
+#3 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminBackend\mydb.php on line 8
+[20-Dec-2025 08:20:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:20:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:23:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:36:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:36:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:39:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:39:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:37 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:42:59 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:45:23 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:45:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:45:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:31 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:32 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:32 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:35 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:46:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:51:34 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:51:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 08:57:18 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 16:57:18 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hotelms.event_venues' doesn't exist in C:\laragon\www\hotel\Admin\event_settings.php:29
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\event_settings.php(29): mysqli_query(Object(mysqli), 'SELECT * FROM e...')
+#1 C:\laragon\www\hotel\Admin\index.php(147): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\event_settings.php on line 29
+[20-Dec-2025 08:57:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:05:46 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:06:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:08:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:09:13 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:09:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:10:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:10:49 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:10:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:10:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:11:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:11:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:11:58 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:13:05 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:13:07 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:13:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:14:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:15:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:17:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:19:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:20:22 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:21:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:21:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:21:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:23:06 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:23:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:23:49 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:25:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:26:03 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:26:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:29:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:29:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:30:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:33:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:33:59 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:35:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:36:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:37:08 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:37:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:39:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:41:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:41:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:43:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:43:37 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:43:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:44:16 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:45:49 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:48:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:49:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 17:49:25 Asia/Manila] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 179
+[20-Dec-2025 17:49:25 Asia/Manila] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 179
+[20-Dec-2025 17:49:25 Asia/Manila] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 179
+[20-Dec-2025 09:49:39 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 17:49:39 Asia/Manila] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 179
+[20-Dec-2025 17:49:39 Asia/Manila] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 179
+[20-Dec-2025 17:49:39 Asia/Manila] PHP Deprecated:  explode(): Passing null to parameter #2 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 179
+[20-Dec-2025 09:49:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:52:31 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:53:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:53:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:54:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:55:02 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:55:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:56:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:57:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 09:58:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 17:58:01 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 539
+[20-Dec-2025 17:58:01 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_management.php on line 539
+[20-Dec-2025 10:01:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:02:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:02:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:02:59 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:04:24 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:06:14 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:06:47 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:07:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:07:13 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:07:18 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:08:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:08:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:08:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:09:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:10:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:10:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:10:49 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:10:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:10:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:11:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:13:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:15:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:16:05 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:17:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:17:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:19:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:19:16 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:21:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:21:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:23:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:23:34 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:23:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:24:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:24:08 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:25:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:25:15 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:25:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:25:37 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:25:45 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:25:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:26:31 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:26:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:26:44 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 10:52:34 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:34 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:36 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:50 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:01:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:02:23 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:02:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:03:06 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:03:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:10:03 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:14:10 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:14:56 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:20:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:20:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 845
+[20-Dec-2025 11:20:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:20:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 845
+[20-Dec-2025 11:20:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:20:53 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 845
+[20-Dec-2025 11:22:12 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:22:12 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 842
+[20-Dec-2025 11:22:59 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:22:59 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 840
+[20-Dec-2025 11:23:03 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:23:05 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:23:05 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 840
+[20-Dec-2025 11:23:31 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:23:31 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 842
+[20-Dec-2025 11:23:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:23:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 840
+[20-Dec-2025 11:24:52 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:24:52 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 847
+[20-Dec-2025 11:24:58 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:24:58 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 849
+[20-Dec-2025 11:26:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:26:41 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:27:29 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:27:29 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:27:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:27:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:28:12 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:28:12 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:28:24 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:28:24 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:29:25 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:29:25 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:30:48 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:30:48 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:30:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:30:57 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:31:27 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:31:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:33:23 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:33:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:33:53 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:33:53 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:49:40 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:49:40 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 888
+[20-Dec-2025 11:49:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:49:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:53:38 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:53:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 834
+[20-Dec-2025 11:53:54 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:53:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 848
+[20-Dec-2025 11:54:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:54:19 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 852
+[20-Dec-2025 11:54:42 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:54:43 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 11:55:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:55:04 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 11:55:22 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:55:22 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 856
+[20-Dec-2025 11:55:30 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:55:30 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 11:55:37 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:55:37 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 11:56:55 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:56:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 11:57:05 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:57:08 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:57:08 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 11:57:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 11:57:10 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 19:57:10 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 12:01:19 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 20:01:19 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 12:02:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:03:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:06:06 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:08:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:08:32 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:17:04 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 20:17:04 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[20-Dec-2025 12:17:14 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 20:17:14 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\test.php on line 855
+[20-Dec-2025 12:17:20 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 20:17:20 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\test.php on line 855
+[20-Dec-2025 12:17:22 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:25:57 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:36:33 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:37:01 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:39:17 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:40:51 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:41:26 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:41:28 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:41:33 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:41:41 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:43:09 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:45:11 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:45:32 UTC] Database connected successfully to: hotelms
+[20-Dec-2025 12:45:34 UTC] Database connected successfully to: hotelms

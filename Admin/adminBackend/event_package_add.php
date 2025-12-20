@@ -12,19 +12,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $max_guests = intval($_POST['max_guests']);
     $duration = intval($_POST['duration']);
     $time_limit = $conn->real_escape_string($_POST['time_limit']);
-
     $max_pax = intval($_POST['max_pax']);
-    $is_available = intval($_POST['is_available']);
     $notes = $conn->real_escape_string($_POST['notes']);
     $description = $conn->real_escape_string($_POST['description']);
     $status = $conn->real_escape_string($_POST['status']);
 
-    $targetDir = '../../Admin/adminBackend/event_packages_images/';
+    $menuItemsArray = $_POST['menu_items'] ?? [];
+    $menuItemsArray = array_filter(array_map('trim', $menuItemsArray));
+    $menu_items = implode(',', $menuItemsArray);
 
+    $targetDir = '../../Admin/adminBackend/event_packages_images/';
     $image_path = $image_path2 = $image_path3 = null;
 
-    if (isset($_FILES['image'])) {
-        $images = $_FILES['image'];
+    if (isset($_FILES['images'])) {
+        $images = $_FILES['images'];
         $countImages = count($images['name']);
 
         for ($i = 0; $i < min($countImages, 3); $i++) {
@@ -45,8 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+
     $stmt = $conn->prepare("INSERT INTO event_packages 
-        (name, price, max_guests, duration, time_limit, max_pax, is_available, notes, description, status, image_path, image_path2, image_path3) 
+        (name, price, max_guests, duration, time_limit, max_pax, notes, description, status, image_path, image_path2, image_path3, menu_items) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
@@ -57,13 +59,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $duration,
         $time_limit,
         $max_pax,
-        $is_available,
         $notes,
         $description,
         $status,
         $image_path,
         $image_path2,
-        $image_path3
+        $image_path3,
+        $menu_items
     );
 
     if ($stmt->execute()) {

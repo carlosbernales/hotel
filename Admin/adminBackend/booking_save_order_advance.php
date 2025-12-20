@@ -57,16 +57,18 @@ try {
         throw new Exception('Missing customer info');
     }
 
+    $remainingBalance = $total - $downpayment;
+
     $stmt = $conn->prepare("
-        INSERT INTO orders_table 
-        (order_id, firstname, lastname, contact, date_time, total, downpayment, dp_payment_method, status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ");
+    INSERT INTO orders_table 
+    (order_id, firstname, lastname, contact, date_time, total, downpayment, remaining_balance, dp_payment_method, status)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+");
 
     $status = 'Cashier';
 
     $stmt->bind_param(
-        "sssssddss",
+        "sssssdddss",
         $orderCode,
         $first,
         $last,
@@ -74,16 +76,15 @@ try {
         $datetime,
         $total,
         $downpayment,
+        $remainingBalance,
         $dpPaymentMethod,
         $status
     );
 
     $stmt->execute();
-
-
-
     $orderId = $stmt->insert_id;
     $stmt->close();
+
 
     if (!isset($_POST['cartItems'])) {
         throw new Exception('No cart items');

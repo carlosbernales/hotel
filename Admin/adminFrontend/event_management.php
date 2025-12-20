@@ -2,92 +2,30 @@
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
-$table_type = [];
-$result = $conn->query("SELECT * FROM table_packages");
-if ($result) {
-    $table_type = $result->fetch_all(MYSQLI_ASSOC);
-}
-
 $query = "SELECT * FROM event_packages";
 $result = $conn->query($query);
 ?>
 
 <style>
-    /* Package Modal Styling */
-    .package-modal {
-        border: none;
-        border-radius: 8px;
-    }
-
-    .package-modal-header {
-        background-color: #C9A961;
-        color: #2d2d2d;
-        border-bottom: 2px solid #B8964F;
-    }
-
-    .package-modal-close {
-        filter: brightness(0.3);
-    }
-
-    .package-modal-body {
-        background-color: #f8f9fa;
-        padding: 2rem;
-    }
-
-    .package-label {
-        font-weight: 600;
-        color: #2d2d2d;
-    }
-
-    .package-input {
-        border: 1px solid #C9A961;
-        border-radius: 4px;
-        padding: 0.6rem;
-    }
-
-    .package-input:focus {
-        border-color: #B8964F;
-        box-shadow: 0 0 0 0.2rem rgba(201, 169, 97, 0.25);
-    }
-
-    .package-help-text {
-        color: #6c757d;
-    }
-
-    .package-btn-cancel {
-        background-color: #6c757d;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-    }
-
-    .package-btn-cancel:hover {
-        background-color: #5a6268;
-        color: white;
-    }
-
-    .package-btn-save {
-        background-color: #28a745;
-        color: white;
-        padding: 0.5rem 1.5rem;
-        border-radius: 4px;
-        font-weight: 500;
-    }
-
-    .package-btn-save:hover {
-        background-color: #218838;
-        color: white;
-    }
-</style>
-<style>
     :root {
-        --primary-gold: #D4AF37;
-        --text-dark: #333333;
+        --primary-gold: #C9A961;
+        --secondary-gold: #B8964F;
+        --dark-gold: #A67C3F;
+        --text-dark: #2d2d2d;
         --text-light: #666666;
+        --text-muted: #858796;
         --background-white: #ffffff;
+        --background-light: #f8f9fa;
         --border-light: #eeeeee;
+        --border-color: #e3e6f0;
+        --success-green: #28a745;
+        --success-light: #e5f4e7;
+        --danger-red: #dc3545;
+        --danger-light: #fce8e8;
+        --warning-yellow: #ffc107;
     }
 
+    /* Breadcrumb and Header */
     .breadcrumb-custom {
         background-color: var(--background-white);
         padding: 15px 20px;
@@ -104,20 +42,28 @@ $result = $conn->query($query);
         margin-right: 8px;
     }
 
-    .btn-primary-custom {
+    .table-add-btn {
         background-color: var(--primary-gold);
-        color: var(--background-white);
+        color: var(--text-dark);
+        padding: 0.5rem 1.5rem;
+        border-radius: 4px;
+        font-weight: 500;
         border: none;
-        padding: 8px 15px;
-        border-radius: 5px;
-        font-size: 0.9em;
-        transition: background-color 0.2s;
+        transition: all 0.3s ease;
     }
 
-    .btn-primary-custom:hover {
-        background-color: #C39D30;
+    .table-add-btn:hover {
+        background-color: var(--secondary-gold);
+        color: var(--text-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
+    .table-add-btn i {
+        font-size: 1.1rem;
+    }
+
+    /* Info Card */
     .info-card {
         background-color: var(--background-white);
         padding: 20px;
@@ -129,6 +75,7 @@ $result = $conn->query($query);
         color: var(--text-dark);
     }
 
+    /* Table Cards Grid */
     .table-type-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -172,11 +119,11 @@ $result = $conn->query($query);
     }
 
     .table-status-badge.available {
-        background-color: #28a745;
+        background-color: var(--success-green);
     }
 
     .table-status-badge.occupied {
-        background-color: #ffc107;
+        background-color: var(--warning-yellow);
         color: var(--text-dark);
     }
 
@@ -184,6 +131,7 @@ $result = $conn->query($query);
         position: absolute;
         top: 10px;
         right: 10px;
+        z-index: 10;
     }
 
     .table-actions i {
@@ -208,6 +156,7 @@ $result = $conn->query($query);
         color: var(--text-dark);
         margin-bottom: 5px;
         font-size: 1.2em;
+        font-weight: 600;
     }
 
     .table-price {
@@ -253,13 +202,13 @@ $result = $conn->query($query);
     }
 
     .is-available-status-text.available {
-        color: #28a745;
-        background-color: #e5f4e7;
+        color: var(--success-green);
+        background-color: var(--success-light);
     }
 
     .is-available-status-text.unavailable {
-        color: #dc3545;
-        background-color: #fce8e8;
+        color: var(--danger-red);
+        background-color: var(--danger-light);
     }
 
     .table-description-area {
@@ -282,38 +231,150 @@ $result = $conn->query($query);
         color: var(--text-light);
     }
 
-    .text-success {
-        color: #28a745;
+    /* Modal Styling */
+    .package-modal .modal-content {
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.15);
     }
 
-    .text-danger {
-        color: #dc3545;
+    .package-modal-header {
+        background-color: var(--primary-gold);
+        color: var(--text-dark);
+        border-bottom: 2px solid var(--secondary-gold);
+        padding: 1.5rem;
     }
-</style>
 
-<style>
-    .table-add-btn {
-        background-color: #C9A961;
-        color: #2d2d2d;
+    .package-modal-header .modal-title {
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+
+    .package-modal-close,
+    .btn-close-white {
+        filter: brightness(0.3);
+    }
+
+    .package-modal-body {
+        background-color: var(--background-light);
+        padding: 2rem;
+    }
+
+    .package-label {
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .package-input {
+        border: 1px solid var(--primary-gold);
+        border-radius: 4px;
+        padding: 0.6rem;
+        transition: all 0.2s ease;
+    }
+
+    .package-input:focus {
+        border-color: var(--secondary-gold);
+        box-shadow: 0 0 0 0.2rem rgba(201, 169, 97, 0.25);
+        outline: none;
+    }
+
+    .menu-item-card {
+        background: var(--background-white);
+        border-left: 4px solid var(--primary-gold);
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .package-help-text {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        font-style: italic;
+    }
+
+    .package-btn-cancel {
+        background-color: #6c757d;
+        color: white;
+        padding: 0.5rem 1.5rem;
+        border-radius: 4px;
+        border: none;
+        transition: background-color 0.2s;
+    }
+
+    .package-btn-cancel:hover {
+        background-color: #5a6268;
+        color: white;
+    }
+
+    .package-btn-save,
+    .btn-save {
+        background-color: var(--success-green);
+        color: white;
         padding: 0.5rem 1.5rem;
         border-radius: 4px;
         font-weight: 500;
         border: none;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
     }
 
-    .table-add-btn:hover {
-        background-color: #B8964F;
-        color: #2d2d2d;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    .package-btn-save:hover,
+    .btn-save:hover {
+        background-color: #218838;
+        color: white;
+        transform: translateY(-1px);
     }
 
-    .table-add-btn i {
-        font-size: 1.1rem;
+    /* Image Upload Area */
+    .border-dashed {
+        border: 2px dashed var(--border-color);
+        transition: border-color 0.3s;
+    }
+
+    .border-dashed:hover {
+        border-color: var(--primary-gold);
+    }
+
+    .image-preview-slot {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+        border: 2px solid var(--border-light);
+    }
+
+    /* Utility Classes */
+    .text-success {
+        color: var(--success-green);
+    }
+
+    .text-danger {
+        color: var(--danger-red);
+    }
+
+    .animate__fadeIn {
+        animation: fadeIn 0.4s ease-in-out;
     }
 </style>
-
 
 <div class="main-content" id="mainContent">
     <div class="table-management-container">
@@ -333,7 +394,6 @@ $result = $conn->query($query);
             </div>
 
             <div class="table-type-grid">
-
                 <?php while ($row = $result->fetch_assoc()): ?>
                     <?php
                     $img1 = "../Admin/adminBackend/event_packages_images/" . $row['image_path'];
@@ -351,11 +411,9 @@ $result = $conn->query($query);
                     ?>
 
                     <div class="table-type-card">
-
                         <div id="carousel-<?php echo $row['id']; ?>" class="carousel slide table-card-header"
                             data-bs-ride="carousel">
                             <div class="carousel-inner">
-
                                 <div class="carousel-item active">
                                     <img src="<?php echo $img1; ?>" class="table-type-img" alt="Image 1">
                                 </div>
@@ -371,7 +429,6 @@ $result = $conn->query($query);
                                         <img src="<?php echo $img3; ?>" class="table-type-img" alt="Image 3">
                                     </div>
                                 <?php endif; ?>
-
                             </div>
 
                             <button class="carousel-control-prev" type="button"
@@ -391,8 +448,10 @@ $result = $conn->query($query);
                             <div class="table-actions">
                                 <i class="fas fa-edit" data-bs-toggle="modal"
                                     data-bs-target="#editModal<?php echo $row['id']; ?>"></i>
-
-                                <i class="fas fa-trash-alt"></i>
+                                <a href="../Admin/adminBackend/event_management_delete.php?id=<?php echo $row['id']; ?>"
+                                    onclick="return confirm('Are you sure you want to delete this event?');">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
                             </div>
                         </div>
 
@@ -435,105 +494,111 @@ $result = $conn->query($query);
                         </div>
                     </div>
 
+                    <?php
+                    $existingMenuItems = [];
+                    if (!empty($row['menu_items'])) {
+                        $existingMenuItems = array_map('trim', explode(',', $row['menu_items']));
+                    }
+                    $menuItemsCount = count($existingMenuItems);
+                    ?>
 
-                    <div class="modal fade" id="editModal<?php echo $row['id']; ?>" tabindex="-1"
-                        aria-labelledby="editModalLabel<?php echo $row['id']; ?>" aria-hidden="true">
+                    <div class="modal fade" id="editModal<?php echo $row['id']; ?>" tabindex="-1" aria-hidden="true">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content package-modal">
-
                                 <form method="POST" enctype="multipart/form-data"
                                     action="../Admin/adminBackend/event_management_edit.php?id=<?php echo $row['id']; ?>">
-
                                     <div class="modal-header package-modal-header">
-                                        <h5 class="modal-title fw-bold" id="editModalLabel<?php echo $row['id']; ?>">
-                                            Edit Table Type
+                                        <h5 class="modal-title fw-bold"><i class="fas fa-edit me-2"></i>Update:
+                                            <?php echo htmlspecialchars($row['name']); ?>
                                         </h5>
-                                        <button type="button" class="btn-close package-modal-close"
+                                        <button type="button" class="btn-close btn-close-white"
                                             data-bs-dismiss="modal"></button>
                                     </div>
-
                                     <div class="modal-body package-modal-body">
-
-                                        <!-- NAME (full row) -->
                                         <div class="mb-3">
-                                            <label class="form-label package-label">Table Name</label>
+                                            <label class="package-label">Package Name</label>
                                             <input type="text" name="name" class="form-control package-input"
-                                                value="<?php echo htmlspecialchars($row['name']); ?>" required>
+                                                placeholder="e.g., Grand Wedding Package"
+                                                value="<?php echo $row['name']; ?>" required>
                                         </div>
 
-                                        <!-- TWO COLUMNS -->
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label package-label">Price</label>
+                                        <div class="row mb-3">
+                                            <div class="col-md-4">
+                                                <label class="package-label">Price (₱)</label>
                                                 <input type="number" step="0.01" name="price"
                                                     class="form-control package-input" value="<?php echo $row['price']; ?>"
                                                     required>
                                             </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label package-label">Duration</label>
-                                                <input type="text" name="duration" class="form-control package-input"
-                                                    value="<?php echo htmlspecialchars($row['duration']); ?>">
+                                            <div class="col-md-4">
+                                                <label class="package-label">Max Guests</label>
+                                                <input type="number" name="max_guests"
+                                                    value="<?php echo $row['max_guests']; ?>"
+                                                    class="form-control package-input" required>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="package-label">Max Pax</label>
+                                                <input type="number" name="max_pax" value="<?php echo $row['max_pax']; ?>"
+                                                    class="form-control package-input">
                                             </div>
                                         </div>
 
-                                        <!-- TWO COLUMNS -->
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label package-label">Time Limit</label>
-                                                <input type="text" name="time_limit" class="form-control package-input"
-                                                    value="<?php echo htmlspecialchars($row['time_limit']); ?>">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label class="package-label">Duration (Hrs)</label>
+                                                <input type="text" name="duration" value="<?php echo $row['duration']; ?>"
+                                                    class="form-control package-input">
                                             </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label package-label">Max Pax</label>
-                                                <input type="number" name="max_pax" class="form-control package-input"
-                                                    value="<?php echo $row['max_pax']; ?>" required>
-                                            </div>
-                                        </div>
-
-                                        <!-- TWO COLUMNS -->
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label package-label">Max Guests</label>
-                                                <input type="number" name="max_guests" class="form-control package-input"
-                                                    value="<?php echo $row['max_guests']; ?>" required>
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label package-label">Availability</label>
-                                                <select name="is_available" class="form-control package-input">
-                                                    <option value="1" <?php echo ($row['is_available'] == 1 ? 'selected' : ''); ?>>Available</option>
-                                                    <option value="0" <?php echo ($row['is_available'] == 0 ? 'selected' : ''); ?>>Not Available</option>
+                                            <div class="col-md-6">
+                                                <label class="package-label">Status</label>
+                                                <select name="status" class="form-select package-input">
+                                                    <option value="available" <?php echo ($row['status'] == 'available') ? 'selected' : ''; ?>>Available</option>
+                                                    <option value="unavailable" <?php echo ($row['status'] == 'unavailable') ? 'selected' : ''; ?>>Unavailable</option>
                                                 </select>
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label package-label">Description</label>
-                                            <textarea name="description" class="form-control package-input"
-                                                rows="3"><?php echo htmlspecialchars($row['description'] !== null ? $row['description'] : ''); ?></textarea>
+                                            <label class="package-label">Description</label>
+                                            <textarea name="description" class="form-control package-input" rows="2"
+                                                required><?php echo $row['description']; ?></textarea>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label package-label">Notes</label>
-                                            <textarea name="notes" class="form-control package-input"
-                                                rows="2"><?php echo htmlspecialchars($row['notes'] !== null ? $row['notes'] : ''); ?></textarea>
+                                            <label class="package-label">Notes</label>
+                                            <textarea name="notes" class="form-control package-input" rows="2"
+                                                required> <?php echo $row['notes']; ?></textarea>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label class="form-label package-label">Image</label>
-                                            <input type="file" name="image" class="form-control package-input">
+                                            <label class="form-label package-label">Images (up to 3)</label>
+                                            <input type="file" name="images[]" class="form-control package-input"
+                                                accept="image/*" multiple>
                                         </div>
 
+                                        <div class="p-3 bg-white rounded border">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <h6 class="fw-bold mb-0">Manage Menu</h6>
+                                                <input type="number" class="form-control form-control-sm menu-counter"
+                                                    data-target="menuItemsContainer-<?php echo $row['id']; ?>"
+                                                    style="width: 70px;" value="<?php echo count($existingMenuItems); ?>"
+                                                    min="0">
+                                            </div>
+                                            <div id="menuItemsContainer-<?php echo $row['id']; ?>">
+                                                <?php foreach ($existingMenuItems as $index => $item): ?>
+                                                    <div class="menu-item-card">
+                                                        <label class="package-label">Item <?php echo $index + 1; ?></label>
+                                                        <input type="text" name="menu_items[]"
+                                                            class="form-control package-input"
+                                                            value="<?php echo htmlspecialchars($item); ?>">
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn package-btn-save">Save Changes</button>
+                                    <div class="modal-footer border-0">
+                                        <button type="submit" class="btn btn-save">Save Changes</button>
                                     </div>
-
                                 </form>
-
                             </div>
                         </div>
                     </div>
@@ -543,107 +608,163 @@ $result = $conn->query($query);
     </div>
 </div>
 
-
-<div class="modal fade" id="addEvent" tabindex="-1" aria-labelledby="addEventLabel" aria-hidden="true">
+<div class="modal fade" id="addEvent" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content package-modal">
-            <div class="modal-header package-modal-header">
-                <h5 class="modal-title fw-bold" id="addEventLabel">Add Package</h5>
-                <button type="button" class="btn-close package-modal-close" data-bs-dismiss="modal"
-                    aria-label="Close"></button>
-            </div>
-            <div class="modal-body package-modal-body">
-                <form id="addPackageForm" method="POST" action="../Admin/adminBackend/event_package_add.php"
-                    enctype="multipart/form-data">
-
+            <form id="addPackageForm" method="POST" action="../Admin/adminBackend/event_package_add.php"
+                enctype="multipart/form-data">
+                <div class="modal-header package-modal-header">
+                    <h5 class="modal-title fw-bold"><i class="fas fa-plus-circle me-2"></i>New Event Package</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body package-modal-body">
                     <div class="mb-3">
-                        <label for="name" class="form-label package-label">Package Name</label>
-                        <input type="text" class="form-control package-input" id="name" name="name" required>
+                        <label class="package-label">Package Name</label>
+                        <input type="text" name="name" class="form-control package-input"
+                            placeholder="e.g., Grand Wedding Package" required>
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="price" class="form-label package-label">Price</label>
-                            <input type="number" class="form-control package-input" id="price" name="price" step="0.01"
-                                min="0" required>
+                        <div class="col-md-4">
+                            <label class="package-label">Price (₱)</label>
+                            <input type="number" step="0.01" name="price" class="form-control package-input" required>
                         </div>
-
-                        <div class="col-md-6">
-                            <label for="max_guests" class="form-label package-label">Max Guests</label>
-                            <input type="number" class="form-control package-input" id="max_guests" name="max_guests"
-                                min="1" required>
+                        <div class="col-md-4">
+                            <label class="package-label">Max Guests</label>
+                            <input type="number" name="max_guests" class="form-control package-input" required>
                         </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label for="duration" class="form-label package-label">Duration (hours)</label>
-                            <input type="number" class="form-control package-input" id="duration" name="duration"
-                                min="1" required>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="time_limit" class="form-label package-label">Time Limit </label>
-                            <input type="text" class="form-control package-input" id="time_limit" name="time_limit">
+                        <div class="col-md-4">
+                            <label class="package-label">Max Pax</label>
+                            <input type="number" name="max_pax" class="form-control package-input">
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="max_pax" class="form-label package-label">Max Pax</label>
-                            <input type="number" class="form-control package-input" id="max_pax" name="max_pax" min="1">
+                            <label class="package-label">Duration (Hrs)</label>
+                            <input type="text" name="duration" class="form-control package-input">
                         </div>
-
                         <div class="col-md-6">
-                            <label for="is_available" class="form-label package-label">Available</label>
-                            <select class="form-select package-input" id="is_available" name="is_available" required>
-                                <option value="1">Yes</option>
-                                <option value="0">No</option>
+                            <label class="package-label">Status</label>
+                            <select name="status" class="form-select package-input">
+                                <option value="available">Available</option>
+                                <option value="unavailable">Unavailable</option>
                             </select>
                         </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="notes" class="form-label package-label">Notes</label>
-                        <textarea class="form-control package-input" id="notes" name="notes" rows="2"></textarea>
+                        <label class="package-label">Description</label>
+                        <textarea name="description" class="form-control package-input" rows="2" required></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label for="description" class="form-label package-label">Description</label>
-                        <textarea class="form-control package-input" id="description" name="description" rows="3"
-                            required></textarea>
+                        <label class="package-label">Notes</label>
+                        <textarea name="notes" class="form-control package-input" rows="2" required></textarea>
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label package-label">Images (Max 3)</label>
-                        <input type="file" class="form-control package-input" id="image" name="image[]" multiple
-                            accept="image/*" required>
-                        <small class="form-text package-help-text">You can upload up to 3 images.</small>
+                        <label class="package-label">Upload Images (Max 3)</label>
+                        <input type="file" name="images[]" class="form-control package-input" multiple accept="image/*"
+                            onchange="previewImages(this, 'addPreview')">
+                        <div id="addPreview" class="d-flex gap-2 mt-2"></div>
                     </div>
 
-                    <div class="mb-3">
-                        <label for="status" class="form-label package-label">Status</label>
-                        <select class="form-select package-input" id="status" name="status" required>
-                            <option value="Available">Available</option>
-                            <option value="Occupied">Occupied</option>
-                        </select>
-
-                    </div>
-
-                    <div class="modal-footer">
-                        <div class="d-flex justify-content-end gap-2">
-                            <button type="submit" class="btn package-btn-save">Save Package</button>
+                    <div class="p-3 bg-white rounded border">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">Menu Items</h6>
+                            <div class="d-flex align-items-center">
+                                <span class="me-2 small fw-bold text-muted">Items:</span>
+                                <input type="number" id="menuCountAdd" class="form-control form-control-sm"
+                                    style="width: 70px;" min="0" value="0">
+                            </div>
                         </div>
+                        <div id="menuItemsContainerAdd"></div>
                     </div>
-                </form>
-
-            </div>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn package-btn-cancel" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-save">Create Package</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 
-
-
-
-
 <?php include 'adminFrontend/footer.php'; ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuCountAdd = document.getElementById('menuCountAdd');
+        const menuContainerAdd = document.getElementById('menuItemsContainerAdd');
+
+        if (menuCountAdd) {
+            menuCountAdd.addEventListener('input', () => {
+                updateMenuInputs(menuCountAdd.value, menuContainerAdd);
+            });
+        }
+
+        document.addEventListener('input', function (e) {
+            if (e.target.classList.contains('menu-counter')) {
+                const containerId = e.target.getAttribute('data-target');
+                const container = document.getElementById(containerId);
+                updateMenuInputs(e.target.value, container);
+            }
+        });
+
+        function updateMenuInputs(count, container) {
+            const currentInputs = Array.from(container.querySelectorAll('input'));
+            const existingValues = currentInputs.map(input => input.value);
+
+            // Count non-empty inputs to enforce minimum
+            const minCount = existingValues.filter(val => val.trim() !== '').length;
+
+            if (parseInt(count) < minCount) {
+                alert(`You cannot reduce menu items below ${minCount} because some inputs are not empty.`);
+                count = minCount;
+            }
+
+            count = parseInt(count);
+
+            while (currentInputs.length < count) {
+                const index = currentInputs.length;
+                const div = document.createElement('div');
+                div.className = 'menu-item-card';
+                div.innerHTML = `
+            <label class="package-label">Item ${index + 1}</label>
+            <input type="text" name="menu_items[]" class="form-control package-input" placeholder="Enter menu item name..." required>
+        `;
+                container.appendChild(div);
+                currentInputs.push(div.querySelector('input'));
+            }
+
+            while (currentInputs.length > count) {
+                const lastInput = currentInputs[currentInputs.length - 1];
+                if (lastInput.value.trim() !== '') break; // stop if last input has value
+                lastInput.parentElement.remove();
+                currentInputs.pop();
+            }
+
+            currentInputs.forEach((input, i) => {
+                input.previousElementSibling.textContent = `Item ${i + 1}`;
+            });
+        }
+
+    });
+
+    function previewImages(input, targetId) {
+        const preview = document.getElementById(targetId);
+        preview.innerHTML = '';
+        if (input.files) {
+            Array.from(input.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'image-preview-slot';
+                    preview.appendChild(img);
+                }
+                reader.readAsDataURL(file);
+            });
+        }
+    }
+</script>

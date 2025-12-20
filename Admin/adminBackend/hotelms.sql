@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 16, 2025 at 01:53 AM
+-- Generation Time: Dec 20, 2025 at 12:33 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -953,17 +953,6 @@ CREATE TABLE `event_bookings` (
   `booking_source` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular Booking'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `event_bookings`
---
-
-INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, `package_price`, `base_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `reservation_date`, `event_type`, `event_date`, `start_time`, `end_time`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`, `created_at`, `updated_at`, `booking_source`) VALUES
-(1, 40, 0, 'Package A', 58500.00, 47500.00, 0, 6000.00, 0, 0.00, 58500.00, 29250.00, 29250.00, '2025-06-13', 'Birthday', '2025-06-25', '10:37:00', '18:37:00', 55, 'gcash', 'downpayment', 'pending', 'Regular', '2025-06-13 02:38:35', '2025-06-13 02:38:35', 'Website Booking'),
-(2, 5, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-06', 'Birthday', '2025-11-14', '09:00:00', '13:00:00', 50, 'gcash', 'full', 'pending', 'Regular', '2025-11-06 02:16:25', '2025-11-06 02:16:25', 'Website Booking'),
-(3, 5, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-06', 'Birthday', '2025-11-14', '12:00:00', '15:00:00', 50, 'gcash', 'full', 'confirmed', 'Regular', '2025-11-06 02:20:32', '2025-11-20 11:26:08', 'Website Booking'),
-(4, 3, 0, 'Package A', 49500.00, 47500.00, 0, 2000.00, 0, 0.00, 49500.00, 49500.00, 0.00, '2025-11-12', 'Corporate', '2025-11-14', '16:16:00', '22:16:00', 50, 'gcash', 'full', 'pending', 'Regular', '2025-11-12 08:18:06', '2025-11-12 08:18:06', 'Website Booking'),
-(5, 42, 0, 'Venue Rental Only', 20000.00, 20000.00, 0, 0.00, 0, 0.00, 20000.00, 20000.00, 0.00, '2025-11-13', 'Birthday', '2025-11-14', '15:13:00', '18:13:00', 5, 'gcash', 'full', 'pending', 'Regular', '2025-11-13 07:14:57', '2025-11-13 07:14:57', 'Website Booking');
-
 -- --------------------------------------------------------
 
 --
@@ -1013,7 +1002,7 @@ CREATE TABLE `event_packages` (
   `max_pax` int DEFAULT '50',
   `time_limit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '5 hours',
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` enum('Available','Occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Available'
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1021,11 +1010,11 @@ CREATE TABLE `event_packages` (
 --
 
 INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`, `image_path2`, `image_path3`, `max_guests`, `duration`, `created_at`, `is_available`, `menu_items`, `max_pax`, `time_limit`, `notes`, `status`) VALUES
-(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, NULL, 50, '5 hours', NULL, 'Available'),
-(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers, 2 Pasta, 2 Mains, Salad Bar, Rice , Drinks', 50, '5 hours', NULL, 'Available'),
-(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, ' 2 Appetizers, 2 Pasta, 3 Mains, Salad Bar, Rice, 1 Dessert,  Drinks ', 50, '5 hours', '**Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'Available'),
-(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'Available'),
-(5, 'Package F', 50000.00, '<br />\r\n<b>Deprecated</b>:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in <b>/home/u429956055/domains/e-akomoda.site/public_html/Admin/edit_event_package.php</b> on line <b>215</b><br />\r\n', 'uploads/event_packages/682692cbc2261.jpg', NULL, NULL, 50, 5, '2025-04-17 06:57:47', 0, NULL, 50, '5 hours', NULL, 'Available');
+(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, 'Carlos,1 Appetizers', 50, '', '  HAHH', 'available'),
+(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 50, '', ' Wala', 'available'),
+(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 50, '', ' **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available'),
+(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'available'),
+(9, 'Package F', 1000.00, 'Note', NULL, NULL, NULL, 2, 1, '2025-12-20 10:11:26', 1, 'Salad,1 Appetizers', 2, '', 'Note', 'available');
 
 -- --------------------------------------------------------
 
@@ -1973,6 +1962,7 @@ CREATE TABLE `orders_table` (
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
   `contact` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
   `date_time` datetime DEFAULT NULL,
   `discount_type` varchar(255) DEFAULT NULL,
   `discount_percentage` int DEFAULT NULL,
@@ -1984,6 +1974,7 @@ CREATE TABLE `orders_table` (
   `remaining_balance` double(10,2) DEFAULT NULL,
   `payment` varchar(255) DEFAULT NULL,
   `payment_method` varchar(255) DEFAULT NULL,
+  `dp_payment_method` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -3380,13 +3371,13 @@ ALTER TABLE `discount_types`
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
 --
 ALTER TABLE `event_packages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `fix_booking_ids_log`
