@@ -60817,3 +60817,80 @@ Stack trace:
 [20-Dec-2025 12:45:11 UTC] Database connected successfully to: hotelms
 [20-Dec-2025 12:45:32 UTC] Database connected successfully to: hotelms
 [20-Dec-2025 12:45:34 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 00:52:26 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 00:52:34 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 00:52:37 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 00:52:38 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 08:52:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[21-Dec-2025 01:03:05 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:03:06 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:03:10 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:03:12 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:03:12 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[21-Dec-2025 01:04:48 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:04:50 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:04:52 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:04:53 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:06:34 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:07:20 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 01:07:21 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:07:21 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 855
+[21-Dec-2025 01:13:25 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:13:25 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:15:12 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:15:12 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:16:00 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:16:00 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:17:00 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:17:00 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:29:06 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:29:06 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:35:21 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:35:21 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:37:10 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:37:10 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:40:01 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:40:01 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 01:45:14 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 09:45:14 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:08:11 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:08:11 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:11:28 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:11:28 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:12:11 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:12:11 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:14:00 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:14:01 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:17:21 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:17:21 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:19:22 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:19:23 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:21:16 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:21:16 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:21:45 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:21:45 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:21:48 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 02:21:49 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 02:22:08 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 02:24:02 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:24:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 858
+[21-Dec-2025 02:25:02 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:25:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:36:14 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:36:14 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:37:42 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:37:42 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:54:03 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:54:03 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 02:55:01 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 10:55:01 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 03:12:04 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 11:12:04 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 03:12:30 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 11:12:30 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 03:13:54 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 11:13:54 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 03:17:55 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 11:17:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[21-Dec-2025 03:21:56 UTC] Database connected successfully to: hotelms
+[21-Dec-2025 11:21:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857

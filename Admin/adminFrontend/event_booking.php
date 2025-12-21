@@ -793,6 +793,8 @@
                 </div>
             </div>
         </div>
+        <div id="availabilityMessage" class="alert d-none"></div>
+
 
         <div class="row" id="eventsContainer">
             <?php while ($row = mysqli_fetch_assoc($result)):
@@ -800,120 +802,120 @@
                 $badgeClass = $status === 'available' ? 'status-available' : 'status-unavailable';
                 $menuItems = array_map('trim', explode(',', $row['menu_items']));
                 ?>
-                        <div class="col-lg-4 col-md-6 col-sm-12">
-                            <div class="event-card" data-status="<?= $status ?>">
+                <div class="col-lg-4 col-md-6 col-sm-12">
+                    <div class="event-card" data-status="<?= $status ?>">
 
-                                <!-- Image Gallery -->
-                                <div class="event-image-gallery">
-                                    <img src="<?= $row['image_path'] ?>" class="main-event-image" id="mainImg<?= $row['id'] ?>">
+                        <!-- Image Gallery -->
+                        <div class="event-image-gallery">
+                            <img src="<?= $row['image_path'] ?>" class="main-event-image" id="mainImg<?= $row['id'] ?>">
 
-                                    <span class="event-status-badge <?= $badgeClass ?>">
-                                        <?= strtoupper($row['status']) ?>
-                                    </span>
+                            <span class="event-status-badge <?= $badgeClass ?>">
+                                <?= strtoupper($row['status']) ?>
+                            </span>
 
-                                    <div class="image-thumbnails">
-                                        <?php if ($row['image_path']): ?>
-                                                    <img src="<?= $row['image_path'] ?>" class="thumbnail-img active">
-                                        <?php endif; ?>
-                                        <?php if ($row['image_path2']): ?>
-                                                    <img src="<?= $row['image_path2'] ?>" class="thumbnail-img">
-                                        <?php endif; ?>
-                                        <?php if ($row['image_path3']): ?>
-                                                    <img src="<?= $row['image_path3'] ?>" class="thumbnail-img">
-                                        <?php endif; ?>
-                                    </div>
+                            <div class="image-thumbnails">
+                                <?php if ($row['image_path']): ?>
+                                    <img src="<?= $row['image_path'] ?>" class="thumbnail-img active">
+                                <?php endif; ?>
+                                <?php if ($row['image_path2']): ?>
+                                    <img src="<?= $row['image_path2'] ?>" class="thumbnail-img">
+                                <?php endif; ?>
+                                <?php if ($row['image_path3']): ?>
+                                    <img src="<?= $row['image_path3'] ?>" class="thumbnail-img">
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Event Details -->
+                        <div class="event-body">
+                            <h5 class="event-name"><?= htmlspecialchars($row['name']) ?></h5>
+
+                            <div class="event-price">
+                                <span class="currency">₱</span>
+                                <span><?= number_format($row['price']) ?></span>
+                            </div>
+
+                            <p class="event-description"><?= nl2br(htmlspecialchars($row['description'])) ?></p>
+
+                            <div class="event-details-grid">
+                                <div class="event-detail-item">
+                                    <i class="fas fa-users"></i>
+                                    <span><?= $row['max_guests'] ?> Max Guests</span>
                                 </div>
-
-                                <!-- Event Details -->
-                                <div class="event-body">
-                                    <h5 class="event-name"><?= htmlspecialchars($row['name']) ?></h5>
-
-                                    <div class="event-price">
-                                        <span class="currency">₱</span>
-                                        <span><?= number_format($row['price']) ?></span>
-                                    </div>
-
-                                    <p class="event-description"><?= nl2br(htmlspecialchars($row['description'])) ?></p>
-
-                                    <div class="event-details-grid">
-                                        <div class="event-detail-item">
-                                            <i class="fas fa-users"></i>
-                                            <span><?= $row['max_guests'] ?> Max Guests</span>
-                                        </div>
-                                        <div class="event-detail-item">
-                                            <i class="fas fa-user-friends"></i>
-                                            <span><?= $row['max_pax'] ?> Max Pax</span>
-                                        </div>
-                                        <div class="event-detail-item">
-                                            <i class="fas fa-clock"></i>
-                                            <span><?= $row['time_limit'] ?> Hours</span>
-                                        </div>
-                                    </div>
-
-                                    <div class="event-notes">
-                                        <i class="fas fa-info-circle"></i>
-                                        <?= nl2br(htmlspecialchars($row['notes'])) ?>
-                                    </div>
-
-                                    <div class="event-actions">
-                                        <!-- Menu Modal Trigger -->
-                                        <button class="btn-view-menu" data-bs-toggle="modal"
-                                            data-bs-target="#menuModal<?= $row['id'] ?>">
-                                            <i class="fas fa-utensils"></i> View Menu
-                                        </button>
-
-                                        <?php if ($status === 'available'): ?>
-                                                    <button class="btn-book-now" data-package-id="<?= $row['id'] ?>"
-                                                        data-package-name="<?= htmlspecialchars($row['name'], ENT_QUOTES) ?>"
-                                                        data-package-price="<?= number_format($row['price']) ?>">
-                                                        <i class="fas fa-calendar-check"></i> Book Now
-                                                    </button>
-                                        <?php endif; ?>
-
-
-                                    </div>
+                                <div class="event-detail-item">
+                                    <i class="fas fa-user-friends"></i>
+                                    <span><?= $row['max_pax'] ?> Max Pax</span>
                                 </div>
+                                <div class="event-detail-item">
+                                    <i class="fas fa-clock"></i>
+                                    <span><?= $row['time_limit'] ?> Hours</span>
+                                </div>
+                            </div>
+
+                            <div class="event-notes">
+                                <i class="fas fa-info-circle"></i>
+                                <?= nl2br(htmlspecialchars($row['notes'])) ?>
+                            </div>
+
+                            <div class="event-actions">
+                                <!-- Menu Modal Trigger -->
+                                <button class="btn-view-menu" data-bs-toggle="modal"
+                                    data-bs-target="#menuModal<?= $row['id'] ?>">
+                                    <i class="fas fa-utensils"></i> View Menu
+                                </button>
+
+                                <?php if ($status === 'available'): ?>
+                                    <button class="btn-book-now" data-package-id="<?= $row['id'] ?>"
+                                        data-package-name="<?= htmlspecialchars($row['name'], ENT_QUOTES) ?>"
+                                        data-package-price="<?= number_format($row['price']) ?>">
+                                        <i class="fas fa-calendar-check"></i> Book Now
+                                    </button>
+                                <?php endif; ?>
+
 
                             </div>
                         </div>
 
-                        <!-- Menu Modal (PHP-rendered) -->
-                        <div class="modal fade" id="menuModal<?= $row['id'] ?>" tabindex="-1">
-                            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                <div class="modal-content">
+                    </div>
+                </div>
 
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">
-                                            <i class="fas fa-utensils"></i>
-                                            <?= htmlspecialchars($row['name']) ?> Menu
-                                        </h5>
-                                        <button type="button" class="close-cart" data-bs-dismiss="modal">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
+                <!-- Menu Modal (PHP-rendered) -->
+                <div class="modal fade" id="menuModal<?= $row['id'] ?>" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                        <div class="modal-content">
 
-                                    <div class="modal-body">
-                                        <?php if (!empty($menuItems)): ?>
-                                                    <?php $count = 0;
-                                                    $total = count($menuItems); ?>
-                                                    <?php foreach ($menuItems as $item):
-                                                        $count++; ?>
-                                                                <div class="menu-item">
-                                                                    <i class="fas fa-check-circle text-success me-2"></i>
-                                                                    <?= htmlspecialchars($item) ?>
-                                                                </div>
-                                                                <?php if ($count < $total): ?>
-                                                                            <div class="menu-separator"></div>
-                                                                <?php endif; ?>
-                                                    <?php endforeach; ?>
-                                        <?php else: ?>
-                                                    <p class="text-muted text-center">No menu items available.</p>
-                                        <?php endif; ?>
-                                    </div>
-
-                                </div>
+                            <div class="modal-header">
+                                <h5 class="modal-title">
+                                    <i class="fas fa-utensils"></i>
+                                    <?= htmlspecialchars($row['name']) ?> Menu
+                                </h5>
+                                <button type="button" class="close-cart" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i>
+                                </button>
                             </div>
+
+                            <div class="modal-body">
+                                <?php if (!empty($menuItems)): ?>
+                                    <?php $count = 0;
+                                    $total = count($menuItems); ?>
+                                    <?php foreach ($menuItems as $item):
+                                        $count++; ?>
+                                        <div class="menu-item">
+                                            <i class="fas fa-check-circle text-success me-2"></i>
+                                            <?= htmlspecialchars($item) ?>
+                                        </div>
+                                        <?php if ($count < $total): ?>
+                                            <div class="menu-separator"></div>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <p class="text-muted text-center">No menu items available.</p>
+                                <?php endif; ?>
+                            </div>
+
                         </div>
+                    </div>
+                </div>
 
             <?php endwhile; ?>
         </div>
@@ -981,8 +983,9 @@
                                 <label class="form-label">
                                     <i class="fas fa-calendar-alt"></i> Event Date *
                                 </label>
-                                <input type="date" class="form-control" id="eventDate" required>
+                                <input type="date" class="form-control" id="eventDate" readonly>
                             </div>
+
                         </div>
 
                         <div class="row">
@@ -990,7 +993,7 @@
                                 <label class="form-label">
                                     <i class="fas fa-clock"></i> Event Time *
                                 </label>
-                                <input type="time" class="form-control" id="eventTime" required>
+                                <input type="time" class="form-control" id="eventTime" readonly>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">
@@ -999,14 +1002,6 @@
                                 <input type="number" class="form-control" id="guestCount" required
                                     placeholder="e.g., 50" min="1">
                             </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">
-                                <i class="fas fa-comment-alt"></i> Special Requests / Notes
-                            </label>
-                            <textarea class="form-control" id="specialRequests" rows="4"
-                                placeholder="Any special requirements or requests for your event..."></textarea>
                         </div>
 
                         <button type="submit" class="btn-confirm-booking">
@@ -1041,52 +1036,181 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script>
         let availabilityChecked = false;
+        let hasConflict = false;
+        let selectedPackageId = null;
 
         const checkBtn = document.getElementById('checkGlobalAvailabilityBtn');
         const bookingDateInput = document.getElementById('globalBookingDateTime');
         const bookNowButtons = document.querySelectorAll('.btn-book-now');
+        const availabilityMessage = document.getElementById('availabilityMessage');
+        const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
 
-        const bookingModalEl = document.getElementById('bookingModal');
-        const bookingModal = new bootstrap.Modal(bookingModalEl);
+        /* CHECK AVAILABILITY */
+        checkBtn.addEventListener('click', () => {
+            const datetime = bookingDateInput.value;
 
-        checkBtn.addEventListener('click', function () {
-            const selectedDate = bookingDateInput.value;
-            if (!selectedDate) {
-                alert('Please select a date first.');
+            if (!datetime) {
+                alert('Please select date and time');
                 return;
             }
 
-            availabilityChecked = true;
+            fetch('../Admin/adminBackend/table_checkOnOrders_availability.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'datetime=' + encodeURIComponent(datetime)
+            })
+                .then(res => res.text())
+                .then(text => {
+                    if (!text) throw new Error('Empty response');
+                    return JSON.parse(text);
+                })
+                .then(data => {
+                    availabilityChecked = true;
+                    availabilityMessage.classList.remove('d-none');
+
+                    if (data.conflict) {
+                        hasConflict = true;
+                        availabilityMessage.className = 'alert alert-danger';
+
+                        availabilityMessage.innerHTML = `
+                            <div style="font-family: sans-serif; border: 1px solid #ffcccc; border-radius: 8px; overflow: hidden;">
+                                <div style="background: #fff5f5; color: #c53030; padding: 12px; font-weight: bold; border-bottom: 1px solid #ffcccc;">
+                                    🚫 Not Available at this time
+                                </div>
+                                <div style="padding: 15px; background: white;">
+                                    <div style="margin-bottom: 10px; color: #4a5568;">
+                                        Existing Booking: <strong>${data.booked_time}</strong>
+                                    </div>
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                                        <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
+                                            <small>Available Before</small><br>
+                                            <strong>${data.available_before}</strong>
+                                        </div>
+                                        <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
+                                            <small>Available After</small><br>
+                                            <strong>${data.available_after}</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        bookNowButtons.forEach(btn => btn.style.display = 'none');
+                    } else {
+                        hasConflict = false;
+                        availabilityMessage.className = 'alert alert-success';
+                        availabilityMessage.textContent = data.message;
+
+                        bookNowButtons.forEach(btn => btn.style.display = 'inline-block');
+                    }
+                });
         });
 
+
+        /* BOOK NOW */
         bookNowButtons.forEach(btn => {
-            btn.addEventListener('click', function (event) {
+            btn.addEventListener('click', e => {
                 if (!availabilityChecked) {
-                    event.preventDefault();
-                    event.stopImmediatePropagation();
-                    alert('Please select a date and check availability before booking.');
+                    e.preventDefault();
+                    alert('Please check availability first');
                     return;
                 }
 
-                // Populate modal with package details
-                const packageName = btn.getAttribute('data-package-name');
-                const packagePrice = btn.getAttribute('data-package-price');
+                if (hasConflict) {
+                    e.preventDefault();
+                    alert('Selected time is unavailable');
+                    return;
+                }
 
-                document.getElementById('bookingPackageName').textContent = packageName;
-                document.getElementById('bookingPackagePrice').textContent = '₱' + packagePrice;
-                document.getElementById('bookingTotalPrice').textContent = '₱' + packagePrice;
+                selectedPackageId = btn.dataset.packageId;
+
+                // Set booking summary
+                document.getElementById('bookingPackageName').textContent = btn.dataset.packageName;
+                document.getElementById('bookingPackagePrice').textContent = '₱' + btn.dataset.packagePrice;
+                document.getElementById('bookingTotalPrice').textContent = '₱' + btn.dataset.packagePrice;
+
+                // Set readonly date/time
+                const [date, time] = bookingDateInput.value.split('T');
+                document.getElementById('eventDate').value = date;
+                document.getElementById('eventTime').value = time;
 
                 bookingModal.show();
             });
         });
 
-        bookingDateInput.addEventListener('change', function () {
+
+        /* RESET ON DATE CHANGE */
+        bookingDateInput.addEventListener('change', () => {
             availabilityChecked = false;
+            hasConflict = false;
+            availabilityMessage.classList.add('d-none');
+            bookNowButtons.forEach(btn => btn.style.display = 'inline-block');
         });
+
+        /* FINAL SUBMIT */
+        document.getElementById('bookingForm').addEventListener('submit', e => {
+            e.preventDefault();
+
+            if (!selectedPackageId) {
+                alert('Please select a package.');
+                return;
+            }
+
+            const customerNameVal = document.getElementById('customerName').value.trim();
+            const guestCountVal = parseInt(document.getElementById('guestCount').value);
+            const eventDateVal = document.getElementById('eventDate').value; // YYYY-MM-DD
+            const eventTimeVal = document.getElementById('eventTime').value; // HH:MM
+
+            if (!customerNameVal || !guestCountVal || !eventDateVal || !eventTimeVal) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+
+            // Combine date + time
+            const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
+            const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000); // +4 hours
+
+            // Format as MySQL DATETIME: YYYY-MM-DD HH:MM:SS
+            const formatDateTime = dt => {
+                return dt.getFullYear() + '-' +
+                    String(dt.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(dt.getDate()).padStart(2, '0') + ' ' +
+                    String(dt.getHours()).padStart(2, '0') + ':' +
+                    String(dt.getMinutes()).padStart(2, '0') + ':' +
+                    String(dt.getSeconds()).padStart(2, '0');
+            };
+
+            const formData = new URLSearchParams({
+                name: customerNameVal,
+                guests: guestCountVal,
+                package_id: selectedPackageId,
+                date_time_start: formatDateTime(dateTimeStart),
+                date_time_end: formatDateTime(dateTimeEnd)
+            });
+
+            fetch('../Admin/adminBackend/bookEvent_insert.php', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.text())
+                .then(response => {
+                    if (response === 'CONFLICT') {
+                        alert('Booking failed. Time slot already taken.');
+                    } else if (response === 'SUCCESS') {
+                        alert('Booking successful!');
+                        location.reload();
+                    } else {
+                        alert('Booking failed. Check console for details.');
+                        console.error(response);
+                    }
+                });
+        });
+
     </script>
+
+
 
 </body>
 

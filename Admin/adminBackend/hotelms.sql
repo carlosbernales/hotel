@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 20, 2025 at 12:33 PM
+-- Generation Time: Dec 21, 2025 at 03:27 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -926,32 +926,33 @@ CREATE TABLE `events` (
 
 CREATE TABLE `event_bookings` (
   `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `customer_name` int NOT NULL,
+  `user_id` int DEFAULT NULL,
+  `customer_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `package_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `package_price` decimal(10,2) NOT NULL,
-  `base_price` decimal(10,2) NOT NULL,
   `overtime_hours` int DEFAULT '0',
   `overtime_charge` decimal(10,2) DEFAULT '0.00',
   `extra_guests` int DEFAULT '0',
   `extra_guest_charge` decimal(10,2) DEFAULT '0.00',
   `total_amount` decimal(10,2) NOT NULL,
-  `paid_amount` decimal(10,2) NOT NULL,
-  `remaining_balance` decimal(10,2) NOT NULL,
-  `reservation_date` date NOT NULL,
+  `paid_amount` decimal(10,2) DEFAULT NULL,
+  `remaining_balance` decimal(10,2) DEFAULT NULL,
   `event_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `event_date` date NOT NULL,
-  `start_time` time NOT NULL,
-  `end_time` time NOT NULL,
+  `date_time_start` datetime NOT NULL,
+  `date_time_end` datetime NOT NULL,
   `number_of_guests` int NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `payment_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `booking_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `reserve_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `booking_source` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular Booking'
+  `reserve_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_bookings`
+--
+
+INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`) VALUES
+(1, NULL, 'Carlos Bernales', 'Venue Rental Only', 20000.00, 0, 0.00, 0, 0.00, 20000.00, NULL, NULL, NULL, '2025-12-23 11:00:00', '2025-12-23 15:00:00', 20, NULL, NULL, 'pending', 'Regular');
 
 -- --------------------------------------------------------
 
@@ -1978,6 +1979,14 @@ CREATE TABLE `orders_table` (
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `orders_table`
+--
+
+INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `email`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `dp_payment_method`, `status`) VALUES
+(1, NULL, 'ORD-1766279192', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 18:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier'),
+(2, NULL, 'ORD-1766283727', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 11:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier');
+
 -- --------------------------------------------------------
 
 --
@@ -1992,6 +2001,14 @@ CREATE TABLE `orders_table_type` (
   `table_name` varchar(255) NOT NULL,
   `table_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders_table_type`
+--
+
+INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
+(1, 1, 2, 3, 'dasd', 3),
+(2, 2, 2, 3, 'dasd', 3);
 
 -- --------------------------------------------------------
 
@@ -3371,7 +3388,7 @@ ALTER TABLE `discount_types`
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
@@ -3443,13 +3460,13 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `order_items`
