@@ -16,7 +16,6 @@ $currentPage = basename($page);
 </head>
 
 <body>
-    <!-- Top Navbar -->
     <nav class="top-navbar">
         <div class="d-flex justify-content-between align-items-center">
             <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
@@ -32,12 +31,10 @@ $currentPage = basename($page);
         </div>
     </nav>
 
-    <!-- Toggle Sidebar Button -->
     <button class="toggle-sidebar shifted" id="toggleBtn">
         <i class="fas fa-bars"></i>
     </button>
 
-    <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <img src="https://via.placeholder.com/80/D4AF37/2c2c2c?text=CE" alt="Logo">
@@ -176,7 +173,6 @@ $currentPage = basename($page);
                     </a>
                 </div>
             </div>
-
 
         </div>
     </div>

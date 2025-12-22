@@ -121,9 +121,11 @@
                                 <?php if ($status === 'available'): ?>
                                     <button class="btn-book-now" data-package-id="<?= $row['id'] ?>"
                                         data-package-name="<?= htmlspecialchars($row['name'], ENT_QUOTES) ?>"
-                                        data-package-price="<?= number_format($row['price']) ?>">
+                                        data-package-price="<?= number_format($row['price']) ?>"
+                                        data-package-max-guests="<?= $row['max_guests'] ?>">
                                         <i class="fas fa-calendar-check"></i> Book Now
                                     </button>
+
                                 <?php endif; ?>
 
 
@@ -194,8 +196,20 @@
                             <strong id="bookingPackageName">-</strong>
                         </div>
                         <div class="booking-summary-item">
-                            <span>Price:</span>
+                            <span>Max Guest:</span>
+                            <strong id="bookingMaxGuests">-</strong>
+                        </div>
+                        <div class="booking-summary-item">
+                            <span>Base Price:</span>
                             <strong id="bookingPackagePrice">₱0</strong>
+                        </div>
+                        <div class="booking-summary-item">
+                            <span>Additional Guests:</span>
+                            <strong id="bookingAdditionalGuests">0</strong>
+                        </div>
+                        <div class="booking-summary-item">
+                            <span>Price per Additional Guest:</span>
+                            <strong id="bookingAdditionalGuestPrice">₱1200</strong>
                         </div>
                         <div class="booking-summary-item total-price">
                             <span>Total Amount:</span>
@@ -204,6 +218,22 @@
                     </div>
 
                     <form id="bookingForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-user-plus"></i> Additional Guests
+                                </label>
+                                <input type="number" class="form-control" id="additionalGuests" min="0" value="0">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-money-bill-wave"></i> Price per Additional Guest
+                                </label>
+                                <input type="number" class="form-control" id="pricePerAdditionalGuest" value="1200"
+                                    min="0">
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">
@@ -235,7 +265,6 @@
                                 </label>
                                 <input type="date" class="form-control" id="eventDate" readonly>
                             </div>
-
                         </div>
 
                         <div class="row">
@@ -254,11 +283,63 @@
                             </div>
                         </div>
 
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-tag"></i> Event Type *
+                                </label>
+                                <select class="form-control" id="eventType" required>
+                                    <option value="">Select Event Type</option>
+                                    <option value="Birthday">Birthday</option>
+                                    <option value="Wedding">Wedding</option>
+                                    <option value="Corporate">Corporate</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-money-bill-wave"></i> Paid Amount *
+                                </label>
+                                <input type="number" class="form-control" id="paidAmount" value="0" min="0">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-wallet"></i> Remaining Balance
+                                </label>
+                                <input type="number" class="form-control" id="remainingBalance" value="0" readonly>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-money-check-alt"></i> Payment Type *
+                                </label>
+                                <select class="form-control" id="paymentType" required>
+                                    <option value="">Select Payment Type</option>
+                                    <option value="Custom">Custom</option>
+                                    <option value="Half">Half</option>
+                                    <option value="Full">Full</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">
+                                    <i class="fas fa-credit-card"></i> Payment Method *
+                                </label>
+                                <select class="form-control" id="paymentMethod" required>
+                                    <option value="">Select Payment Method</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="GCash">GCash</option>
+                                    <option value="Bank Transfer">Bank Transfer</option>
+                                </select>
+                            </div>
+                        </div>
+
                         <button type="submit" class="btn-confirm-booking">
                             <i class="fas fa-check-circle"></i> Confirm Booking
-                        </button>
-                        <button type="button" class="btn-cancel" data-bs-dismiss="modal">
-                            <i class="fas fa-times-circle"></i> Cancel
                         </button>
                     </form>
                 </div>
@@ -296,14 +377,62 @@
         const availabilityMessage = document.getElementById('availabilityMessage');
         const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
 
+        const guestCountInput = document.getElementById('guestCount');
+        const additionalGuestsInput = document.getElementById('additionalGuests');
+        const pricePerAdditionalInput = document.getElementById('pricePerAdditionalGuest');
+        const paidAmountInput = document.getElementById('paidAmount');
+        const remainingBalanceInput = document.getElementById('remainingBalance');
+        const eventTypeSelect = document.getElementById('eventType');
+        const paymentTypeSelect = document.getElementById('paymentType');
+        const paymentMethodSelect = document.getElementById('paymentMethod');
+
+        function updateTotal() {
+            let basePrice = parseFloat(document.getElementById('bookingPackagePrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
+            basePrice = parseFloat(basePrice.toFixed(2));
+
+            const additionalGuests = parseInt(additionalGuestsInput.value) || 0;
+            let pricePerAdditional = parseFloat(pricePerAdditionalInput.value) || 0;
+            pricePerAdditional = parseFloat(pricePerAdditional.toFixed(2));
+
+            document.getElementById('bookingAdditionalGuests').textContent = additionalGuests;
+            document.getElementById('bookingAdditionalGuestPrice').textContent = '₱' + pricePerAdditional.toLocaleString();
+
+            const additionalTotal = pricePerAdditional * additionalGuests;
+            const total = parseFloat((basePrice + additionalTotal).toFixed(2));
+            document.getElementById('bookingTotalPrice').textContent = `₱${total.toLocaleString()}`;
+
+            // Update Paid Amount based on payment type
+            updatePaidAmountByPaymentType();
+        }
+
+        function updateRemainingBalance() {
+            const totalAmount = parseFloat(document.getElementById('bookingTotalPrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
+            const paidAmount = parseFloat(paidAmountInput.value) || 0;
+            const remaining = totalAmount - paidAmount;
+            remainingBalanceInput.value = remaining >= 0 ? remaining.toFixed(2) : 0;
+        }
+
+        function updatePaidAmountByPaymentType() {
+            const totalAmount = parseFloat(document.getElementById('bookingTotalPrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
+            const type = paymentTypeSelect.value;
+
+            if (type === 'Full') {
+                paidAmountInput.value = totalAmount.toFixed(2);
+                paidAmountInput.readOnly = true;
+            } else if (type === 'Half') {
+                paidAmountInput.value = (totalAmount / 2).toFixed(2);
+                paidAmountInput.readOnly = true;
+            } else { // Custom
+                paidAmountInput.value = 0;
+                paidAmountInput.readOnly = false;
+            }
+            updateRemainingBalance();
+        }
+
         /* CHECK AVAILABILITY */
         checkBtn.addEventListener('click', () => {
             const datetime = bookingDateInput.value;
-
-            if (!datetime) {
-                alert('Please select date and time');
-                return;
-            }
+            if (!datetime) { alert('Please select date and time'); return; }
 
             fetch('../Admin/adminBackend/table_checkOnOrders_availability.php', {
                 method: 'POST',
@@ -311,82 +440,94 @@
                 body: 'datetime=' + encodeURIComponent(datetime)
             })
                 .then(res => res.text())
-                .then(text => {
-                    if (!text) throw new Error('Empty response');
-                    return JSON.parse(text);
-                })
+                .then(text => { if (!text) throw new Error('Empty response'); return JSON.parse(text); })
                 .then(data => {
                     availabilityChecked = true;
                     availabilityMessage.classList.remove('d-none');
-
                     if (data.conflict) {
                         hasConflict = true;
                         availabilityMessage.className = 'alert alert-danger';
-
-                        availabilityMessage.innerHTML = `
-                            <div style="font-family: sans-serif; border: 1px solid #ffcccc; border-radius: 8px; overflow: hidden;">
-                                <div style="background: #fff5f5; color: #c53030; padding: 12px; font-weight: bold; border-bottom: 1px solid #ffcccc;">
-                                    🚫 Not Available at this time
-                                </div>
-                                <div style="padding: 15px; background: white;">
-                                    <div style="margin-bottom: 10px; color: #4a5568;">
-                                        Existing Booking: <strong>${data.booked_time}</strong>
-                                    </div>
-                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
-                                        <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
-                                            <small>Available Before</small><br>
-                                            <strong>${data.available_before}</strong>
-                                        </div>
-                                        <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
-                                            <small>Available After</small><br>
-                                            <strong>${data.available_after}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-
+                        availabilityMessage.innerHTML = `<div style="font-family: sans-serif; border: 1px solid #ffcccc; border-radius: 8px; overflow: hidden;">
+                            <div style="background: #fff5f5; color: #c53030; padding: 12px; font-weight: bold; border-bottom: 1px solid #ffcccc;">
+                            🚫 Not Available at this time</div>
+                            <div style="padding: 15px; background: white;">
+                            <div style="margin-bottom: 10px; color: #4a5568;">Existing Booking: <strong>${data.booked_time}</strong></div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                            <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
+                            <small>Available Before</small><br><strong>${data.available_before}</strong></div>
+                            <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
+                            <small>Available After</small><br><strong>${data.available_after}</strong></div></div></div></div>`;
                         bookNowButtons.forEach(btn => btn.style.display = 'none');
                     } else {
                         hasConflict = false;
                         availabilityMessage.className = 'alert alert-success';
                         availabilityMessage.textContent = data.message;
-
                         bookNowButtons.forEach(btn => btn.style.display = 'inline-block');
                     }
                 });
         });
 
-
         /* BOOK NOW */
+        /* BOOK NOW HANDLER */
         bookNowButtons.forEach(btn => {
             btn.addEventListener('click', e => {
+                const dateTimeVal = bookingDateInput.value;
+
+                // Check if date/time is selected
+                if (!dateTimeVal) {
+                    alert('Please select a booking date and time first.');
+                    return;
+                }
+
+                // Check if availability has been checked
                 if (!availabilityChecked) {
-                    e.preventDefault();
-                    alert('Please check availability first');
+                    alert('Please click "Check Availability" before booking.');
                     return;
                 }
 
+                // Check for conflict
                 if (hasConflict) {
-                    e.preventDefault();
-                    alert('Selected time is unavailable');
+                    alert('Selected date/time is not available.');
                     return;
                 }
 
+                // Set selected package
                 selectedPackageId = btn.dataset.packageId;
 
                 document.getElementById('bookingPackageName').textContent = btn.dataset.packageName;
                 document.getElementById('bookingPackagePrice').textContent = '₱' + btn.dataset.packagePrice;
                 document.getElementById('bookingTotalPrice').textContent = '₱' + btn.dataset.packagePrice;
+                document.getElementById('bookingMaxGuests').textContent = btn.dataset.packageMaxGuests;
 
-                const [date, time] = bookingDateInput.value.split('T');
+                // Reset inputs
+                additionalGuestsInput.value = 0;
+                pricePerAdditionalInput.value = 1200;
+                paidAmountInput.value = 0;
+                paidAmountInput.readOnly = false;
+                remainingBalanceInput.value = btn.dataset.packagePrice;
+                eventTypeSelect.value = '';
+                paymentTypeSelect.value = '';
+                paymentMethodSelect.value = '';
+
+                updateTotal();
+
+                // Set event date/time in modal
+                const [date, time] = dateTimeVal.split('T');
                 document.getElementById('eventDate').value = date;
                 document.getElementById('eventTime').value = time;
 
+                // Show the booking modal
                 bookingModal.show();
             });
         });
 
+
+        // Dynamic updates
+        guestCountInput.addEventListener('input', updateTotal);
+        additionalGuestsInput.addEventListener('input', updateTotal);
+        pricePerAdditionalInput.addEventListener('input', updateTotal);
+        paidAmountInput.addEventListener('input', updateRemainingBalance);
+        paymentTypeSelect.addEventListener('change', updatePaidAmountByPaymentType);
 
         /* RESET ON DATE CHANGE */
         bookingDateInput.addEventListener('change', () => {
@@ -399,18 +540,24 @@
         /* FINAL SUBMIT */
         document.getElementById('bookingForm').addEventListener('submit', e => {
             e.preventDefault();
-
-            if (!selectedPackageId) {
-                alert('Please select a package.');
-                return;
-            }
+            if (!selectedPackageId) { alert('Please select a package.'); return; }
 
             const customerNameVal = document.getElementById('customerName').value.trim();
-            const guestCountVal = parseInt(document.getElementById('guestCount').value);
+            const customerEmailVal = document.getElementById('customerEmail').value.trim();
+            const customerPhoneVal = document.getElementById('customerPhone').value.trim();
+            const guestCountVal = parseInt(guestCountInput.value);
+            const additionalGuestsVal = parseInt(additionalGuestsInput.value) || 0;
+            const pricePerAdditional = parseFloat(pricePerAdditionalInput.value) || 0;
+            const paidAmountVal = parseFloat(paidAmountInput.value) || 0;
+            const remainingBalanceVal = parseFloat(remainingBalanceInput.value) || 0;
+            const eventTypeVal = eventTypeSelect.value;
+            const paymentTypeVal = paymentTypeSelect.value;
+            const paymentMethodVal = paymentMethodSelect.value;
             const eventDateVal = document.getElementById('eventDate').value;
             const eventTimeVal = document.getElementById('eventTime').value;
+            const totalAmount = parseFloat(document.getElementById('bookingTotalPrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
 
-            if (!customerNameVal || !guestCountVal || !eventDateVal || !eventTimeVal) {
+            if (!customerNameVal || !customerEmailVal || !customerPhoneVal || !guestCountVal || !eventDateVal || !eventTimeVal || !eventTypeVal || !paymentTypeVal || !paymentMethodVal) {
                 alert('Please fill in all required fields.');
                 return;
             }
@@ -418,18 +565,21 @@
             const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
             const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000);
 
-            const formatDateTime = dt => {
-                return dt.getFullYear() + '-' +
-                    String(dt.getMonth() + 1).padStart(2, '0') + '-' +
-                    String(dt.getDate()).padStart(2, '0') + ' ' +
-                    String(dt.getHours()).padStart(2, '0') + ':' +
-                    String(dt.getMinutes()).padStart(2, '0') + ':' +
-                    String(dt.getSeconds()).padStart(2, '0');
-            };
+            const formatDateTime = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0') + ' ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ':' + String(dt.getSeconds()).padStart(2, '0');
 
             const formData = new URLSearchParams({
                 name: customerNameVal,
+                email: customerEmailVal,
+                phone: customerPhoneVal,
                 guests: guestCountVal,
+                additional_guests: additionalGuestsVal,
+                price_per_additional: pricePerAdditional,
+                total_amount: totalAmount,
+                paid_amount: paidAmountVal,
+                remaining_balance: remainingBalanceVal,
+                event_type: eventTypeVal,
+                payment_type: paymentTypeVal,
+                payment_method: paymentMethodVal,
                 package_id: selectedPackageId,
                 date_time_start: formatDateTime(dateTimeStart),
                 date_time_end: formatDateTime(dateTimeEnd)
@@ -441,15 +591,9 @@
             })
                 .then(res => res.text())
                 .then(response => {
-                    if (response === 'CONFLICT') {
-                        alert('Booking failed. Time slot already taken.');
-                    } else if (response === 'SUCCESS') {
-                        alert('Booking successful!');
-                        location.reload();
-                    } else {
-                        alert('Booking failed. Check console for details.');
-                        console.error(response);
-                    }
+                    if (response === 'CONFLICT') alert('Booking failed. Time slot already taken.');
+                    else if (response === 'SUCCESS') { alert('Booking successful!'); location.reload(); }
+                    else { alert('Booking failed. Check console.'); console.error(response); }
                 });
         });
     </script>

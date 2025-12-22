@@ -3,6 +3,14 @@ include '../adminBackend/mydb.php';
 
 $customer_name = trim($_POST['name']);
 $number_of_guests = (int) $_POST['guests'];
+$extra_guests = isset($_POST['additional_guests']) ? (int) $_POST['additional_guests'] : 0;
+$price_per_additional = isset($_POST['price_per_additional']) ? (float) $_POST['price_per_additional'] : 0;
+$total_amount = isset($_POST['total_amount']) ? (float) $_POST['total_amount'] : 0;
+$paid_amount = isset($_POST['paid_amount']) ? (float) $_POST['paid_amount'] : 0;
+$remaining_balance = isset($_POST['remaining_balance']) ? (float) $_POST['remaining_balance'] : 0;
+$event_type = trim($_POST['event_type']);
+$payment_type = trim($_POST['payment_type']);
+$payment_method = trim($_POST['payment_method']);
 $package_id = (int) $_POST['package_id'];
 
 $date_time_start = isset($_POST['date_time_start']) ? date('Y-m-d H:i:s', strtotime($_POST['date_time_start'])) : null;
@@ -13,7 +21,7 @@ if (empty($customer_name) || $number_of_guests <= 0 || empty($date_time_start) |
     exit;
 }
 
-$sqlPackage = "SELECT name, price FROM event_packages WHERE id = ?";
+$sqlPackage = "SELECT name, price, max_guests FROM event_packages WHERE id=?";
 $stmt = $conn->prepare($sqlPackage);
 $stmt->bind_param("i", $package_id);
 $stmt->execute();
@@ -27,45 +35,43 @@ if ($result->num_rows === 0) {
 $package = $result->fetch_assoc();
 $package_name = $package['name'];
 $package_price = $package['price'];
-
-$total_amount = $package_price;
+$max_guests = (int) $package['max_guests'];
 
 $sqlCheck = "SELECT * FROM event_bookings WHERE 
     (date_time_start < ? AND date_time_end > ?) OR
     (date_time_start < ? AND date_time_end > ?) OR
     (date_time_start >= ? AND date_time_end <= ?)";
 $stmtCheck = $conn->prepare($sqlCheck);
-$stmtCheck->bind_param(
-    "ssssss",
-    $date_time_end,
-    $date_time_start,
-    $date_time_start,
-    $date_time_start,
-    $date_time_start,
-    $date_time_end
-);
+$stmtCheck->bind_param("ssssss", $date_time_end, $date_time_start, $date_time_start, $date_time_start, $date_time_start, $date_time_end);
 $stmtCheck->execute();
 $resultCheck = $stmtCheck->get_result();
-
 if ($resultCheck->num_rows > 0) {
     echo 'CONFLICT';
     exit;
 }
 
 $sqlInsert = "INSERT INTO event_bookings 
-    (customer_name, package_name, package_price, total_amount, date_time_start, date_time_end, number_of_guests)
-    VALUES (?, ?, ?, ?, ?, ?, ?)";
-$stmtInsert = $conn->prepare($sqlInsert);
+(customer_name, package_name, package_price, total_amount, paid_amount, remaining_balance, date_time_start, date_time_end, number_of_guests, extra_guests, max_guest, extra_guest_charge, event_type, payment_type, payment_method)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
+$stmtInsert = $conn->prepare($sqlInsert);
 $stmtInsert->bind_param(
-    "ssddssi",
+    "ssddddssiiddsss",
     $customer_name,
     $package_name,
     $package_price,
     $total_amount,
+    $paid_amount,
+    $remaining_balance,
     $date_time_start,
     $date_time_end,
-    $number_of_guests
+    $number_of_guests,
+    $extra_guests,
+    $max_guests,
+    $price_per_additional,
+    $event_type,
+    $payment_type,
+    $payment_method
 );
 
 if ($stmtInsert->execute()) {

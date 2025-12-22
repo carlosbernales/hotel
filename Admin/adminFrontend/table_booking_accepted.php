@@ -17,8 +17,6 @@ if ($result) {
 }
 ?>
 
-
-
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
@@ -223,8 +221,9 @@ if ($result) {
                                                         <h6 class="text-uppercase text-muted fw-bold small mb-0">Items
                                                             Ordered</h6>
                                                         <span
-                                                            class="badge bg-primary-subtle text-primary border border-primary-subtle"><?= $itemsRes->num_rows ?>
-                                                            Items</span>
+                                                            class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                                                            <?= $itemsRes->num_rows ?> Items
+                                                        </span>
                                                     </div>
 
                                                     <div class="card-body">
@@ -269,9 +268,19 @@ if ($result) {
                                                                     <?php endif; ?>
                                                                 </div>
                                                             <?php endwhile; ?>
+
+                                                        <?php else: ?>
+                                                            <div class="text-center py-5">
+                                                                <div class="mb-3">
+                                                                    <i class="bi bi-cart-x text-muted"
+                                                                        style="font-size: 3rem;"></i>
+                                                                </div>
+                                                                <h5 class="text-muted">No items found</h5>
+                                                                <p class="text-secondary small">This order doesn't seem to have
+                                                                    any items listed.</p>
+                                                            </div>
                                                         <?php endif; ?>
                                                     </div>
-
                                                 </div>
                                             </div>
                                         </div>

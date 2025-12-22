@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 21, 2025 at 03:27 AM
+-- Generation Time: Dec 22, 2025 at 03:43 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -929,6 +929,7 @@ CREATE TABLE `event_bookings` (
   `user_id` int DEFAULT NULL,
   `customer_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `package_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `max_guest` int DEFAULT NULL,
   `package_price` decimal(10,2) NOT NULL,
   `overtime_hours` int DEFAULT '0',
   `overtime_charge` decimal(10,2) DEFAULT '0.00',
@@ -951,8 +952,8 @@ CREATE TABLE `event_bookings` (
 -- Dumping data for table `event_bookings`
 --
 
-INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`) VALUES
-(1, NULL, 'Carlos Bernales', 'Venue Rental Only', 20000.00, 0, 0.00, 0, 0.00, 20000.00, NULL, NULL, NULL, '2025-12-23 11:00:00', '2025-12-23 15:00:00', 20, NULL, NULL, 'pending', 'Regular');
+INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`) VALUES
+(1, NULL, 'Carlos Bernales', 'Package B', 30, 55000.00, 0, 0.00, 2, 1200.00, 57400.00, 28700.00, 28700.00, 'Birthday', '2025-12-24 11:41:00', '2025-12-24 15:41:00', 30, 'Cash', 'Half', 'pending', 'Regular');
 
 -- --------------------------------------------------------
 
@@ -1984,7 +1985,7 @@ CREATE TABLE `orders_table` (
 --
 
 INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `email`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `dp_payment_method`, `status`) VALUES
-(1, NULL, 'ORD-1766279192', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 18:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier'),
+(1, NULL, 'ORD-1766279192', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 18:00:00', NULL, NULL, NULL, 420.00, NULL, NULL, NULL, 420.00, NULL, NULL, NULL, 'Cashier'),
 (2, NULL, 'ORD-1766283727', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 11:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier');
 
 -- --------------------------------------------------------
@@ -2024,6 +2025,14 @@ CREATE TABLE `order_items` (
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
+(1, 1, 'Chicken Wings', 1, 180.00),
+(2, 1, 'Coconut Salad', 1, 200.00);
+
 -- --------------------------------------------------------
 
 --
@@ -2037,6 +2046,14 @@ CREATE TABLE `order_item_addons` (
   `price` double(10,2) NOT NULL,
   `quantity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_item_addons`
+--
+
+INSERT INTO `order_item_addons` (`id`, `order_item_fk_id`, `addon_name`, `price`, `quantity`) VALUES
+(1, 1, 'cheese', 20.00, 1),
+(2, 1, 'Gravy', 20.00, 1);
 
 -- --------------------------------------------------------
 
@@ -3472,13 +3489,13 @@ ALTER TABLE `orders_table_type`
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `payments`
