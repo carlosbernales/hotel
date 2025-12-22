@@ -60894,3 +60894,97 @@ Stack trace:
 [21-Dec-2025 11:17:55 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
 [21-Dec-2025 03:21:56 UTC] Database connected successfully to: hotelms
 [21-Dec-2025 11:21:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[22-Dec-2025 00:16:14 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 00:16:15 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 00:18:19 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 00:32:46 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 00:36:49 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 00:37:01 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:14:42 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:14:45 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:15:02 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:15:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[22-Dec-2025 01:17:36 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:17:47 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:17:59 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:18:57 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:19:01 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:20:56 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:02 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:06 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:18 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:20 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:24 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:25 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:25 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:25 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:25 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:26 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:26 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:26 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:38 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:21:42 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:22:42 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:22:45 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:23:05 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:23:08 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:23:10 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:24:28 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:24:32 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:24:36 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:24:39 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:25:22 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:25:47 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:25:49 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:27:02 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:27:03 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:27:05 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:27:07 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:27:09 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:27:10 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:09 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:17 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:29 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:47 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:48 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:51 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:31:51 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:31:51 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[22-Dec-2025 01:31:54 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:32:05 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:32:05 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 857
+[22-Dec-2025 01:33:38 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:33:38 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 117
+[22-Dec-2025 01:33:41 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:33:41 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 116
+[22-Dec-2025 01:35:02 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:35:02 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 112
+[22-Dec-2025 01:35:04 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:18 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:23 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:26 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:36:26 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 112
+[22-Dec-2025 01:36:27 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:31 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 09:36:31 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\event_booking.php on line 112
+[22-Dec-2025 01:36:42 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:47 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:48 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:49 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:36:49 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:37:38 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:38:05 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:38:08 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:38:12 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:39:37 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:39:53 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:39:59 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:40:44 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:40:49 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:40:58 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:41:11 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:41:39 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:41:50 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:41:56 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:42:12 UTC] Database connected successfully to: hotelms
+[22-Dec-2025 01:46:58 UTC] Database connected successfully to: hotelms

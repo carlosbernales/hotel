@@ -427,6 +427,8 @@
             z-index: 1001;
             max-width: 600px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
             animation: popIn 0.5s ease-out;
         }
 
@@ -454,7 +456,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.7);
-            z-index: 1000;
+
             backdrop-filter: blur(5px);
         }
 
@@ -600,8 +602,9 @@
 
 <body>
     <!-- Background Music (Optional - Replace with your music file) -->
-    <audio id="bg-music" loop>
-        <source src="your-christmas-music.mp3" type="audio/mpeg">
+    <audio id="bg-music" loop muted>
+        <source src="music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
     </audio>
 
     <!-- Christmas Lights -->
@@ -631,7 +634,7 @@
         <!-- Hero Section -->
         <div class="hero-section">
             <h1 class="hero-title">Merry Christmas, My Love</h1>
-            <p class="hero-subtitle">& Happy New Year 2025 <span class="heart-pulse">❤️</span></p>
+            <p class="hero-subtitle">& Happy New Year <span class="heart-pulse">❤️</span></p>
             <p class="hero-message">
                 To the one who makes every day feel like Christmas, who fills my life with warmth, laughter,
                 and endless love. This season, and always, you are my greatest gift.
@@ -647,13 +650,16 @@
                     <!-- 2018 Card - CUSTOMIZE: Change year, image, title, and text -->
                     <div class="col-md-6 col-lg-4">
                         <div class="memory-card">
-                            <img src="https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=600"
-                                alt="Christmas 2018">
+                            <img src="2019.jpg" alt="Christmas 2018">
                             <div class="memory-card-body">
-                                <span class="year-badge">2018</span>
+                                <span class="year-badge">2019</span>
                                 <h5 class="memory-title">Where It All Began</h5>
-                                <p class="memory-text">Our first Christmas together, under twinkling parols. The first
-                                    "I love you" whispered just for us, a memory I'll treasure forever.</p>
+                                <p class="memory-text">Our first Christmas together, the first year of ‘I love you,’
+                                    whispered just for us.
+                                    When the universe gave me the greatest gift I could ever have, a memory and an
+                                    experience I
+                                    will treasure forever
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -664,7 +670,7 @@
                             <img src="https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=600"
                                 alt="Christmas 2019">
                             <div class="memory-card-body">
-                                <span class="year-badge">2019</span>
+                                <span class="year-badge">2020</span>
                                 <h5 class="memory-title">Growing Closer</h5>
                                 <p class="memory-text">With every sunset over the islands and every laugh we shared, our
                                     love blossomed. You became my partner, my best friend, my heart's home.</p>
@@ -678,10 +684,10 @@
                             <img src="https://images.unsplash.com/photo-1544273677-ac73e3fef4ed?w=600"
                                 alt="Christmas 2020">
                             <div class="memory-card-body">
-                                <span class="year-badge">2020</span>
+                                <span class="year-badge">2021</span>
                                 <h5 class="memory-title">Love Through Challenges</h5>
-                                <p class="memory-text">Even when the world felt uncertain, your smile was my sunshine.
-                                    Hand in hand, we proved that love conquers all.</p>
+                                <p class="memory-text">Even when the world felt uncertain. Through challenges,
+                                    through ups and downs. Hand in hand, we proved that love conquers all.</p>
                             </div>
                         </div>
                     </div>
@@ -689,27 +695,13 @@
                     <!-- 2021 Card - CUSTOMIZE: Change year, image, title, and text -->
                     <div class="col-md-6 col-lg-4">
                         <div class="memory-card">
-                            <img src="https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=600"
-                                alt="Christmas 2021">
-                            <div class="memory-card-body">
-                                <span class="year-badge">2021</span>
-                                <h5 class="memory-title">Tropical Adventures</h5>
-                                <p class="memory-text">From beach trips to quiet evenings watching the sunset, every
-                                    moment with you was a new adventure, and I fell more in love every day.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 2022 Card - CUSTOMIZE: Change year, image, title, and text -->
-                    <div class="col-md-6 col-lg-4">
-                        <div class="memory-card">
-                            <img src="https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?w=600"
-                                alt="Christmas 2022">
+                            <img src="2022.jpg" alt="Christmas 2021">
                             <div class="memory-card-body">
                                 <span class="year-badge">2022</span>
-                                <h5 class="memory-title">Building Our Dreams</h5>
-                                <p class="memory-text">Together we dreamed, built, and laughed. Your love gives me
-                                    courage, and our life together is my favorite story.</p>
+                                <h5 class="memory-title">Tropical Adventures</h5>
+                                <p class="memory-text">From beach trips and quiet evenings to watching beautiful sunsets
+                                    like you, with you.
+                                    Every moment, every smile on your face makes me fall in love with you even more</p>
                             </div>
                         </div>
                     </div>
@@ -717,16 +709,32 @@
                     <!-- 2023 Card - CUSTOMIZE: Change year, image, title, and text -->
                     <div class="col-md-6 col-lg-4">
                         <div class="memory-card">
-                            <img src="https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=600"
-                                alt="Christmas 2023">
+                            <img src="2023.jpg" alt="Christmas 2023">
                             <div class="memory-card-body">
                                 <span class="year-badge">2023</span>
                                 <h5 class="memory-title">Stronger Every Year</h5>
-                                <p class="memory-text">Seven years together, and my heart still races for you. You are
-                                    my everyday miracle, my endless Christmas joy.</p>
+                                <p class="memory-text">Five Christmases with you, and my heart still races. It proves
+                                    that love can be painful, but loving you is beautiful.</p>
                             </div>
                         </div>
                     </div>
+
+                    <!-- 2022 Card - CUSTOMIZE: Change year, image, title, and text -->
+                    <div class="col-md-6 col-lg-4">
+                        <div class="memory-card">
+                            <img src="2024.jpg" alt="Christmas 2022">
+                            <div class="memory-card-body">
+                                <span class="year-badge">2024</span>
+                                <h5 class="memory-title">Building Our Dreams</h5>
+                                <p class="memory-text">Together, we dreamed, built, and graduated. Nothing was ever
+                                    easy, but everything was bearable because it's you that here by my side. Your love
+                                    gives me
+                                    courage, and our life together is my favorite story.</p>
+                            </div>
+                        </div>
+                    </div>
+
+
 
                     <!-- 2024 Card - CUSTOMIZE: Change year, image, title, and text -->
                     <div class="col-md-6 col-lg-4">
@@ -734,10 +742,10 @@
                             <img src="https://images.unsplash.com/photo-1514160945036-8c814d6e8e61?w=600"
                                 alt="Christmas 2024">
                             <div class="memory-card-body">
-                                <span class="year-badge">2024</span>
+                                <span class="year-badge">2025</span>
                                 <h5 class="memory-title">Our Bright Today</h5>
-                                <p class="memory-text">Here we are, laughing, loving, and choosing each other every
-                                    single day. You make my heart feel like home and my life a paradise.</p>
+                                <p class="memory-text">Here we are still laughing, still loving, and still choosing each
+                                    other every single day. Through everything, here we stand; still you, still us.</p>
                             </div>
                         </div>
                     </div>
@@ -745,224 +753,163 @@
             </div>
 
             <!-- Surprise Button Section -->
-            <div class="surprise-section">
-                <button class="surprise-btn" id="surpriseBtn">Open Your Special Surprise</button>
-            </div>
+
 
             <!-- Surprise Message (Hidden Initially) -->
             <div class="surprise-message" id="surpriseMessage">
-                <h3>A Special Message Just For You 💝</h3>
+                <h3>To My Darling 💝</h3>
                 <p>
-                    My dearest love, you are the reason I believe in magic. Every moment with you is a gift,
-                    every smile from you brightens my darkest days, and every laugh we share becomes a cherished memory.
+                    I want you to know that I love you every single day, even though our relationship is not perfect and
+                    is sometimes full of struggles.
+                    In our seven christmas together, we have cried, lost hope, and even felt like giving up at times.
+                    But most importantly, we learned to love each other even more and proved that nothing is impossible
+                    when you truly love someone.
                 </p>
                 <p>
-                    Thank you for being you—beautiful, kind, strong, and endlessly amazing.
-                    I promise to love you more each day, to support your dreams, and to be by your side through
-                    everything.
+                    Thank you for being you—beautiful, kind, strong, and endlessly amazing. I’m sorry for the times when
+                    I can be stubborn, immature, doubtful, and always seeking reassurance. Those things are proof of how
+                    deeply I love you.
+
+                    I promise to love you more each day, to support your dreams, and to stand by your side through
+                    everything. This Christmas and every Christmas, I couldn’t ask for anything more, because I know
+                    that your love is the greatest gift of all.
                 </p>
                 <p style="font-size: 1.4rem; margin-top: 30px;">
-                    <strong>You are my forever. Merry Christmas, my love! ❤️✨</strong>
+                    <strong>You are my forever. Merry Christmas, my asbag! ❤️✨</strong>
                 </p>
                 <button class="close-btn" id="closeBtn">Close</button>
             </div>
 
             <!-- Final Love Message -->
             <div class="final-message">
-                <h2>To My Beautiful Soulmate <span class="heart-pulse">💝</span></h2>
+                <h2>To My Beautiful Asbag <span class="heart-pulse">💝</span></h2>
                 <p>
-                    Seven years of sunsets, seven years of shared laughter, seven years of love that keeps growing
-                    stronger.
-                    You are my greatest gift, and I thank the universe every day for bringing you into my life.
+                    Seven Christmases together, like a beautiful sunset. Seven years of shared laughter, seven years of
+                    love that keeps growing stronger, and seven wonderful Christmases. Countless memories I will cherish
+                    forever.
                 </p>
                 <p>
                     As we celebrate this Christmas and welcome the New Year, know that my love for you blooms brighter
                     each day. You are my today and all of my tomorrows.
                 </p>
                 <p style="font-size: 1.5rem; font-weight: 600; margin-top: 30px;">
-                    Merry Christmas and a Happy New Year 2025! 🎄✨
+                    Merry Christmas and a Happy New Year! 🎄✨
                 </p>
                 <p style="font-size: 1.3rem;">
                     Here's to more laughter, love, and sun-kissed memories together.
                 </p>
-                <p class="signature">Forever Yours ❤️</p>
+                <p class="signature">I love You ❤️</p>
+            </div>
+
+            <div class="surprise-section">
+                <button class="surprise-btn" id="surpriseBtn">Click Me</button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript -->
+    <!-- Background Music -->
+    <div id="loveModal" style="
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.8);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index: 9999;
+">
+        <div style="
+        background: #fff;
+        padding: 30px;
+        border-radius: 15px;
+        text-align:center;
+        max-width: 300px;
+    ">
+            <h2>Do you love me? ❤️</h2>
+            <div style="margin-top:20px;">
+                <button class="loveBtn" style="padding:10px 20px; margin:5px;">YES</button>
+                <button class="loveBtn" style="padding:10px 20px; margin:5px;">YES</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // === Snowflake Animation ===
+        /* ===============================
+           BACKGROUND MUSIC
+        =============================== */
+        const music = document.getElementById('bg-music');
+
+        if (music) {
+            music.muted = true; // start muted
+            music.volume = 0.3;
+            music.play().catch(() => console.log('Muted autoplay attempted'));
+        }
+
+        /* ===============================
+           LOVE PROMPT MODAL
+        =============================== */
+        const loveModal = document.getElementById('loveModal');
+        const loveBtns = document.querySelectorAll('.loveBtn');
+
+        loveBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Unmute and play music
+                if (music) {
+                    music.muted = false;
+                    music.play().catch(() => console.log('Music blocked'));
+                }
+                // Hide modal
+                loveModal.style.display = 'none';
+            });
+        });
+
+        /* ===============================
+           SNOWFLAKE ANIMATION
+        =============================== */
         function createSnowflake() {
             const snowflake = document.createElement('div');
-            snowflake.classList.add('snowflake');
-            snowflake.innerHTML = '❄';
+            snowflake.className = 'snowflake';
+            snowflake.textContent = '❄';
             snowflake.style.left = Math.random() * window.innerWidth + 'px';
-            snowflake.style.animationDuration = Math.random() * 3 + 2 + 's';
-            snowflake.style.fontSize = Math.random() * 10 + 10 + 'px';
+            snowflake.style.fontSize = Math.random() * 12 + 10 + 'px';
             snowflake.style.opacity = Math.random() * 0.6 + 0.4;
-
+            snowflake.style.animationDuration = Math.random() * 5 + 5 + 's';
             document.getElementById('snow').appendChild(snowflake);
-
-            setTimeout(() => {
-                snowflake.remove();
-            }, 5000);
+            setTimeout(() => snowflake.remove(), 10000);
         }
-
         setInterval(createSnowflake, 200);
 
-        // === Countdown Timer to New Year ===
-        function updateCountdown() {
-            const newYear = new Date('January 1, 2025 00:00:00').getTime();
-            const now = new Date().getTime();
-            const distance = newYear - now;
-
-            if (distance < 0) {
-                // New Year has passed, show a message
-                document.querySelector('.countdown-section').innerHTML = `
-                    <h2 class="countdown-title">Happy New Year 2025! 🎉</h2>
-                    <p style="color: white; font-size: 1.5rem;">Here's to an amazing year ahead together!</p>
-                `;
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
-        }
-
-        // Update countdown every second
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-
-        // === Surprise Button & Modal ===
-        const surpriseBtn = document.getElementById('surpriseBtn');
-        const surpriseMessage = document.getElementById('surpriseMessage');
-        const overlay = document.getElementById('overlay');
-        const closeBtn = document.getElementById('closeBtn');
-
-        // Open surprise message
-        surpriseBtn.addEventListener('click', () => {
-            surpriseMessage.classList.add('active');
-            overlay.classList.add('active');
-
-            // Optional: Play a sound effect here
-            // new Audio('surprise-sound.mp3').play();
-        });
-
-        // Close surprise message
-        closeBtn.addEventListener('click', () => {
-            surpriseMessage.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // Close when clicking overlay
-        overlay.addEventListener('click', () => {
-            surpriseMessage.classList.remove('active');
-            overlay.classList.remove('active');
-        });
-
-        // === Background Music Control (Optional) ===
-        window.addEventListener('load', () => {
-            const music = document.getElementById('bg-music');
-
-            // Set volume (0.0 to 1.0)
-            music.volume = 0.3;
-
-            // Try to play music (may be blocked by browser)
-            music.play().catch(e => {
-                console.log("Autoplay blocked. User interaction needed.");
-
-                // Add a play button if autoplay is blocked
-                const playBtn = document.createElement('button');
-                playBtn.textContent = '🎵 Play Music';
-                playBtn.style.cssText = `
-                    position: fixed;
-                    bottom: 30px;
-                    right: 30px;
-                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                    color: white;
-                    border: none;
-                    padding: 15px 30px;
-                    border-radius: 50px;
-                    font-size: 1rem;
-                    font-weight: 600;
-                    cursor: pointer;
-                    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
-                    z-index: 1001;
-                    transition: all 0.3s ease;
-                `;
-
-                playBtn.addEventListener('click', () => {
-                    music.play();
-                    playBtn.remove();
-                });
-
-                playBtn.addEventListener('mouseenter', () => {
-                    playBtn.style.transform = 'scale(1.1)';
-                });
-
-                playBtn.addEventListener('mouseleave', () => {
-                    playBtn.style.transform = 'scale(1)';
-                });
-
-                document.body.appendChild(playBtn);
-            });
-        });
-
-        // === Smooth Scroll Animation ===
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
-            });
-        });
-
-        // === Add Stagger Animation to Cards ===
-        const observerOptions = {
-            threshold: 0.1,
-            rootMargin: '0px 0px -100px 0px'
-        };
-
-        const observer = new IntersectionObserver((entries) => {
+        /* ===============================
+           MEMORY CARD SCROLL ANIMATION
+        =============================== */
+        const observer = new IntersectionObserver(entries => {
             entries.forEach((entry, index) => {
                 if (entry.isIntersecting) {
                     setTimeout(() => {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
-                    }, index * 100);
+                    }, index * 120);
                     observer.unobserve(entry.target);
                 }
             });
-        }, observerOptions);
+        }, { threshold: 0.15 });
 
-        // Observe all memory cards
         document.querySelectorAll('.memory-card').forEach(card => {
             card.style.opacity = '0';
-            card.style.transform = 'translateY(30px)';
-            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            card.style.transform = 'translateY(40px)';
+            card.style.transition = 'all 0.6s ease';
             observer.observe(card);
         });
 
-        // === Random Floating Hearts Effect (Optional) ===
+        /* ===============================
+           FLOATING HEARTS
+        =============================== */
         function createFloatingHeart() {
             const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
+            heart.textContent = '❤️';
             heart.style.cssText = `
                 position: fixed;
-                bottom: -50px;
+                bottom: -40px;
                 left: ${Math.random() * 100}%;
                 font-size: ${Math.random() * 20 + 20}px;
                 opacity: ${Math.random() * 0.5 + 0.5};
@@ -970,50 +917,69 @@
                 z-index: 999;
                 animation: floatUp ${Math.random() * 3 + 4}s linear;
             `;
-
             document.body.appendChild(heart);
-
-            setTimeout(() => {
-                heart.remove();
-            }, 7000);
+            setTimeout(() => heart.remove(), 7000);
         }
-
-        // Create floating heart every few seconds
         setInterval(createFloatingHeart, 3000);
 
-        // Add CSS for floating hearts animation
-        const style = document.createElement('style');
-        style.textContent = `
+        const heartStyle = document.createElement('style');
+        heartStyle.textContent = `
             @keyframes floatUp {
                 to {
-                    bottom: 110%;
+                    bottom: 120%;
                     transform: translateX(${Math.random() * 100 - 50}px);
                     opacity: 0;
                 }
             }
         `;
-        document.head.appendChild(style);
+        document.head.appendChild(heartStyle);
 
-        // === Keyboard Shortcuts (Easter Eggs) ===
-        document.addEventListener('keydown', (e) => {
-            // Press 'L' for Love message
-            if (e.key.toLowerCase() === 'l') {
-                surpriseBtn.click();
+        /* ===============================
+           SURPRISE MODAL
+        =============================== */
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const surpriseMessage = document.getElementById('surpriseMessage');
+        const overlayModal = document.getElementById('overlay');
+        const closeBtn = document.getElementById('closeBtn');
+
+        function openSurprise() {
+            surpriseMessage.classList.add('active');
+            overlayModal.classList.add('active');
+
+            if (music && music.paused) {
+                music.play().catch(() => console.log('Music blocked until user interacts'));
             }
 
-            // Press 'M' to toggle music
-            if (e.key.toLowerCase() === 'm') {
-                const music = document.getElementById('bg-music');
-                if (music.paused) {
-                    music.play();
-                } else {
-                    music.pause();
-                }
+            surpriseBtn.disabled = true;
+            setTimeout(() => surpriseBtn.disabled = false, 1000);
+        }
+
+        function closeSurprise() {
+            surpriseMessage.classList.remove('active');
+            overlayModal.classList.remove('active');
+        }
+
+        surpriseBtn.addEventListener('click', openSurprise);
+        closeBtn.addEventListener('click', closeSurprise);
+        overlayModal.addEventListener('click', closeSurprise);
+
+        /* ===============================
+           KEYBOARD SHORTCUTS
+        =============================== */
+        document.addEventListener('keydown', e => {
+            if (e.key.toLowerCase() === 'l') openSurprise();
+            if (e.key.toLowerCase() === 'm' && music) {
+                music.paused ? music.play() : music.pause();
             }
         });
 
-        // === Console Easter Egg ===
-        console.log('%c❤️ Merry Christmas, My Love! ❤️', 'color: #ff6b6b; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);');
-        console.log('%cYou found the secret message! 🎁', 'color: #ffd700; font-size: 16px;');
-        console.log('%cEvery line of code in this page was written with love for you. 💝', 'color: #4ecdc4; font-size: 14px;');
+        /* ===============================
+           CONSOLE MESSAGE
+        =============================== */
+        console.log('%c❤️ Merry Christmas, My Love! ❤️', 'color:#ff6b6b;font-size:24px;font-weight:bold;');
+        console.log('%cEvery line of this page was written with love 💝', 'color:#ffd700;font-size:16px;');
     </script>
+
+</body>
+
+</html>
