@@ -133,6 +133,19 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['event-booking'])) {
     $page = "adminFrontend/event_booking.php";
 
+} elseif (isset($_GET['event-acp-list'])) {
+    $page = "adminFrontend/event_accepted_booking.php";
+
+} elseif (isset($_GET['event-ongoing'])) {
+    $page = "adminFrontend/event_ongoing_booking.php";
+
+} elseif (isset($_GET['event-complete-list'])) {
+    $page = "adminFrontend/event_completed_booking.php";
+
+} elseif (isset($_GET['admin-dashboard'])) {
+    $page = "adminFrontend/dashboard.php";
+
+
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {
     $page = "adminFrontend/test.php";

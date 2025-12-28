@@ -107,10 +107,13 @@
                                 </div>
                             </div>
 
-                            <div class="event-notes">
-                                <i class="fas fa-info-circle"></i>
-                                <?= nl2br(htmlspecialchars($row['notes'])) ?>
-                            </div>
+                            <?php if (!empty($row['notes'])): ?>
+                                <div class="event-notes">
+                                    <i class="fas fa-info-circle"></i>
+                                    <?= nl2br(htmlspecialchars($row['notes'])) ?>
+                                </div>
+                            <?php endif; ?>
+
 
                             <div class="event-actions">
                                 <button class="btn-view-menu" data-bs-toggle="modal"
@@ -401,7 +404,6 @@
             const total = parseFloat((basePrice + additionalTotal).toFixed(2));
             document.getElementById('bookingTotalPrice').textContent = `₱${total.toLocaleString()}`;
 
-            // Update Paid Amount based on payment type
             updatePaidAmountByPaymentType();
         }
 
@@ -422,7 +424,7 @@
             } else if (type === 'Half') {
                 paidAmountInput.value = (totalAmount / 2).toFixed(2);
                 paidAmountInput.readOnly = true;
-            } else { // Custom
+            } else {
                 paidAmountInput.value = 0;
                 paidAmountInput.readOnly = false;
             }
@@ -468,38 +470,36 @@
         });
 
         /* BOOK NOW */
-        /* BOOK NOW HANDLER */
         bookNowButtons.forEach(btn => {
             btn.addEventListener('click', e => {
                 const dateTimeVal = bookingDateInput.value;
 
-                // Check if date/time is selected
                 if (!dateTimeVal) {
                     alert('Please select a booking date and time first.');
                     return;
                 }
 
-                // Check if availability has been checked
                 if (!availabilityChecked) {
                     alert('Please click "Check Availability" before booking.');
                     return;
                 }
 
-                // Check for conflict
                 if (hasConflict) {
                     alert('Selected date/time is not available.');
                     return;
                 }
 
-                // Set selected package
                 selectedPackageId = btn.dataset.packageId;
+
+                bookingMaxGuestsValue = parseInt(btn.dataset.packageMaxGuests);
+
+                guestCountInput.max = bookingMaxGuestsValue;
 
                 document.getElementById('bookingPackageName').textContent = btn.dataset.packageName;
                 document.getElementById('bookingPackagePrice').textContent = '₱' + btn.dataset.packagePrice;
                 document.getElementById('bookingTotalPrice').textContent = '₱' + btn.dataset.packagePrice;
                 document.getElementById('bookingMaxGuests').textContent = btn.dataset.packageMaxGuests;
 
-                // Reset inputs
                 additionalGuestsInput.value = 0;
                 pricePerAdditionalInput.value = 1200;
                 paidAmountInput.value = 0;
@@ -511,18 +511,22 @@
 
                 updateTotal();
 
-                // Set event date/time in modal
                 const [date, time] = dateTimeVal.split('T');
                 document.getElementById('eventDate').value = date;
                 document.getElementById('eventTime').value = time;
 
-                // Show the booking modal
                 bookingModal.show();
             });
         });
 
+        guestCountInput.addEventListener('input', () => {
+            const value = parseInt(guestCountInput.value) || 0;
 
-        // Dynamic updates
+            if (value > bookingMaxGuestsValue) {
+                guestCountInput.value = bookingMaxGuestsValue;
+                alert(`Guest count cannot exceed ${bookingMaxGuestsValue}`);
+            }
+        });
         guestCountInput.addEventListener('input', updateTotal);
         additionalGuestsInput.addEventListener('input', updateTotal);
         pricePerAdditionalInput.addEventListener('input', updateTotal);
@@ -546,6 +550,12 @@
             const customerEmailVal = document.getElementById('customerEmail').value.trim();
             const customerPhoneVal = document.getElementById('customerPhone').value.trim();
             const guestCountVal = parseInt(guestCountInput.value);
+
+            if (guestCountVal > bookingMaxGuestsValue) {
+                alert(`Guest count cannot exceed ${bookingMaxGuestsValue}`);
+                return;
+            }
+
             const additionalGuestsVal = parseInt(additionalGuestsInput.value) || 0;
             const pricePerAdditional = parseFloat(pricePerAdditionalInput.value) || 0;
             const paidAmountVal = parseFloat(paidAmountInput.value) || 0;

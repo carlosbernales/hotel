@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 22, 2025 at 03:43 AM
+-- Generation Time: Dec 28, 2025 at 09:41 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -926,12 +926,13 @@ CREATE TABLE `events` (
 
 CREATE TABLE `event_bookings` (
   `id` int NOT NULL,
+  `booking_refId` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `user_id` int DEFAULT NULL,
   `customer_name` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
   `package_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `max_guest` int DEFAULT NULL,
   `package_price` decimal(10,2) NOT NULL,
-  `overtime_hours` int DEFAULT '0',
+  `overtime_hours` varchar(255) COLLATE utf8mb4_general_ci DEFAULT '0',
   `overtime_charge` decimal(10,2) DEFAULT '0.00',
   `extra_guests` int DEFAULT '0',
   `extra_guest_charge` decimal(10,2) DEFAULT '0.00',
@@ -952,8 +953,8 @@ CREATE TABLE `event_bookings` (
 -- Dumping data for table `event_bookings`
 --
 
-INSERT INTO `event_bookings` (`id`, `user_id`, `customer_name`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`) VALUES
-(1, NULL, 'Carlos Bernales', 'Package B', 30, 55000.00, 0, 0.00, 2, 1200.00, 57400.00, 28700.00, 28700.00, 'Birthday', '2025-12-24 11:41:00', '2025-12-24 15:41:00', 30, 'Cash', 'Half', 'pending', 'Regular');
+INSERT INTO `event_bookings` (`id`, `booking_refId`, `user_id`, `customer_name`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`) VALUES
+(3, 'EVT-SJ92C0', NULL, 'Carlos Bernales', 'Package A', 30, 47500.00, '0', 0.00, 3, 1200.00, 51100.00, 24950.00, 26150.00, 'Birthday', '2025-12-28 16:00:00', '2025-12-28 20:00:00', 30, 'Cash', 'Half', 'Ongoing', 'Regular');
 
 -- --------------------------------------------------------
 
@@ -3405,7 +3406,7 @@ ALTER TABLE `discount_types`
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
