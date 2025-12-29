@@ -1,0 +1,27 @@
+[29-Dec-2025 08:32:46 UTC] Session data: Array
+(
+    [redirect_url] => http://localhost/hotel/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => b667d32bd5299b31693a3f2b9c4d81961d89abb00764c20602ad232b4d2758d8
+    [advance_order] => Array
+        (
+            [first] => Carlos
+            [last] => Bernales
+            [contact] => 9951776920
+            [datetime] => 2025-12-29T15:00
+            [tableTypes] => Array
+                (
+                    [0] => 3
+                )
+
+            [tables] => Array
+                (
+                    [0] => 2
+                )
+
+        )
+
+)
+

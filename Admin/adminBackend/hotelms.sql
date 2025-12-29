@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 28, 2025 at 09:41 AM
+-- Generation Time: Dec 29, 2025 at 12:24 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -649,8 +649,8 @@ CREATE TABLE `contact_info` (
 --
 
 INSERT INTO `contact_info` (`id`, `icon_class`, `display_text`, `link`, `is_external`, `display_order`, `active`) VALUES
-(1, 'fab fa-facebook', 'Casa Estela Boutique Hotel & Cafés', 'https://web.facebook.com/casaestelahotelcafe', 1, 1, 1),
-(2, 'fas fa-envelope', 'casaestelahotelcafe@gmail.com', 'mailto:casaestelahotelcafe@gmail.com', 0, 2, 1),
+(1, 'fab fa-facebook', 'Casa Estela Boutique Hotel & Cafés', 'https://web.facebook.com/casaestelahotelcafe', 0, 1, 1),
+(2, 'fas fa-envelope', 'casaestelahotelcafe@gmail.com', 'mailto:casaestelahotelcafe@gmail.com', 1, 2, 1),
 (3, 'fas fa-phone', '0908 747 4892', 'tel:+09087474892', 0, 3, 1),
 (4, 'fab fa-twitter', '@casaestelahlcf', '#', 1, 4, 1),
 (5, 'fab fa-instagram', '@casaestelahotelcafe', 'https://www.instagram.com/casaestelahotelcafe', 1, 5, 1),
@@ -1052,15 +1052,14 @@ INSERT INTO `facilities` (`id`, `category_id`, `name`, `icon`, `display_order`, 
 (10, 2, '24-hour security', 'check', 6, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (11, 3, 'Coffee house', 'check', 1, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (12, 3, 'Snack bar', 'check', 2, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
-(13, 3, 'Restaurant', 'check', 3, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
+(13, 3, 'Restaurant', 'check', 3, 0, '2025-03-05 11:21:30', '2025-12-29 10:24:45'),
 (14, 4, 'Private check-in/check-out', 'check', 1, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (15, 4, 'Luggage storage', 'check', 2, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (16, 4, '24-hour front desk', 'check', 3, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (17, 5, 'English', 'check', 1, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (18, 5, 'Filipino', 'check', 2, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (19, 6, 'Free Wi-Fi', 'check', 1, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
-(20, 7, 'Toilet paper', 'check', 1, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
-(21, 7, 'Bidet', 'check', 2, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
+(21, 7, 'Bidet', 'check', 2, 1, '2025-03-05 11:21:30', '2025-12-29 10:19:55'),
 (22, 7, 'Slippers', 'check', 3, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (23, 7, 'Private bathroom', 'check', 4, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (24, 7, 'Toilet', 'check', 5, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
@@ -1068,7 +1067,8 @@ INSERT INTO `facilities` (`id`, `category_id`, `name`, `icon`, `display_order`, 
 (26, 7, 'Shower', 'check', 7, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (27, 1, 'may tanod', 'check', 5, 1, '2025-04-09 11:13:27', '2025-04-09 11:13:27'),
 (29, 4, 'Kiss', 'check', 4, 1, '2025-04-09 13:55:56', '2025-04-09 13:55:56'),
-(0, 1, 'May bayad', 'check', 6, 1, '2025-04-21 08:50:34', '2025-04-21 08:50:34');
+(30, 1, 'May bayad', 'check', 6, 1, '2025-04-21 08:50:34', '2025-04-21 08:50:34'),
+(57, 2, 'Package F', 'check', 1, 0, '2025-12-29 10:04:42', '2025-12-29 10:04:42');
 
 -- --------------------------------------------------------
 
@@ -1090,14 +1090,13 @@ CREATE TABLE `facility_categories` (
 --
 
 INSERT INTO `facility_categories` (`id`, `name`, `display_order`, `active`, `created_at`, `updated_at`) VALUES
-(1, 'Parking', 1, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
+(1, 'Parking', 1, 0, '2025-03-05 11:21:30', '2025-12-29 11:25:15'),
 (2, 'Safety & Security', 2, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (3, 'Food & Drink', 3, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (4, 'Reception Services', 4, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (5, 'Languages Spoken', 5, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
 (6, 'Internet', 6, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
-(7, 'Bathroom', 7, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30'),
-(0, 'Computer Shop', 8, 1, '2025-11-14 01:06:34', '2025-11-14 01:06:34');
+(7, 'Bathroom', 7, 1, '2025-03-05 11:21:30', '2025-03-05 11:21:30');
 
 -- --------------------------------------------------------
 
@@ -3039,7 +3038,7 @@ CREATE TABLE `verification_types` (
 --
 
 INSERT INTO `verification_types` (`id`, `type`, `is_enabled`, `disable_message`, `last_updated`) VALUES
-(1, 'SMS', 1, NULL, '2025-04-11 09:47:29'),
+(1, 'SMS', 0, 'fd', '2025-12-29 07:29:40'),
 (2, 'Email', 0, 'basta', '2025-04-11 09:47:26');
 
 --
@@ -3118,6 +3117,12 @@ ALTER TABLE `cashier`
   ADD UNIQUE KEY `username` (`username`);
 
 --
+-- Indexes for table `contact_info`
+--
+ALTER TABLE `contact_info`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
@@ -3145,6 +3150,18 @@ ALTER TABLE `event_bookings`
 -- Indexes for table `event_packages`
 --
 ALTER TABLE `event_packages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `facilities`
+--
+ALTER TABLE `facilities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `facility_categories`
+--
+ALTER TABLE `facility_categories`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -3391,6 +3408,12 @@ ALTER TABLE `cashier`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `contact_info`
+--
+ALTER TABLE `contact_info`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
@@ -3413,6 +3436,18 @@ ALTER TABLE `event_bookings`
 --
 ALTER TABLE `event_packages`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `facilities`
+--
+ALTER TABLE `facilities`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+
+--
+-- AUTO_INCREMENT for table `facility_categories`
+--
+ALTER TABLE `facility_categories`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `fix_booking_ids_log`

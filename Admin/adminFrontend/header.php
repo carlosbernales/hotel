@@ -150,7 +150,7 @@ $currentPage = basename($page);
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['contact_management.php', 'room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php', 'facilities_management.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-cogs"></i> Settings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -183,6 +183,20 @@ $currentPage = basename($page);
                     <a href="index.php?event_management"
                         class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
                         <i class="fas fa-calendar-alt"></i> Event Management
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?facilities"
+                        class="<?php echo ($currentPage == 'facilities_management.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-calendar-alt"></i> Facility Management
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?contact_management"
+                        class="<?php echo ($currentPage == 'contact_management.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-calendar-alt"></i> Contact Management
                     </a>
                 </div>
             </div>

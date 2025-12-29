@@ -145,6 +145,14 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['admin-dashboard'])) {
     $page = "adminFrontend/dashboard.php";
 
+} elseif (isset($_GET['facilities'])) {
+    $page = "adminFrontend/facilities_management.php";
+
+} elseif (isset($_GET['contact_management'])) {
+    $page = "adminFrontend/contact_management.php";
+
+
+
 
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {
