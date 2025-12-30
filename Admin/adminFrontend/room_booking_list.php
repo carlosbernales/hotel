@@ -306,7 +306,7 @@ while ($g = $resGuests->fetch_assoc()) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"> Checked In Bookings</i>
+            <i class="fas fa-home"> Checked In Room Bookings</i>
         </div>
     </div>
 

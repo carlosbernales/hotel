@@ -56,8 +56,7 @@ while ($g = $resGuests->fetch_assoc()) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"></i>
-            <span>Finished Bookings</span>
+            <i class="fas fa-home"> Finished Room Bookings</i>
         </div>
     </div>
 
@@ -439,7 +438,7 @@ function getRoomInfo($conn, $room_number_fk_id)
                                     echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
                                 }
                                 ?>
-                                </textarea>
+                                                                        </textarea>
                             </div>
                         </div>
                     <?php endif; ?>

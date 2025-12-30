@@ -109,11 +109,20 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['accepted_room_bookDetails'])) {
     $page = "adminFrontend/accepted_room_bookDetails.php";
 
+} elseif (isset($_GET['details-pend'])) {
+    $page = "adminFrontend/pending_room_bookDetails.php";
+
+
+
 } elseif (isset($_GET['checkInDetails_room_booking'])) {
     $page = "adminFrontend/checkInDetails_room_booking.php";
 
 } elseif (isset($_GET['room_booking_receipt'])) {
     $page = "adminFrontend/room_booking_receipt.php";
+
+} elseif (isset($_GET['room_booking_receipt_accp'])) {
+    $page = "adminFrontend/room_booking_receipt_accepted.php";
+
 
 } elseif (isset($_GET['amenity_list'])) {
     $page = "adminFrontend/amenity_list.php";
@@ -151,6 +160,11 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['contact_management'])) {
     $page = "adminFrontend/contact_management.php";
 
+} elseif (isset($_GET['messages'])) {
+    $page = "message.php";
+
+} elseif (isset($_GET['rejected-room-bookings'])) {
+    $page = "adminFrontend/rejected_room_bookings_list.php";
 
 
 

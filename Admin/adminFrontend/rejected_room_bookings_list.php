@@ -4,8 +4,7 @@ include 'adminFrontend/header.php';
 
 $bookings = [];
 
-$sqlBookings = "SELECT * FROM bookings WHERE status IN ('pending')";
-
+$sqlBookings = "SELECT * FROM bookings WHERE status = 'rejected'";
 $resBookings = $conn->query($sqlBookings);
 
 while ($row = $resBookings->fetch_assoc()) {
@@ -31,7 +30,6 @@ $sqlRooms = "
     LEFT JOIN room_numbers rn 
         ON br.room_number_fk_id = rn.room_number_id
 ";
-
 $resRooms = $conn->query($sqlRooms);
 
 while ($r = $resRooms->fetch_assoc()) {
@@ -53,15 +51,12 @@ while ($g = $resGuests->fetch_assoc()) {
         $bookings[$id]['guests'][] = $g;
     }
 }
-
-
 ?>
-
 
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"> Pending Room Bookings</i>
+            <i class="fas fa-home"> Rejected Room Bookings</i>
         </div>
     </div>
 
@@ -77,7 +72,7 @@ while ($g = $resGuests->fetch_assoc()) {
                         <th>Fullname</th>
                         <th>Contact</th>
                         <th>Schedule</th>
-                        <th>Status</th>
+
                         <th></th>
                     </tr>
                 </thead>
@@ -92,31 +87,18 @@ while ($g = $resGuests->fetch_assoc()) {
                                 <?= date("F j, Y", strtotime($b['check_in'])) ?> -
                                 <?= date("F j, Y", strtotime($b['check_out'])) ?>
                             </td>
-                            <td>
-                                <?php
-                                $status = $b['status'];
-                                if ($status === 'pending') {
-                                    echo '<span class="badge bg-warning text-dark">Pending</span>';
-                                } else {
-                                    echo '<span class="badge bg-secondary">' . htmlspecialchars($status) . '</span>';
-                                }
-                                ?>
-                            </td>
+
 
                             <td>
-                                <a href="../Admin/index.php?details-pend&id=<?= $id ?>" class="btn btn-sm table-action-btn">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-
                                 <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
                                     data-bs-target="#viewModal<?= $id ?>">
                                     <i class="bi bi-eye"></i>
                                 </button>
-
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
+
             </table>
         </div>
     </div>
@@ -199,14 +181,59 @@ function getRoomInfo($conn, $room_number_fk_id)
                         </div>
                         <div class="card-body">
                             <div class="row g-3">
+
+                                <?php
+                                // Fetch original check-in/out from booking_check_inout
+                                $original_check_in = $original_check_out = null;
+                                if (!empty($b['booking_id'])) {
+                                    $stmt_chk = $conn->prepare("SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?");
+                                    $stmt_chk->bind_param("i", $b['booking_id']);
+                                    $stmt_chk->execute();
+                                    $chk_res = $stmt_chk->get_result();
+                                    if ($chk_res->num_rows > 0) {
+                                        $chk_row = $chk_res->fetch_assoc();
+                                        $original_check_in = $chk_row['check_in'];
+                                        $original_check_out = $chk_row['check_out'];
+                                    }
+                                }
+
+                                $current_check_in = $b['check_in'];
+                                $current_check_out = $b['check_out'];
+                                ?>
+
                                 <div class="col-md-3">
-                                    <label class="text-muted small">Check-in</label>
-                                    <p class="mb-0 fw-semibold"><?= date('M d, Y', strtotime($b['check_in'])) ?></p>
+                                    <label class="text-muted small">Booked Check-in</label>
+                                    <p class="mb-0 fw-semibold">
+                                        <?= $original_check_in ? date("M d, Y", strtotime($original_check_in)) : 'N/A' ?>
+                                    </p>
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="text-muted small">Check-out</label>
-                                    <p class="mb-0 fw-semibold"><?= date('M d, Y', strtotime($b['check_out'])) ?></p>
+                                    <label class="text-muted small">Booked Check-out</label>
+                                    <p class="mb-0 fw-semibold">
+                                        <?= $original_check_out ? date("M d, Y", strtotime($original_check_out)) : 'N/A' ?>
+                                    </p>
                                 </div>
+
+                                <div class="col-md-3">
+                                    <label class="text-muted small"> Check-in</label>
+                                    <p class="mb-0 fw-semibold">
+                                        <?= date("M d, Y", strtotime($current_check_in)) ?>
+                                        <?php if ($original_check_in && strtotime($current_check_in) < strtotime($original_check_in)): ?>
+                                            <span class="text-success fw-bold">(Advance Check-in)</span>
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+
+                                <div class="col-md-3">
+                                    <label class="text-muted small"> Check-out</label>
+                                    <p class="mb-0 fw-semibold">
+                                        <?= date("M d, Y", strtotime($current_check_out)) ?>
+                                        <?php if ($original_check_out && strtotime($current_check_out) > strtotime($original_check_out)): ?>
+                                            <span class="text-warning fw-bold">(Extended Booking)</span>
+                                        <?php endif; ?>
+                                    </p>
+                                </div>
+
                                 <div class="col-md-2">
                                     <label class="text-muted small">Nights</label>
                                     <p class="mb-0 fw-semibold"><?= $b['nights'] ?></p>
@@ -219,21 +246,41 @@ function getRoomInfo($conn, $room_number_fk_id)
                                     <label class="text-muted small">Children</label>
                                     <p class="mb-0 fw-semibold"><?= $b['num_children'] ?></p>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="text-muted small">Total Guests</label>
                                     <p class="mb-0 fw-semibold"><?= $b['number_of_guests'] ?></p>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="text-muted small">Room Quantity</label>
                                     <p class="mb-0 fw-semibold"><?= $b['room_quantity'] ?></p>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <label class="text-muted small">Payment Method</label>
                                     <p class="mb-0 fw-semibold"><?= $b['payment_method'] ?></p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-danger text-white">
+                            <h6 class="mb-0">
+                                <i class="bi bi-x-circle"></i> Rejection Details
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-12">
+                                    <label class="text-muted small">Rejection Reason</label>
+                                    <p class="mb-0 fw-semibold text-danger">
+                                        <?= !empty($b['rejection_reason']) ? htmlspecialchars($b['rejection_reason']) : 'No reason provided' ?>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <!-- PAYMENT INFORMATION -->
                     <div class="card mb-3 border-0 shadow-sm">
@@ -244,20 +291,24 @@ function getRoomInfo($conn, $room_number_fk_id)
                             <div class="row g-3">
                                 <div class="col-md-3">
                                     <label class="text-muted small">Total Amount</label>
-                                    <p class="mb-0 fw-bold text-success">₱<?= number_format($b['total_amount'], 2) ?></p>
+                                    <p class="mb-0 fw-bold text-success">
+                                        ₱<?= number_format($b['total_amount'], 2) ?></p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Downpayment</label>
-                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['downpayment_amount'], 2) ?></p>
+                                    <p class="mb-0 fw-semibold">
+                                        ₱<?= number_format($b['downpayment_amount'], 2) ?></p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Remaining Balance</label>
-                                    <p class="mb-0 fw-bold text-danger">₱<?= number_format($b['remaining_balance'], 2) ?>
+                                    <p class="mb-0 fw-bold text-danger">
+                                        ₱<?= number_format($b['remaining_balance'], 2) ?>
                                     </p>
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Discount</label>
-                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?></p>
+                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?>
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -281,7 +332,8 @@ function getRoomInfo($conn, $room_number_fk_id)
                                     </div>
                                     <div class="col-md-4">
                                         <label class="text-muted small">Discount Amount</label>
-                                        <p class="mb-0 fw-semibold text-success">₱<?= number_format($b['discount_amount'], 2) ?>
+                                        <p class="mb-0 fw-semibold text-success">
+                                            ₱<?= number_format($b['discount_amount'], 2) ?>
                                         </p>
                                     </div>
                                 </div>
@@ -330,19 +382,56 @@ function getRoomInfo($conn, $room_number_fk_id)
                         </div>
                     <?php endif; ?>
 
+                    <div class="card mb-3 border-0 shadow-sm">
+                        <div class="card-header bg-dark text-warning">
+                            <h6 class="mb-0"><i class="bi bi-door-open"></i> Amenities</h6>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Amenity</th>
+                                            <th>Quantity</th>
+                                            <th>Price</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        if (!empty($b['booking_id'])) {
+                                            $stmt = $conn->prepare("
+                                                            SELECT amenity_name, quantity, price
+                                                            FROM booking_amenities
+                                                            WHERE booking_fk_id = ?
+                                                        ");
+                                            $stmt->bind_param("i", $b['booking_id']);
+                                            $stmt->execute();
+                                            $amenities_res = $stmt->get_result();
+
+                                            if ($amenities_res->num_rows > 0) {
+                                                while ($amenity = $amenities_res->fetch_assoc()) {
+                                                    echo "<tr>
+                                                                        <td>" . htmlspecialchars($amenity['amenity_name']) . "</td>
+                                                                        <td>" . htmlspecialchars($amenity['quantity']) . "</td>
+                                                                        <td>₱" . number_format($amenity['price'], 2) . "</td>
+                                                                    </tr>";
+                                                }
+                                            } else {
+                                                echo '<tr><td colspan="3" class="text-center text-muted py-3">No amenities found</td></tr>';
+                                            }
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
 
                     <?php
                     // Fetch reschedules safely
                     $resched_res = null;
                     if (!empty($b['booking_id'])) {
-                        // Get original check-in/out from booking_check_inout
-                        $ci_co_stmt = $conn->prepare("SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?");
-                        $ci_co_stmt->bind_param("i", $b['booking_id']);
-                        $ci_co_stmt->execute();
-                        $ci_co_result = $ci_co_stmt->get_result();
-                        $original = $ci_co_result->fetch_assoc();
-
-                        // Fetch reschedules
                         $stmt = $conn->prepare("SELECT * FROM reschedule_bookings WHERE booking_fk_id = ? ORDER BY date_resched ASC");
                         $stmt->bind_param("i", $b['booking_id']);
                         $stmt->execute();
@@ -350,37 +439,29 @@ function getRoomInfo($conn, $room_number_fk_id)
                     }
 
                     if ($resched_res && $resched_res->num_rows > 0):
+                        $newCI = date("F j, Y", strtotime($b['check_in']));
+                        $newCO = date("F j, Y", strtotime($b['check_out']));
                         ?>
                         <div class="card mb-3 border-0 shadow-sm">
                             <div class="card-header bg-dark text-warning">
                                 <h6 class="mb-0"><i class="fas fa-concierge-bell"></i> Reschedule Details</h6>
                             </div>
                             <div class="card-body p-0">
-                                <textarea class="form-control border-0" rows="3" readonly><?php
-                                $prevCI = $original['check_in'];
-                                $prevCO = $original['check_out'];
+                                <textarea class="form-control border-0" rows="3"
+                                    readonly> <?php
+                                    while ($r = $resched_res->fetch_assoc()) {
+                                        $oldCI = date("F j, Y", strtotime($r['check_in']));
+                                        $oldCO = date("F j, Y", strtotime($r['check_out']));
+                                        $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                        $reason = $r['reason'];
 
-                                while ($r = $resched_res->fetch_assoc()) {
-                                    $newCI = $r['check_in'];
-                                    $newCO = $r['check_out'];
-                                    $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                    $reason = $r['reason'];
-
-                                    echo "On $dateRes, the guest requested a reschedule, changing the stay from "
-                                        . date("F j, Y", strtotime($prevCI)) . " - "
-                                        . date("F j, Y", strtotime($prevCO)) . " to "
-                                        . date("F j, Y", strtotime($newCI)) . " - "
-                                        . date("F j, Y", strtotime($newCO)) . " due to the reason: \"$reason\".\n";
-
-                                    // Update previous dates for next iteration
-                                    $prevCI = $newCI;
-                                    $prevCO = $newCO;
-                                }
-                                ?></textarea>
+                                        echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                                    }
+                                    ?>
+                                                                                                                                                        </textarea>
                             </div>
                         </div>
                     <?php endif; ?>
-
 
                     <!-- BOOKED ROOMS TABLE -->
                     <div class="card mb-3 border-0 shadow-sm">
@@ -410,7 +491,8 @@ function getRoomInfo($conn, $room_number_fk_id)
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="4" class="text-center text-muted py-3">No rooms found</td>
+                                                <td colspan="4" class="text-center text-muted py-3">No rooms found
+                                                </td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -446,7 +528,8 @@ function getRoomInfo($conn, $room_number_fk_id)
                                             <?php endforeach; ?>
                                         <?php else: ?>
                                             <tr>
-                                                <td colspan="3" class="text-center text-muted py-3">No guests found</td>
+                                                <td colspan="3" class="text-center text-muted py-3">No guests found
+                                                </td>
                                             </tr>
                                         <?php endif; ?>
                                     </tbody>
@@ -459,6 +542,8 @@ function getRoomInfo($conn, $room_number_fk_id)
         </div>
     </div>
 <?php endforeach; ?>
+
+
 
 
 

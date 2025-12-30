@@ -20,7 +20,7 @@ if ($result) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"> Accepted and Reserved Bookings</i>
+            <i class="fas fa-home"> Accepted Table Bookings</i>
         </div>
     </div>
 

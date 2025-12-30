@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 29, 2025 at 12:24 PM
+-- Generation Time: Dec 30, 2025 at 02:51 PM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -305,6 +305,13 @@ CREATE TABLE `booked_rooms` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `booked_rooms`
+--
+
+INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
+(1, 1, 10, 4, 'Family', 4500.00, '2025-12-30 01:34:19');
+
 -- --------------------------------------------------------
 
 --
@@ -340,8 +347,16 @@ CREATE TABLE `bookings` (
   `discount_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
   `discount_amount` decimal(10,2) DEFAULT NULL,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `rejection_reason` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`, `rejection_reason`) VALUES
+(1, 'BK-0Z9VAFXGEXZ9', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '9951776920', 'walkin', '2025-12-31 00:00:00', '2026-01-02 00:00:00', NULL, 2, NULL, 1, '0', 'Cash', 9000.00, '2025-12-30 01:34:19', 2, 1500.00, 7500.00, 'admin', 2, 0, NULL, 'none', 0.00, 0.00, 'rejected', 'Unfortunately, the selected room is unavailable for your preferred dates.');
 
 -- --------------------------------------------------------
 
@@ -399,6 +414,13 @@ CREATE TABLE `booking_check_inout` (
   `check_in` datetime NOT NULL,
   `check_out` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking_check_inout`
+--
+
+INSERT INTO `booking_check_inout` (`id`, `booking_fk_id`, `check_in`, `check_out`) VALUES
+(1, 1, '2025-12-31 00:00:00', '2026-01-02 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -1210,6 +1232,14 @@ CREATE TABLE `guest_names` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `guest_names`
+--
+
+INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
+(1, 1, 'sad', 'asdasd', 'Adult', NULL, NULL, '2025-12-30 01:34:19'),
+(2, 1, 'asdasdavcv', 'vsdgsfa', 'Adult', NULL, NULL, '2025-12-30 01:34:19');
+
 -- --------------------------------------------------------
 
 --
@@ -1565,7 +1595,29 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `sender_type`, `read_status`
 (83, 5, 'yo', 'user', 1, '2025-11-06 05:29:20', 'unread'),
 (84, 5, 'hello', 'user', 1, '2025-11-06 05:29:28', 'unread'),
 (85, 5, 'snob yern', 'user', 1, '2025-11-06 05:29:44', 'unread'),
-(86, 5, 'fdf', 'admin', 1, '2025-11-18 06:04:35', 'unread');
+(86, 5, 'fdf', 'admin', 1, '2025-11-18 06:04:35', 'unread'),
+(87, 5, 'dsd', 'admin', 1, '2025-12-30 04:18:09', 'unread'),
+(88, 33, 'dsd', 'admin', 1, '2025-12-30 04:18:24', 'unread'),
+(89, 45, 'Hello', 'user', 1, '2025-12-30 04:22:07', 'unread'),
+(90, 45, 'Hi', 'admin', 1, '2025-12-30 04:22:15', 'unread'),
+(91, 45, 'hello', 'user', 1, '2025-12-30 04:22:38', 'unread'),
+(92, 45, 'hi', 'admin', 1, '2025-12-30 04:28:00', 'unread'),
+(93, 45, 'hello', 'user', 1, '2025-12-30 04:28:08', 'unread'),
+(94, 45, 'hello', 'user', 1, '2025-12-30 04:28:13', 'unread'),
+(95, 45, '3', 'user', 1, '2025-12-30 04:28:27', 'unread'),
+(96, 45, 'h', 'admin', 1, '2025-12-30 04:31:15', 'unread'),
+(97, 45, 'h', 'user', 1, '2025-12-30 04:31:21', 'unread'),
+(98, 45, 'h', 'user', 1, '2025-12-30 04:31:26', 'unread'),
+(99, 45, 'd', 'user', 1, '2025-12-30 04:31:45', 'unread'),
+(100, 45, 'd', 'user', 1, '2025-12-30 04:33:09', 'unread'),
+(101, 45, 'ds', 'user', 1, '2025-12-30 04:33:12', 'unread'),
+(102, 45, 'asd', 'user', 1, '2025-12-30 04:33:16', 'unread'),
+(103, 45, 'asd', 'admin', 1, '2025-12-30 04:41:28', 'unread'),
+(104, 45, 'ds', 'user', 1, '2025-12-30 04:41:36', 'unread'),
+(105, 45, 'asd', 'user', 1, '2025-12-30 04:41:40', 'unread'),
+(106, 45, 'asd', 'admin', 1, '2025-12-30 04:41:41', 'unread'),
+(107, 45, 'asd', 'admin', 1, '2025-12-30 04:49:31', 'unread'),
+(108, 45, 'asd', 'user', 1, '2025-12-30 04:49:52', 'unread');
 
 -- --------------------------------------------------------
 
@@ -3375,13 +3427,13 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `booking_amenities`
@@ -3393,7 +3445,7 @@ ALTER TABLE `booking_amenities`
 -- AUTO_INCREMENT for table `booking_check_inout`
 --
 ALTER TABLE `booking_check_inout`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
@@ -3459,7 +3511,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
@@ -3489,7 +3541,7 @@ ALTER TABLE `menu_item_addons`
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
 
 --
 -- AUTO_INCREMENT for table `notifications`

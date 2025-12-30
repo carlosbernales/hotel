@@ -20,15 +20,95 @@ $currentPage = basename($page);
         <div class="d-flex justify-content-between align-items-center">
             <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
             <div class="nav-icons">
-                <a href="#"><i class="fas fa-envelope"></i></a>
+                <a href="index.php?messages"><i class="fas fa-envelope"></i></a>
                 <a href="#" class="position-relative">
                     <i class="fas fa-bell"></i>
                     <span class="notification-badge">3</span>
                 </a>
-                <a href="#"><i class="fas fa-user"></i></a>
+                <div class="user-dropdown">
+                    <a href="#" class="user-icon-link"><i class="fas fa-user"></i></a>
+                    <div class="dropdown-menu-custom">
+                        <a href="profile.php" class="dropdown-item-custom">
+                            <i class="fas fa-user-circle"></i> Profile
+                        </a>
+                        <a href="logout.php" class="dropdown-item-custom">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
+
+    <style>
+        .user-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .user-icon-link {
+            cursor: pointer;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .dropdown-menu-custom {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 10px;
+            background-color: white;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .user-dropdown:hover .dropdown-menu-custom,
+        .dropdown-menu-custom:hover {
+            display: block;
+        }
+
+        .dropdown-item-custom {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-item-custom:hover {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+
+        .dropdown-item-custom i {
+            margin-right: 8px;
+            width: 16px;
+        }
+    </style>
+
+    <script>
+        // Alternative: Click to toggle instead of hover
+        document.addEventListener('DOMContentLoaded', function () {
+            const userIcon = document.querySelector('.user-icon-link');
+            const dropdown = document.querySelector('.dropdown-menu-custom');
+
+            userIcon.addEventListener('click', function (e) {
+                e.preventDefault();
+                dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function (e) {
+                if (!e.target.closest('.user-dropdown')) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
     <button class="toggle-sidebar shifted" id="toggleBtn">
         <i class="fas fa-bars"></i>
@@ -52,7 +132,7 @@ $currentPage = basename($page);
             </a>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['rejected_room_bookings_list.php', 'pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-bed"></i> Room Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -79,6 +159,14 @@ $currentPage = basename($page);
                     <a href="index.php?finished_room_bookings_list"
                         class="<?php echo ($currentPage == 'finished_room_bookings_list.php') ? 'active' : ''; ?>">
                         <i class="fas fa-check-double"></i> Finished
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?rejected-room-bookings"
+                        class="<?php echo ($currentPage == 'rejected_room_bookings_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Rejected
                     </a>
                 </div>
             </div>
@@ -182,23 +270,24 @@ $currentPage = basename($page);
                 <div class="sidebar-submenu">
                     <a href="index.php?event_management"
                         class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-alt"></i> Event Management
+                        <i class="fas fa-calendar-check"></i> Event Management
                     </a>
                 </div>
 
                 <div class="sidebar-submenu">
                     <a href="index.php?facilities"
                         class="<?php echo ($currentPage == 'facilities_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-alt"></i> Facility Management
+                        <i class="fas fa-building"></i> Facility Management
                     </a>
                 </div>
 
                 <div class="sidebar-submenu">
                     <a href="index.php?contact_management"
                         class="<?php echo ($currentPage == 'contact_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-alt"></i> Contact Management
+                        <i class="fas fa-address-book"></i> Contact Management
                     </a>
                 </div>
+
             </div>
         </div>
     </div>
