@@ -191,6 +191,13 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        const tablesContainer = document.getElementById("tablesContainer");
+        // Backup original tables HTML
+        const originalTablesHTML = tablesContainer.innerHTML;
+
+    </script>
+
+    <script>
         let cart = [];
         let availabilityChecked = false;
 
@@ -268,7 +275,6 @@
                 checkoutBtn.disabled = false;
                 advanceBtn.disabled = false;
             }
-
             updateCartSummary();
         }
         function updateCartSummary() {
@@ -286,11 +292,9 @@
         }
         function filterTables(filter) {
             const allCards = document.querySelectorAll('.table-card');
-
             allCards.forEach(card => {
                 const parent = card.closest('.col-lg-4');
                 const status = card.dataset.status;
-
                 let show = true;
 
                 if (filter === 'available') show = status === 'active';
@@ -299,17 +303,13 @@
                 parent.style.display = show ? 'block' : 'none';
             });
         }
-
         function loadAvailableTableNumbers(datetime = null) {
             const wrapper = document.getElementById("availableTablesWrapper");
             wrapper.innerHTML = '';
-
             const typeIds = cart.map(t => t.typeId);
-
             const formData = new URLSearchParams();
             typeIds.forEach(id => formData.append("type_ids[]", id));
             if (datetime) formData.append("datetime", datetime);
-
             fetch("../Admin/adminBackend/booking_fetch_table_numbers.php", {
                 method: "POST",
                 body: formData
@@ -318,10 +318,8 @@
                 .then(data => {
                     cart.forEach(table => {
                         const tableOptions = data.filter(d => d.table_type_fk_id == table.typeId);
-
                         const div = document.createElement('div');
                         div.classList.add('mb-3');
-
                         div.innerHTML = `
                             <label class="form-label">Select Table for ${table.name}</label>
                             <select class="form-control availableTableSelect" data-table-type="${table.typeId}">
@@ -349,7 +347,6 @@
                                         }
                                         disabled = 'disabled';
                                     }
-
                                     return `<option value="${item.id}" ${disabled}>${label}</option>`;
                                 }).join('') :
                                 `<option value="">No tables available</option>`
@@ -362,20 +359,16 @@
                 .catch(err => console.error(err));
         }
 
-
         function setupEventListeners() {
             const bookingModalEl = document.getElementById("bookingInfoModal");
             const bookingModal = new bootstrap.Modal(bookingModalEl);
-
             document.getElementById('cartToggle').addEventListener('click', function (e) {
                 e.preventDefault();
                 document.getElementById('cartSidebar').classList.toggle('open');
             });
-
             document.getElementById('closeCart').addEventListener('click', () => {
                 document.getElementById('cartSidebar').classList.remove('open');
             });
-
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', function () {
                     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -383,7 +376,6 @@
                     filterTables(this.dataset.filter);
                 });
             });
-
             document.getElementById("checkoutBtn").addEventListener("click", function () {
                 if (cart.length > 0) {
                     const globalDT = document.getElementById("globalBookingDateTime").value;
@@ -395,14 +387,12 @@
                     bookingModalEl.dataset.action = "checkout";
                 }
             });
-
             document.getElementById("advanceOrdersBtn").addEventListener("click", function () {
                 if (cart.length > 0) {
                     const globalDT = document.getElementById("globalBookingDateTime").value;
                     if (globalDT) {
                         document.getElementById("bookingDateTime").value = globalDT;
                     }
-
                     loadAvailableTableNumbers(globalDT);
                     bookingModal.show();
                     bookingModalEl.dataset.action = "advance";
@@ -413,23 +403,15 @@
                 const last = document.getElementById("lastName").value.trim();
                 const contact = document.getElementById("contactNumber").value.trim();
                 const dt = document.getElementById("bookingDateTime").value.trim();
-
-                // Get selected table numbers from the modal selects
                 const selectedTableNumbers = Array.from(document.querySelectorAll('.availableTableSelect'))
                     .map(sel => parseInt(sel.value))
                     .filter(v => !isNaN(v));
-
                 const typeIds = cart.map(t => t.typeId);
-
-                // Validate required fields
                 if (!first || !last || !contact || !dt || selectedTableNumbers.length !== cart.length) {
                     alert("Complete all fields and select available tables.");
                     return;
                 }
-
                 const action = document.getElementById("bookingInfoModal").dataset.action; // "checkout" or "advance"
-
-                // Build URL-encoded POST data
                 const formData = new URLSearchParams();
                 formData.append("first", first);
                 formData.append("last", last);
@@ -437,8 +419,6 @@
                 formData.append("datetime", dt);
                 typeIds.forEach(id => formData.append("tableTypes[]", id));
                 selectedTableNumbers.forEach(num => formData.append("tables[]", num));
-
-                // Handle checkout booking
                 if (action === "checkout") {
                     fetch("../Admin/adminBackend/booking_save_order.php", {
                         method: "POST",
@@ -456,8 +436,6 @@
                         })
                         .catch(err => console.error("Checkout error:", err));
                 }
-
-                // Handle advance orders
                 if (action === "advance") {
                     fetch("../Admin/adminBackend/booking_store_advance.php", {
                         method: "POST",
@@ -475,28 +453,22 @@
                         .catch(err => console.error("Advance order error:", err));
                 }
             });
-
         }
-
         init();
-
         document.getElementById("checkAvailabilityBtn").addEventListener("click", function () {
             const dt = document.getElementById("bookingDateTime").value.trim();
             if (!dt) {
                 alert("Please select a booking date & time first.");
                 return;
             }
-
             const typeIds = cart.map(t => t.typeId);
             if (!typeIds.length) {
                 alert("No table types selected in your cart.");
                 return;
             }
-
             const formData = new URLSearchParams();
             formData.append("datetime", dt);
             typeIds.forEach(id => formData.append("type_ids[]", id));
-
             fetch("../Admin/adminBackend/table_check_availability.php", {
                 method: "POST",
                 body: formData
@@ -521,11 +493,9 @@
             const cards = document.querySelectorAll("#tablesContainer .table-card");
             const typeIds = Array.from(cards).map(c => parseInt(c.dataset.typeId));
             if (!typeIds.length) return;
-
             const formData = new URLSearchParams();
             typeIds.forEach(id => formData.append("type_ids[]", id));
             if (datetime) formData.append("datetime", datetime);
-
             fetch("../Admin/adminBackend/table_check_availability.php", {
                 method: "POST",
                 body: formData
@@ -537,19 +507,15 @@
                         const countDiv = document.getElementById(`available-count-${typeId}`);
                         const count = data.counts?.[typeId] ?? data.available?.length ?? 0;
                         countDiv.innerHTML = `<strong>Available Tables:</strong> ${count}`;
-
                         const badge = card.querySelector(".table-status-badge");
                         const btn = card.querySelector(".btn-add-to-cart");
-
                         const originalStatus = card.dataset.originalStatus || card.dataset.status; // PHP initial status
                         card.dataset.originalStatus = originalStatus;
-
                         if (originalStatus !== 'active') {
                             card.dataset.status = 'inactive';
                             badge.textContent = 'UNAVAILABLE';
                             badge.classList.remove("status-available");
                             badge.classList.add("status-unavailable");
-
                             btn.disabled = true;
                             btn.classList.add('btn-disabled');
                         } else if (count > 0) {
@@ -557,7 +523,6 @@
                             badge.textContent = 'AVAILABLE';
                             badge.classList.remove("status-unavailable");
                             badge.classList.add("status-available");
-
                             btn.disabled = false;
                             btn.classList.remove('btn-disabled');
                         } else {
@@ -565,11 +530,9 @@
                             badge.textContent = 'UNAVAILABLE';
                             badge.classList.remove("status-available");
                             badge.classList.add("status-unavailable");
-
                             btn.disabled = true;
                             btn.classList.add('btn-disabled');
                         }
-
                     });
                     const activeFilter = document.querySelector(".filter-btn.active").dataset.filter;
                     filterTables(activeFilter);
@@ -577,48 +540,108 @@
                 .catch(err => console.error(err));
         }
         loadAvailableCounts();
-
         document.getElementById("checkGlobalAvailabilityBtn").addEventListener("click", function () {
+            const btn = this;
             const dt = document.getElementById("globalBookingDateTime").value.trim();
             if (!dt) {
-                alert("Select date & time");
+                alert("Please select a valid date & time.");
                 return;
             }
-
+            const originalBtnText = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Checking...`;
             availabilityChecked = true;
-            loadAvailableCounts(dt);
+            tablesContainer.innerHTML = originalTablesHTML;
+            const cards = tablesContainer.querySelectorAll(".table-card");
+            const typeIds = Array.from(cards).map(c => parseInt(c.dataset.typeId));
+            if (!typeIds.length) {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnText;
+                return;
+            }
+            const formData = new URLSearchParams();
+            formData.append("datetime", dt);
+            typeIds.forEach(id => formData.append("type_ids[]", id));
+            fetch("../Admin/adminBackend/table_check_availability.php", {
+                method: "POST",
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnText;
+
+                    if (data.cafe_conflict) {
+                        tablesContainer.innerHTML = `
+                            <div class="col-12 d-flex justify-content-center align-items-center animate__animated animate__fadeIn" style="min-height: 400px; width: 100%;">
+                                <div class="card border-0 shadow-sm" style="max-width: 500px; border-radius: 20px; background: #ffffff; border: 1px solid #e0e0e0;">
+                                    
+                                    <div class="text-center pt-5 pb-4">
+                                        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center" 
+                                            style="width: 80px; height: 80px; background-color: #fdf7e7; border-radius: 50%; color: #b89535;">
+                                            <i class="fas fa-calendar-check" style="font-size: 2.5rem;"></i>
+                                        </div>
+                                        <h3 class="fw-bold" style="color: #333; letter-spacing: -0.5px;">Schedule Adjustment</h3>
+                                    </div>
+
+                                    <div class="card-body px-5 pb-5 text-center">
+                                        <p class="text-muted mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+                                            ${data.cafe_conflict}
+                                        </p>
+                                        
+                                        <div class="p-3 mb-4" style="background: #f8f9fa; border-left: 4px solid #17a2b8; border-radius: 8px;">
+                                            <small class="text-uppercase fw-bold text-muted d-block mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">Recommended Slot</small>
+                                            <span class="h5 fw-bold" style="color: #17a2b8;">${data.cafe_available_window}</span>
+                                        </div>
+
+                                        <button class="btn w-100 py-3 text-white shadow-sm" 
+                                                style="background-color: #219ebc; border-radius: 10px; font-weight: 600; border: none; transition: all 0.3s ease;"
+                                                onmouseover="this.style.backgroundColor='#1a7a91'"
+                                                onmouseout="this.style.backgroundColor='#219ebc'"
+                                                onclick="location.reload()">
+                                            <i class="fas fa-redo-alt me-2 small"></i> Select another schedule
+                                        </button>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        return;
+                    }
+                    loadAvailableCounts(dt);
+                })
+                .catch(err => {
+                    console.error(err);
+                    btn.disabled = false;
+                    btn.innerHTML = originalBtnText;
+                    alert("Error connecting to server. Please check your connection.");
+                });
         });
         document.getElementById("globalBookingDateTime").addEventListener("change", function () {
             const selected = new Date(this.value);
             const now = new Date();
-
             if (selected < now) {
                 alert("You cannot select a past date or time.");
                 this.value = "";
                 return;
             }
-
             availabilityChecked = false;
             resetCart();
+            tablesContainer.innerHTML = originalTablesHTML;
             loadAvailableCounts(this.value);
         });
-
-
-
         function resetCart() {
             cart = [];
             updateCart();
             updateCartCount();
             document.getElementById('cartSidebar').classList.remove('open');
         }
-
     </script>
     <script>
         wrapper.querySelectorAll('.availableTableSelect').forEach(select => {
             select.addEventListener('change', function () {
                 const tableTypeId = parseInt(this.dataset.tableType);
                 const selectedId = parseInt(this.value);
-                // Save selected table in cart
                 const cartItem = cart.find(c => c.typeId === tableTypeId);
                 if (cartItem) cartItem.selectedTableId = selectedId;
             });
@@ -628,21 +651,16 @@
     <script>
         function setMinGlobalDateTime() {
             const input = document.getElementById("globalBookingDateTime");
-
             const now = new Date();
 
-            // Convert to local datetime-local format (YYYY-MM-DDTHH:MM)
             const year = now.getFullYear();
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const day = String(now.getDate()).padStart(2, '0');
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
-
             const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
-
             input.min = minDateTime;
         }
-
         setMinGlobalDateTime();
     </script>
 

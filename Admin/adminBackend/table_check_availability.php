@@ -5,6 +5,61 @@ include '../adminBackend/mydb.php';
 $datetime = $_POST['datetime'] ?? '';
 $typeIds = $_POST['type_ids'] ?? [];
 
+// Check for cafe event conflicts
+$conflictMsg = '';
+$availableWindowMsg = '';
+
+if (!empty($datetime)) {
+    $sqlConflict = "
+        SELECT date_time_start, date_time_end
+        FROM event_bookings 
+        WHERE place = 'cafe'
+          AND booking_status NOT IN ('Finished','Cancelled','Rejected')
+          AND ? BETWEEN date_time_start AND date_time_end
+        LIMIT 1
+    ";
+    $stmtConflict = $conn->prepare($sqlConflict);
+    $stmtConflict->bind_param('s', $datetime);
+    $stmtConflict->execute();
+    $resConflict = $stmtConflict->get_result();
+
+    if ($resConflict->num_rows > 0) {
+        $row = $resConflict->fetch_assoc();
+        $conflictMsg = "There's an event on this cafe at this time.";
+
+        // Calculate allowed booking window
+        $start = new DateTime($row['date_time_start']);
+        $end = new DateTime($row['date_time_end']);
+
+        // Before the event: 5 hours earlier
+        $allowedBefore = clone $start;
+        $allowedBefore->modify('-5 hours');
+
+        // After the event: 2 hours later
+        $allowedAfter = clone $end;
+        $allowedAfter->modify('+2 hours');
+
+        // Max booking hour for the day (2 PM)
+        $maxBookingHour = 14; // 2 PM
+        $openingHour = 8;     // 8 AM next day
+
+        // If allowedAfter exceeds max booking hour, move to next day at opening hour
+        if ((int) $allowedAfter->format('H') >= $maxBookingHour) {
+            $allowedAfter->modify('+1 day');
+            $allowedAfter->setTime($openingHour, 0);
+        }
+
+        // Format nicely
+        $availableWindowMsg = "Booking is available until "
+            . $allowedBefore->format('F j, Y h:i A')
+            . " or "
+            . $allowedAfter->format('F j, Y h:i A')
+            . ".";
+    }
+}
+
+
+
 if (empty($typeIds)) {
     echo json_encode(['counts' => [], 'available_type_ids' => []]);
     exit;
@@ -83,4 +138,10 @@ foreach ($typeIds as $typeId) {
         $availableTypeIds[] = $typeId;
 }
 
-echo json_encode(['counts' => $counts, 'available_type_ids' => $availableTypeIds]);
+echo json_encode([
+    'counts' => $counts,
+    'available_type_ids' => $availableTypeIds,
+    'cafe_conflict' => $conflictMsg,
+    'cafe_available_window' => $availableWindowMsg
+]);
+

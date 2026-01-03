@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $notes = $conn->real_escape_string($_POST['notes']);
     $description = $conn->real_escape_string($_POST['description']);
     $status = $conn->real_escape_string($_POST['status']);
+    $place = $conn->real_escape_string($_POST['place']);
 
     $menuItemsArray = $_POST['menu_items'] ?? [];
     $menuItemsArray = array_filter(array_map('trim', $menuItemsArray));
@@ -48,11 +49,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
     $stmt = $conn->prepare("INSERT INTO event_packages 
-        (name, price, max_guests, duration, time_limit, max_pax, notes, description, status, image_path, image_path2, image_path3, menu_items) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        (name, price, max_guests, duration, time_limit, max_pax, notes, description, status, place, image_path, image_path2, image_path3, menu_items) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
     $stmt->bind_param(
-        "sdiisisssssss",
+        "sdiisissssssss",
         $name,
         $price,
         $max_guests,
@@ -62,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $notes,
         $description,
         $status,
+        $place,
         $image_path,
         $image_path2,
         $image_path3,

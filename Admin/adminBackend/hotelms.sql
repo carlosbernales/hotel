@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 30, 2025 at 02:51 PM
+-- Generation Time: Jan 03, 2026 at 11:41 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -305,13 +305,6 @@ CREATE TABLE `booked_rooms` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
---
--- Dumping data for table `booked_rooms`
---
-
-INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
-(1, 1, 10, 4, 'Family', 4500.00, '2025-12-30 01:34:19');
-
 -- --------------------------------------------------------
 
 --
@@ -350,13 +343,6 @@ CREATE TABLE `bookings` (
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `rejection_reason` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`, `rejection_reason`) VALUES
-(1, 'BK-0Z9VAFXGEXZ9', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '9951776920', 'walkin', '2025-12-31 00:00:00', '2026-01-02 00:00:00', NULL, 2, NULL, 1, '0', 'Cash', 9000.00, '2025-12-30 01:34:19', 2, 1500.00, 7500.00, 'admin', 2, 0, NULL, 'none', 0.00, 0.00, 'rejected', 'Unfortunately, the selected room is unavailable for your preferred dates.');
 
 -- --------------------------------------------------------
 
@@ -414,13 +400,6 @@ CREATE TABLE `booking_check_inout` (
   `check_in` datetime NOT NULL,
   `check_out` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `booking_check_inout`
---
-
-INSERT INTO `booking_check_inout` (`id`, `booking_fk_id`, `check_in`, `check_out`) VALUES
-(1, 1, '2025-12-31 00:00:00', '2026-01-02 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -968,15 +947,9 @@ CREATE TABLE `event_bookings` (
   `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `payment_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `booking_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `reserve_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular'
+  `reserve_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular',
+  `place` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `event_bookings`
---
-
-INSERT INTO `event_bookings` (`id`, `booking_refId`, `user_id`, `customer_name`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`) VALUES
-(3, 'EVT-SJ92C0', NULL, 'Carlos Bernales', 'Package A', 30, 47500.00, '0', 0.00, 3, 1200.00, 51100.00, 24950.00, 26150.00, 'Birthday', '2025-12-28 16:00:00', '2025-12-28 20:00:00', 30, 'Cash', 'Half', 'Ongoing', 'Regular');
 
 -- --------------------------------------------------------
 
@@ -1027,19 +1000,20 @@ CREATE TABLE `event_packages` (
   `max_pax` int DEFAULT '50',
   `time_limit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '5 hours',
   `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
+  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available',
+  `place` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `event_packages`
 --
 
-INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`, `image_path2`, `image_path3`, `max_guests`, `duration`, `created_at`, `is_available`, `menu_items`, `max_pax`, `time_limit`, `notes`, `status`) VALUES
-(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, 'Carlos,1 Appetizers', 50, '', '  HAHH', 'available'),
-(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 50, '', ' Wala', 'available'),
-(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 50, '', ' **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available'),
-(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'available'),
-(9, 'Package F', 1000.00, 'Note', NULL, NULL, NULL, 2, 1, '2025-12-20 10:11:26', 1, 'Salad,1 Appetizers', 2, '', 'Note', 'available');
+INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`, `image_path2`, `image_path3`, `max_guests`, `duration`, `created_at`, `is_available`, `menu_items`, `max_pax`, `time_limit`, `notes`, `status`, `place`) VALUES
+(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, 'Carlos,1 Appetizers', 50, '', '  HAHH', 'available', 'cafe'),
+(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 50, '', '  Wala', 'available', 'cafe'),
+(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 50, '', ' **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available', 'cafe'),
+(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'available', 'garden'),
+(9, 'Package F', 1000.00, 'Note', NULL, NULL, NULL, 2, 1, '2025-12-20 10:11:26', 1, 'Salad,1 Appetizers', 2, '', 'Note', 'available', 'garden');
 
 -- --------------------------------------------------------
 
@@ -1231,14 +1205,6 @@ CREATE TABLE `guest_names` (
   `image_proof` varchar(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `guest_names`
---
-
-INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
-(1, 1, 'sad', 'asdasd', 'Adult', NULL, NULL, '2025-12-30 01:34:19'),
-(2, 1, 'asdasdavcv', 'vsdgsfa', 'Adult', NULL, NULL, '2025-12-30 01:34:19');
 
 -- --------------------------------------------------------
 
@@ -2032,14 +1998,6 @@ CREATE TABLE `orders_table` (
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `orders_table`
---
-
-INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `email`, `date_time`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `dp_payment_method`, `status`) VALUES
-(1, NULL, 'ORD-1766279192', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 18:00:00', NULL, NULL, NULL, 420.00, NULL, NULL, NULL, 420.00, NULL, NULL, NULL, 'Cashier'),
-(2, NULL, 'ORD-1766283727', 'Carlos', 'Bernales', '9951776920', NULL, '2025-12-22 11:00:00', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Cashier');
-
 -- --------------------------------------------------------
 
 --
@@ -2055,14 +2013,6 @@ CREATE TABLE `orders_table_type` (
   `table_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
---
--- Dumping data for table `orders_table_type`
---
-
-INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
-(1, 1, 2, 3, 'dasd', 3),
-(2, 2, 2, 3, 'dasd', 3);
-
 -- --------------------------------------------------------
 
 --
@@ -2077,14 +2027,6 @@ CREATE TABLE `order_items` (
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `order_items`
---
-
-INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
-(1, 1, 'Chicken Wings', 1, 180.00),
-(2, 1, 'Coconut Salad', 1, 200.00);
-
 -- --------------------------------------------------------
 
 --
@@ -2098,14 +2040,6 @@ CREATE TABLE `order_item_addons` (
   `price` double(10,2) NOT NULL,
   `quantity` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `order_item_addons`
---
-
-INSERT INTO `order_item_addons` (`id`, `order_item_fk_id`, `addon_name`, `price`, `quantity`) VALUES
-(1, 1, 'cheese', 20.00, 1),
-(2, 1, 'Gravy', 20.00, 1);
 
 -- --------------------------------------------------------
 
@@ -3427,13 +3361,13 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `booking_amenities`
@@ -3445,7 +3379,7 @@ ALTER TABLE `booking_amenities`
 -- AUTO_INCREMENT for table `booking_check_inout`
 --
 ALTER TABLE `booking_check_inout`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
@@ -3481,7 +3415,7 @@ ALTER TABLE `discount_types`
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
@@ -3511,7 +3445,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
@@ -3565,25 +3499,25 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`

@@ -1345,7 +1345,11 @@ if ($amenitiesResult->num_rows > 0) {
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
             check_in: document.getElementById('check_in').value,
-            check_out: document.getElementById('check_out').value,
+            //check_out: document.getElementById('check_out').value,
+            check_out: status === 'finished'
+                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+                : document.getElementById('check_out').value,
+
             total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
             payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
             payment_method: document.querySelector('select[name="payment_method"]').value,

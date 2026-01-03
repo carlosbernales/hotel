@@ -13,6 +13,12 @@ $payment_type = trim($_POST['payment_type']);
 $payment_method = trim($_POST['payment_method']);
 $package_id = (int) $_POST['package_id'];
 $booking_status = 'Accepted';
+$place = isset($_POST['place']) ? trim($_POST['place']) : '';
+
+if (!in_array($place, ['cafe', 'garden'])) {
+    echo 'INVALID_PLACE';
+    exit;
+}
 
 
 $date_time_start = isset($_POST['date_time_start']) ? date('Y-m-d H:i:s', strtotime($_POST['date_time_start'])) : null;
@@ -39,13 +45,30 @@ $package_name = $package['name'];
 $package_price = $package['price'];
 $max_guests = (int) $package['max_guests'];
 
-$sqlCheck = "SELECT * FROM event_bookings WHERE 
+$sqlCheck = "
+SELECT id FROM event_bookings 
+WHERE place = ?
+AND booking_status NOT IN ('Finished','Rejected','Cancelled')
+AND (
     (date_time_start < ? AND date_time_end > ?) OR
     (date_time_start < ? AND date_time_end > ?) OR
-    (date_time_start >= ? AND date_time_end <= ?)";
+    (date_time_start >= ? AND date_time_end <= ?)
+)";
+
+
 $stmtCheck = $conn->prepare($sqlCheck);
-$stmtCheck->bind_param("ssssss", $date_time_end, $date_time_start, $date_time_start, $date_time_start, $date_time_start, $date_time_end);
+$stmtCheck->bind_param(
+    "sssssss",
+    $place,
+    $date_time_end,
+    $date_time_start,
+    $date_time_start,
+    $date_time_start,
+    $date_time_start,
+    $date_time_end
+);
 $stmtCheck->execute();
+
 $resultCheck = $stmtCheck->get_result();
 if ($resultCheck->num_rows > 0) {
     echo 'CONFLICT';
@@ -75,12 +98,12 @@ $booking_refId = generateUniqueBookingRefId($conn);
 
 
 $sqlInsert = "INSERT INTO event_bookings 
-(booking_refId, customer_name, package_name, package_price, total_amount, paid_amount, remaining_balance, date_time_start, date_time_end, number_of_guests, extra_guests, max_guest, extra_guest_charge, event_type, payment_type, payment_method, booking_status)
-VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+(booking_refId, customer_name, package_name, package_price, total_amount, paid_amount, remaining_balance, date_time_start, date_time_end, number_of_guests, extra_guests, max_guest, extra_guest_charge, event_type, payment_type, payment_method, booking_status, place)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 $stmtInsert = $conn->prepare($sqlInsert);
 $stmtInsert->bind_param(
-    "sssddddssiiddssss",
+    "sssddddssiiddsssss",
     $booking_refId,
     $customer_name,
     $package_name,
@@ -97,7 +120,8 @@ $stmtInsert->bind_param(
     $event_type,
     $payment_type,
     $payment_method,
-    $booking_status
+    $booking_status,
+    $place,
 );
 
 if ($stmtInsert->execute()) {

@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = $conn->real_escape_string($_POST['status'] ?? 'unavailable');
     $description = $conn->real_escape_string($_POST['description'] ?? '');
     $notes = $conn->real_escape_string($_POST['notes'] ?? '');
+    $place = $conn->real_escape_string($_POST['place'] ?? '');
+
 
     $menuItems = $_POST['menu_items'] ?? [];
     $menuItems = implode(',', array_filter(array_map('trim', $menuItems)));
@@ -105,6 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             status='$status',
             description='$description',
             notes='$notes',
+            place='$place',
             menu_items='$menuItems',
             image_path=" . ($newImage1 === NULL ? "NULL" : "'$newImage1'") . ",
             image_path2=" . ($newImage2 === NULL ? "NULL" : "'$newImage2'") . ",

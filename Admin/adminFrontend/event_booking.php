@@ -123,9 +123,11 @@
 
                                 <?php if ($status === 'available'): ?>
                                     <button class="btn-book-now" data-package-id="<?= $row['id'] ?>"
+                                        data-place="<?= $row['place'] ?>"
                                         data-package-name="<?= htmlspecialchars($row['name'], ENT_QUOTES) ?>"
                                         data-package-price="<?= number_format($row['price']) ?>"
                                         data-package-max-guests="<?= $row['max_guests'] ?>">
+
                                         <i class="fas fa-calendar-check"></i> Book Now
                                     </button>
 
@@ -373,6 +375,8 @@
         let availabilityChecked = false;
         let hasConflict = false;
         let selectedPackageId = null;
+        let selectedPlace = null;
+
 
         const checkBtn = document.getElementById('checkGlobalAvailabilityBtn');
         const bookingDateInput = document.getElementById('globalBookingDateTime');
@@ -388,6 +392,10 @@
         const eventTypeSelect = document.getElementById('eventType');
         const paymentTypeSelect = document.getElementById('paymentType');
         const paymentMethodSelect = document.getElementById('paymentMethod');
+
+        const MAX_START_HOUR = 12; // 12:00 PM
+
+
 
         function updateTotal() {
             let basePrice = parseFloat(document.getElementById('bookingPackagePrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
@@ -431,10 +439,21 @@
             updateRemainingBalance();
         }
 
+
         /* CHECK AVAILABILITY */
         checkBtn.addEventListener('click', () => {
             const datetime = bookingDateInput.value;
             if (!datetime) { alert('Please select date and time'); return; }
+
+            const selectedDateTime = new Date(bookingDateInput.value);
+            const hours = selectedDateTime.getHours();
+            const minutes = selectedDateTime.getMinutes();
+
+            if (hours > 12 || (hours === 12 && minutes > 0)) {
+                alert('Events must start at 12:00 PM or earlier (4-hour event must end by 2:00 PM).');
+                bookingDateInput.value = '';
+                return;
+            }
 
             fetch('../Admin/adminBackend/table_checkOnOrders_availability.php', {
                 method: 'POST',
@@ -446,33 +465,60 @@
                 .then(data => {
                     availabilityChecked = true;
                     availabilityMessage.classList.remove('d-none');
+
                     if (data.conflict) {
                         hasConflict = true;
                         availabilityMessage.className = 'alert alert-danger';
-                        availabilityMessage.innerHTML = `<div style="font-family: sans-serif; border: 1px solid #ffcccc; border-radius: 8px; overflow: hidden;">
-                            <div style="background: #fff5f5; color: #c53030; padding: 12px; font-weight: bold; border-bottom: 1px solid #ffcccc;">
-                            🚫 Not Available at this time</div>
-                            <div style="padding: 15px; background: white;">
-                            <div style="margin-bottom: 10px; color: #4a5568;">Existing Booking: <strong>${data.booked_time}</strong></div>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
-                            <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
-                            <small>Available Before</small><br><strong>${data.available_before}</strong></div>
-                            <div style="background: #f0fff4; color: #276749; padding: 8px; border-radius: 4px;">
-                            <small>Available After</small><br><strong>${data.available_after}</strong></div></div></div></div>`;
-                        bookNowButtons.forEach(btn => btn.style.display = 'none');
+
+                        let html = '<div style="font-family: sans-serif; border: 1px solid #ffcccc; border-radius: 8px; overflow: hidden;">';
+                        html += '<div style="background: #fff5f5; color: #c53030; padding: 12px; font-weight: bold; border-bottom: 1px solid #ffcccc;">';
+                        html += '🚫 The following places are not available: ' + data.places.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ') + '</div>';
+                        html += '<div style="padding: 15px; background: white;">';
+
+                        data.bookings.forEach(b => {
+                            html += `<div style="margin-bottom: 10px; color: #4a5568;">
+                            ${b.place.charAt(0).toUpperCase() + b.place.slice(1)} Booking: <strong>${b.booked_time}</strong>
+                         </div>`;
+                        });
+
+                        html += '</div></div>';
+                        availabilityMessage.innerHTML = html;
+
+                        // Disable Book Now buttons for unavailable places
+                        bookNowButtons.forEach(btn => {
+                            if (data.places.includes(btn.dataset.place)) {
+                                btn.disabled = true;
+                                btn.classList.add('disabled');
+                                btn.textContent = 'Not Available';
+                            } else {
+                                btn.disabled = false;
+                                btn.classList.remove('disabled');
+                                btn.textContent = 'Book Now';
+                            }
+                        });
                     } else {
                         hasConflict = false;
                         availabilityMessage.className = 'alert alert-success';
                         availabilityMessage.textContent = data.message;
-                        bookNowButtons.forEach(btn => btn.style.display = 'inline-block');
+                        bookNowButtons.forEach(btn => {
+                            btn.disabled = false;
+                            btn.classList.remove('disabled');
+                            btn.textContent = 'Book Now';
+                        });
                     }
                 });
         });
+
 
         /* BOOK NOW */
         bookNowButtons.forEach(btn => {
             btn.addEventListener('click', e => {
                 const dateTimeVal = bookingDateInput.value;
+
+                if (btn.disabled) {
+                    return; // silently ignore
+                }
+
 
                 if (!dateTimeVal) {
                     alert('Please select a booking date and time first.');
@@ -484,12 +530,9 @@
                     return;
                 }
 
-                if (hasConflict) {
-                    alert('Selected date/time is not available.');
-                    return;
-                }
-
                 selectedPackageId = btn.dataset.packageId;
+                selectedPlace = btn.dataset.place;
+
 
                 bookingMaxGuestsValue = parseInt(btn.dataset.packageMaxGuests);
 
@@ -538,8 +581,29 @@
             availabilityChecked = false;
             hasConflict = false;
             availabilityMessage.classList.add('d-none');
-            bookNowButtons.forEach(btn => btn.style.display = 'inline-block');
+
+            bookNowButtons.forEach(btn => {
+                btn.style.display = 'inline-block';
+                btn.disabled = false;
+                btn.classList.remove('disabled');
+                btn.textContent = 'Book Now';
+            });
+
+            if (!bookingDateInput.value) return;
+
+            const [date, time] = bookingDateInput.value.split('T');
+            const selectedHour = parseInt(time.split(':')[0], 10);
+
+            // Force max selectable time to 12:00 PM
+            bookingDateInput.max = `${date}T12:00`;
+
+            // If user selected beyond 12:00 PM, reset
+            if (selectedHour > MAX_START_HOUR) {
+                alert('Events must start at 12:00 PM or earlier.');
+                bookingDateInput.value = '';
+            }
         });
+
 
         /* FINAL SUBMIT */
         document.getElementById('bookingForm').addEventListener('submit', e => {
@@ -573,6 +637,12 @@
             }
 
             const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
+
+            if (dateTimeStart.getHours() > 12) {
+                alert('Invalid event start time. Events must start at 12:00 PM or earlier.');
+                return;
+            }
+
             const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000);
 
             const formatDateTime = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0') + ' ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ':' + String(dt.getSeconds()).padStart(2, '0');
@@ -591,6 +661,7 @@
                 payment_type: paymentTypeVal,
                 payment_method: paymentMethodVal,
                 package_id: selectedPackageId,
+                place: selectedPlace,
                 date_time_start: formatDateTime(dateTimeStart),
                 date_time_end: formatDateTime(dateTimeEnd)
             });

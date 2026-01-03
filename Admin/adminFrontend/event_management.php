@@ -175,19 +175,28 @@ $result = $conn->query($query);
                                         </div>
 
                                         <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label class="package-label">Duration (Hrs)</label>
+                                            <div class="col-md-4">
+                                               <label class="package-label">Duration (Hrs)</label>
                                                 <input type="text" name="duration" value="<?php echo $row['duration']; ?>"
                                                     class="form-control package-input">
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <label class="package-label">Status</label>
                                                 <select name="status" class="form-select package-input">
                                                     <option value="available" <?php echo ($row['status'] == 'available') ? 'selected' : ''; ?>>Available</option>
                                                     <option value="unavailable" <?php echo ($row['status'] == 'unavailable') ? 'selected' : ''; ?>>Unavailable</option>
                                                 </select>
                                             </div>
+                                            <div class="col-md-4">
+                                               <label class="package-label">Place</label>
+                                                <select name="place" class="form-select package-input">
+                                                    <option value="cafe" <?php echo ($row['place'] == 'cafe') ? 'selected' : ''; ?>>Cafe</option>
+                                                    <option value="garden" <?php echo ($row['place'] == 'garden') ? 'selected' : ''; ?>>Garden</option>
+                                                </select>
+                                            </div>
                                         </div>
+
+                                       
 
                                         <div class="mb-3">
                                             <label class="package-label">Description</label>
@@ -271,19 +280,28 @@ $result = $conn->query($query);
                         </div>
                     </div>
 
+
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="package-label">Duration (Hrs)</label>
                             <input type="text" name="duration" class="form-control package-input">
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label class="package-label">Status</label>
                             <select name="status" class="form-select package-input">
                                 <option value="available">Available</option>
                                 <option value="unavailable">Unavailable</option>
                             </select>
                         </div>
+                        <div class="col-md-4">
+                            <label class="package-label">Place</label>
+                            <select name="status" class="form-select package-input">
+                                <option value="cafe">Cafe</option>
+                                <option value="garden">Garden</option>
+                            </select>
+                        </div>
                     </div>
+
 
                     <div class="mb-3">
                         <label class="package-label">Description</label>
