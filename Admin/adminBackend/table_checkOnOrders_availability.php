@@ -52,7 +52,6 @@ if ($row = $resultOrders->fetch_assoc()) {
     exit;
 }
 
-// --- Check Event Bookings ---
 $sqlEvents = "
     SELECT place, date_time_start, date_time_end
     FROM event_bookings

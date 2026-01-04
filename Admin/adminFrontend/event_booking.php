@@ -393,10 +393,6 @@
         const paymentTypeSelect = document.getElementById('paymentType');
         const paymentMethodSelect = document.getElementById('paymentMethod');
 
-        const MAX_START_HOUR = 12; // 12:00 PM
-
-
-
         function updateTotal() {
             let basePrice = parseFloat(document.getElementById('bookingPackagePrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
             basePrice = parseFloat(basePrice.toFixed(2));
@@ -445,16 +441,6 @@
             const datetime = bookingDateInput.value;
             if (!datetime) { alert('Please select date and time'); return; }
 
-            const selectedDateTime = new Date(bookingDateInput.value);
-            const hours = selectedDateTime.getHours();
-            const minutes = selectedDateTime.getMinutes();
-
-            if (hours > 12 || (hours === 12 && minutes > 0)) {
-                alert('Events must start at 12:00 PM or earlier (4-hour event must end by 2:00 PM).');
-                bookingDateInput.value = '';
-                return;
-            }
-
             fetch('../Admin/adminBackend/table_checkOnOrders_availability.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -466,25 +452,27 @@
                     availabilityChecked = true;
                     availabilityMessage.classList.remove('d-none');
 
-                    if (data.conflict) {
+                    if (data.conflict && data.places) {
                         hasConflict = true;
                         availabilityMessage.className = 'alert alert-danger';
 
                         let html = '<div style="font-family: sans-serif; border: 1px solid #ffcccc; border-radius: 8px; overflow: hidden;">';
                         html += '<div style="background: #fff5f5; color: #c53030; padding: 12px; font-weight: bold; border-bottom: 1px solid #ffcccc;">';
-                        html += '🚫 The following places are not available: ' + data.places.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ') + '</div>';
+                        html += '🚫 The following places are not available: ' +
+                            data.places.map(p => p.charAt(0).toUpperCase() + p.slice(1)).join(', ') +
+                            '</div>';
                         html += '<div style="padding: 15px; background: white;">';
 
                         data.bookings.forEach(b => {
                             html += `<div style="margin-bottom: 10px; color: #4a5568;">
-                            ${b.place.charAt(0).toUpperCase() + b.place.slice(1)} Booking: <strong>${b.booked_time}</strong>
-                         </div>`;
+                                        ${b.place.charAt(0).toUpperCase() + b.place.slice(1)} Booking:
+                                        <strong>${b.booked_time}</strong>
+                                    </div>`;
                         });
 
                         html += '</div></div>';
                         availabilityMessage.innerHTML = html;
 
-                        // Disable Book Now buttons for unavailable places
                         bookNowButtons.forEach(btn => {
                             if (data.places.includes(btn.dataset.place)) {
                                 btn.disabled = true;
@@ -496,19 +484,46 @@
                                 btn.textContent = 'Book Now';
                             }
                         });
+
+                    } else if (data.conflict) {
+                        hasConflict = true;
+                        availabilityMessage.className = 'alert alert-danger';
+
+                        availabilityMessage.innerHTML = `
+                            <strong>🚫 Café Not Available</strong><br>
+                            ${data.message}<br><br>
+                            <small>
+                                Available before: <b>${data.available_before}</b><br>
+                                Available after: <b>${data.available_after}</b>
+                            </small>
+                        `;
+
+                        bookNowButtons.forEach(btn => {
+                            if (btn.dataset.place === 'cafe') {
+                                btn.disabled = true;
+                                btn.classList.add('disabled');
+                                btn.textContent = 'Not Available';
+                            } else {
+                                btn.disabled = false;
+                                btn.classList.remove('disabled');
+                                btn.textContent = 'Book Now';
+                            }
+                        });
+
                     } else {
                         hasConflict = false;
                         availabilityMessage.className = 'alert alert-success';
                         availabilityMessage.textContent = data.message;
+
                         bookNowButtons.forEach(btn => {
                             btn.disabled = false;
                             btn.classList.remove('disabled');
                             btn.textContent = 'Book Now';
                         });
                     }
+
                 });
         });
-
 
         /* BOOK NOW */
         bookNowButtons.forEach(btn => {
@@ -591,17 +606,6 @@
 
             if (!bookingDateInput.value) return;
 
-            const [date, time] = bookingDateInput.value.split('T');
-            const selectedHour = parseInt(time.split(':')[0], 10);
-
-            // Force max selectable time to 12:00 PM
-            bookingDateInput.max = `${date}T12:00`;
-
-            // If user selected beyond 12:00 PM, reset
-            if (selectedHour > MAX_START_HOUR) {
-                alert('Events must start at 12:00 PM or earlier.');
-                bookingDateInput.value = '';
-            }
         });
 
 
@@ -637,11 +641,6 @@
             }
 
             const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
-
-            if (dateTimeStart.getHours() > 12) {
-                alert('Invalid event start time. Events must start at 12:00 PM or earlier.');
-                return;
-            }
 
             const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000);
 

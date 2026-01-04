@@ -27,34 +27,28 @@ if (!empty($datetime)) {
         $row = $resConflict->fetch_assoc();
         $conflictMsg = "There's an event on this cafe at this time.";
 
-        // Calculate allowed booking window
         $start = new DateTime($row['date_time_start']);
         $end = new DateTime($row['date_time_end']);
 
-        // Before the event: 5 hours earlier
         $allowedBefore = clone $start;
         $allowedBefore->modify('-5 hours');
 
-        // After the event: 2 hours later
         $allowedAfter = clone $end;
         $allowedAfter->modify('+2 hours');
 
-        // Max booking hour for the day (2 PM)
-        $maxBookingHour = 14; // 2 PM
-        $openingHour = 8;     // 8 AM next day
+        $maxBookingHour = 14;
+        $openingHour = 8;
 
-        // If allowedAfter exceeds max booking hour, move to next day at opening hour
         if ((int) $allowedAfter->format('H') >= $maxBookingHour) {
             $allowedAfter->modify('+1 day');
             $allowedAfter->setTime($openingHour, 0);
         }
 
-        // Format nicely
         $availableWindowMsg = "Booking is available until "
             . $allowedBefore->format('F j, Y h:i A')
             . " or "
             . $allowedAfter->format('F j, Y h:i A')
-            . ".";
+            . " onwards.";
     }
 }
 
