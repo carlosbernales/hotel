@@ -131,6 +131,11 @@ $currentPage = basename($page);
                 <i class="fas fa-users"></i> Customer Info
             </a>
 
+            <a href="index.php?sales-report"
+                class="<?php echo ($currentPage == 'sales_report.php') ? 'active' : ''; ?>">
+                <i class="fas fa-tachometer-alt"></i>Sales Report
+            </a>
+
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['rejected_room_bookings_list.php', 'pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">

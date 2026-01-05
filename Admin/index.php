@@ -3,7 +3,7 @@ require_once "db.php";
 
 // Check if user is logged in before any output
 if (!isset($_SESSION['user_id'])) {
-    header('Location:login.php');
+    header('Location:../Admin/Customer/aa');
     exit();
 }
 
@@ -165,6 +165,10 @@ elseif (isset($_GET['room_mang'])) {
 
 } elseif (isset($_GET['rejected-room-bookings'])) {
     $page = "adminFrontend/rejected_room_bookings_list.php";
+
+} elseif (isset($_GET['sales-report'])) {
+    $page = "adminFrontend/sales_report.php";
+
 
 
 

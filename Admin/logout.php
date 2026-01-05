@@ -8,9 +8,9 @@ if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
     unset($_SESSION['user_id']);
     unset($_SESSION['username']);
     session_abort();
-    
+
     // Redirect to login page
-    header('Location:login.php');
+    header('Location:../Admin/Customer/aa');
     exit();
 } else {
     // Prompt user with confirmation before logout
@@ -25,6 +25,6 @@ if (isset($_GET['confirm']) && $_GET['confirm'] == 'yes') {
 }
 
 session_destroy();
-header("Location: login.php");
+header("Location: ../Admin/Customer/aa");
 exit();
 ?>

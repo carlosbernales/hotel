@@ -39,10 +39,12 @@
             </button>
 
             <div class="filter-section d-flex flex-wrap align-items-center gap-2 mb-3">
-                <button class="filter-btn active" data-filter="all">All Event Packages</button>
+                <button class="filter-btn active" data-filter="cafe">Cafe</button>
+                <button class="filter-btn" data-filter="garden">Garden</button>
                 <div class="d-flex align-items-center gap-3 ms-auto">
                     <input type="datetime-local" id="globalBookingDateTime" class="form-control"
                         style="max-width: 250px;">
+
 
                     <button class="btn btn-info me-5" id="checkGlobalAvailabilityBtn" style="width: 200px;">
                         Check Availability
@@ -60,7 +62,8 @@
                 $menuItems = array_map('trim', explode(',', $row['menu_items']));
                 ?>
                 <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="event-card" data-status="<?= $status ?>">
+                    <div class="event-card" data-status="<?= $status ?>" data-place="<?= strtolower($row['place']) ?>">
+
 
                         <div class="event-image-gallery">
                             <img src="<?= $row['image_path'] ?>" class="main-event-image" id="mainImg<?= $row['id'] ?>">
@@ -105,6 +108,13 @@
                                     <i class="fas fa-clock"></i>
                                     <span><?= $row['time_limit'] ?> Hours</span>
                                 </div>
+                                <div class="event-detail-item">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>
+                                        <?= ucfirst($row['place']) ?> Event
+                                    </span>
+                                </div>
+
                             </div>
 
                             <?php if (!empty($row['notes'])): ?>
@@ -203,6 +213,11 @@
                         <div class="booking-summary-item">
                             <span>Max Guest:</span>
                             <strong id="bookingMaxGuests">-</strong>
+                        </div>
+
+                        <div class="booking-summary-item">
+                            <span>Place:</span>
+                            <strong id="bookingPlaceEvent">-</strong>
                         </div>
                         <div class="booking-summary-item">
                             <span>Base Price:</span>
@@ -547,6 +562,10 @@
 
                 selectedPackageId = btn.dataset.packageId;
                 selectedPlace = btn.dataset.place;
+                const place = btn.dataset.place;
+                document.getElementById('bookingPlaceEvent').textContent =
+                    place.charAt(0).toUpperCase() + place.slice(1);
+
 
 
                 bookingMaxGuestsValue = parseInt(btn.dataset.packageMaxGuests);
@@ -675,6 +694,53 @@
                     else if (response === 'SUCCESS') { alert('Booking successful!'); location.reload(); }
                     else { alert('Booking failed. Check console.'); console.error(response); }
                 });
+        });
+    </script>
+
+    <script>
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const eventCards = document.querySelectorAll('.event-card');
+
+        function applyFilter(filter) {
+            eventCards.forEach(card => {
+                const col = card.closest('.col-lg-4');
+                if (card.dataset.place === filter) {
+                    col.style.display = 'block';
+                } else {
+                    col.style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            applyFilter('cafe');
+        });
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                const filter = btn.dataset.filter;
+                applyFilter(filter);
+            });
+        });
+    </script>
+
+    <script>
+        document.querySelectorAll('.event-card').forEach(card => {
+            const mainImage = card.querySelector('.main-event-image');
+            const thumbnails = card.querySelectorAll('.thumbnail-img');
+
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    mainImage.src = thumb.src;
+
+                    thumbnails.forEach(t => t.classList.remove('active'));
+
+                    thumb.classList.add('active');
+                });
+            });
         });
     </script>
 </body>

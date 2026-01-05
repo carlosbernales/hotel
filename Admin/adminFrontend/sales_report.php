@@ -184,30 +184,30 @@ if (mysqli_num_rows($eventResult) > 0) {
                 </thead>
                 <tbody>
                     <?php if (mysqli_num_rows($result) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                            <tr>
-                                <td>
-                                    <?= htmlspecialchars($row['booking_reference']) ?>
-                                </td>
-                                <td>
-                                    <?= date('M d, Y', strtotime($row['check_in'])) ?> →
-                                    <?= date('M d, Y', strtotime($row['check_out'])) ?>
-                                </td>
-                                <td>
-                                    <?= htmlspecialchars($row['room_types']) ?>
-                                </td>
-                                <td>
-                                    <?= $row['booked_rooms'] ?>
-                                </td>
-                                <td>₱
-                                    <?= number_format($row['total_amount'], 2) ?>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
+                            <?php while ($row = mysqli_fetch_assoc($result)): ?>
+                                    <tr>
+                                        <td>
+                                            <?= htmlspecialchars($row['booking_reference']) ?>
+                                        </td>
+                                        <td>
+                                            <?= date('M d, Y', strtotime($row['check_in'])) ?> →
+                                            <?= date('M d, Y', strtotime($row['check_out'])) ?>
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars($row['room_types']) ?>
+                                        </td>
+                                        <td>
+                                            <?= $row['booked_rooms'] ?>
+                                        </td>
+                                        <td>₱
+                                            <?= number_format($row['total_amount'], 2) ?>
+                                        </td>
+                                    </tr>
+                            <?php endwhile; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="5" class="text-center">No finished bookings found.</td>
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-center">No finished bookings found.</td>
+                            </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -229,26 +229,26 @@ if (mysqli_num_rows($eventResult) > 0) {
                 </thead>
                 <tbody>
                     <?php if (mysqli_num_rows($tableResult) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($tableResult)): ?>
-                            <tr>
-                                <td>
-                                    <?= $row['order_id'] ?>
-                                </td>
-                                <td>
-                                    <?= date('M d, Y h:i A', strtotime($row['date_time'])) ?>
-                                </td>
-                                <td>
-                                    <?= htmlspecialchars($row['table_names']) ?>
-                                </td>
-                                <td>₱
-                                    <?= number_format($row['total'], 2) ?>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
+                            <?php while ($row = mysqli_fetch_assoc($tableResult)): ?>
+                                    <tr>
+                                        <td>
+                                            <?= $row['order_id'] ?>
+                                        </td>
+                                        <td>
+                                            <?= date('M d, Y h:i A', strtotime($row['date_time'])) ?>
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars($row['table_names']) ?>
+                                        </td>
+                                        <td>₱
+                                            <?= number_format($row['total'], 2) ?>
+                                        </td>
+                                    </tr>
+                            <?php endwhile; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="4" class="text-center">No finished table bookings found.</td>
-                        </tr>
+                            <tr>
+                                <td colspan="4" class="text-center">No finished table bookings found.</td>
+                            </tr>
                     <?php endif; ?>
                 </tbody>
             </table>
@@ -271,30 +271,30 @@ if (mysqli_num_rows($eventResult) > 0) {
                 </thead>
                 <tbody>
                     <?php if (mysqli_num_rows($eventResult) > 0): ?>
-                        <?php while ($row = mysqli_fetch_assoc($eventResult)): ?>
-                            <tr>
-                                <td>
-                                    <?= htmlspecialchars($row['booking_refId']) ?>
-                                </td>
-                                <td>
-                                    <?= date('M d, Y h:i A', strtotime($row['date_time_start'])) ?> →
-                                    <?= date('M d, Y h:i A', strtotime($row['date_time_end'])) ?>
-                                </td>
-                                <td>
-                                    <?= htmlspecialchars($row['event_type']) ?>
-                                </td>
-                                <td>
-                                    <?= htmlspecialchars($row['place']) ?>
-                                </td>
-                                <td>
-                                    <?= htmlspecialchars($row['total_amount']) ?>
-                                </td>
-                            </tr>
-                        <?php endwhile; ?>
+                            <?php while ($row = mysqli_fetch_assoc($eventResult)): ?>
+                                    <tr>
+                                        <td>
+                                            <?= htmlspecialchars($row['booking_refId']) ?>
+                                        </td>
+                                        <td>
+                                            <?= date('M d, Y h:i A', strtotime($row['date_time_start'])) ?> →
+                                            <?= date('M d, Y h:i A', strtotime($row['date_time_end'])) ?>
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars($row['event_type']) ?>
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars($row['place']) ?>
+                                        </td>
+                                        <td>
+                                            <?= htmlspecialchars($row['total_amount']) ?>
+                                        </td>
+                                    </tr>
+                            <?php endwhile; ?>
                     <?php else: ?>
-                        <tr>
-                            <td colspan="5" class="text-center">No finished event bookings found.</td>
-                        </tr>
+                            <tr>
+                                <td colspan="5" class="text-center">No finished event bookings found.</td>
+                            </tr>
                     <?php endif; ?>
                 </tbody>
             </table>

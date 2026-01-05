@@ -70997,3 +70997,324 @@ Stack trace:
 [04-Jan-2026 11:24:53 UTC] Database connected successfully to: hotelms
 [04-Jan-2026 11:25:09 UTC] Database connected successfully to: hotelms
 [04-Jan-2026 11:33:16 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:10:31 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:10:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:10:43 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 434
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 434
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 435
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 435
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 436
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 436
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 437
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 437
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 438
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 438
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 439
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 439
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 440
+[05-Jan-2026 12:10:43 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 440
+[05-Jan-2026 04:10:46 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:13 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:17 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:20 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:20 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:30 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:30 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:32 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:32 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:11:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:22:22 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:22:52 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:23:20 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:23:23 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:25:22 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:26:59 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:03 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:05 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:06 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:12 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:19 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:20 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:36 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:38 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:39 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:40 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 04:27:41 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:04:49 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:05:05 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:05:11 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:05:19 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:05:27 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:07:56 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:08:21 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:09:57 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:10:57 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 06:12:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:41:58 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:42:00 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:43:56 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:44:35 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:45:56 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:47:27 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:48:32 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:49:06 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:52:50 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:53:21 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:53:44 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:20 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:23 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 15:56:23 Asia/Manila] PHP Warning:  include_once(room_mang.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\index.php on line 182
+[05-Jan-2026 15:56:23 Asia/Manila] PHP Warning:  include_once(): Failed opening 'room_mang.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\index.php on line 182
+[05-Jan-2026 07:56:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 15:56:34 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: BLOB, TEXT, GEOMETRY or JSON column 'description' can't have a default value in C:\laragon\www\hotel\Admin\room_types.php:28
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\room_types.php(28): mysqli_query(Object(mysqli), 'CREATE TABLE ro...')
+#1 C:\laragon\www\hotel\Admin\index.php(182): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\room_types.php on line 28
+[05-Jan-2026 07:56:38 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 15:56:38 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'hotelms.event_venues' doesn't exist in C:\laragon\www\hotel\Admin\event_settings.php:29
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\event_settings.php(29): mysqli_query(Object(mysqli), 'SELECT * FROM e...')
+#1 C:\laragon\www\hotel\Admin\index.php(182): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\event_settings.php on line 29
+[05-Jan-2026 07:56:43 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 15:56:43 Asia/Manila] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:43 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:50 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 15:56:54 Asia/Manila] PHP Warning:  Undefined variable $emp_id in C:\laragon\www\hotel\Admin\emp_history.php on line 28
+[05-Jan-2026 15:56:54 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\emp_history.php on line 32
+[05-Jan-2026 15:56:54 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\emp_history.php on line 33
+[05-Jan-2026 15:56:54 Asia/Manila] PHP Warning:  Undefined variable $emp_id in C:\laragon\www\hotel\Admin\emp_history.php on line 48
+[05-Jan-2026 15:56:54 Asia/Manila] PHP Warning:  Undefined array key 1 in C:\laragon\www\hotel\Admin\emp_history.php on line 169
+[05-Jan-2026 07:56:54 UTC] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in C:\laragon\www\hotel\Admin\db.php on line 9
+[05-Jan-2026 07:56:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:57 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:56:57 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:02 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:08 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:13 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:18 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:23 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:28 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:33 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:38 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:43 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:53 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:57:58 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:03 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:12 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:36 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:38 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 15:58:38 Asia/Manila] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:38 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:41 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 07:58:55 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 08:01:22 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:00:50 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:00:52 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:01:07 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:01:11 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:02:07 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:02:15 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:02:21 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:02:27 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:02:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:03:01 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:06:32 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:09:21 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:09:26 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:09:31 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:09:45 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:09:59 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:03 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:05 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:14 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:20 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:33 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:37 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:46 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:10:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:11:18 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:15:28 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:20:29 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:20:29 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'br.booked_rooms' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:21
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(21): mysqli_query(Object(mysqli), '\r\n    SELECT \r\n...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 21
+[05-Jan-2026 10:20:44 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:20:44 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'br.booked_rooms' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:21
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(21): mysqli_query(Object(mysqli), '\r\n    SELECT \r\n...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 21
+[05-Jan-2026 10:21:46 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:21:46 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'br.room_number' in 'field list' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:21
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(21): mysqli_query(Object(mysqli), '\r\n    SELECT \r\n...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 21
+[05-Jan-2026 10:22:43 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:24:12 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:27:37 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:27:37 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Illegal mix of collations for operation 'UNION' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:41
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(41): mysqli_query(Object(mysqli), '\r\n    SELECT \r\n...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 41
+[05-Jan-2026 10:27:44 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:27:44 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Illegal mix of collations for operation 'UNION' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:41
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(41): mysqli_query(Object(mysqli), '\r\n    SELECT \r\n...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 41
+[05-Jan-2026 10:28:15 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:28:52 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:28:56 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:29:27 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:29:44 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:29:44 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 87
+[05-Jan-2026 10:30:26 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:30:26 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 87
+[05-Jan-2026 10:30:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:31:02 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:31:25 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:32:49 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:33:29 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:35:59 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:35:59 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:38
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(38): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 38
+[05-Jan-2026 10:36:03 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:36:03 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:38
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(38): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 38
+[05-Jan-2026 10:36:53 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:36:53 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:38
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(38): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 38
+[05-Jan-2026 10:37:03 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:37:21 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:37:34 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:37:36 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:37:55 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:37:59 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:37:59 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:38
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(38): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 38
+[05-Jan-2026 10:38:15 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:38:16 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_type_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:39
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(39): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 39
+[05-Jan-2026 10:38:27 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:38:27 Asia/Manila] PHP Warning:  Undefined array key "table_name" in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 136
+[05-Jan-2026 18:38:27 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 136
+[05-Jan-2026 10:40:28 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:40:28 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:41
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(41): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 41
+[05-Jan-2026 10:40:33 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:40:33 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:41
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(41): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 41
+[05-Jan-2026 10:41:14 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:41:15 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'ot.table_booking_fk_id' in 'on clause' in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:41
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(41): mysqli_query(Object(mysqli), '\r\n    SELECT\r\n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 41
+[05-Jan-2026 10:42:10 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:45:10 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:45:56 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:45:56 Asia/Manila] PHP Warning:  Undefined array key "total_amount" in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 206
+[05-Jan-2026 18:45:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 206
+[05-Jan-2026 18:45:56 Asia/Manila] PHP Warning:  Undefined array key "total_amount" in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 206
+[05-Jan-2026 18:45:56 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 206
+[05-Jan-2026 10:46:33 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:46:59 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 18:46:59 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'GROUP_CONCAT(DISTINCT br.room_type_name SEPARATOR ', ') AS room_types,
+        ' at line 3 in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php:20
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php(20): mysqli_query(Object(mysqli), '\r\n    SELECT *\r...')
+#1 C:\laragon\www\hotel\Admin\index.php(186): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\sales_report.php on line 20
+[05-Jan-2026 10:47:02 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:54:06 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:54:22 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:54:32 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:55:52 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:56:43 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:56:52 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:57:04 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:57:28 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:57:40 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:57:42 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:57:46 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:58:14 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:58:17 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:58:41 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 10:58:55 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:02:56 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:02:58 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:04:39 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:04:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:05:29 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:05:44 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:05:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:06:27 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:06:28 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:06:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:06:55 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:06:59 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:07:00 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:07:49 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:07:57 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:08:48 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:09:14 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:09:23 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:11:08 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:13:17 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:13:30 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:13:54 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:13:55 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:14:08 UTC] Database connected successfully to: hotelms
+[05-Jan-2026 11:14:09 UTC] Database connected successfully to: hotelms
