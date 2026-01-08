@@ -721,9 +721,16 @@ while ($row = $addonsResult->fetch_assoc()) {
 
                                 <div class="mb-3">
                                     <label class="form-label package-label">Availability</label>
-                                    <input type="number" step="0.01" name="availability" class="form-control package-input"
-                                        value="<?= htmlspecialchars($item['availability']) ?>">
+                                    <select name="availability" class="form-control package-input" required>
+                                        <option value="1" <?= $item['availability'] == 1 ? 'selected' : '' ?>>
+                                            Available
+                                        </option>
+                                        <option value="0" <?= $item['availability'] == 0 ? 'selected' : '' ?>>
+                                            Unavailable
+                                        </option>
+                                    </select>
                                 </div>
+
 
                                 <div class="mb-3">
                                     <label class="form-label package-label">Image</label>
@@ -911,9 +918,13 @@ while ($row = $addonsResult->fetch_assoc()) {
 
                     <div class="mb-3">
                         <label for="availability" class="form-label package-label">Availability</label>
-                        <input type="text" class="form-control package-input" id="availability" name="availability"
-                            required>
+                        <select class="form-control package-input" id="availability" name="availability" required>
+                            <option value="" disabled selected>Select availability</option>
+                            <option value="1">Available</option>
+                            <option value="0">Unavailable</option>
+                        </select>
                     </div>
+
 
                     <div class="mb-3">
                         <label for="description" class="form-label package-label">Description</label>

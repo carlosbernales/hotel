@@ -169,7 +169,17 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['sales-report'])) {
     $page = "adminFrontend/sales_report.php";
 
+} elseif (isset($_GET['generate-report-event'])) {
+    $page = "adminFrontend/sales_report_event.php";
 
+} elseif (isset($_GET['generate-report-room'])) {
+    $page = "adminFrontend/sales_report_room.php";
+
+} elseif (isset($_GET['generate-report-table'])) {
+    $page = "adminFrontend/sales_report_table.php";
+
+} elseif (isset($_GET['users'])) {
+    $page = "adminFrontend/users.php";
 
 
     ///THIS IS TEST

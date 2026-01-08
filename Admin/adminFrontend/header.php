@@ -126,14 +126,13 @@ $currentPage = basename($page);
                 <i class="fas fa-tachometer-alt"></i>Dashboard
             </a>
 
-            <a href="<?php echo ($currentPage == 'customers.php') ? 'javascript:void(0)' : 'customers.php'; ?>"
-                class="<?php echo ($currentPage == 'customers.php') ? 'active' : ''; ?>">
-                <i class="fas fa-users"></i> Customer Info
-            </a>
-
             <a href="index.php?sales-report"
                 class="<?php echo ($currentPage == 'sales_report.php') ? 'active' : ''; ?>">
                 <i class="fas fa-tachometer-alt"></i>Sales Report
+            </a>
+
+            <a href="index.php?users" class="<?php echo ($currentPage == 'users.php') ? 'active' : ''; ?>">
+                <i class="fas fa-tachometer-alt"></i>Users
             </a>
 
             <div
