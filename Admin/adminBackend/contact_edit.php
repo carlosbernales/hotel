@@ -12,15 +12,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $link = $conn->real_escape_string($_POST['link']);
     $display_order = intval($_POST['display_order']);
     $is_external = ($_POST['is_external'] == 1) ? 1 : 0;
-    $icon_class = $conn->real_escape_string($_POST['icon_class']);
 
 
     $sql = "UPDATE contact_info 
             SET display_text = '$display_text', 
                 link = '$link', 
                 display_order = $display_order, 
-                is_external = $is_external,
-                icon_class = '$icon_class'
+                is_external = $is_external
             WHERE id = $id";
 
     if ($conn->query($sql) === TRUE) {

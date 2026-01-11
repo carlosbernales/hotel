@@ -129,13 +129,6 @@ if ($result) {
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label package-label">Icon</label>
-                                                <input type="text" name="icon_class" class="form-control package-input"
-                                                    value="<?php echo htmlspecialchars($contact['icon_class']); ?>"
-                                                    required>
-                                            </div>
-
-                                            <div class="mb-3">
                                                 <label class="form-label package-label">Link</label>
                                                 <input type="text" name="link" class="form-control package-input"
                                                     value="<?php echo htmlspecialchars($contact['link']); ?>" required>
@@ -181,7 +174,7 @@ if ($result) {
     <div class="modal-dialog modal-lg">
         <div class="modal-content package-modal">
             <div class="modal-header package-modal-header">
-                <h5 class="modal-title fw-bold" id="addContactLabel">Add Facility Category</h5>
+                <h5 class="modal-title fw-bold" id="addContactLabel">Add Contact</h5>
                 <button type="button" class="btn-close package-modal-close" data-bs-dismiss="modal"
                     aria-label="Close"></button>
             </div>
@@ -190,20 +183,14 @@ if ($result) {
                     enctype="multipart/form-data">
 
                     <div class="mb-3">
-                        <label for="display_text" class="form-label package-label">Category Name</label>
+                        <label for="display_text" class="form-label package-label">Display Text</label>
                         <input type="text" class="form-control package-input" id="display_text" name="display_text"
                             required>
                     </div>
 
                     <div class="mb-3">
-                        <label for="link" class="form-label package-label">Category Name</label>
+                        <label for="link" class="form-label package-label">Link</label>
                         <input type="text" class="form-control package-input" id="link" name="link" required>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="icon_class" class="form-label package-label">Icon</label>
-                        <input type="text" class="form-control package-input" id="icon_class" name="icon_class"
-                            required>
                     </div>
 
                     <div class="mb-3">
@@ -253,7 +240,7 @@ if ($result) {
             const icon = this.querySelector('i');
             const statusCell = this.closest('tr').querySelector('td:nth-child(5)');
 
-            fetch('../admin/adminBackend/contact_status_update.php', {
+            fetch('../Admin/adminBackend/contact_status_update.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'id=' + id

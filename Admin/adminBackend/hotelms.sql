@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 03, 2026 at 11:41 AM
+-- Generation Time: Jan 11, 2026 at 08:29 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -305,6 +305,13 @@ CREATE TABLE `booked_rooms` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Dumping data for table `booked_rooms`
+--
+
+INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
+(1, 1, 5, 2, 'Double Occupancy', 1000.00, '2026-01-05 10:09:45');
+
 -- --------------------------------------------------------
 
 --
@@ -343,6 +350,13 @@ CREATE TABLE `bookings` (
   `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `rejection_reason` text COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`, `rejection_reason`) VALUES
+(1, 'BK-EMN0MQ165BY4', NULL, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '9951776920', 'walkin', '2026-01-06 00:00:00', '2026-01-05 18:10:36', NULL, 2, NULL, 1, '0', 'Cash', 1000.00, '2026-01-05 10:09:45', 0, 1000.00, 0.00, 'admin', 2, 0, NULL, 'none', 0.00, 0.00, 'finished', NULL);
 
 -- --------------------------------------------------------
 
@@ -400,6 +414,13 @@ CREATE TABLE `booking_check_inout` (
   `check_in` datetime NOT NULL,
   `check_out` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking_check_inout`
+--
+
+INSERT INTO `booking_check_inout` (`id`, `booking_fk_id`, `check_in`, `check_out`) VALUES
+(1, 1, '2026-01-06 00:00:00', '2026-01-07 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -951,6 +972,14 @@ CREATE TABLE `event_bookings` (
   `place` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `event_bookings`
+--
+
+INSERT INTO `event_bookings` (`id`, `booking_refId`, `user_id`, `customer_name`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`, `place`) VALUES
+(1, 'EVT-64IUPF', NULL, 'Carlos Bernales', 'Package A', 30, 47500.00, '0', 0.00, 0, 1200.00, 47500.00, 0.00, 47500.00, 'Birthday', '2026-01-07 14:00:00', '2026-01-07 18:00:00', 30, 'GCash', 'Custom', 'Finished', 'Regular', 'cafe'),
+(2, 'EVT-ZCESL0', NULL, 'Carlos Bernales', 'Package A', 30, 47500.00, '0', 0.00, 0, 1200.00, 47500.00, 23750.00, 23750.00, 'Birthday', '2026-01-08 18:58:00', '2026-01-08 22:58:00', 30, 'GCash', 'Half', 'Finished', 'Regular', 'garden');
+
 -- --------------------------------------------------------
 
 --
@@ -1010,8 +1039,8 @@ CREATE TABLE `event_packages` (
 
 INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`, `image_path2`, `image_path3`, `max_guests`, `duration`, `created_at`, `is_available`, `menu_items`, `max_pax`, `time_limit`, `notes`, `status`, `place`) VALUES
 (1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, 'Carlos,1 Appetizers', 50, '', '  HAHH', 'available', 'cafe'),
-(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 50, '', '  Wala', 'available', 'cafe'),
-(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 50, '', ' **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available', 'cafe'),
+(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 30, '', '   Wala', 'available', 'cafe'),
+(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 40, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 40, '', '   **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available', 'cafe'),
 (4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'available', 'garden'),
 (9, 'Package F', 1000.00, 'Note', NULL, NULL, NULL, 2, 1, '2025-12-20 10:11:26', 1, 'Salad,1 Appetizers', 2, '', 'Note', 'available', 'garden');
 
@@ -1205,6 +1234,14 @@ CREATE TABLE `guest_names` (
   `image_proof` varchar(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `guest_names`
+--
+
+INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
+(1, 1, 'asd', 'asd', 'Adult', NULL, NULL, '2026-01-05 10:09:45'),
+(2, 1, 'asdas', 'dsad', 'Adult', NULL, NULL, '2026-01-05 10:09:45');
 
 -- --------------------------------------------------------
 
@@ -1984,6 +2021,7 @@ CREATE TABLE `orders_table` (
   `contact` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `date_time` datetime DEFAULT NULL,
+  `order_type` varchar(255) DEFAULT NULL,
   `discount_type` varchar(255) DEFAULT NULL,
   `discount_percentage` int DEFAULT NULL,
   `discount_amount` double(10,2) DEFAULT NULL,
@@ -1997,6 +2035,13 @@ CREATE TABLE `orders_table` (
   `dp_payment_method` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders_table`
+--
+
+INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `email`, `date_time`, `order_type`, `discount_type`, `discount_percentage`, `discount_amount`, `total`, `balance`, `downpayment`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `dp_payment_method`, `status`) VALUES
+(2, NULL, 'ORD85053822217', 'Carlos', 'Bernales', '9951776920', NULL, '2026-01-06 15:00:00', NULL, NULL, NULL, NULL, 470.00, NULL, 235.00, NULL, 235.00, NULL, NULL, 'gcash', 'Finished');
 
 -- --------------------------------------------------------
 
@@ -2013,6 +2058,13 @@ CREATE TABLE `orders_table_type` (
   `table_number` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+--
+-- Dumping data for table `orders_table_type`
+--
+
+INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
+(2, 2, 3, 2, 'GAS', 2);
+
 -- --------------------------------------------------------
 
 --
@@ -2026,6 +2078,14 @@ CREATE TABLE `order_items` (
   `quantity` int NOT NULL,
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
+(1, 2, 'Spaghetti maccaroni', 1, 270.00),
+(2, 2, 'Coconut Salad', 1, 200.00);
 
 -- --------------------------------------------------------
 
@@ -2875,7 +2935,7 @@ CREATE TABLE `userss` (
 
 INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `address`, `password`, `actual_password`, `profile_photo`, `user_type`, `name`, `verification_code`, `verification_expiry`, `is_verified`, `reset_token`, `reset_token_expires`) VALUES
 (1, 'Alfred hendrik', 'Aceveda', 'admin@example.com', '09362715617', 'Balite Calapan City Oriental Mindoro', '$2y$10$efqc04ABmXuKUBzj1BRlmuytMLjir6CJ.LrTm2qw81/rS94GcA54u', NULL, NULL, 'admin', NULL, NULL, NULL, 0, 'd3ab8c68d4af772a776130cb755d22611faafa41a9bc56af2b46aae42d220527', '2025-04-24 13:48:57'),
-(2, NULL, NULL, 'frontdesk@example.com', NULL, NULL, '$2y$10$gKCFBo96Q51u5PeLc3ZT6OnrMg47XQpYTKECADPF6skWy5ipIgdgG', NULL, NULL, 'frontdesk', NULL, NULL, NULL, 0, NULL, NULL),
+(2, 'asd', 'asd', 'frontdesk@example.com', '9951776920', 'asdasd', '$2y$10$gKCFBo96Q51u5PeLc3ZT6OnrMg47XQpYTKECADPF6skWy5ipIgdgG', NULL, NULL, 'frontdesk', NULL, NULL, NULL, 1, NULL, NULL),
 (3, 'Cashier', 'Realisan', 'cashier@example.com', '09123456789', 'TAwagan', '$2y$10$kwMXcUy2XFwfJ1IyAKXHCe.MLTdIGUwJrZSOSF5gw2vJ6gzE6oO86', NULL, 'uploads/profile/3.jpg', 'cashier', NULL, NULL, NULL, 1, '225874', '2025-05-31 21:24:35'),
 (5, 'Aizzy', 'Villanueva', 'aizzyvillanueva43@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$NuTp9esbPDwxbh1w1lhCO..UptxZgsn3x8/sDH7poiX4hPVFUB02q', NULL, 'profile_690c175b3465a9.35460400.png', 'admin', NULL, NULL, NULL, 0, NULL, NULL),
 (6, 'Aizzy', 'Villanueva', 'aizzyvillanueva34@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$r1X5exzjzJcmM.v3uGBNXeXiN.QkoU1QOIYDIG.7UjmZG.qmxt0hy', NULL, NULL, 'admin', NULL, NULL, NULL, 0, NULL, NULL),
@@ -2902,7 +2962,7 @@ INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`
 (41, 'Elly', 'Mildred', 'ellymildred846@gmail.com', '09951779200', NULL, '$2y$10$cJzE7CDOXKXPvaif0cvB3eotY.ZUvd.8rjGgsWE86fU0SzV2DRjgy', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
 (43, 'Chan', 'Chan', 'chan.christians123@gmail.com', '09112222222', NULL, '$2y$10$yuRf9CSeCcdoBE7DThbiJuV0yj8.c4Lcv.KjVQVCL2HfumNEMqXbm', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
 (44, 'Henz', 'Ollywod', 'ollywodhenz@gmail.com', '09267615921', NULL, '$2y$10$B/8hHJuPTqiIaRxiRHtVr.Aq81jbGza/cgr7s/6xRNrdY./KnTugu', NULL, 'profile_6922c38c6b37d9.85367249.jpg', 'customer', NULL, NULL, NULL, 1, NULL, NULL),
-(45, 'Carlos ', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', NULL, '$2y$10$djb2VvV3CY6KhxoATZ4kCuoNKTG3sYLZEa.fhUipGsXgidMdIpNxu', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL);
+(45, 'Carlos', 'Bernales', 'carlosbernales24@gmail.com', '09951776920', 'Masipit', '$2y$10$djb2VvV3CY6KhxoATZ4kCuoNKTG3sYLZEa.fhUipGsXgidMdIpNxu', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -3361,13 +3421,13 @@ ALTER TABLE `beds`
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `booking_amenities`
@@ -3379,7 +3439,7 @@ ALTER TABLE `booking_amenities`
 -- AUTO_INCREMENT for table `booking_check_inout`
 --
 ALTER TABLE `booking_check_inout`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
@@ -3415,7 +3475,7 @@ ALTER TABLE `discount_types`
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
@@ -3445,7 +3505,7 @@ ALTER TABLE `fix_booking_ids_log`
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
@@ -3499,19 +3559,19 @@ ALTER TABLE `orders`
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
@@ -3595,7 +3655,7 @@ ALTER TABLE `table_types`
 -- AUTO_INCREMENT for table `userss`
 --
 ALTER TABLE `userss`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `users_unified`
