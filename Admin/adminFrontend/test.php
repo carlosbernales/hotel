@@ -1,118 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Event Booking Receipt</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
-        .receipt-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.05);
-        }
-        .receipt-header { border-bottom: 2px solid #eee; padding-bottom: 20px; margin-bottom: 30px; }
-        .invoice-title { color: #0d6efd; font-weight: 800; text-transform: uppercase; }
-        .table thead { background-color: #f1f4f9; }
-        .total-section { background: #f8f9fa; padding: 20px; border-radius: 5px; }
-        @media print {
-            .no-print { display: none; }
-            .receipt-container { box-shadow: none; margin: 0; width: 100%; }
-        }
-    </style>
+    <title>Room Reviews</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.13.6/css/dataTables.bootstrap5.min.css"
+        rel="stylesheet">
+
 </head>
+
 <body>
-
-<div class="container">
-    <div class="receipt-container">
-        <div class="row receipt-header align-items-center">
-            <div class="col-sm-6">
-                <h2 class="invoice-title">Sales Report</h2>
-                <p class="mb-0">Booking Reference: <strong>#EVT-99283</strong></p>
-                <p>Date: Jan 05, 2026</p>
-            </div>
-            <div class="col-sm-6 text-sm-end">
-                <h4 class="fw-bold">Starlight Venues Inc.</h4>
-                <p class="text-muted small">123 Event Plaza, Suite 400<br>New York, NY 10001<br>contact@starlight.com</p>
+    <div class="main-content" id="mainContent">
+        <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
+            <div>
+                <i class="fas fa-home"></i> Reviews
             </div>
         </div>
 
-        <div class="row mb-4">
-            <div class="col-sm-6">
-                <h6 class="text-muted text-uppercase small font-weight-bold">Billed To:</h6>
-                <p class="fw-bold mb-0">Alex Thompson</p>
-                <p class="text-muted">alex.t@email.com<br>+1 (555) 000-1234</p>
+        <div class="stats-row">
+            <div class="stat-card">
+                <h3>127</h3>
+                <p>Total Reviews</p>
             </div>
-            <div class="col-sm-6 text-sm-end">
-                <h6 class="text-muted text-uppercase small font-weight-bold">Event Details:</h6>
-                <p class="fw-bold mb-0">Annual Corporate Gala</p>
-                <p class="text-muted">Date: March 15, 2026<br>Guests: 150</p>
+            <div class="stat-card">
+                <h3>4.6</h3>
+                <p>Average Rating</p>
             </div>
-        </div>
-
-        <div class="table-responsive">
-            <table class="table table-borderless mt-4">
-                <thead>
-                    <tr>
-                        <th class="py-3">Description</th>
-                        <th class="text-center py-3">Qty/Hrs</th>
-                        <th class="text-end py-3">Unit Price</th>
-                        <th class="text-end py-3">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="py-3">Grand Ballroom Rental (Full Day)</td>
-                        <td class="text-center">1</td>
-                        <td class="text-end">$2,500.00</td>
-                        <td class="text-end fw-bold">$2,500.00</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3">Premium Catering Service (Per Head)</td>
-                        <td class="text-center">150</td>
-                        <td class="text-end">$65.00</td>
-                        <td class="text-end fw-bold">$9,750.00</td>
-                    </tr>
-                    <tr>
-                        <td class="py-3">AV Setup & Tech Support</td>
-                        <td class="text-center">1</td>
-                        <td class="text-end">$450.00</td>
-                        <td class="text-end fw-bold">$450.00</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <div class="row mt-4 justify-content-end">
-            <div class="col-md-5">
-                <div class="total-section">
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Subtotal</span>
-                        <span>$12,700.00</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-2">
-                        <span>Tax (8%)</span>
-                        <span>$1,016.00</span>
-                    </div>
-                    <hr>
-                    <div class="d-flex justify-content-between">
-                        <span class="fw-bold">Total Amount</span>
-                        <span class="fw-bold text-primary h5 mb-0">$13,716.00</span>
-                    </div>
-                </div>
+            <div class="stat-card">
+                <h3>89%</h3>
+                <p>5-Star Reviews</p>
             </div>
         </div>
 
-        <div class="mt-5 text-center">
-            <p class="text-muted small">Thank you for choosing Starlight Venues. Please note that cancellations made within 30 days of the event are subject to a 50% fee.</p>
-            <button class="btn btn-outline-primary btn-sm no-print mt-3" onclick="window.print()">Print Receipt</button>
+        <div class="reviews-container">
+            <div class="reviews-header">
+                <h4><i class="fas fa-star" style="color: var(--gold);"></i> Guest Reviews</h4>
+                <button class="btn btn-sm" style="background: var(--gold); color: #2c2c2c; border: none;">
+                    <i class="fas fa-download"></i> Export
+                </button>
+            </div>
+
+            <div class="filter-section">
+                <select id="ratingFilter">
+                    <option value="">All Ratings</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="2">2 Stars</option>
+                    <option value="1">1 Star</option>
+                </select>
+                <select id="roomFilter">
+                    <option value="">All Rooms</option>
+                    <option value="Deluxe Ocean View">Deluxe Ocean View</option>
+                    <option value="Presidential Suite">Presidential Suite</option>
+                    <option value="Garden Villa">Garden Villa</option>
+                    <option value="Executive Room">Executive Room</option>
+                </select>
+                <input type="text" id="searchGuest" placeholder="Search guest name...">
+            </div>
+
+            <div id="reviewsList">
+                <!-- Reviews will be dynamically loaded here -->
+            </div>
         </div>
     </div>
-</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
 
 </body>
+
 </html>

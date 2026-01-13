@@ -135,6 +135,9 @@ $currentPage = basename($page);
                 <i class="fas fa-users"></i> Users
             </a>
 
+            <a href="index.php?feedbacks" class="<?php echo ($currentPage == 'feedback.php') ? 'active' : ''; ?>">
+                <i class="fas fa-star"></i> Reviews
+            </a>
 
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['rejected_room_bookings_list.php', 'pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">

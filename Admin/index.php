@@ -181,6 +181,10 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['users'])) {
     $page = "adminFrontend/users.php";
 
+} elseif (isset($_GET['feedbacks'])) {
+    $page = "adminFrontend/feedback.php";
+
+
 
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {
