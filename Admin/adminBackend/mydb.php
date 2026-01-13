@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$database = "u763377220_hotelms";
-$username = "u763377220_casaestela";
-$password = "Casaestela@2025";
+$database = "hotelms";
+$username = "root";
+$password = "";
 
 
 $conn = new mysqli($host, $username, $password, $database);
