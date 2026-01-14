@@ -180,11 +180,18 @@ $currentPage = basename($page);
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['table_booking_accepted.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['table_booking_pending.php', 'table_booking_accepted.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-chair"></i> Table Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table-booking-pend"
+                        class="<?php echo ($currentPage == 'table_booking_pending.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-check-circle"></i> Pending
+                    </a>
+                </div>
                 <div class="sidebar-submenu">
                     <a href="index.php?table-booking-acptd"
                         class="<?php echo ($currentPage == 'table_booking_accepted.php') ? 'active' : ''; ?>">
