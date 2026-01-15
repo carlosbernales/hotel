@@ -8,7 +8,7 @@ if (!isset($_GET['booking_id'])) {
 $order_id = intval($_GET['booking_id']);
 
 /* ============================
-   FETCH ORDER
+   FETCH ORDER (orders_table)
 ============================ */
 $sql = "SELECT * FROM orders_table WHERE id = ?";
 $stmt = $conn->prepare($sql);
@@ -56,7 +56,8 @@ $order = $res->fetch_assoc();
             margin: 25px 0 10px
         }
 
-        .detail-row {
+        .detail-row,
+        .total-row {
             display: flex;
             justify-content: space-between;
             font-size: 14px;
@@ -78,13 +79,6 @@ $order = $res->fetch_assoc();
 
         th {
             text-align: left
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 15px;
-            padding: 6px 0
         }
 
         .grand-total {
@@ -118,39 +112,32 @@ $order = $res->fetch_assoc();
             <h2>Casa Estela Boutique Hotel & Cafe</h2>
             <p>Gov B Marasigan St, Calapan City</p>
             <p><strong>TABLE BOOKING RECEIPT</strong></p>
-            <p>Order Ref:
-                <?= htmlspecialchars($order['order_id']) ?>
-            </p>
-            <p>Date:
-                <?= date("F j, Y h:i A", strtotime($order['date_time'])) ?>
-            </p>
+            <p>Order Ref: <?= $order['id'] ?></p>
+            <p>Date: <?= date("F j, Y h:i A", strtotime($order['date_time'])) ?></p>
         </div>
 
         <!-- CUSTOMER INFO -->
         <div class="section-title">Customer Information</div>
-        <div class="detail-row"><span>Name:</span><span>
-                <?= htmlspecialchars($order['firstname'] . " " . $order['lastname']) ?>
-            </span></div>
-        <div class="detail-row"><span>Email:</span><span>
-                <?= htmlspecialchars($order['email']) ?>
-            </span></div>
-        <div class="detail-row"><span>Contact:</span><span>
-                <?= htmlspecialchars($order['contact']) ?>
-            </span></div>
+        <div class="detail-row">
+            <span>Name:</span><span><?= htmlspecialchars($order['firstname'] . " " . $order['lastname']) ?></span></div>
+        <div class="detail-row"><span>Email:</span><span><?= htmlspecialchars($order['email']) ?></span></div>
+        <div class="detail-row"><span>Contact:</span><span><?= htmlspecialchars($order['contact']) ?></span></div>
 
         <!-- TABLE INFO -->
         <div class="section-title">Table Information</div>
         <?php
-        $table_sql = "SELECT table_name, table_number 
-              FROM orders_table_type 
-              WHERE table_booking_fk_id = ?";
+        $table_sql = "
+        SELECT table_name, table_number
+        FROM orders_table_type
+        WHERE table_booking_fk_id = ?
+    ";
         $stmt = $conn->prepare($table_sql);
         $stmt->bind_param("i", $order_id);
         $stmt->execute();
         $tables = $stmt->get_result();
+        ?>
 
-        if ($tables->num_rows > 0):
-            ?>
+        <?php if ($tables->num_rows > 0): ?>
             <table>
                 <tr>
                     <th>Table</th>
@@ -158,12 +145,8 @@ $order = $res->fetch_assoc();
                 </tr>
                 <?php while ($t = $tables->fetch_assoc()): ?>
                     <tr>
-                        <td>
-                            <?= htmlspecialchars($t['table_name']) ?>
-                        </td>
-                        <td>
-                            <?= $t['table_number'] ?>
-                        </td>
+                        <td><?= htmlspecialchars($t['table_name']) ?></td>
+                        <td><?= $t['table_number'] ?></td>
                     </tr>
                 <?php endwhile; ?>
             </table>
@@ -179,9 +162,9 @@ $order = $res->fetch_assoc();
         $stmt->bind_param("i", $order_id);
         $stmt->execute();
         $items = $stmt->get_result();
+        ?>
 
-        if ($items->num_rows > 0):
-            ?>
+        <?php if ($items->num_rows > 0): ?>
             <table>
                 <tr>
                     <th>Item</th>
@@ -191,15 +174,9 @@ $order = $res->fetch_assoc();
 
                 <?php while ($item = $items->fetch_assoc()): ?>
                     <tr>
-                        <td>
-                            <?= htmlspecialchars($item['item_name']) ?>
-                        </td>
-                        <td>
-                            <?= $item['quantity'] ?>
-                        </td>
-                        <td style="text-align:right;">₱
-                            <?= number_format($item['unit_price'], 2) ?>
-                        </td>
+                        <td><?= htmlspecialchars($item['item_name']) ?></td>
+                        <td><?= $item['quantity'] ?></td>
+                        <td style="text-align:right;">₱<?= number_format($item['unit_price'], 2) ?></td>
                     </tr>
 
                     <?php
@@ -208,19 +185,13 @@ $order = $res->fetch_assoc();
                     $stmt2->bind_param("i", $item['id']);
                     $stmt2->execute();
                     $addons = $stmt2->get_result();
+                    ?>
 
-                    while ($ad = $addons->fetch_assoc()):
-                        ?>
+                    <?php while ($ad = $addons->fetch_assoc()): ?>
                         <tr>
-                            <td style="padding-left:30px;">+
-                                <?= htmlspecialchars($ad['addon_name']) ?>
-                            </td>
-                            <td>
-                                <?= $ad['quantity'] ?>
-                            </td>
-                            <td style="text-align:right;">₱
-                                <?= number_format($ad['price'], 2) ?>
-                            </td>
+                            <td style="padding-left:30px;">+ <?= htmlspecialchars($ad['addon_name']) ?></td>
+                            <td><?= $ad['quantity'] ?></td>
+                            <td style="text-align:right;">₱<?= number_format($ad['price'], 2) ?></td>
                         </tr>
                     <?php endwhile; ?>
 
@@ -232,57 +203,20 @@ $order = $res->fetch_assoc();
 
         <!-- PAYMENT SUMMARY -->
         <div class="section-title">Payment Summary</div>
-        <div class="total-row">
-            <span>Subtotal:</span>
-            <span>₱
-                <?= number_format($order['total'] + $order['discount_amount'], 2) ?>
-            </span>
+        <div class="total-row"><span>Total:</span><span>₱<?= number_format($order['total'], 2) ?></span></div>
+        <div class="total-row"><span>Downpayment:</span><span>₱<?= number_format($order['downpayment'], 2) ?></span>
         </div>
-
-        <?php if ($order['discount_percentage'] > 0): ?>
-            <div class="total-row">
-                <span>Discount (
-                    <?= $order['discount_percentage'] ?>%)
-                </span>
-                <span>-₱
-                    <?= number_format($order['discount_amount'], 2) ?>
-                </span>
-            </div>
-        <?php endif; ?>
-
-        <div class="total-row grand-total">
-            <span>TOTAL:</span>
-            <span>₱
-                <?= number_format($order['total'], 2) ?>
-            </span>
-        </div>
-
-        <div class="total-row">
-            <span>Downpayment:</span>
-            <span>₱
-                <?= number_format($order['downpayment'], 2) ?>
-            </span>
-        </div>
-
-        <div class="total-row">
-            <span>Remaining Balance:</span>
-            <span>₱
-                <?= number_format($order['remaining_balance'], 2) ?>
-            </span>
-        </div>
+        <div class="total-row grand-total"><span>Remaining
+                Balance:</span><span>₱<?= number_format($order['remaining_balance'], 2) ?></span></div>
 
         <div class="detail-row">
             <span>Payment Method:</span>
-            <span>
-                <?= htmlspecialchars($order['payment_method']) ?>
-            </span>
+            <span><?= htmlspecialchars($order['payment_method']) ?></span>
         </div>
 
         <!-- FOOTER -->
         <div class="footer">
-            <p>Status: <strong>
-                    <?= strtoupper($order['status']) ?>
-                </strong></p>
+            <p>Status: <strong><?= strtoupper($order['status']) ?></strong></p>
             <p>Thank you for dining with us!</p>
         </div>
 

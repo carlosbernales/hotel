@@ -98,7 +98,7 @@ if ($result) {
                                     <ul class="dropdown-menu">
                                         <li>
                                             <a class="dropdown-item text-success"
-                                                href="index.php?accept-table-booking&id=<?= $order_id ?>">
+                                                href="../Admin/adminFrontend/table_booking_receipt.php&id=<?= $order_id ?>">
                                                 <i class="bi bi-check-circle"></i> Accept
                                             </a>
                                         </li>
