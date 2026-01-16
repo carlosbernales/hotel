@@ -40,7 +40,100 @@ $grandTotal = 0;
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Courier New', Courier, monospace;
+        }
 
+        /* Receipt Styling */
+        .receipt-container {
+            max-width: 500px;
+            margin: 30px auto;
+            background: #fff;
+            padding: 25px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            border: 1px solid #ddd;
+        }
+
+        /* Jagged Edge Effect */
+        .receipt-container::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(-45deg, transparent 5px, #fff 5px),
+                linear-gradient(45deg, transparent 5px, #fff 5px);
+            background-size: 10px 10px;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 15px;
+        }
+
+        .receipt-header h3 {
+            margin: 0;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .item-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .item-details {
+            flex: 1;
+        }
+
+        .item-price {
+            font-weight: bold;
+        }
+
+        .divider {
+            border-top: 1px dashed #000;
+            margin: 15px 0;
+        }
+
+        .total-section {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 12px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .no-print {
+                display: none;
+            }
+
+            .receipt-container {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                margin: 0;
+            }
+        }
+    </style>
     <style>
         body {
             background-color: #f4f4f4;
@@ -159,12 +252,14 @@ $grandTotal = 0;
     <div class="receipt-container">
         <div class="receipt-header">
             <h4>TABLE SALES REPORT</h4>
-            <small>Generated on: <?= date('M d, Y h:i A') ?></small>
-            <?php if ($fromDate && $toDate): ?>
-                <div class="mt-1 small">
-                    RANGE: <?= date('m/d/Y', strtotime($fromDate)) ?> - <?= date('m/d/Y', strtotime($toDate)) ?>
-                </div>
-            <?php endif; ?>
+            <p class="mb-0">Official Business Record</p>
+            <small>
+                <?php if ($fromDate && $toDate): ?>
+                    Period: <?= date('m/d/Y', strtotime($fromDate)) ?> - <?= date('m/d/Y', strtotime($toDate)) ?>
+                <?php else: ?>
+                    All-Time Sales
+                <?php endif; ?>
+            </small>
         </div>
 
         <div class="receipt-body">
@@ -197,10 +292,14 @@ $grandTotal = 0;
 
         <div class="divider"></div>
 
-        <div class="footer-text">
-            <p>*** END OF SALES REPORT ***</p>
-            <small>Keep this for your internal accounting records.</small>
+
+        <div class="footer-note">
+            <p>Report Generated:
+                <?= date('F d, Y h:i A') ?><br>
+                *** End of Report ***
+            </p>
         </div>
+
     </div>
 
     <script>

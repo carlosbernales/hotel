@@ -1,15 +1,12 @@
 <?php
 include 'adminBackend/mydb.php';
 
-if (!isset($_GET['booking_id'])) {
+if (!isset($_GET['id'])) {
     die("<h3>No Order ID provided.</h3>");
 }
 
-$order_id = intval($_GET['booking_id']);
+$order_id = intval($_GET['id']);
 
-/* ============================
-   FETCH ORDER (orders_table)
-============================ */
 $sql = "SELECT * FROM orders_table WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $order_id);
@@ -111,15 +108,16 @@ $order = $res->fetch_assoc();
         <div class="header">
             <h2>Casa Estela Boutique Hotel & Cafe</h2>
             <p>Gov B Marasigan St, Calapan City</p>
-            <p><strong>TABLE BOOKING RECEIPT</strong></p>
-            <p>Order Ref: <?= $order['id'] ?></p>
+            <p><strong>TABLE BOOKING ACCEPTED RECEIPT</strong></p>
+            <p>Order ID: <?= $order['order_id'] ?></p>
             <p>Date: <?= date("F j, Y h:i A", strtotime($order['date_time'])) ?></p>
         </div>
 
         <!-- CUSTOMER INFO -->
         <div class="section-title">Customer Information</div>
         <div class="detail-row">
-            <span>Name:</span><span><?= htmlspecialchars($order['firstname'] . " " . $order['lastname']) ?></span></div>
+            <span>Name:</span><span><?= htmlspecialchars($order['firstname'] . " " . $order['lastname']) ?></span>
+        </div>
         <div class="detail-row"><span>Email:</span><span><?= htmlspecialchars($order['email']) ?></span></div>
         <div class="detail-row"><span>Contact:</span><span><?= htmlspecialchars($order['contact']) ?></span></div>
 
@@ -127,10 +125,10 @@ $order = $res->fetch_assoc();
         <div class="section-title">Table Information</div>
         <?php
         $table_sql = "
-        SELECT table_name, table_number
-        FROM orders_table_type
-        WHERE table_booking_fk_id = ?
-    ";
+            SELECT table_name, table_number
+            FROM orders_table_type
+            WHERE table_booking_fk_id = ?
+        ";
         $stmt = $conn->prepare($table_sql);
         $stmt->bind_param("i", $order_id);
         $stmt->execute();
@@ -203,24 +201,174 @@ $order = $res->fetch_assoc();
 
         <!-- PAYMENT SUMMARY -->
         <div class="section-title">Payment Summary</div>
-        <div class="total-row"><span>Total:</span><span>₱<?= number_format($order['total'], 2) ?></span></div>
-        <div class="total-row"><span>Downpayment:</span><span>₱<?= number_format($order['downpayment'], 2) ?></span>
-        </div>
-        <div class="total-row grand-total"><span>Remaining
-                Balance:</span><span>₱<?= number_format($order['remaining_balance'], 2) ?></span></div>
 
-        <div class="detail-row">
-            <span>Payment Method:</span>
-            <span><?= htmlspecialchars($order['payment_method']) ?></span>
+        <div class="total-row">
+            <span>Total:</span>
+            <span>₱<?= number_format($order['total'], 2) ?></span>
         </div>
+
+        <?php if (!empty($order['downpayment'])): ?>
+            <div class="total-row">
+                <span>Downpayment:</span>
+                <span>₱<?= number_format($order['downpayment'], 2) ?></span>
+            </div>
+
+            <?php if (!empty($order['dp_payment_method'])): ?>
+                <div class="detail-row">
+                    <span>DP Payment Method:</span>
+                    <span><?= htmlspecialchars($order['dp_payment_method']) ?></span>
+                </div>
+            <?php endif; ?>
+        <?php endif; ?>
+
+        <div class="total-row grand-total">
+            <span>Remaining Balance:</span>
+            <span>₱<?= number_format($order['remaining_balance'], 2) ?></span>
+        </div>
+
+        <?php if (!empty($order['payment_method'])): ?>
+            <div class="detail-row">
+                <span>Payment Method:</span>
+                <span><?= htmlspecialchars($order['payment_method']) ?></span>
+            </div>
+        <?php endif; ?>
+
 
         <!-- FOOTER -->
         <div class="footer">
-            <p>Status: <strong><?= strtoupper($order['status']) ?></strong></p>
             <p>Thank you for dining with us!</p>
         </div>
-
     </div>
+
+
+    <div style="text-align: center; margin-top: 20px;">
+        <button id="saveReceiptBtn" style="padding: 10px 20px;">Accept this booking!</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <div id="loadingOverlay" style="
+    position: fixed;
+    top: 0; left: 0; 
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+">
+        <div id="loadingBox" style="text-align:center; color: white; font-size: 22px;">
+            <div class="spinner" style="
+                border: 6px solid #f3f3f3;
+                border-top: 6px solid #ffffff;
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                animation: spin 1s linear infinite;
+                margin: auto;
+                margin-bottom: 20px;
+            ">
+            </div>
+            <div id="loadingText">Please wait... processing your request</div>
+        </div>
+
+        <div id="successBox" style="
+            display:none;
+            background:#2ecc71;
+            padding:25px 40px;
+            border-radius:10px;
+            color:white;
+            text-align:center;
+            font-size:22px;
+            animation: fadein 0.4s ease-out;
+        ">
+            <div style="font-size:26px; font-weight:bold; margin-bottom:10px;">
+                Request done!
+            </div>
+            <button id="okBtn" style="
+            background:white;
+            color:#2ecc71;
+            padding:10px 25px;
+            border:none;
+            border-radius:5px;
+            font-size:18px;
+            cursor:pointer;
+            margin-top:15px;
+        ">OK</button>
+        </div>
+    </div>
+
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+
+    <script>
+        document.getElementById('saveReceiptBtn').addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+
+            const overlay = document.getElementById('loadingOverlay');
+            const loadingBox = document.getElementById('loadingBox');
+            const successBox = document.getElementById('successBox');
+
+            overlay.style.display = 'flex';
+            loadingBox.style.display = 'block';
+            successBox.style.display = 'none';
+
+            try {
+                const container = document.querySelector('.receipt-container');
+                const canvas = await html2canvas(container, { scale: 2 });
+                const dataUrl = canvas.toDataURL('image/png');
+
+                const res = await fetch('../Admin/adminBackend/table_save_receipt_image.php', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        id: <?= $order_id ?>,
+                        image: dataUrl,
+                    }),
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                const msg = await res.text();
+                console.log(msg);
+
+                loadingBox.style.display = 'none';
+                successBox.style.display = 'block';
+
+                document.getElementById('okBtn').onclick = function () {
+                    overlay.style.display = 'none';
+                    window.location.href = 'index.php?table-booking-pend';
+                };
+            } catch (err) {
+                console.error(err);
+                alert('Failed to accept booking.');
+                btn.disabled = false;
+                overlay.style.display = 'none';
+            }
+        });
+
+    </script>
+
+
 </body>
 
 </html>

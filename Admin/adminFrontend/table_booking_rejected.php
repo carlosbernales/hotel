@@ -4,7 +4,7 @@ include 'adminFrontend/header.php';
 
 $sql = "SELECT *
         FROM orders_table 
-        WHERE status IN ('confirmed')
+        WHERE status IN ('Rejected')
         ORDER BY date_time DESC";
 
 $result = mysqli_query($conn, $sql);
@@ -20,7 +20,7 @@ if ($result) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"> Pending Table Bookings</i>
+            <i class="fas fa-home"> Rejected Table Bookings</i>
         </div>
     </div>
 
@@ -77,8 +77,8 @@ if ($result) {
                             <td><?= htmlspecialchars($order['contact']) ?></td>
                             <td><?= date("F j, Y g:i A", strtotime($order['date_time'])) ?></td>
                             <td>
-                                <?php if ($order['status'] === 'confirmed'): ?>
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                <?php if ($order['status'] === 'Rejected'): ?>
+                                    <span class="badge bg-danger text-dark">Rejected</span>
                                 <?php else: ?>
                                     <span class="badge bg-success">Accepted</span>
                                 <?php endif; ?>
@@ -88,68 +88,9 @@ if ($result) {
                                     data-bs-target="#viewModal<?= $order_id ?>">
                                     <i class="bi bi-eye"></i> View
                                 </button>
-
-                                <div class="dropdown">
-                                    <button class="btn btn-sm btn-success dropdown-toggle" type="button"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-plus"></i> Action
-                                    </button>
-
-                                    <ul class="dropdown-menu">
-                                        <li>
-                                            <a class="dropdown-item text-success"
-                                                href="index.php?accept-table-boooking&id=<?= $order_id ?>">
-                                                <i class="bi bi-check-circle"></i> Accept
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal"
-                                                data-bs-target="#rejectModal<?= $order_id ?>">
-                                                <i class="bi bi-x-circle"></i> Reject
-                                            </button>
-                                        </li>
-
-                                    </ul>
-                                </div>
                             </td>
 
                         </tr>
-
-                        <div class="modal fade" id="rejectModal<?= $order_id ?>" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content border-0 shadow-lg">
-                                    <div class="modal-header bg-danger text-white">
-                                        <h5 class="modal-title">Reject Booking #
-                                            <?= $order['order_id'] ?>
-                                        </h5>
-                                        <button type="button" class="btn-close btn-close-white"
-                                            data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <form action="../Admin/adminBackend/table_receipt_rejected.php" method="post">
-                                        <div class="modal-body">
-                                            <input type="hidden" name="order_id" value="<?= $order_id ?>">
-                                            <input type="hidden" name="action" value="reject">
-                                            <div class="mb-3">
-                                                <label for="reason<?= $order_id ?>" class="form-label">Reason for
-                                                    Rejection</label>
-                                                <textarea class="form-control" id="reason<?= $order_id ?>" name="reason"
-                                                    rows="3" required></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-light"
-                                                data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-danger" id="rejectBtn<?= $order_id ?>">
-                                                Submit
-                                                <span class="spinner-border spinner-border-sm ms-2 d-none" role="status"
-                                                    id="rejectSpinner<?= $order_id ?>"></span>
-                                            </button>
-
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
 
 
                         <div class="modal fade" id="viewModal<?= $order_id ?>" tabindex="-1">
@@ -266,10 +207,29 @@ if ($result) {
                                                                     class="fw-bold text-danger fs-5">₱<?= number_format($order['remaining_balance'] ?? 0, 2) ?></span>
                                                             </li>
 
+
+                                                            <?php if (!empty($order['reject_reason'])): ?>
+                                                                <div class="card border-0 shadow-sm mt-4">
+                                                                    <div class="card-header bg-white border-0 pt-3">
+                                                                        <h6
+                                                                            class="text-uppercase text-muted fw-bold small mb-0">
+                                                                            Reject Reason
+                                                                        </h6>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <p class="text-danger fw-medium mb-0">
+                                                                            <?= htmlspecialchars($order['reject_reason']) ?>
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            <?php endif; ?>
+
                                                         </ul>
                                                     </div>
                                                 </div>
                                             </div>
+
+
 
                                             <div class="col-lg-8">
                                                 <div class="card border-0 shadow-sm h-100">
@@ -357,18 +317,3 @@ if ($result) {
     </div>
 </div>
 <?php include 'adminFrontend/footer.php'; ?>
-<script>
-    <?php foreach ($orders as $order): ?>
-        const form<?= $order['id'] ?> = document.querySelector('#rejectModal<?= $order['id'] ?> form');
-        const btn<?= $order['id'] ?> = document.getElementById('rejectBtn<?= $order['id'] ?>');
-        const spinner<?= $order['id'] ?> = document.getElementById('rejectSpinner<?= $order['id'] ?>');
-
-        form<?= $order['id'] ?>.addEventListener('submit', function (e) {
-            btn<?= $order['id'] ?>.disabled = true;
-
-            spinner<?= $order['id'] ?>.classList.remove('d-none');
-            btn<?= $order['id'] ?>.innerHTML = 'Please wait, processing your request...';
-            btn<?= $order['id'] ?>.appendChild(spinner<?= $order['id'] ?>);
-        });
-    <?php endforeach; ?>
-</script>

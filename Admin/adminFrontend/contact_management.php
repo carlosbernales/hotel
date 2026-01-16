@@ -12,7 +12,7 @@ if ($result) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"> Contact Information</i>
+            <i class="fas fa-home"> Contact and About Us Information</i>
         </div>
         <button class="btn btn-sm"
             style="background: var(--gold); color: #2c2c2c; border: none; padding: 8px 20px; border-radius: 5px; font-weight: 500;"
@@ -37,7 +37,7 @@ if ($result) {
                         <th style="background: var(--gold); color: #2c2c2c; border: none; padding: 12px;">Status</th>
                         <th
                             style="background: var(--gold); color: #2c2c2c; border: none; padding: 12px; text-align: center;">
-                            Actions</th>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -165,6 +165,91 @@ if ($result) {
             </table>
         </div>
     </div>
+
+
+    <?php
+    // Fetch About Us content
+    $about_content = [];
+    $resultAbout = $conn->query("SELECT * FROM about_content");
+    if ($resultAbout) {
+        $about_content = $resultAbout->fetch_all(MYSQLI_ASSOC);
+    }
+    ?>
+
+    <div class="info-card mt-4">
+        <h4><i class="fas fa-info-circle" style="color: var(--gold); margin-right: 10px;"></i>About Us</h4>
+
+        <div class="table-responsive">
+            <table class="table table-hover" id="aboutTable">
+                <thead>
+                    <tr>
+                        <th style="background: var(--gold); color: #2c2c2c; border: none; padding: 12px;">Title</th>
+                        <th style="background: var(--gold); color: #2c2c2c; border: none; padding: 12px;">Description
+                        </th>
+                        <th
+                            style="background: var(--gold); color: #2c2c2c; border: none; padding: 12px; text-align: center;">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($about_content as $about): ?>
+                        <tr>
+                            <td style="padding: 15px; vertical-align: middle;">
+                                <strong>
+                                    <?= htmlspecialchars($about['title']) ?>
+                                </strong>
+                            </td>
+                            <td style="padding: 15px; vertical-align: middle;">
+                                <?= nl2br(htmlspecialchars($about['description'])) ?>
+                            </td>
+                            <td style="padding: 15px; vertical-align: middle; text-align: center;">
+                                <button class="btn btn-sm btn-warning" title="Edit" data-bs-toggle="modal"
+                                    data-bs-target="#editAboutModal<?= $about['id'] ?>">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+
+                        <!-- Edit Modal -->
+                        <div class="modal fade" id="editAboutModal<?= $about['id'] ?>" tabindex="-1"
+                            aria-labelledby="editAboutModalLabel<?= $about['id'] ?>" aria-hidden="true">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content package-modal">
+                                    <form method="POST"
+                                        action="../Admin/adminBackend/about_edit.php?id=<?= $about['id'] ?>">
+                                        <div class="modal-header package-modal-header">
+                                            <h5 class="modal-title fw-bold">Edit About Us</h5>
+                                            <button type="button" class="btn-close package-modal-close"
+                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body package-modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">Title</label>
+                                                <input type="text" name="title" class="form-control package-input"
+                                                    value="<?= htmlspecialchars($about['title']) ?>" required>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">Description</label>
+                                                <textarea name="description" class="form-control package-input" rows="5"
+                                                    required>
+                                                    <?= htmlspecialchars($about['description']) ?>
+                                                </textarea>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn package-btn-save">Save Changes</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 

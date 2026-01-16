@@ -184,9 +184,12 @@ $totalSales = 0;
         <div class="divider"></div>
 
         <div class="footer-note">
-            <p>Report Generated: <?= date('Y-m-d H:i:s') ?><br>
-                *** End of Report ***</p>
+            <p>Report Generated:
+                <?= date('F d, Y h:i A') ?><br>
+                *** End of Report ***
+            </p>
         </div>
+
     </div>
 
 

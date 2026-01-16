@@ -77,7 +77,7 @@ if ($result) {
                                 </button>
 
                                 <form method="POST"
-                                    action="../Admin/adminBackend/amenity_delete.php?id=<?php echo $userss['id']; ?>"
+                                    action="../Admin/adminBackend/user_delete.php?id=<?php echo $userss['id']; ?>"
                                     style="display:inline-block;">
                                     <button type="submit" class="btn btn-sm table-action-btn table-action-delete"
                                         onclick="return confirm('Are you sure you want to delete this amenity type?')"

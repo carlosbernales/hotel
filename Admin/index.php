@@ -190,6 +190,18 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['accept-table-boooking'])) {
     $page = "adminFrontend/table_booking_receipt.php";
 
+} elseif (isset($_GET['table-booking-rejected'])) {
+    $page = "adminFrontend/table_booking_rejected.php";
+
+} elseif (isset($_GET['table-booking-completed'])) {
+    $page = "adminFrontend/table_booking_completed.php";
+
+} elseif (isset($_GET['staff-management'])) {
+    $page = "adminFrontend/staffs.php";
+
+} elseif (isset($_GET['offers'])) {
+    $page = "adminFrontend/offers.php";
+
 
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {

@@ -79,14 +79,19 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 
 //////////////////
+TABLE ORDERS
+orders_table : date_time
+orders_table_type
+order_items
+order_item_addons
 
-SET FOREIGN_KEY_CHECKS = 0;
+EVENT BOOKING
+event_bookings: date_time_start - date_time_end
+event_packages
 
-TRUNCATE TABLE orders_table;
-TRUNCATE TABLE orders_table_type;
-TRUNCATE TABLE order_items;
-TRUNCATE TABLE order_item_addons;
-
-SET FOREIGN_KEY_CHECKS = 1;
+on checking availablity must check the orders_table date_time by selected date on user side also on the event_bookings
+date_time_start and date_time_end, if user input conflict the date_time  from orders_table and date_time_start and date_time_end
+from event_bookings within range and 2 hours before and after total of 8 hours then shows no availablity slots with the status from
+orders_table  and event_bookings is not finished or rejected and event is cafe, if garden then shows available.
 
 
