@@ -430,6 +430,15 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label"><strong>Payment Type</strong></label>
+                        <select class="form-select" id="paymentType" onchange="handlePaymentTypeChange()">
+                            <option value="full">Full Payment</option>
+                            <option value="half" selected>Half (50%)</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
                         <label class="form-label"><strong>Downpayment (₱)</strong></label>
                         <input
                             type="number"
@@ -439,8 +448,10 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                             max="${subtotal}"
                             step="0.01"
                             value="${defaultDownpayment.toFixed(2)}"
-                        >
-                        <small class="text-muted">Default is 50% of total</small>
+                            readonly>
+                        <small class="text-muted" id="dpNote">
+                            Default is 50% of total
+                        </small>
                     </div>
                 </div>
                 `;
@@ -520,6 +531,29 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                     console.error(err);
                 });
         });
+
+        function handlePaymentTypeChange() {
+            const paymentType = document.getElementById('paymentType').value;
+            const downpaymentInput = document.getElementById('downpayment');
+            const total = parseFloat(document.getElementById('orderTotal').textContent);
+            const note = document.getElementById('dpNote');
+
+            if (paymentType === 'full') {
+                downpaymentInput.value = total.toFixed(2);
+                downpaymentInput.readOnly = true;
+                note.innerText = 'Full payment required';
+            }
+            else if (paymentType === 'half') {
+                downpaymentInput.value = (total / 2).toFixed(2);
+                downpaymentInput.readOnly = true;
+                note.innerText = '50% downpayment required';
+            }
+            else if (paymentType === 'custom') {
+                downpaymentInput.readOnly = false;
+                note.innerText = 'Enter custom downpayment amount';
+            }
+        }
+
     </script>
 
 </body>

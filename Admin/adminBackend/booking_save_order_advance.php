@@ -65,7 +65,7 @@ try {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 ");
 
-    $status = 'Cashier';
+    $status = 'Accepted';
 
     $stmt->bind_param(
         "sssssdddss",

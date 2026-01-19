@@ -1,13 +1,15 @@
-<?php
-include 'adminBackend/mydb.php';
-include 'adminFrontend/header.php';
-
-?>
 <style>
     :root {
         --gold: #d4af37;
+        --gold-light: #f4e7c3;
+        --gold-dark: #b8941f;
         --dark-bg: #2c2c2c;
         --sidebar-width: 250px;
+        --room-color: #667eea;
+        --cafe-color: #f5576c;
+        --event-color: #00f2fe;
+        --shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.12);
     }
 
     * {
@@ -17,227 +19,36 @@ include 'adminFrontend/header.php';
     }
 
     body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        overflow-x: hidden;
-        background: #f8f9fa;
+        font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+        color: #333;
+        line-height: 1.6;
     }
 
     .main-content {
-        padding: 30px;
+        padding: 20px;
         min-height: 100vh;
+        max-width: 1600px;
+        margin: 0 auto;
     }
 
+    /* Breadcrumb */
     .breadcrumb-custom {
         background: white;
-        padding: 15px 20px;
-        border-radius: 8px;
+        padding: 18px 25px;
+        border-radius: 16px;
         margin-bottom: 25px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        box-shadow: var(--shadow);
+        font-weight: 600;
+        color: var(--dark-bg);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 
     .breadcrumb-custom i {
         color: var(--gold);
-        margin-right: 8px;
-    }
-
-    /* Dashboard Stats Cards */
-    .stats-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .stat-card {
-        background: white;
-        border-radius: 10px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        transition: transform 0.3s, box-shadow 0.3s;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .stat-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 4px;
-        height: 100%;
-        background: var(--gold);
-    }
-
-    .stat-card-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-    }
-
-    .stat-icon {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 28px;
-        color: white;
-    }
-
-    .stat-icon.room {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    }
-
-    .stat-icon.cafe {
-        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-    }
-
-    .stat-icon.event {
-        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-    }
-
-    .stat-icon.revenue {
-        background: linear-gradient(135deg, var(--gold) 0%, #b8941f 100%);
-    }
-
-    .stat-info h3 {
-        color: #6c757d;
-        font-size: 0.9rem;
-        font-weight: 500;
-        margin-bottom: 8px;
-    }
-
-    .stat-number {
-        font-size: 2rem;
-        font-weight: bold;
-        color: #2c2c2c;
-        line-height: 1;
-    }
-
-    .stat-change {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-
-    .stat-change.positive {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .stat-change.negative {
-        background: #f8d7da;
-        color: #721c24;
-    }
-
-    /* Charts Section */
-    .charts-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-        gap: 20px;
-        margin-bottom: 30px;
-    }
-
-    .chart-card {
-        background: white;
-        border-radius: 10px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    }
-
-    .chart-card h4 {
-        color: #2c2c2c;
-        margin-bottom: 20px;
-        font-size: 1.2rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .chart-card h4 i {
-        color: var(--gold);
         margin-right: 10px;
-    }
-
-    /* Recent Bookings Table */
-    .recent-bookings {
-        background: white;
-        border-radius: 10px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-        margin-bottom: 30px;
-    }
-
-    .recent-bookings h4 {
-        color: #2c2c2c;
-        margin-bottom: 20px;
-        font-size: 1.2rem;
-        display: flex;
-        align-items: center;
-    }
-
-    .recent-bookings h4 i {
-        color: var(--gold);
-        margin-right: 10px;
-    }
-
-    .bookings-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .bookings-table thead {
-        background: var(--gold);
-    }
-
-    .bookings-table thead th {
-        padding: 12px;
-        text-align: left;
-        color: #2c2c2c;
-        font-weight: 600;
-        font-size: 0.9rem;
-    }
-
-    .bookings-table tbody td {
-        padding: 12px;
-        border-bottom: 1px solid #e9ecef;
-        color: #495057;
-        font-size: 0.9rem;
-    }
-
-    .bookings-table tbody tr:hover {
-        background: rgba(212, 175, 55, 0.05);
-    }
-
-    .badge {
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-
-    .badge.confirmed {
-        background: #d4edda;
-        color: #155724;
-    }
-
-    .badge.pending {
-        background: #fff3cd;
-        color: #856404;
-    }
-
-    .badge.cancelled {
-        background: #f8d7da;
-        color: #721c24;
     }
 
     /* Quick Actions */
@@ -250,305 +61,827 @@ include 'adminFrontend/header.php';
 
     .action-btn {
         background: white;
-        border: 2px solid var(--gold);
-        border-radius: 8px;
-        padding: 20px;
+        border: none;
+        border-radius: 16px;
+        padding: 25px 20px;
         text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
         text-decoration: none;
-        color: #2c2c2c;
+        color: #444;
+        font-weight: 600;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
     }
 
-    .action-btn:hover {
-        background: var(--gold);
-        transform: translateY(-3px);
-        box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    .action-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        z-index: 0;
+    }
+
+    .action-btn:hover::before {
+        opacity: 1;
+    }
+
+    .action-btn i,
+    .action-btn span {
+        position: relative;
+        z-index: 1;
+        transition: color 0.3s ease;
     }
 
     .action-btn i {
         font-size: 2rem;
         color: var(--gold);
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         display: block;
-        transition: color 0.3s;
     }
 
-    .action-btn:hover i {
-        color: #2c2c2c;
+    .action-btn:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
     }
 
-    .action-btn span {
-        display: block;
+    .action-btn:hover i,
+    .action-btn:hover span {
+        color: white;
+    }
+
+    /* Stats Cards */
+    .stats-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .stat-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: var(--gold);
+        transition: width 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow-hover);
+    }
+
+    .stat-card:hover::before {
+        width: 100%;
+        opacity: 0.05;
+    }
+
+    .stat-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .stat-info h3 {
+        font-size: 0.75rem;
+        color: #888;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        margin-bottom: 5px;
+        font-weight: 700;
+    }
+
+    .stat-main-val .stat-label {
+        font-size: 0.7rem;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .stat-number {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: var(--dark-bg);
+        margin-top: 8px;
+        background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .stat-icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.5rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.room {
+        background: linear-gradient(135deg, #667eea, #764ba2);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .stat-icon.cafe {
+        background: linear-gradient(135deg, #f5576c, #f093fb);
+        box-shadow: 0 8px 20px rgba(245, 87, 108, 0.3);
+    }
+
+    .stat-icon.event {
+        background: linear-gradient(135deg, #4facfe, #00f2fe);
+        box-shadow: 0 8px 20px rgba(79, 172, 254, 0.3);
+    }
+
+    .stat-icon.revenue {
+        background: linear-gradient(135deg, #d4af37, #b8941f);
+        box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
+    }
+
+    .stat-divider {
+        height: 1px;
+        background: linear-gradient(to right, transparent, #eee, transparent);
+        margin: 20px 0;
+    }
+
+    .stat-overall {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .stat-overall .stat-label {
+        font-size: 0.65rem;
+        color: #999;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .overall-val {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #555;
+    }
+
+    .stat-change {
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .stat-change.positive {
+        background: linear-gradient(135deg, #e6fcf5, #d4f8e8);
+        color: #0ca678;
+    }
+
+    .stat-change.negative {
+        background: linear-gradient(135deg, #fff5f5, #ffe8e8);
+        color: #fa5252;
+    }
+
+    /* Charts Section */
+    .charts-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+        gap: 25px;
+    }
+
+    .chart-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+
+    .chart-card:hover {
+        box-shadow: var(--shadow-hover);
+    }
+
+    .chart-card h4 {
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        color: var(--dark-bg);
+    }
+
+    .chart-card h4 i {
+        color: var(--gold);
+        margin-right: 8px;
+    }
+
+    /* Legend */
+    .chart-legend {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: #666;
         font-weight: 600;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-        .stats-container {
-            grid-template-columns: 1fr;
-        }
-
-        .charts-container {
-            grid-template-columns: 1fr;
-        }
-
-        .bookings-table {
-            font-size: 0.8rem;
-        }
-
-        .bookings-table thead th,
-        .bookings-table tbody td {
-            padding: 8px;
-        }
+    .legend-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
     }
 
-    /* Simple Bar Chart */
-    .simple-chart {
+    /* Weekly Bar Chart */
+    .simple-chart.weekly-3bars {
         display: flex;
         align-items: flex-end;
         justify-content: space-around;
-        height: 200px;
-        padding: 20px 0;
+        height: 280px;
+        padding-bottom: 40px;
+        border-bottom: 2px solid #f0f0f0;
+        gap: 10px;
+    }
+
+    .chart-group {
+        display: flex;
+        align-items: flex-end;
+        gap: 5px;
+        height: 100%;
+        position: relative;
+        flex: 1;
+        max-width: 80px;
     }
 
     .chart-bar {
         flex: 1;
-        margin: 0 5px;
-        background: linear-gradient(to top, var(--gold), #f4e7c3);
-        border-radius: 4px 4px 0 0;
+        min-width: 12px;
+        border-radius: 6px 6px 2px 2px;
         position: relative;
-        transition: transform 0.3s;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        cursor: pointer;
     }
 
     .chart-bar:hover {
-        transform: scaleY(1.05);
+        transform: scaleY(1.08);
+        filter: brightness(1.15);
     }
 
-    .chart-bar-label {
+    .chart-bar.room {
+        background: linear-gradient(180deg, #667eea, #764ba2);
+    }
+
+    .chart-bar.cafe {
+        background: linear-gradient(180deg, #f5576c, #f093fb);
+    }
+
+    .chart-bar.event {
+        background: linear-gradient(180deg, #4facfe, #00f2fe);
+    }
+
+    .chart-bar-count {
         position: absolute;
-        bottom: -25px;
+        top: -22px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 0.8rem;
-        color: #6c757d;
-        white-space: nowrap;
+        font-size: 11px;
+        font-weight: 800;
+        color: #333;
     }
 
     .chart-bar-value {
         position: absolute;
-        top: -25px;
+        top: -38px;
+        left: 50%;
+        transform: translateX(-50%) scale(0);
+        background: #333;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 6px;
+        font-size: 10px;
+        white-space: nowrap;
+        transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 5;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .chart-bar-value::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #2c2c2c;
+        width: 0;
+        height: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 4px solid #333;
+    }
+
+    .chart-bar:hover .chart-bar-value {
+        transform: translateX(-50%) scale(1);
+    }
+
+    .chart-bar-label {
+        position: absolute;
+        bottom: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 12px;
+        font-weight: 700;
+        color: #888;
+        white-space: nowrap;
+    }
+
+    /* Distribution Chart */
+    .simple-chart {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        height: 280px;
+        gap: 20px;
+        padding-bottom: 40px;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .charts-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .main-content {
+            padding: 15px;
+        }
+
+        .breadcrumb-custom {
+            padding: 15px 20px;
+            font-size: 0.9rem;
+        }
+
+        .quick-actions {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .action-btn {
+            padding: 20px 15px;
+        }
+
+        .action-btn i {
+            font-size: 1.5rem;
+        }
+
+        .action-btn span {
+            font-size: 0.85rem;
+        }
+
+        .stats-container {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .stat-card {
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+        }
+
+        .charts-container {
+            gap: 20px;
+        }
+
+        .chart-card {
+            padding: 20px;
+        }
+
+        .chart-card h4 {
+            font-size: 1rem;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .chart-group {
+            gap: 3px;
+            max-width: 60px;
+        }
+
+        .chart-bar {
+            min-width: 10px;
+        }
+
+        .simple-chart.weekly-3bars {
+            height: 220px;
+            gap: 5px;
+        }
+
+        .simple-chart {
+            height: 220px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .quick-actions {
+            grid-template-columns: 1fr;
+        }
+
+        .stat-card-header {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .stat-icon {
+            align-self: flex-end;
+        }
+
+        .chart-bar-label {
+            font-size: 10px;
+        }
+
+        .legend-item {
+            font-size: 0.7rem;
+        }
     }
 </style>
 
+<?php
+include 'adminBackend/mydb.php';
+include 'adminFrontend/header.php';
+
+/* =========================
+   TIMEZONE
+========================= */
+date_default_timezone_set('Asia/Manila');
+
+/* =========================
+   DATE RANGES
+========================= */
+// This Month
+$thisMonthStart = date('Y-m-01 00:00:00');
+$thisMonthEnd = date('Y-m-t 23:59:59');
+
+// Last Month
+$lastMonthStart = date('Y-m-01 00:00:00', strtotime('first day of last month'));
+$lastMonthEnd = date('Y-m-t 23:59:59', strtotime('last day of last month'));
+
+/* =========================
+   HELPER FUNCTIONS
+========================= */
+function getSum($conn, $sql, $params = [])
+{
+    $stmt = $conn->prepare($sql);
+    if (!empty($params)) {
+        $types = str_repeat('s', count($params));
+        $stmt->bind_param($types, ...$params);
+    }
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc()['total'] ?? 0;
+}
+
+function percentChange($current, $previous)
+{
+    if ($previous == 0 && $current > 0)
+        return 100;
+    if ($previous == 0)
+        return 0;
+    return (($current - $previous) / $previous) * 100;
+}
+
+function getWeeklyCounts($conn, $table, $dateColumn, $statusColumn, $statusValue, $weekStart, $weekEnd)
+{
+    $counts = array_fill(0, 7, 0);
+    $sql = "
+        SELECT WEEKDAY(DATE($dateColumn)) AS wd, COUNT(*) AS total
+        FROM $table
+        WHERE $statusColumn = ?
+          AND DATE($dateColumn) BETWEEN ? AND ?
+        GROUP BY wd
+    ";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sss", $statusValue, $weekStart, $weekEnd);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    while ($r = $res->fetch_assoc()) {
+        $counts[(int) $r['wd']] = (int) $r['total'];
+    }
+    return $counts;
+}
+
+
+/* =========================
+   MONTHLY BOOKINGS & REVENUE
+========================= */
+
+/* CAFE BOOKINGS */
+$cafeMonth = getSum($conn, "
+    SELECT COALESCE(SUM(total),0) AS total
+    FROM orders_table
+    WHERE status='Completed'
+      AND date_time BETWEEN ? AND ?
+", [$thisMonthStart, $thisMonthEnd]);
+
+$cafeLast = getSum($conn, "
+    SELECT COALESCE(SUM(total),0) AS total
+    FROM orders_table
+    WHERE status='Completed'
+      AND date_time BETWEEN ? AND ?
+", [$lastMonthStart, $lastMonthEnd]);
+
+$cafeOverall = getSum($conn, "
+    SELECT COALESCE(SUM(total),0) AS total
+    FROM orders_table
+    WHERE status='Completed'
+");
+
+/* ROOM BOOKINGS */
+$roomMonth = getSum($conn, "
+    SELECT COALESCE(SUM(total_amount),0) AS total
+    FROM bookings
+    WHERE status='finished'
+      AND check_out BETWEEN ? AND ?
+", [$thisMonthStart, $thisMonthEnd]);
+
+$roomLast = getSum($conn, "
+    SELECT COALESCE(SUM(total_amount),0) AS total
+    FROM bookings
+    WHERE status='finished'
+      AND check_out BETWEEN ? AND ?
+", [$lastMonthStart, $lastMonthEnd]);
+
+$roomOverall = getSum($conn, "
+    SELECT COALESCE(SUM(total_amount),0) AS total
+    FROM bookings
+    WHERE status='finished'
+");
+
+/* EVENT BOOKINGS */
+$eventMonth = getSum($conn, "
+    SELECT COALESCE(SUM(total_amount),0) AS total
+    FROM event_bookings
+    WHERE booking_status='Finished'
+      AND date_time_end BETWEEN ? AND ?
+", [$thisMonthStart, $thisMonthEnd]);
+
+$eventLast = getSum($conn, "
+    SELECT COALESCE(SUM(total_amount),0) AS total
+    FROM event_bookings
+    WHERE booking_status='Finished'
+      AND date_time_end BETWEEN ? AND ?
+", [$lastMonthStart, $lastMonthEnd]);
+
+$eventOverall = getSum($conn, "
+    SELECT COALESCE(SUM(total_amount),0) AS total
+    FROM event_bookings
+    WHERE booking_status='Finished'
+");
+
+/* TOTAL REVENUE */
+$totalMonthRevenue = $roomMonth + $cafeMonth + $eventMonth;
+$totalLastRevenue = $roomLast + $cafeLast + $eventLast;
+$totalOverallRevenue = $roomOverall + $cafeOverall + $eventOverall;
+
+/* PERCENT CHANGES */
+$roomChange = percentChange($roomMonth, $roomLast);
+$cafeChange = percentChange($cafeMonth, $cafeLast);
+$eventChange = percentChange($eventMonth, $eventLast);
+$revenueChange = percentChange($totalMonthRevenue, $totalLastRevenue);
+
+/* =========================
+   WEEKLY BOOKINGS
+========================= */
+$weekStart = date('Y-m-d', strtotime('monday this week'));
+$weekEnd = date('Y-m-d', strtotime('sunday this week'));
+
+
+$days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
+$weeklyRooms = getWeeklyCounts($conn, 'bookings', 'check_out', 'status', 'finished', $weekStart, $weekEnd);
+$weeklyCafe = getWeeklyCounts($conn, 'orders_table', 'date_time', 'status', 'Completed', $weekStart, $weekEnd);
+$weeklyEvents = getWeeklyCounts($conn, 'event_bookings', 'date_time_end', 'booking_status', 'Finished', $weekStart, $weekEnd);
+
+/* Scaling for charts */
+$maxWeekly = max(max($weeklyRooms), max($weeklyCafe), max($weeklyEvents), 1);
+
+/* =========================
+   OVERALL DISTRIBUTION
+========================= */
+$roomTotalCount = getSum($conn, "SELECT COUNT(*) total FROM bookings WHERE status='finished'");
+$cafeTotalCount = getSum($conn, "SELECT COUNT(*) total FROM orders_table WHERE status='Completed'");
+$eventTotalCount = getSum($conn, "SELECT COUNT(*) total FROM event_bookings WHERE booking_status='Finished'");
+$maxOverall = max($roomTotalCount, $cafeTotalCount, $eventTotalCount, 1);
+
+?>
+
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
-        <div>
-            <i class="fas fa-home"> Dashboard</i>
-        </div>
+        <div><i class="fas fa-home"></i> Dashboard Overview</div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="quick-actions">
-        <a href="#" class="action-btn">
-            <i class="fas fa-bed"></i>
-            <span>New Room Booking</span>
-        </a>
-        <a href="#" class="action-btn">
-            <i class="fas fa-utensils"></i>
-            <span>New Cafe Booking</span>
-        </a>
-        <a href="#" class="action-btn">
-            <i class="fas fa-calendar-alt"></i>
-            <span>New Event Booking</span>
-        </a>
-        <a href="#" class="action-btn">
-            <i class="fas fa-users"></i>
-            <span>View Customers</span>
-        </a>
+        <a href="#" class="action-btn"><i class="fas fa-bed"></i><span>New Room Booking</span></a>
+        <a href="#" class="action-btn"><i class="fas fa-utensils"></i><span>New Cafe Booking</span></a>
+        <a href="#" class="action-btn"><i class="fas fa-calendar-alt"></i><span>New Event Booking</span></a>
+        <a href="#" class="action-btn"><i class="fas fa-users"></i><span>View Customers</span></a>
     </div>
 
-    <!-- Statistics Cards -->
     <div class="stats-container">
+        <!-- ROOM -->
         <div class="stat-card">
             <div class="stat-card-header">
                 <div class="stat-info">
                     <h3>Room Bookings</h3>
-                    <div class="stat-number">142</div>
-                    <span class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i> 12% this month
-                    </span>
+                    <div class="stat-main-val">
+                        <span class="stat-label">THIS MONTH</span>
+                        <div class="stat-number">₱<?= number_format($roomMonth, 2) ?></div>
+                    </div>
                 </div>
-                <div class="stat-icon room">
-                    <i class="fas fa-bed"></i>
+                <div class="stat-icon room"><i class="fas fa-bed"></i></div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-overall">
+                <div>
+                    <span class="stat-label">OVERALL TOTAL</span>
+                    <div class="overall-val">₱<?= number_format($roomOverall, 2) ?></div>
                 </div>
+                <span class="stat-change <?= $roomChange >= 0 ? 'positive' : 'negative' ?>">
+                    <i class="fas fa-arrow-<?= $roomChange >= 0 ? 'up' : 'down' ?>"></i>
+                    <?= abs(round($roomChange, 1)) ?>%
+                </span>
             </div>
         </div>
 
+        <!-- CAFE -->
         <div class="stat-card">
             <div class="stat-card-header">
                 <div class="stat-info">
                     <h3>Cafe Bookings</h3>
-                    <div class="stat-number">89</div>
-                    <span class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i> 8% this month
-                    </span>
+                    <div class="stat-main-val">
+                        <span class="stat-label">THIS MONTH</span>
+                        <div class="stat-number">₱<?= number_format($cafeMonth, 2) ?></div>
+                    </div>
                 </div>
-                <div class="stat-icon cafe">
-                    <i class="fas fa-utensils"></i>
+                <div class="stat-icon cafe"><i class="fas fa-utensils"></i></div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-overall">
+                <div>
+                    <span class="stat-label">OVERALL TOTAL</span>
+                    <div class="overall-val">₱<?= number_format($cafeOverall, 2) ?></div>
                 </div>
+                <span class="stat-change <?= $cafeChange >= 0 ? 'positive' : 'negative' ?>">
+                    <i class="fas fa-arrow-<?= $cafeChange >= 0 ? 'up' : 'down' ?>"></i>
+                    <?= abs(round($cafeChange, 1)) ?>%
+                </span>
             </div>
         </div>
 
+        <!-- EVENT -->
         <div class="stat-card">
             <div class="stat-card-header">
                 <div class="stat-info">
                     <h3>Event Bookings</h3>
-                    <div class="stat-number">34</div>
-                    <span class="stat-change negative">
-                        <i class="fas fa-arrow-down"></i> 3% this month
-                    </span>
+                    <div class="stat-main-val">
+                        <span class="stat-label">THIS MONTH</span>
+                        <div class="stat-number">₱<?= number_format($eventMonth, 2) ?></div>
+                    </div>
                 </div>
-                <div class="stat-icon event">
-                    <i class="fas fa-calendar-alt"></i>
+                <div class="stat-icon event"><i class="fas fa-calendar-alt"></i></div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-overall">
+                <div>
+                    <span class="stat-label">OVERALL TOTAL</span>
+                    <div class="overall-val">₱<?= number_format($eventOverall, 2) ?></div>
                 </div>
+                <span class="stat-change <?= $eventChange >= 0 ? 'positive' : 'negative' ?>">
+                    <i class="fas fa-arrow-<?= $eventChange >= 0 ? 'up' : 'down' ?>"></i>
+                    <?= abs(round($eventChange, 1)) ?>%
+                </span>
             </div>
         </div>
 
+        <!-- TOTAL REVENUE -->
         <div class="stat-card">
             <div class="stat-card-header">
                 <div class="stat-info">
                     <h3>Total Revenue</h3>
-                    <div class="stat-number">₱428K</div>
-                    <span class="stat-change positive">
-                        <i class="fas fa-arrow-up"></i> 15% this month
-                    </span>
+                    <div class="stat-main-val">
+                        <span class="stat-label">THIS MONTH</span>
+                        <div class="stat-number">₱<?= number_format($totalMonthRevenue, 2) ?></div>
+                    </div>
                 </div>
-                <div class="stat-icon revenue">
-                    <i class="fas fa-dollar-sign"></i>
+                <div class="stat-icon revenue"><i class="fas fa-coins"></i></div>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat-overall">
+                <div>
+                    <span class="stat-label">OVERALL TOTAL</span>
+                    <div class="overall-val">₱<?= number_format($totalOverallRevenue, 2) ?></div>
                 </div>
+                <span class="stat-change <?= $revenueChange >= 0 ? 'positive' : 'negative' ?>">
+                    <i class="fas fa-arrow-<?= $revenueChange >= 0 ? 'up' : 'down' ?>"></i>
+                    <?= abs(round($revenueChange, 1)) ?>%
+                </span>
             </div>
         </div>
     </div>
 
-    <!-- Charts Section -->
+    <!-- WEEKLY BOOKINGS CHART -->
     <div class="charts-container">
         <div class="chart-card">
-            <h4><i class="fas fa-chart-bar"></i> Weekly Bookings Overview</h4>
-            <div class="simple-chart">
-                <div class="chart-bar" style="height: 65%;">
-                    <span class="chart-bar-value">52</span>
-                    <span class="chart-bar-label">Mon</span>
+            <h4>
+                <span><i class="fas fa-chart-bar"></i> Weekly Bookings Overview</span>
+                <div class="chart-legend">
+                    <div class="legend-item"><span class="legend-dot" style="background: #667eea"></span> Room</div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #f5576c"></span> Cafe</div>
+                    <div class="legend-item"><span class="legend-dot" style="background: #00f2fe"></span> Event</div>
                 </div>
-                <div class="chart-bar" style="height: 80%;">
-                    <span class="chart-bar-value">64</span>
-                    <span class="chart-bar-label">Tue</span>
-                </div>
-                <div class="chart-bar" style="height: 55%;">
-                    <span class="chart-bar-value">44</span>
-                    <span class="chart-bar-label">Wed</span>
-                </div>
-                <div class="chart-bar" style="height: 90%;">
-                    <span class="chart-bar-value">72</span>
-                    <span class="chart-bar-label">Thu</span>
-                </div>
-                <div class="chart-bar" style="height: 100%;">
-                    <span class="chart-bar-value">80</span>
-                    <span class="chart-bar-label">Fri</span>
-                </div>
-                <div class="chart-bar" style="height: 95%;">
-                    <span class="chart-bar-value">76</span>
-                    <span class="chart-bar-label">Sat</span>
-                </div>
-                <div class="chart-bar" style="height: 70%;">
-                    <span class="chart-bar-value">56</span>
-                    <span class="chart-bar-label">Sun</span>
-                </div>
+            </h4>
+            <div class="simple-chart weekly-3bars">
+                <?php foreach ($days as $i => $day): ?>
+                    <div class="chart-group">
+                        <div class="chart-bar room" style="height: <?= ($weeklyRooms[$i] / $maxWeekly) * 100 ?>%;">
+                            <span class="chart-bar-count"><?= $weeklyRooms[$i] > 0 ? $weeklyRooms[$i] : '' ?></span>
+                            <span class="chart-bar-value">Rooms: <?= $weeklyRooms[$i] ?></span>
+                        </div>
+
+                        <div class="chart-bar cafe" style="height: <?= ($weeklyCafe[$i] / $maxWeekly) * 100 ?>%;">
+                            <span class="chart-bar-count"><?= $weeklyCafe[$i] > 0 ? $weeklyCafe[$i] : '' ?></span>
+                            <span class="chart-bar-value">Cafe: <?= $weeklyCafe[$i] ?></span>
+                        </div>
+
+                        <div class="chart-bar event" style="height: <?= ($weeklyEvents[$i] / $maxWeekly) * 100 ?>%;">
+                            <span class="chart-bar-count"><?= $weeklyEvents[$i] > 0 ? $weeklyEvents[$i] : '' ?></span>
+                            <span class="chart-bar-value">Events: <?= $weeklyEvents[$i] ?></span>
+                        </div>
+
+                        <span class="chart-bar-label"><?= $day ?></span>
+                    </div>
+                <?php endforeach; ?>
             </div>
         </div>
 
         <div class="chart-card">
-            <h4><i class="fas fa-chart-line"></i> Booking Distribution</h4>
-            <div class="simple-chart">
-                <div class="chart-bar" style="height: 100%; background: linear-gradient(to top, #667eea, #b3bef5);">
-                    <span class="chart-bar-value">142</span>
+            <h4><span><i class="fas fa-chart-pie"></i> Booking Distribution</span></h4>
+            <div class="simple-chart" style="gap: 20px; padding-bottom: 40px;">
+                <div class="chart-bar room" style="height: <?= ($roomTotalCount / $maxOverall) * 100 ?>%; width: 40px;">
+                    <span class="chart-bar-count"><?= $roomTotalCount ?></span>
                     <span class="chart-bar-label">Rooms</span>
+                    <span class="chart-bar-value">Total: <?= $roomTotalCount ?></span>
                 </div>
-                <div class="chart-bar" style="height: 63%; background: linear-gradient(to top, #f5576c, #fcb4bd);">
-                    <span class="chart-bar-value">89</span>
+                <div class="chart-bar cafe" style="height: <?= ($cafeTotalCount / $maxOverall) * 100 ?>%; width: 40px;">
+                    <span class="chart-bar-count"><?= $cafeTotalCount ?></span>
                     <span class="chart-bar-label">Cafe</span>
+                    <span class="chart-bar-value">Total: <?= $cafeTotalCount ?></span>
                 </div>
-                <div class="chart-bar" style="height: 24%; background: linear-gradient(to top, #00f2fe, #99f8fe);">
-                    <span class="chart-bar-value">34</span>
+                <div class="chart-bar event"
+                    style="height: <?= ($eventTotalCount / $maxOverall) * 100 ?>%; width: 40px;">
+                    <span class="chart-bar-count"><?= $eventTotalCount ?></span>
                     <span class="chart-bar-label">Events</span>
+                    <span class="chart-bar-value">Total: <?= $eventTotalCount ?></span>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Recent Bookings Table -->
-    <div class="recent-bookings">
-        <h4><i class="fas fa-clock"></i> Recent Bookings</h4>
-        <div style="overflow-x: auto;">
-            <table class="bookings-table">
-                <thead>
-                    <tr>
-                        <th>Booking ID</th>
-                        <th>Customer</th>
-                        <th>Type</th>
-                        <th>Date</th>
-                        <th>Status</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>#BK-1245</td>
-                        <td>Juan Dela Cruz</td>
-                        <td><i class="fas fa-bed"></i> Room</td>
-                        <td>Dec 28, 2025</td>
-                        <td><span class="badge confirmed">Confirmed</span></td>
-                        <td>₱3,500</td>
-                    </tr>
-                    <tr>
-                        <td>#BK-1244</td>
-                        <td>Maria Santos</td>
-                        <td><i class="fas fa-utensils"></i> Cafe</td>
-                        <td>Dec 28, 2025</td>
-                        <td><span class="badge pending">Pending</span></td>
-                        <td>₱1,200</td>
-                    </tr>
-                    <tr>
-                        <td>#BK-1243</td>
-                        <td>Pedro Garcia</td>
-                        <td><i class="fas fa-calendar-alt"></i> Event</td>
-                        <td>Dec 29, 2025</td>
-                        <td><span class="badge confirmed">Confirmed</span></td>
-                        <td>₱15,000</td>
-                    </tr>
-                    <tr>
-                        <td>#BK-1242</td>
-                        <td>Ana Reyes</td>
-                        <td><i class="fas fa-bed"></i> Room</td>
-                        <td>Dec 27, 2025</td>
-                        <td><span class="badge confirmed">Confirmed</span></td>
-                        <td>₱4,200</td>
-                    </tr>
-                    <tr>
-                        <td>#BK-1241</td>
-                        <td>Carlos Mendoza</td>
-                        <td><i class="fas fa-utensils"></i> Cafe</td>
-                        <td>Dec 27, 2025</td>
-                        <td><span class="badge cancelled">Cancelled</span></td>
-                        <td>₱850</td>
-                    </tr>
-                </tbody>
-            </table>
         </div>
     </div>
 </div>

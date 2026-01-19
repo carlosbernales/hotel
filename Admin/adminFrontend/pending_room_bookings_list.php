@@ -255,39 +255,10 @@ function getRoomInfo($conn, $room_number_fk_id)
                                     <p class="mb-0 fw-bold text-danger">₱<?= number_format($b['remaining_balance'], 2) ?>
                                     </p>
                                 </div>
-                                <div class="col-md-3">
-                                    <label class="text-muted small">Discount</label>
-                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?></p>
-                                </div>
                             </div>
                         </div>
                     </div>
-
                     <!-- DISCOUNT INFORMATION -->
-                    <?php if ($b['discount_type'] != 'None' && $b['discount_percentage'] > 0): ?>
-                        <div class="card mb-3 border-0 shadow-sm">
-                            <div class="card-header bg-dark text-warning">
-                                <h6 class="mb-0"><i class="bi bi-percent"></i> Discount Information</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-3">
-                                    <div class="col-md-4">
-                                        <label class="text-muted small">Discount Type</label>
-                                        <p class="mb-0 fw-semibold"><?= $b['discount_type'] ?></p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="text-muted small">Discount Percentage</label>
-                                        <p class="mb-0 fw-semibold"><?= $b['discount_percentage'] ?>%</p>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label class="text-muted small">Discount Amount</label>
-                                        <p class="mb-0 fw-semibold text-success">₱<?= number_format($b['discount_amount'], 2) ?>
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endif; ?>
 
                     <?php if ($transfers_res && $transfers_res->num_rows > 0): ?>
                         <div class="card mb-3 border-0 shadow-sm">

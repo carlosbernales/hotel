@@ -61,7 +61,7 @@ if (isset($_POST['save_profile'])) {
     $stmt->bind_param($types, ...$params);
 
     if ($stmt->execute()) {
-        header("Location: ../../user_profile.php?success=1");
+        header("Location: ../index.php?admin-dashboard");
         exit;
     } else {
         echo "Update failed: " . $stmt->error;
