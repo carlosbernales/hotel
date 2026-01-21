@@ -475,11 +475,19 @@ $profileImg = !empty($user['profile_photo'])
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['event_accepted_booking.php', 'event_ongoing_booking.php', 'event_completed_booking.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['event_pending_booking.php', 'event_accepted_booking.php', 'event_ongoing_booking.php', 'event_completed_booking.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-calendar-alt"></i> Event Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?event-pend-list"
+                        class="<?php echo ($currentPage == 'event_pending_booking.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-check-circle"></i> Pending
+                    </a>
+                </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?event-acp-list"
                         class="<?php echo ($currentPage == 'event_accepted_booking.php') ? 'active' : ''; ?>">

@@ -73538,3 +73538,336 @@ Stack trace:
 [19-Jan-2026 03:35:27 UTC] Database connected successfully to: hotelms
 [19-Jan-2026 03:37:51 UTC] Database connected successfully to: hotelms
 [19-Jan-2026 03:39:53 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:17:45 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:17:48 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:19:26 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:19:32 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:19:50 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 19:19:51 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 11:20:18 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 19:20:18 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 11:20:33 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 19:20:33 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 11:20:37 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 318
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 318
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 319
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 319
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 320
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 320
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 321
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 321
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 322
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 322
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 323
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 323
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 324
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 324
+[21-Jan-2026 11:20:37 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 318
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 318
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 319
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 319
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 320
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 320
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 321
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 321
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 322
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 322
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 323
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 323
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 324
+[21-Jan-2026 19:20:37 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 324
+[21-Jan-2026 11:20:38 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 19:20:38 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 11:20:38 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:20:39 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 19:20:39 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 11:22:11 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 19:22:12 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 11:22:14 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 19:22:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 11:22:24 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:23:03 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:23:53 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:23:53 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:23:58 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:24:00 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:24:18 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:24:21 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:25:04 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 318
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 319
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 320
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 321
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 322
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 323
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 19:25:04 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_pending_booking.php on line 324
+[21-Jan-2026 11:25:12 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:25:47 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:32:20 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:32:54 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:38:07 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:38:52 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:39:54 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:39:58 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:40:49 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:42:49 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:42:52 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:42:54 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:44:56 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:51:37 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:51:45 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:51:49 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:51:58 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:52:13 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:52:22 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:52:23 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:52:34 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:52:38 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:53:38 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 11:53:40 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:01:20 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 20:01:20 Asia/Manila] PHP Warning:  include(../adminBackend/mydb.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 2
+[21-Jan-2026 20:01:20 Asia/Manila] PHP Warning:  include(): Failed opening '../adminBackend/mydb.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 2
+[21-Jan-2026 20:01:20 Asia/Manila] PHP Warning:  Undefined variable $conn in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 8
+[21-Jan-2026 20:01:20 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php:8
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\index.php(226): include_once()
+#1 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 8
+[21-Jan-2026 12:01:23 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 20:01:23 Asia/Manila] PHP Warning:  include(../adminBackend/mydb.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 2
+[21-Jan-2026 20:01:23 Asia/Manila] PHP Warning:  include(): Failed opening '../adminBackend/mydb.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 2
+[21-Jan-2026 20:01:23 Asia/Manila] PHP Warning:  Undefined variable $conn in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 8
+[21-Jan-2026 20:01:23 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php:8
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\index.php(226): include_once()
+#1 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 8
+[21-Jan-2026 12:01:29 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 20:01:30 Asia/Manila] PHP Warning:  include(../adminBackend/mydb.php): Failed to open stream: No such file or directory in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 2
+[21-Jan-2026 20:01:30 Asia/Manila] PHP Warning:  include(): Failed opening '../adminBackend/mydb.php' for inclusion (include_path='.;C:/laragon/etc/php/pear') in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 2
+[21-Jan-2026 20:01:30 Asia/Manila] PHP Warning:  Undefined variable $conn in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 8
+[21-Jan-2026 20:01:30 Asia/Manila] PHP Fatal error:  Uncaught Error: Call to a member function prepare() on null in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php:8
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\index.php(226): include_once()
+#1 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\event_booking_receipt_accepted.php on line 8
+[21-Jan-2026 12:01:34 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:08:45 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:08:48 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:08:49 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:09:32 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:10:30 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:10:38 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:11:06 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 12:11:14 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 318
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 318
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 319
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 319
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 320
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 320
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 321
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 321
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 322
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 322
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 323
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 323
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 324
+[21-Jan-2026 20:11:14 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_accepted_booking.php on line 324
+[21-Jan-2026 12:11:15 UTC] Database connected successfully to: hotelms
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 448
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 449
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 450
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 451
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 452
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 453
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 454
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 455
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 457
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 458
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 459
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 461
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 462
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 464
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 517
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 521
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Undefined variable $order in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 20:11:15 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\event_ongoing_booking.php on line 522
+[21-Jan-2026 12:11:23 UTC] Database connected successfully to: hotelms

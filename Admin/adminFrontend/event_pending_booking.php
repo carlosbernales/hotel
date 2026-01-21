@@ -2,7 +2,7 @@
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
-$sql = "SELECT * FROM event_bookings WHERE booking_status IN ('Accepted')";
+$sql = "SELECT * FROM event_bookings WHERE booking_status IN ('pending')";
 $result = mysqli_query($conn, $sql);
 
 $orders = [];
@@ -18,7 +18,7 @@ if ($result) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home">Accepted and Reserved Event Bookings</i>
+            <i class="fas fa-home">Pending Event Bookings</i>
         </div>
     </div>
 
@@ -272,9 +272,14 @@ if ($result) {
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-outline-custom px-4"
                                             data-bs-dismiss="modal">Close</button>
+
                                         <button type="button" class="btn btn-gold-action px-4"
                                             onclick="setOngoing(<?php echo $order['id']; ?>)">
-                                            Set Ongoing
+                                            Reject
+                                        </button>
+                                        <button type="button" class="btn btn-gold-action px-4"
+                                            onclick="acceptEvent(<?= $order['id']; ?>)">
+                                            Accept
                                         </button>
                                     </div>
                                 </div>
@@ -289,57 +294,8 @@ if ($result) {
 
 <?php include 'adminFrontend/footer.php'; ?>
 
-
 <script>
-    function setOngoing(bookingId) {
-        if (!confirm('Mark this booking as Ongoing?')) return;
-
-        fetch('../Admin/adminBackend/event_set_to_ongoing.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: 'id=' + bookingId + '&status=Ongoing'
-        })
-            .then(response => response.text())
-            .then(data => {
-                if (data === 'success') {
-                    alert('Booking status updated to Ongoing!');
-                    location.reload();
-                } else {
-                    alert('Failed to update status: ' + data);
-                }
-            })
-            .catch(err => alert('Error: ' + err));
+    function acceptEvent(id) {
+        window.location.href = "index.php?event-receipt-accepted=1&event_id=" + id;
     }
-</script>
-
-
-<script>
-    (function () {
-        const guestInput = document.getElementById("guestCount_<?php echo $order['id']; ?>");
-        const priceInput = document.getElementById("pricePerGuest_<?php echo $order['id']; ?>");
-        const extraAmountInput = document.getElementById("extraAmount_<?php echo $order['id']; ?>");
-        const newTotalInput = document.getElementById("newTotal_<?php echo $order['id']; ?>");
-        const remainingBalanceInput = document.getElementById("remainingBalance_<?php echo $order['id']; ?>");
-        const paidAmount = parseFloat(<?php echo $order['paid_amount']; ?>);
-        const originalTotal = parseFloat(<?php echo $order['total_amount']; ?>);
-
-        function updateAmounts() {
-            let guests = parseInt(guestInput.value) || 0;
-            let price = parseFloat(priceInput.value) || 0;
-            if (guests < 0) guests = 0;
-            if (price < 0) price = 0;
-
-            const extraAmount = guests * price;
-            extraAmountInput.value = extraAmount.toFixed(2);
-
-            const newTotal = originalTotal + extraAmount;
-            newTotalInput.value = newTotal.toFixed(2);
-
-            const remainingBalance = newTotal - paidAmount;
-            remainingBalanceInput.value = remainingBalance.toFixed(2);
-        }
-
-        guestInput.addEventListener('input', updateAmounts);
-        priceInput.addEventListener('input', updateAmounts);
-    })();
 </script>
