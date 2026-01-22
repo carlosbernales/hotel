@@ -1,17 +1,22 @@
 <?php
+/**
+ * Rejection email template
+ * Expects $booking array and $reason string to be defined in backend before including
+ */
+
 return "
 <div style='font-family: Arial, sans-serif; line-height: 1.6; color: #333; background-color: #f4f4f4; padding: 20px;'>
 
     <div style='background-color: #8c783c; color: #ffffff; padding: 15px 20px; text-align: center;'>
         <h2 style='margin:0;'>Casa Estela Boutique Hotel & Cafe</h2>
-        <p style='margin:5px 0 0;'>Event Booking Accepted</p>
+        <p style='margin:5px 0 0;'>Event Booking Update</p>
     </div>
 
     <div style='background-color:#fff; padding:20px;'>
 
         <p>Dear <strong>{$booking['customer_name']}</strong>,</p>
 
-        <p>Your event booking has been <strong>successfully accepted</strong>.</p>
+        <p>We regret to inform you that your event booking has been <strong>rejected</strong>.</p>
 
         <table style='width:100%; border-collapse:collapse; margin:15px 0;' border='1'>
             <tr>
@@ -39,22 +44,16 @@ return "
                 <td style='padding:8px;'>" . date("F j, Y g:i A", strtotime($booking['date_time_end'])) . "</td>
             </tr>
             <tr>
-                <td style='padding:8px;'><strong>Total Amount</strong></td>
-                <td style='padding:8px; font-weight:bold;'>₱" . number_format($booking['total_amount'], 2) . "</td>
+                <td style='padding:8px;'><strong>Rejection Reason</strong></td>
+                <td style='padding:8px;'>$reason</td>
             </tr>
         </table>
 
-        <p>
-            The full official receipt is attached to this email.
-        </p>
+        <p>We apologize for any inconvenience this may cause. Please feel free to contact us for alternative dates or packages.</p>
 
-        <p>
-            Thank you for choosing Casa Estela.
-        </p>
+        <p>Thank you for considering Casa Estela Boutique Hotel & Cafe.</p>
 
-        <p>
-            <strong>Casa Estela Boutique Hotel & Cafe</strong>
-        </p>
+        <p><strong>Casa Estela Boutique Hotel & Cafe</strong></p>
 
     </div>
 

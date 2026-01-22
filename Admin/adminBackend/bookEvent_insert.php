@@ -14,6 +14,8 @@ $payment_method = trim($_POST['payment_method']);
 $package_id = (int) $_POST['package_id'];
 $booking_status = 'Accepted';
 $place = isset($_POST['place']) ? trim($_POST['place']) : '';
+$customer_email = trim($_POST['email']);
+
 
 if (!in_array($place, ['cafe', 'garden'])) {
     echo 'INVALID_PLACE';
@@ -98,12 +100,12 @@ $booking_refId = generateUniqueBookingRefId($conn);
 
 
 $sqlInsert = "INSERT INTO event_bookings 
-(booking_refId, customer_name, package_name, package_price, total_amount, paid_amount, remaining_balance, date_time_start, date_time_end, number_of_guests, extra_guests, max_guest, extra_guest_charge, event_type, payment_type, payment_method, booking_status, place)
-VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+(booking_refId, customer_name, package_name, package_price, total_amount, paid_amount, remaining_balance, date_time_start, date_time_end, number_of_guests, extra_guests, max_guest, extra_guest_charge, event_type, payment_type, payment_method, booking_status, place, email)
+VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 $stmtInsert = $conn->prepare($sqlInsert);
 $stmtInsert->bind_param(
-    "sssddddssiiddsssss",
+    "sssddddssiiddssssss",
     $booking_refId,
     $customer_name,
     $package_name,
@@ -122,6 +124,7 @@ $stmtInsert->bind_param(
     $payment_method,
     $booking_status,
     $place,
+    $customer_email,
 );
 
 if ($stmtInsert->execute()) {

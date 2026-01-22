@@ -208,6 +208,10 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['event-receipt-accepted'])) {
     $page = "adminFrontend/event_booking_receipt_accepted.php";
 
+} elseif (isset($_GET['event-rej-list'])) {
+    $page = "adminFrontend/event_rejected_list.php";
+
+
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {
     $page = "adminFrontend/test.php";

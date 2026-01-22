@@ -100,142 +100,202 @@ if (isset($_GET['event_id'])) {
                     border-top: 2px dashed #333;
                     padding-top: 10px;
                 }
+
+                .spinner {
+                    border: 6px solid #f3f3f3;
+                    border-top: 6px solid #ffffff;
+                    border-radius: 50%;
+                    width: 60px;
+                    height: 60px;
+                    animation: spin 1s linear infinite;
+                    margin: auto;
+                    margin-bottom: 20px;
+                }
+
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                @keyframes fadein {
+                    from {
+                        opacity: 0;
+                        transform: scale(0.9);
+                    }
+
+                    to {
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                }
+
+                /* Overlay styles */
+                #loadingOverlay {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.6);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 9999;
+                    flex-direction: column;
+                }
+
+                #successBox {
+                    display: none;
+                    background: #2ecc71;
+                    padding: 25px 40px;
+                    border-radius: 10px;
+                    color: white;
+                    text-align: center;
+                    font-size: 22px;
+                    animation: fadein 0.4s ease-out;
+                }
+
+                #successBox button {
+                    background: white;
+                    color: #2ecc71;
+                    padding: 10px 25px;
+                    border: none;
+                    border-radius: 5px;
+                    font-size: 18px;
+                    cursor: pointer;
+                    margin-top: 15px;
+                }
             </style>
         </head>
 
         <body>
+
             <div class="receipt-container">
                 <div class="header">
                     <h1>Casa Estela Boutique Hotel & Cafe</h1>
                     <p>Gov B Marasigan St, Calapan City, Oriental Mindoro</p>
-                    <p>Phone: 0908 747 4892 | Email: casaestelaboutiquehotelandcafe@gmail.com</p>
-                    <p style="margin-top: 15px; font-size: 14px;"><strong>ACCEPTED EVENT BOOKING RECEIPT</strong></p>
+                    <p>0908 747 4892 | casaestelaboutiquehotelandcafe@gmail.com</p>
+                    <p><strong>ACCEPTED EVENT BOOKING RECEIPT</strong></p>
                     <p>Reference: <?= htmlspecialchars($booking['booking_refId']) ?></p>
                     <p>Date Issued: <?= date("F j, Y") ?></p>
                 </div>
 
                 <div class="section-title">Customer Information</div>
-                <div class="detail-row">
-                    <span class="detail-label">Name:</span>
-                    <span><?= htmlspecialchars($booking['customer_name']) ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Number of Guests:</span>
-                    <span><?= htmlspecialchars($booking['number_of_guests']) ?></span>
-                </div>
+                <div class="detail-row"><span
+                        class="detail-label">Name:</span><span><?= htmlspecialchars($booking['customer_name']) ?></span></div>
+                <div class="detail-row"><span
+                        class="detail-label">Email:</span><span><?= htmlspecialchars($booking['email'] ?? 'N/A') ?></span></div>
+                <div class="detail-row"><span
+                        class="detail-label">Guests:</span><span><?= $booking['number_of_guests'] ?></span></div>
 
                 <div class="section-title">Event Information</div>
-                <div class="detail-row">
-                    <span class="detail-label">Event Type:</span>
-                    <span><?= htmlspecialchars($booking['event_type']) ?></span>
+                <div class="detail-row"><span class="detail-label">Event
+                        Type:</span><span><?= htmlspecialchars($booking['event_type']) ?></span></div>
+                <div class="detail-row"><span class="detail-label">Event
+                        Place:</span><span><?= htmlspecialchars($booking['place'] ?? 'N/A') ?></span></div>
+                <div class="detail-row"><span class="detail-label">Reservation
+                        Type:</span><span><?= htmlspecialchars($booking['reserve_type']) ?></span></div>
+
+                <div class="detail-row"><span
+                        class="detail-label">Start:</span><span><?= date("F j, Y h:i A", strtotime($booking['date_time_start'])) ?></span>
                 </div>
-                <div class="detail-row">
-                    <span class="detail-label">Package:</span>
-                    <span><?= htmlspecialchars($booking['package_name']) ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Package Price:</span>
-                    <span>₱<?= number_format($booking['package_price'], 2) ?></span>
-                </div>
-                <?php if ($booking['overtime_hours'] > 0): ?>
-                    <div class="detail-row">
-                        <span class="detail-label">Overtime (hours):</span>
-                        <span><?= htmlspecialchars($booking['overtime_hours']) ?> -
-                            ₱<?= number_format($booking['overtime_charge'], 2) ?></span>
-                    </div>
-                <?php endif; ?>
-                <?php if ($booking['extra_guests'] > 0): ?>
-                    <div class="detail-row">
-                        <span class="detail-label">Extra Guests:</span>
-                        <span><?= htmlspecialchars($booking['extra_guests']) ?> -
-                            ₱<?= number_format($booking['extra_guest_charge'], 2) ?></span>
-                    </div>
-                <?php endif; ?>
-                <div class="detail-row">
-                    <span class="detail-label">Event Start:</span>
-                    <span><?= date("F j, Y, h:i A", strtotime($booking['date_time_start'])) ?></span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Event End:</span>
-                    <span><?= date("F j, Y, h:i A", strtotime($booking['date_time_end'])) ?></span>
+                <div class="detail-row"><span
+                        class="detail-label">End:</span><span><?= date("F j, Y h:i A", strtotime($booking['date_time_end'])) ?></span>
                 </div>
 
-                <!-- Payment Summary -->
+                <div class="section-title">Package Details</div>
+                <div class="detail-row"><span
+                        class="detail-label">Package:</span><span><?= htmlspecialchars($booking['package_name']) ?></span></div>
+                <div class="detail-row"><span class="detail-label">Max
+                        Guests:</span><span><?= $booking['max_guest'] ?? 'N/A' ?></span></div>
+                <div class="detail-row"><span class="detail-label">Package
+                        Price:</span><span>₱<?= number_format($booking['package_price'], 2) ?></span></div>
+
+                <?php if ($booking['overtime_hours'] > 0): ?>
+                    <div class="detail-row"><span class="detail-label">Overtime:</span><span><?= $booking['overtime_hours'] ?> hrs -
+                            ₱<?= number_format($booking['overtime_charge'], 2) ?></span></div>
+                <?php endif; ?>
+
+                <?php if ($booking['extra_guests'] > 0): ?>
+                    <div class="detail-row"><span class="detail-label">Extra Guests:</span><span><?= $booking['extra_guests'] ?> -
+                            ₱<?= number_format($booking['extra_guest_charge'], 2) ?></span></div>
+                <?php endif; ?>
+
                 <div class="total-section">
                     <div class="section-title">Payment Summary</div>
-                    <div class="total-row">
-                        <span>Total Amount:</span>
-                        <span>₱<?= number_format($booking['total_amount'], 2) ?></span>
-                    </div>
-                    <div class="total-row">
-                        <span>Paid Amount:</span>
-                        <span>₱<?= number_format($booking['paid_amount'], 2) ?></span>
-                    </div>
-                    <div class="total-row grand-total">
-                        <span>Remaining Balance:</span>
-                        <span>₱<?= number_format($booking['remaining_balance'], 2) ?></span>
-                    </div>
-                    <div class="detail-row" style="margin-top: 10px;">
-                        <span class="detail-label">Payment Method:</span>
-                        <span><?= htmlspecialchars($booking['payment_method']) ?></span>
-                    </div>
+                    <div class="total-row"><span>Total
+                            Amount:</span><span>₱<?= number_format($booking['total_amount'], 2) ?></span></div>
+                    <div class="total-row"><span>Paid
+                            Amount:</span><span>₱<?= number_format($booking['paid_amount'] ?? 0, 2) ?></span></div>
+                    <div class="total-row grand-total"><span>Remaining
+                            Balance:</span><span>₱<?= number_format($booking['remaining_balance'] ?? 0, 2) ?></span></div>
                 </div>
 
                 <div class="footer">
                     <p>Thank you for booking your event with us!</p>
-                    <p>For inquiries, please contact us at the details above.</p>
                 </div>
             </div>
 
-            <div style="text-align: center; margin-top: 20px;">
-                <!-- Changed from <a> to <button> with id -->
-                <button id="saveReceiptBtn" class="btn btn-gold-action" style="padding: 10px 20px;">
-                    Accept this booking!
-                </button>
+            <div style="text-align:center;margin-top:20px">
+                <button id="saveReceiptBtn" style="padding:10px 20px">Accept this booking!</button>
+            </div>
+
+            <!-- Overlay and Success Box -->
+            <div id="loadingOverlay">
+                <div id="loadingBox" style="text-align:center; color:white; font-size:22px;">
+                    <div class="spinner"></div>
+                    <div id="loadingText">Please wait... processing your request</div>
+                </div>
+                <div id="successBox">
+                    <div style="font-size:26px; font-weight:bold; margin-bottom:10px;">Event booking accepted!</div>
+                    <button id="okBtn">OK</button>
+                </div>
             </div>
 
             <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
             <script>
-                document.getElementById('saveReceiptBtn').addEventListener('click', async function () {
-                    const btn = this;
-                    btn.disabled = true;
+                const saveBtn = document.getElementById('saveReceiptBtn');
+                const overlay = document.getElementById('loadingOverlay');
+                const loadingBox = document.getElementById('loadingBox');
+                const successBox = document.getElementById('successBox');
+                const okBtn = document.getElementById('okBtn');
 
-                    const container = document.querySelector('.receipt-container');
+                saveBtn.addEventListener('click', async () => {
+                    overlay.style.display = 'flex';
+                    loadingBox.style.display = 'block';
+                    successBox.style.display = 'none';
 
-                    try {
-                        const canvas = await html2canvas(container, { scale: 2 });
-                        const dataUrl = canvas.toDataURL('image/png');
+                    const canvas = await html2canvas(document.querySelector('.receipt-container'), { scale: 2 });
 
-                        const response = await fetch('../Admin/adminBackend/event_accepted_save_receipt.php', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                booking_id: <?= $booking['id'] ?>,
-                                image: dataUrl
-                            }),
-                            headers: { 'Content-Type': 'application/json' }
-                        });
+                    await fetch('../Admin/adminBackend/event_accepted_save_receipt.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            booking_id: <?= $booking['id'] ?>,
+                            image: canvas.toDataURL('image/png')
+                        })
+                    });
 
-                        const msg = await response.text();
-                        alert(msg);
-                        window.location.href = "index.php?pending_event_bookings";
-                    } catch (err) {
-                        console.error(err);
-                        alert('Failed to save/email receipt.');
-                        btn.disabled = false;
-                    }
+                    loadingBox.style.display = 'none';
+                    successBox.style.display = 'block';
+                });
+
+                okBtn.addEventListener('click', () => {
+                    overlay.style.display = 'none';
+                    window.location.href = 'index.php?event-pend-list';
                 });
             </script>
-
 
 
         </body>
 
         </html>
         <?php
-    } else {
-        echo "<h3>No event booking found with ID $event_id</h3>";
     }
-} else {
-    echo "<h3>No Event ID provided.</h3>";
 }
 ?>

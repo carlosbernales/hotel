@@ -2,7 +2,7 @@
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
-$sql = "SELECT * FROM event_bookings WHERE booking_status IN ('pending')";
+$sql = "SELECT * FROM event_bookings WHERE booking_status IN ('Rejected')";
 $result = mysqli_query($conn, $sql);
 
 $orders = [];
@@ -41,9 +41,15 @@ if ($result) {
                 <tbody>
                     <?php foreach ($orders as $order): ?>
                         <tr>
-                            <td><?php echo htmlspecialchars($order['booking_refId']); ?></td>
-                            <td><?php echo htmlspecialchars($order['customer_name']); ?></td>
-                            <td><?php echo htmlspecialchars($order['package_name']); ?></td>
+                            <td>
+                                <?php echo htmlspecialchars($order['booking_refId']); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($order['customer_name']); ?>
+                            </td>
+                            <td>
+                                <?php echo htmlspecialchars($order['package_name']); ?>
+                            </td>
                             <td>
                                 <?php
                                 $start = strtotime($order['date_time_start']);
@@ -52,12 +58,14 @@ if ($result) {
                                 ?>
                             </td>
                             <td>
-                                <span class="badge bg-warning text-dark">
+                                <span class="badge bg-danger text-white">
                                     <?php echo ucfirst(htmlspecialchars($order['booking_status'])); ?>
                                 </span>
                             </td>
 
-                            <td><?php echo number_format($order['total_amount'], 2); ?></td>
+                            <td>
+                                <?php echo number_format($order['total_amount'], 2); ?>
+                            </td>
                             <td>
                                 <button type="button" class="btn btn-sm btn-info text-white" data-bs-toggle="modal"
                                     data-bs-target="#viewModal_<?php echo $order['id']; ?>">
@@ -84,20 +92,24 @@ if ($result) {
                                         <div class="row mb-4">
                                             <div class="col-md-6 mb-3">
                                                 <label class="text-muted d-block small">Booking Reference</label>
-                                                <span
-                                                    class="data-highlight"><?php echo htmlspecialchars($order['booking_refId']); ?></span>
+                                                <span class="data-highlight">
+                                                    <?php echo htmlspecialchars($order['booking_refId']); ?>
+                                                </span>
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="text-muted d-block small">Customer Name</label>
-                                                <span
-                                                    class="fw-bold text-dark"><?php echo htmlspecialchars($order['customer_name']); ?></span>
+                                                <span class="fw-bold text-dark">
+                                                    <?php echo htmlspecialchars($order['customer_name']); ?>
+                                                </span>
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="text-muted d-block small">Package & Type</label>
-                                                <span
-                                                    class="fw-bold"><?php echo htmlspecialchars($order['package_name']); ?></span>
-                                                <span
-                                                    class="badge rounded-pill bg-light text-dark border ms-1"><?php echo htmlspecialchars($order['event_type']); ?></span>
+                                                <span class="fw-bold">
+                                                    <?php echo htmlspecialchars($order['package_name']); ?>
+                                                </span>
+                                                <span class="badge rounded-pill bg-light text-dark border ms-1">
+                                                    <?php echo htmlspecialchars($order['event_type']); ?>
+                                                </span>
                                             </div>
                                             <div class="col-md-6 mb-3">
                                                 <label class="text-muted d-block small">Schedule</label>
@@ -133,20 +145,35 @@ if ($result) {
                                             </div>
                                         </div>
 
+                                        <?php if (!empty($order['rejection_reason'])): ?>
+                                            <div class="alert alert-danger border-0 shadow-sm mb-4">
+                                                <label class="fw-bold small text-uppercase d-block mb-1">
+                                                    <i class="fas fa-exclamation-circle me-1"></i> Rejection Reason
+                                                </label>
+                                                <p class="mb-0 small text-dark">
+                                                    <?php echo htmlspecialchars($order['rejection_reason']); ?>
+                                                </p>
+                                            </div>
+                                        <?php endif; ?>
+
                                         <span class="modal-section-label">Financial Summary</span>
                                         <div class="px-2">
                                             <div class="d-flex justify-content-between mb-2">
                                                 <span class="text-muted">Package Base Price</span>
-                                                <span
-                                                    class="fw-bold text-dark">₱<?php echo number_format($order['package_price'], 2); ?></span>
+                                                <span class="fw-bold text-dark">₱
+                                                    <?php echo number_format($order['package_price'], 2); ?>
+                                                </span>
                                             </div>
 
                                             <?php if ($order['extra_guests'] > 0): ?>
                                                 <div class="d-flex justify-content-between mb-2">
                                                     <span class="text-muted">Extra Guests
-                                                        (<?php echo $order['extra_guests']; ?>)</span>
-                                                    <span
-                                                        class="text-muted">₱<?php echo number_format($order['extra_guest_charge'], 2); ?></span>
+                                                        (
+                                                        <?php echo $order['extra_guests']; ?>)
+                                                    </span>
+                                                    <span class="text-muted">₱
+                                                        <?php echo number_format($order['extra_guest_charge'], 2); ?>
+                                                    </span>
                                                 </div>
                                             <?php endif; ?>
 
@@ -154,13 +181,15 @@ if ($result) {
                                                 class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
                                                 <div>
                                                     <span class="text-muted small">Payment Method:</span><br>
-                                                    <span
-                                                        class="badge bg-dark"><?php echo htmlspecialchars($order['payment_method']); ?></span>
+                                                    <span class="badge bg-dark">
+                                                        <?php echo htmlspecialchars($order['payment_method']); ?>
+                                                    </span>
                                                 </div>
                                                 <div class="text-end">
                                                     <div class="text-muted small">Total Amount</div>
-                                                    <span
-                                                        class="total-amount-display">₱<?php echo number_format($order['total_amount'], 2); ?></span>
+                                                    <span class="total-amount-display">₱
+                                                        <?php echo number_format($order['total_amount'], 2); ?>
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -168,16 +197,22 @@ if ($result) {
                                         <div class="row mt-4 g-3">
                                             <div class="col-md-6">
                                                 <div class="payment-stat paid">
-                                                    <span class="small fw-bold text-uppercase d-block">Paid Amount</span>
+                                                    <span class="small fw-bold text-uppercase d-block">Paid
+                                                        Amount</span>
                                                     <h5 class="mb-0 fw-bold">
-                                                        ₱<?php echo number_format($order['paid_amount'], 2); ?></h5>
+                                                        ₱
+                                                        <?php echo number_format($order['paid_amount'], 2); ?>
+                                                    </h5>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="payment-stat due">
-                                                    <span class="small fw-bold text-uppercase d-block">Balance Due</span>
+                                                    <span class="small fw-bold text-uppercase d-block">Balance
+                                                        Due</span>
                                                     <h5 class="mb-0 fw-bold">
-                                                        ₱<?php echo number_format($order['remaining_balance'], 2); ?></h5>
+                                                        ₱
+                                                        <?php echo number_format($order['remaining_balance'], 2); ?>
+                                                    </h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -186,17 +221,6 @@ if ($result) {
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-outline-custom px-4"
                                             data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-danger px-4"
-                                            onclick="rejectEvent(<?php echo $order['id']; ?>)">
-                                            Reject
-                                        </button>
-
-
-
-                                        <button type="button" class="btn btn-gold-action px-4"
-                                            onclick="acceptEvent(<?= $order['id']; ?>)">
-                                            Accept
-                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -208,76 +232,6 @@ if ($result) {
     </div>
 </div>
 
-<!-- Reject Reason Modal -->
-<div class="modal fade" id="rejectReasonModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title text-danger"><i class="fas fa-times-circle me-2"></i> Reject Booking</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="rejectForm">
-                    <input type="hidden" id="rejectEventId" name="event_id">
-                    <div class="mb-3">
-                        <label for="rejectReason" class="form-label">Reason for rejection</label>
-                        <textarea id="rejectReason" name="reason" class="form-control" rows="3" required></textarea>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-danger" onclick="submitRejection()">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
 <?php include 'adminFrontend/footer.php'; ?>
-
-</script>
-
-<script>
-    function acceptEvent(id) {
-        window.location.href = "index.php?event-receipt-accepted=1&event_id=" + id;
-    }
-</script>
-
-<script>
-    function rejectEvent(id) {
-        document.getElementById('rejectEventId').value = id;
-        document.getElementById('rejectReason').value = '';
-
-        var rejectModal = new bootstrap.Modal(document.getElementById('rejectReasonModal'));
-        rejectModal.show();
-    }
-
-    function submitRejection() {
-        var id = document.getElementById('rejectEventId').value;
-        var reason = document.getElementById('rejectReason').value.trim();
-
-        if (reason === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Missing Information',
-                text: 'Please enter a reason for rejection.',
-                confirmButtonColor: '#d33'
-            });
-            return;
-        }
-
-        Swal.fire({
-            title: 'Processing Rejection...',
-            text: 'Please wait while we update the booking status.',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
-
-        setTimeout(function () {
-            window.location.href = "../Admin/adminBackend/event_reject.php?event_id=" + id + "&reason=" + encodeURIComponent(reason);
-        }, 800);
-    }
-</script>

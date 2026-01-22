@@ -23,7 +23,7 @@ $user = $stmt->get_result()->fetch_assoc();
 
 ?>
 <?php
-$uploadDir = "../Admin/adminBackend/user_photo/"; // browser URL path
+$uploadDir = "../Admin/adminBackend/user_photo/";
 $profileImg = !empty($user['profile_photo'])
     ? $uploadDir . $user['profile_photo']
     : $uploadDir . "default.png";
@@ -475,7 +475,7 @@ $profileImg = !empty($user['profile_photo'])
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['event_pending_booking.php', 'event_accepted_booking.php', 'event_ongoing_booking.php', 'event_completed_booking.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['event_rejected_list.php', 'event_pending_booking.php', 'event_accepted_booking.php', 'event_ongoing_booking.php', 'event_completed_booking.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-calendar-alt"></i> Event Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -484,7 +484,7 @@ $profileImg = !empty($user['profile_photo'])
                 <div class="sidebar-submenu">
                     <a href="index.php?event-pend-list"
                         class="<?php echo ($currentPage == 'event_pending_booking.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-check-circle"></i> Pending
+                        <i class="fas fa-hourglass-start"></i> Pending
                     </a>
                 </div>
 
@@ -494,19 +494,30 @@ $profileImg = !empty($user['profile_photo'])
                         <i class="fas fa-check-circle"></i> Accepted
                     </a>
                 </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?event-ongoing"
                         class="<?php echo ($currentPage == 'event_ongoing_booking.php') ? 'active' : ''; ?>">
                         <i class="fas fa-spinner"></i> Ongoing
                     </a>
                 </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?event-complete-list"
                         class="<?php echo ($currentPage == 'event_completed_booking.php') ? 'active' : ''; ?>">
                         <i class="fas fa-check-double"></i> Completed
                     </a>
                 </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?event-rej-list"
+                        class="<?php echo ($currentPage == 'event_rejected_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </a>
+                </div>
             </div>
+
+
 
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking.php', 'table_booking.php', 'event_booking.php']) ? 'active' : ''; ?>">

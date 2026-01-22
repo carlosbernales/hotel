@@ -53,8 +53,6 @@
             </div>
         </div>
         <div id="availabilityMessage" class="alert d-none"></div>
-
-
         <div class="row" id="eventsContainer">
             <?php while ($row = mysqli_fetch_assoc($result)):
                 $status = strtolower($row['status']);
@@ -316,11 +314,17 @@
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
+
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">
-                                    <i class="fas fa-money-bill-wave"></i> Paid Amount *
+                                    <i class="fas fa-money-check-alt"></i> Payment Type *
                                 </label>
-                                <input type="number" class="form-control" id="paidAmount" value="0" min="0">
+                                <select class="form-control" id="paymentType" required>
+                                    <option value="">Select Payment Type</option>
+                                    <option value="Custom">Custom</option>
+                                    <option value="Half">Half</option>
+                                    <option value="Full">Full</option>
+                                </select>
                             </div>
                         </div>
 
@@ -333,14 +337,9 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">
-                                    <i class="fas fa-money-check-alt"></i> Payment Type *
+                                    <i class="fas fa-money-bill-wave"></i> Paid Amount *
                                 </label>
-                                <select class="form-control" id="paymentType" required>
-                                    <option value="">Select Payment Type</option>
-                                    <option value="Custom">Custom</option>
-                                    <option value="Half">Half</option>
-                                    <option value="Full">Full</option>
-                                </select>
+                                <input type="number" class="form-control" id="paidAmount" value="0" min="0">
                             </div>
                         </div>
 
@@ -386,6 +385,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let availabilityChecked = false;
         let hasConflict = false;
@@ -631,7 +632,16 @@
         /* FINAL SUBMIT */
         document.getElementById('bookingForm').addEventListener('submit', e => {
             e.preventDefault();
-            if (!selectedPackageId) { alert('Please select a package.'); return; }
+            if (!selectedPackageId) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Select Package',
+                    text: 'Please select a package before booking.',
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
 
             const customerNameVal = document.getElementById('customerName').value.trim();
             const customerEmailVal = document.getElementById('customerEmail').value.trim();
@@ -639,62 +649,110 @@
             const guestCountVal = parseInt(guestCountInput.value);
 
             if (guestCountVal > bookingMaxGuestsValue) {
-                alert(`Guest count cannot exceed ${bookingMaxGuestsValue}`);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Guest Limit Exceeded',
+                    text: `Guest count cannot exceed ${bookingMaxGuestsValue}.`,
+                    confirmButtonColor: '#e74c3c',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
-            const additionalGuestsVal = parseInt(additionalGuestsInput.value) || 0;
-            const pricePerAdditional = parseFloat(pricePerAdditionalInput.value) || 0;
-            const paidAmountVal = parseFloat(paidAmountInput.value) || 0;
-            const remainingBalanceVal = parseFloat(remainingBalanceInput.value) || 0;
+            const eventDateVal = document.getElementById('eventDate').value;
+            const eventTimeVal = document.getElementById('eventTime').value;
             const eventTypeVal = eventTypeSelect.value;
             const paymentTypeVal = paymentTypeSelect.value;
             const paymentMethodVal = paymentMethodSelect.value;
-            const eventDateVal = document.getElementById('eventDate').value;
-            const eventTimeVal = document.getElementById('eventTime').value;
             const totalAmount = parseFloat(document.getElementById('bookingTotalPrice').textContent.replace('₱', '').replace(/,/g, '')) || 0;
 
             if (!customerNameVal || !customerEmailVal || !customerPhoneVal || !guestCountVal || !eventDateVal || !eventTimeVal || !eventTypeVal || !paymentTypeVal || !paymentMethodVal) {
-                alert('Please fill in all required fields.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Incomplete Form',
+                    text: 'Please fill in all required fields.',
+                    confirmButtonColor: '#e74c3c',
+                    confirmButtonText: 'OK'
+                });
                 return;
             }
 
-            const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
+            Swal.fire({
+                title: 'Confirm Booking?',
+                html: `<p>Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong></p>
+               <p>Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong></p>`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2ecc71',
+                cancelButtonColor: '#e74c3c',
+                confirmButtonText: 'Yes, Book Now',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
+                    const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000);
+                    const formatDateTime = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0') + ' ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ':' + String(dt.getSeconds()).padStart(2, '0');
 
-            const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000);
+                    const formData = new URLSearchParams({
+                        name: customerNameVal,
+                        email: customerEmailVal,
+                        phone: customerPhoneVal,
+                        guests: guestCountVal,
+                        additional_guests: parseInt(additionalGuestsInput.value) || 0,
+                        price_per_additional: parseFloat(pricePerAdditionalInput.value) || 0,
+                        total_amount: totalAmount,
+                        paid_amount: parseFloat(paidAmountInput.value) || 0,
+                        remaining_balance: parseFloat(remainingBalanceInput.value) || 0,
+                        event_type: eventTypeVal,
+                        payment_type: paymentTypeVal,
+                        payment_method: paymentMethodVal,
+                        package_id: selectedPackageId,
+                        place: selectedPlace,
+                        date_time_start: formatDateTime(dateTimeStart),
+                        date_time_end: formatDateTime(dateTimeEnd)
+                    });
 
-            const formatDateTime = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0') + ' ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ':' + String(dt.getSeconds()).padStart(2, '0');
-
-            const formData = new URLSearchParams({
-                name: customerNameVal,
-                email: customerEmailVal,
-                phone: customerPhoneVal,
-                guests: guestCountVal,
-                additional_guests: additionalGuestsVal,
-                price_per_additional: pricePerAdditional,
-                total_amount: totalAmount,
-                paid_amount: paidAmountVal,
-                remaining_balance: remainingBalanceVal,
-                event_type: eventTypeVal,
-                payment_type: paymentTypeVal,
-                payment_method: paymentMethodVal,
-                package_id: selectedPackageId,
-                place: selectedPlace,
-                date_time_start: formatDateTime(dateTimeStart),
-                date_time_end: formatDateTime(dateTimeEnd)
+                    fetch('../Admin/adminBackend/bookEvent_insert.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => res.text())
+                        .then(response => {
+                            if (response === 'CONFLICT') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Booking Failed',
+                                    text: 'Time slot already taken.',
+                                    confirmButtonColor: '#e74c3c',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else if (response === 'SUCCESS') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Booking Confirmed!',
+                                    html: `<p>Your booking has been successfully made.</p>
+                               <p>Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong></p>
+                               <p>Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong></p>`,
+                                    confirmButtonColor: '#2ecc71',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Booking Failed',
+                                    text: 'Something went wrong. Check console.',
+                                    confirmButtonColor: '#e74c3c',
+                                    confirmButtonText: 'OK'
+                                });
+                                console.error(response);
+                            }
+                        });
+                }
             });
-
-            fetch('../Admin/adminBackend/bookEvent_insert.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.text())
-                .then(response => {
-                    if (response === 'CONFLICT') alert('Booking failed. Time slot already taken.');
-                    else if (response === 'SUCCESS') { alert('Booking successful!'); location.reload(); }
-                    else { alert('Booking failed. Check console.'); console.error(response); }
-                });
         });
+
     </script>
 
     <script>
