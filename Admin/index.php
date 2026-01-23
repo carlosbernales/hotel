@@ -211,6 +211,11 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['event-rej-list'])) {
     $page = "adminFrontend/event_rejected_list.php";
 
+} elseif (isset($_GET['room-report'])) {
+    $page = "adminFrontend/room_report.php";
+
+} elseif (isset($_GET['generate-report-room-det'])) {
+    $page = "adminFrontend/room_report_det.php";
 
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {

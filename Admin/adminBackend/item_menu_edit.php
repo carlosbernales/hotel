@@ -1,5 +1,5 @@
 <?php
-include 'mydb.php';
+include '../adminBackend/mydb.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_GET['id'];

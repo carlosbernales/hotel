@@ -32,7 +32,6 @@ if ($result) {
                     <tr>
                         <th style="background: var(--gold); color: #2c2c2c;">Title</th>
                         <th style="background: var(--gold); color: #2c2c2c;">Preview</th>
-                        <th style="background: var(--gold); color: #2c2c2c;">Discount</th>
                         <th style="background: var(--gold); color: #2c2c2c;">Description</th>
                         <th style="background: var(--gold); color: #2c2c2c;">Status</th>
                         <th style="background: var(--gold); color: #2c2c2c; text-align: center;">Actions</th>
@@ -65,8 +64,7 @@ if ($result) {
                                 </div>
                             </div>
 
-                            <td><span class="badge bg-light text-dark"><?= htmlspecialchars($offer['discount']) ?></span>
-                            </td>
+
                             <td style="max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                                 <?= htmlspecialchars($offer['description']) ?>
                             </td>
@@ -132,12 +130,6 @@ if ($result) {
                                             </div>
 
                                             <div class="mb-3">
-                                                <label class="form-label package-label">Discount</label>
-                                                <input type="text" name="discount" class="form-control package-input"
-                                                    value="<?= htmlspecialchars($offer['discount']); ?>">
-                                            </div>
-
-                                            <div class="mb-3">
                                                 <label class="form-label package-label">Description</label>
                                                 <textarea name="description" class="form-control package-input" rows="4"
                                                     required><?= htmlspecialchars($offer['description']); ?></textarea>
@@ -187,11 +179,6 @@ if ($result) {
                     </div>
 
                     <div class="mb-3">
-                        <label for="discount" class="form-label package-label">Discount</label>
-                        <input type="text" class="form-control package-input" id="discount" name="discount" required>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="description" class="form-label package-label">Description</label>
                         <textarea class="form-control package-input" id="description" name="description" rows="4"
                             required></textarea>
@@ -217,7 +204,7 @@ if ($result) {
         btn.addEventListener('click', function () {
             const id = this.dataset.id;
             const icon = this.querySelector('i');
-            const statusCell = this.closest('tr').querySelector('td:nth-child(5)');
+            const statusCell = this.closest('tr').querySelector('td:nth-child(4)');
 
             fetch('../Admin/adminBackend/offer_status_update.php', {
                 method: 'POST',

@@ -9,7 +9,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_GET['id'])) {
 $id = intval($_GET['id']);
 
 $title = trim($_POST['title']);
-$discount = trim($_POST['discount']);
 $description = trim($_POST['description']);
 
 $uploadDir = "../../Admin/adminBackend/offers_images/";
@@ -49,14 +48,13 @@ if (!empty($_FILES['image']['name']) && $_FILES['image']['error'] === 0) {
 
 $update = $conn->prepare("
     UPDATE offers 
-    SET title = ?, image = ?, discount = ?, description = ?
+    SET title = ?, image = ?, description = ?
     WHERE id = ?
 ");
 $update->bind_param(
-    "ssssi",
+    "sssi",
     $title,
     $imageName,
-    $discount,
     $description,
     $id
 );
