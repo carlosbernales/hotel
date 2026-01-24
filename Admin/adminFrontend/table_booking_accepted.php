@@ -1,4 +1,20 @@
 <?php
+if (!empty($_SESSION['checkout_success'])): ?>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            CasaEstelaAlert.show(
+                'success',
+                'Checkout Completed',
+                'The order has been marked as Completed.'
+            );
+        });
+    </script>
+    <?php
+    unset($_SESSION['checkout_success']);
+endif;
+?>
+
+<?php
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
@@ -292,9 +308,11 @@ if ($result) {
                                         </button>
 
                                         <?php if ($order['status'] !== 'Completed'): ?>
-                                            <form method="POST" action="checkout_order.php" class="m-0">
-                                                <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
-                                                <button type="submit" class="btn btn-success fw-bold px-4">
+                                            <form method="POST"
+                                                action="../Admin/adminBackend/checkout_order_table.php?id=<?= $order_id ?>"
+                                                class="m-0">
+                                                <button type="button" class="btn btn-success fw-bold px-4"
+                                                    onclick="confirmCheckout(this.form)">
                                                     <i class="bi bi-check-circle me-2"></i> Checkout
                                                 </button>
                                             </form>
@@ -303,6 +321,7 @@ if ($result) {
                                                 <i class="bi bi-check2-all me-1"></i> Completed
                                             </span>
                                         <?php endif; ?>
+
                                     </div>
 
                                 </div>
@@ -315,3 +334,99 @@ if ($result) {
     </div>
 </div>
 <?php include 'adminFrontend/footer.php'; ?>
+
+
+
+<script>
+    // ---------------- CASA ESTELA ALERT SYSTEM ----------------
+    const CasaEstelaAlert = {
+        show: function (type, title, message, duration = 5000) {
+            const icons = {
+                success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            };
+
+            const alert = document.createElement('div');
+            alert.className = `cea-inline-alert cea-inline-alert-${type}`;
+            alert.innerHTML = `
+                <div class="cea-inline-alert-icon">${icons[type]}</div>
+                <div class="cea-inline-alert-content">
+                    <div class="cea-inline-alert-title">${title}</div>
+                    <div class="cea-inline-alert-message">${message}</div>
+                </div>
+                <button class="cea-inline-alert-close" onclick="this.parentElement.classList.add('cea-inline-alert-closing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
+            `;
+
+            document.body.appendChild(alert);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    alert.classList.add('cea-inline-alert-closing');
+                    setTimeout(() => alert.remove(), 300);
+                }, duration);
+            }
+        }
+    };
+
+    // ---------------- CASA ESTELA MODAL SYSTEM ----------------
+    const CasaEstelaModal = {
+        confirm: function (title, message, onConfirm, onCancel = null) {
+            const overlay = document.createElement('div');
+            overlay.className = 'cea-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-confirm">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper">
+                            <svg class="cea-icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.handleCancel(this)">Cancel</button>
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+            overlay.querySelector('.cea-modal-button-secondary').ceCancelCallback = onCancel;
+            document.body.appendChild(overlay);
+        },
+
+        handleConfirm: function (btn) {
+            if (btn.ceConfirmCallback && typeof btn.ceConfirmCallback === 'function') {
+                btn.ceConfirmCallback();
+            }
+            this.close(btn);
+        },
+
+        handleCancel: function (btn) {
+            if (btn.ceCancelCallback && typeof btn.ceCancelCallback === 'function') {
+                btn.ceCancelCallback();
+            }
+            this.close(btn);
+        },
+
+        close: function (element) {
+            const overlay = element.closest ? element.closest('.cea-modal-overlay') : element;
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 200);
+            }
+        }
+    };
+</script>
+
+<script>
+    function confirmCheckout(form) {
+        CasaEstelaModal.confirm(
+            'Confirm Checkout',
+            'Are you sure you want to mark this order as Completed?',
+            () => form.submit()
+        );
+    }
+</script>
