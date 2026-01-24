@@ -1,17 +1,17 @@
 <?php
-header("Content-Type: application/json");
 include '../adminBackend/mydb.php';
 
 try {
     $first = $_POST['first'] ?? '';
     $last = $_POST['last'] ?? '';
+    $email = $_POST['email'] ?? '';
     $contact = $_POST['contact'] ?? '';
     $datetime = $_POST['datetime'] ?? '';
     $tableTypes = $_POST['tableTypes'] ?? [];
     $tables = $_POST['tables'] ?? [];
 
-    if (!$first || !$last || !$contact || !$datetime) {
-        echo json_encode(["status" => "error", "msg" => "Missing fields"]);
+    if (!$first || !$last || !$email || !$contact || !$datetime) {
+        echo json_encode(["status" => "error", "msg" => "Missing required fields"]);
         exit;
     }
 
@@ -22,13 +22,14 @@ try {
 
     $orderId = "ORD-" . time();
 
-    $stmt = $conn->prepare("INSERT INTO orders_table 
-        (order_id, firstname, lastname, contact, date_time, status)
-        VALUES (?, ?, ?, ?, ?, 'Cashier')");
-    $stmt->bind_param("sssss", $orderId, $first, $last, $contact, $datetime);
-
+    $stmt = $conn->prepare("
+        INSERT INTO orders_table 
+        (order_id, firstname, lastname, email, contact, date_time, status)
+        VALUES (?, ?, ?, ?, ?, ?, 'Accepted')
+    ");
+    $stmt->bind_param("ssssss", $orderId, $first, $last, $email, $contact, $datetime);
     if (!$stmt->execute()) {
-        echo json_encode(["status" => "error", "msg" => "Insert main order failed"]);
+        echo json_encode(["status" => "error", "msg" => "Failed to save booking"]);
         exit;
     }
 
@@ -48,8 +49,9 @@ try {
         $ins->execute();
     }
 
-    echo json_encode(["status" => "success", "order_id" => $orderId, "booking_id" => $bookingId]);
+    echo json_encode(["status" => "success", "order_id" => $orderId]);
 
 } catch (Exception $e) {
     echo json_encode(["status" => "error", "msg" => $e->getMessage()]);
 }
+?>

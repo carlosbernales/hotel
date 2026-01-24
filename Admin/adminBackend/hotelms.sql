@@ -1,9 +1,9 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.2
+-- version 5.2.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 23, 2026 at 04:31 AM
+-- Generation Time: Jan 24, 2026 at 03:42 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -976,6 +976,13 @@ CREATE TABLE `event_bookings` (
   `place` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   `rejection_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_bookings`
+--
+
+INSERT INTO `event_bookings` (`id`, `booking_refId`, `user_id`, `customer_name`, `email`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`, `place`, `rejection_reason`) VALUES
+(1, 'EVT-4P1LP8', NULL, 'asd', 'carlosbernales24@gmail.com', 'Package A', 30, 47500.00, '0', 0.00, 0, 1200.00, 47500.00, 23750.00, 23750.00, 'Birthday', '2026-01-28 11:41:00', '2026-01-28 15:41:00', 30, 'Cash', 'Half', 'Accepted', 'Regular', 'cafe', NULL);
 
 -- --------------------------------------------------------
 
@@ -3468,7 +3475,7 @@ ALTER TABLE `discount_types`
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `event_packages`

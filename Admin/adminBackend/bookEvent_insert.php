@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../adminBackend/mydb.php';
 
 $customer_name = trim($_POST['name']);

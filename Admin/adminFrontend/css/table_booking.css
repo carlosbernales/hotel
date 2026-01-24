@@ -20,7 +20,12 @@
 }
 
 body {
-  font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-family:
+    "Inter",
+    "Segoe UI",
+    system-ui,
+    -apple-system,
+    sans-serif;
   overflow-x: hidden;
   background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
   min-height: 100vh;

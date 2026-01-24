@@ -925585,3 +925585,18 @@ Data: Array
 [2026-01-23 02:22:03] Database connection successful
 [2026-01-23 02:22:03] Action received
 Data: check_unread
+[2026-01-24 01:25:01] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2026-01-24 01:25:31] Incoming request
+Data: Array
+(
+    [action] => check_unread
+)
+
+[2026-01-24 01:25:31] Database connection successful
+[2026-01-24 01:25:31] Action received
+Data: check_unread

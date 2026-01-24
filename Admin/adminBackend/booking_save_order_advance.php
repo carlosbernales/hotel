@@ -29,6 +29,7 @@ try {
     // ------------------ BASIC ORDER ------------------
     $first = $_POST['first'] ?? '';
     $last = $_POST['last'] ?? '';
+    $email = $_POST['email'] ?? '';
     $contact = $_POST['contact'] ?? '';
     $datetime = $_POST['datetime'] ?? '';
 
@@ -53,26 +54,29 @@ try {
     }
 
 
-    if (!$first || !$last || !$contact || !$datetime) {
+    if (!$first || !$last || !$contact || !$email || !$datetime) {
         throw new Exception('Missing customer info');
     }
+
 
     $remainingBalance = $total - $downpayment;
 
     $stmt = $conn->prepare("
-    INSERT INTO orders_table 
-    (order_id, firstname, lastname, contact, date_time, total, downpayment, remaining_balance, dp_payment_method, status)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-");
+        INSERT INTO orders_table 
+        (order_id, firstname, lastname, contact, email, date_time, total, downpayment, remaining_balance, dp_payment_method, status)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+
 
     $status = 'Accepted';
 
     $stmt->bind_param(
-        "sssssdddss",
+        "ssssssdddss",
         $orderCode,
         $first,
         $last,
         $contact,
+        $email,
         $datetime,
         $total,
         $downpayment,
@@ -80,6 +84,7 @@ try {
         $dpPaymentMethod,
         $status
     );
+
 
     $stmt->execute();
     $orderId = $stmt->insert_id;

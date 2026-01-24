@@ -8,6 +8,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Admin/adminFrontend/css/event_booking.css">
+    <link rel="stylesheet" href="../Admin/adminFrontend/css/alerts.css">
+
 </head>
 
 <body>
@@ -455,7 +457,10 @@
         /* CHECK AVAILABILITY */
         checkBtn.addEventListener('click', () => {
             const datetime = bookingDateInput.value;
-            if (!datetime) { alert('Please select date and time'); return; }
+            if (!datetime) {
+                CasaEstelaAlert.show('warning', 'Select Date & Time', 'Please select date and time before checking availability.');
+                return;
+            }
 
             fetch('../Admin/adminBackend/table_checkOnOrders_availability.php', {
                 method: 'POST',
@@ -552,12 +557,12 @@
 
 
                 if (!dateTimeVal) {
-                    alert('Please select a booking date and time first.');
+                    CasaEstelaAlert.show('warning', 'Select Date & Time', 'Please select a booking date and time first.');
                     return;
                 }
 
                 if (!availabilityChecked) {
-                    alert('Please click "Check Availability" before booking.');
+                    CasaEstelaAlert.show('warning', 'Check Availability', 'Please click "Check Availability" before booking.');
                     return;
                 }
 
@@ -602,7 +607,7 @@
 
             if (value > bookingMaxGuestsValue) {
                 guestCountInput.value = bookingMaxGuestsValue;
-                alert(`Guest count cannot exceed ${bookingMaxGuestsValue}`);
+                CasaEstelaAlert.show('error', 'Guest Limit Exceeded', `Guest count cannot exceed ${bookingMaxGuestsValue}.`);
             }
         });
         guestCountInput.addEventListener('input', updateTotal);
@@ -677,18 +682,11 @@
                 return;
             }
 
-            Swal.fire({
-                title: 'Confirm Booking?',
-                html: `<p>Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong></p>
-               <p>Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong></p>`,
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#2ecc71',
-                cancelButtonColor: '#e74c3c',
-                confirmButtonText: 'Yes, Book Now',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
+            CasaEstelaModal.confirm(
+                'Confirm Booking?',
+                `<p>Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong></p>
+                <p>Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong></p>`,
+                () => {
                     const dateTimeStart = new Date(`${eventDateVal}T${eventTimeVal}:00`);
                     const dateTimeEnd = new Date(dateTimeStart.getTime() + 4 * 60 * 60 * 1000);
                     const formatDateTime = dt => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0') + ' ' + String(dt.getHours()).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ':' + String(dt.getSeconds()).padStart(2, '0');
@@ -719,38 +717,22 @@
                         .then(res => res.text())
                         .then(response => {
                             if (response === 'CONFLICT') {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Booking Failed',
-                                    text: 'Time slot already taken.',
-                                    confirmButtonColor: '#e74c3c',
-                                    confirmButtonText: 'OK'
-                                });
+                                CasaEstelaAlert.show('error', 'Booking Failed', 'Time slot already taken.');
                             } else if (response === 'SUCCESS') {
-                                Swal.fire({
-                                    icon: 'success',
-                                    title: 'Booking Confirmed!',
-                                    html: `<p>Your booking has been successfully made.</p>
-                               <p>Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong></p>
-                               <p>Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong></p>`,
-                                    confirmButtonColor: '#2ecc71',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    location.reload();
-                                });
+                                CasaEstelaAlert.show('success', 'Booking Confirmed',
+                                    `Your booking has been successfully made.<br>
+                                        Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong><br>
+                                        Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong>`);
+
+                                setTimeout(() => location.reload(), 2500);
                             } else {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Booking Failed',
-                                    text: 'Something went wrong. Check console.',
-                                    confirmButtonColor: '#e74c3c',
-                                    confirmButtonText: 'OK'
-                                });
+                                CasaEstelaAlert.show('error', 'Booking Failed', 'Something went wrong. Check console.');
                                 console.error(response);
                             }
                         });
                 }
-            });
+            );
+
         });
 
     </script>
@@ -801,6 +783,93 @@
             });
         });
     </script>
+
+
+    <script>
+        // ---------------- CASA ESTELA ALERT SYSTEM ----------------
+        const CasaEstelaAlert = {
+            show: function (type, title, message, duration = 5000) {
+                const icons = {
+                    success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                    info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                };
+
+                const alert = document.createElement('div');
+                alert.className = `cea-inline-alert cea-inline-alert-${type}`;
+                alert.innerHTML = `
+                <div class="cea-inline-alert-icon">${icons[type]}</div>
+                <div class="cea-inline-alert-content">
+                    <div class="cea-inline-alert-title">${title}</div>
+                    <div class="cea-inline-alert-message">${message}</div>
+                </div>
+                <button class="cea-inline-alert-close" onclick="this.parentElement.classList.add('cea-inline-alert-closing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
+            `;
+
+                document.body.appendChild(alert);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        alert.classList.add('cea-inline-alert-closing');
+                        setTimeout(() => alert.remove(), 300);
+                    }, duration);
+                }
+            }
+        };
+
+        // ---------------- CASA ESTELA MODAL SYSTEM ----------------
+        const CasaEstelaModal = {
+            confirm: function (title, message, onConfirm, onCancel = null) {
+                const overlay = document.createElement('div');
+                overlay.className = 'cea-modal-overlay';
+                overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-confirm">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper">
+                            <svg class="cea-icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.handleCancel(this)">Cancel</button>
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+                overlay.querySelector('.cea-modal-button-secondary').ceCancelCallback = onCancel;
+                document.body.appendChild(overlay);
+            },
+
+            handleConfirm: function (btn) {
+                if (btn.ceConfirmCallback && typeof btn.ceConfirmCallback === 'function') {
+                    btn.ceConfirmCallback();
+                }
+                this.close(btn);
+            },
+
+            handleCancel: function (btn) {
+                if (btn.ceCancelCallback && typeof btn.ceCancelCallback === 'function') {
+                    btn.ceCancelCallback();
+                }
+                this.close(btn);
+            },
+
+            close: function (element) {
+                const overlay = element.closest ? element.closest('.cea-modal-overlay') : element;
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 200);
+                }
+            }
+        };
+    </script>
+
+
 </body>
 
 </html>

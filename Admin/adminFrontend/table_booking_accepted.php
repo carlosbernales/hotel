@@ -286,10 +286,25 @@ if ($result) {
                                         </div>
                                     </div>
 
-                                    <div class="modal-footer border-0">
-                                        <button type="button" class="btn btn-light fw-bold px-4"
-                                            data-bs-dismiss="modal">Close</button>
+                                    <div class="modal-footer border-0 d-flex justify-content-end gap-2">
+                                        <button type="button" class="btn btn-light fw-bold px-4" data-bs-dismiss="modal">
+                                            Close
+                                        </button>
+
+                                        <?php if ($order['status'] !== 'Completed'): ?>
+                                            <form method="POST" action="checkout_order.php" class="m-0">
+                                                <input type="hidden" name="order_id" value="<?= $order['order_id'] ?>">
+                                                <button type="submit" class="btn btn-success fw-bold px-4">
+                                                    <i class="bi bi-check-circle me-2"></i> Checkout
+                                                </button>
+                                            </form>
+                                        <?php else: ?>
+                                            <span class="badge bg-success align-self-center px-3 py-2">
+                                                <i class="bi bi-check2-all me-1"></i> Completed
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

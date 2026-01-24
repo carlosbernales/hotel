@@ -1,3 +1,15 @@
+<?php
+$orderSuccess = isset($_GET['order_success']) && $_GET['order_success'] == '1';
+?>
+
+<?php
+$bookingSuccess = $_SESSION['booking_success'] ?? null;
+unset($_SESSION['booking_success']);
+
+$bookingError = $_SESSION['booking_error'] ?? null;
+unset($_SESSION['booking_error']);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +20,61 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Admin/adminFrontend/css/table_booking.css">
+    <link rel="stylesheet" href="../Admin/adminFrontend/css/alerts.css">
 </head>
+
+<style>
+    /* Casa Estela Theme Colors */
+    :root {
+        --gold-primary: #b89535;
+        --gold-hover: #9a7b2a;
+        --dark-text: #2c2c2c;
+        --soft-bg: #f8f9fa;
+    }
+
+    .custom-modal {
+        border-radius: 15px !important;
+        overflow: hidden;
+    }
+
+    .modal-header-gold {
+        background-color: var(--gold-primary) !important;
+        border-bottom: none;
+        letter-spacing: 1px;
+    }
+
+    .custom-input {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 10px 12px;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+    }
+
+    .custom-input:focus {
+        border-color: var(--gold-primary);
+        box-shadow: 0 0 0 0.25rem rgba(184, 149, 53, 0.25);
+    }
+
+    .btn-gold {
+        background-color: var(--gold-primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        transition: background 0.3s ease;
+    }
+
+    .btn-gold:hover {
+        background-color: var(--gold-hover);
+        color: white;
+        transform: translateY(-1px);
+    }
+
+    .form-label {
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+</style>
 
 <body>
     <!-- Top Navbar -->
@@ -159,35 +225,49 @@
     <!-- Booking Info Modal -->
     <div class="modal fade" id="bookingInfoModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header bg-dark text-white">
-                    <h5 class="modal-title">Booking Information</h5>
+            <div class="modal-content border-0 shadow-lg custom-modal">
+                <div class="modal-header modal-header-gold text-white">
+                    <h5 class="modal-title fw-bold">Booking Information</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body" id="bookingTablesContainer">
-                    <label class="form-label">First Name</label>
-                    <input type="text" id="firstName" class="form-control mb-2">
+                <div class="modal-body p-4" id="bookingTablesContainer">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">First Name</label>
+                            <input type="text" id="firstName" class="form-control custom-input mb-3" placeholder="Juan">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label small fw-bold text-muted">Last Name</label>
+                            <input type="text" id="lastName" class="form-control custom-input mb-3"
+                                placeholder="Dela Cruz">
+                        </div>
+                    </div>
 
-                    <label class="form-label">Last Name</label>
-                    <input type="text" id="lastName" class="form-control mb-2">
+                    <label class="form-label small fw-bold text-muted">Email Address</label>
+                    <input type="email" id="email" class="form-control custom-input mb-3"
+                        placeholder="example@mail.com">
 
-                    <label class="form-label">Contact Number</label>
-                    <input type="text" id="contactNumber" class="form-control mb-2">
+                    <label class="form-label small fw-bold text-muted">Contact Number</label>
+                    <input type="text" id="contactNumber" class="form-control custom-input mb-3"
+                        placeholder="0917 XXX XXXX">
 
-                    <label class="form-label">Booking Date & Time</label>
-                    <input type="datetime-local" id="bookingDateTime" class="form-control mb-3" readonly>
+                    <label class="form-label small fw-bold text-muted">Booking Date & Time</label>
+                    <input type="datetime-local" id="bookingDateTime" class="form-control custom-input mb-4 bg-light"
+                        readonly>
 
-                    <!-- Available tables for each type will be inserted here dynamically -->
-                    <div id="availableTablesWrapper"></div>
+                    <div id="availableTablesWrapper" class="p-3 rounded-3"
+                        style="background-color: #fdfaf0; border: 1px dashed #d1b876;">
+                        <p class="small text-center text-muted mb-0">Available tables will be listed here.</p>
+                    </div>
                 </div>
 
-                <div class="modal-footer">
-                    <button class="btn btn-primary" id="submitBookingInfo">Confirm Booking</button>
+                <div class="modal-footer border-0 p-4">
+                    <button class="btn btn-gold w-100 fw-bold py-2" id="submitBookingInfo">CONFIRM BOOKING</button>
                 </div>
-
             </div>
         </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -221,7 +301,7 @@
         function addToCart(tableId) {
 
             if (!availabilityChecked) {
-                alert("Please check availability first before adding to cart.");
+                CasaEstelaAlert.show('warning', 'Action Required', 'Please check availability first before adding to cart.');
                 return;
             }
 
@@ -399,60 +479,87 @@
                 }
             });
             document.getElementById("submitBookingInfo").addEventListener("click", function () {
+                // 1. Collect form values
                 const first = document.getElementById("firstName").value.trim();
                 const last = document.getElementById("lastName").value.trim();
+                const email = document.getElementById("email").value.trim();
                 const contact = document.getElementById("contactNumber").value.trim();
                 const dt = document.getElementById("bookingDateTime").value.trim();
+
+                // 2. Get selected tables
                 const selectedTableNumbers = Array.from(document.querySelectorAll('.availableTableSelect'))
                     .map(sel => parseInt(sel.value))
                     .filter(v => !isNaN(v));
+
                 const typeIds = cart.map(t => t.typeId);
-                if (!first || !last || !contact || !dt || selectedTableNumbers.length !== cart.length) {
-                    alert("Complete all fields and select available tables.");
+
+                // 3. Validate form
+                if (!first || !last || !email || !contact || !dt || selectedTableNumbers.length !== cart.length) {
+                    CasaEstelaAlert.show('warning', 'Incomplete Form', 'Complete all fields and select available tables.');
                     return;
                 }
-                const action = document.getElementById("bookingInfoModal").dataset.action; // "checkout" or "advance"
-                const formData = new URLSearchParams();
-                formData.append("first", first);
-                formData.append("last", last);
-                formData.append("contact", contact);
-                formData.append("datetime", dt);
-                typeIds.forEach(id => formData.append("tableTypes[]", id));
-                selectedTableNumbers.forEach(num => formData.append("tables[]", num));
-                if (action === "checkout") {
-                    fetch("../Admin/adminBackend/booking_save_order.php", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: formData
-                    })
-                        .then(res => res.json())
-                        .then(res => {
-                            if (res.status === "success") {
-                                alert(`Booking successful! Order ID: ${res.order_id}`);
-                                location.reload(); // or close modal and reset cart
-                            } else {
-                                alert("Booking failed: " + res.msg);
-                            }
-                        })
-                        .catch(err => console.error("Checkout error:", err));
-                }
-                if (action === "advance") {
-                    fetch("../Admin/adminBackend/booking_store_advance.php", {
-                        method: "POST",
-                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                        body: formData
-                    })
-                        .then(res => res.json())
-                        .then(res => {
-                            if (res.status === "success") {
-                                window.location.href = res.redirect || "/";
-                            } else {
-                                alert("Error storing advance order: " + res.msg);
-                            }
-                        })
-                        .catch(err => console.error("Advance order error:", err));
-                }
+
+                CasaEstelaModal.confirm(
+                    'Casa Estela Confirmation',
+                    'Are you sure you want to confirm this booking?',
+                    function () {
+                        const action = document.getElementById("bookingInfoModal").dataset.action;
+                        const formData = new URLSearchParams();
+                        formData.append("first", first);
+                        formData.append("last", last);
+                        formData.append("email", email);
+                        formData.append("contact", contact);
+                        formData.append("datetime", dt);
+                        typeIds.forEach(id => formData.append("tableTypes[]", id));
+                        selectedTableNumbers.forEach(num => formData.append("tables[]", num));
+
+                        if (action === "checkout") {
+                            fetch("../Admin/adminBackend/booking_save_order.php", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: formData
+                            })
+                                .then(res => res.json())
+                                .then(res => {
+                                    if (res.status === "success") {
+                                        CasaEstelaAlert.show(
+                                            'success',
+                                            'Casa Estela Confirmation',
+                                            `Your booking was successful! Order ID: ${res.order_id}`,
+                                            7000
+                                        );
+                                        setTimeout(() => location.reload(), 2500);
+                                    } else {
+                                        CasaEstelaAlert.show('error', 'Booking Failed', res.msg || 'Unable to complete booking.');
+                                    }
+                                })
+                                .catch(err => console.error("Checkout error:", err));
+
+                        }
+
+                        if (action === "advance") {
+                            fetch("../Admin/adminBackend/booking_store_advance.php", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                                body: formData
+                            })
+                                .then(res => res.json())
+                                .then(res => {
+                                    if (res.status === "success") {
+                                        window.location.href = res.redirect || "/";
+                                    } else {
+                                        CasaEstelaAlert.show('error', 'Error', res.msg || 'Unable to store advance order.');
+                                    }
+                                })
+                                .catch(err => console.error("Advance order error:", err));
+                        }
+                    },
+                    function () {
+                        CasaEstelaAlert.show('info', 'Cancelled', 'Your booking was not submitted.');
+                    }
+                );
             });
+
         }
         init();
         document.getElementById("checkAvailabilityBtn").addEventListener("click", function () {
@@ -463,7 +570,7 @@
             }
             const typeIds = cart.map(t => t.typeId);
             if (!typeIds.length) {
-                alert("No table types selected in your cart.");
+                CasaEstelaAlert.show('info', 'Notice', 'No table types selected in your cart.');
                 return;
             }
             const formData = new URLSearchParams();
@@ -484,7 +591,7 @@
                 })
                 .catch(err => {
                     console.error(err);
-                    alert("Error checking availability.");
+                    CasaEstelaAlert.show('error', 'Error', 'Error checking availability.');
                 });
         });
     </script>
@@ -621,7 +728,7 @@
             const selected = new Date(this.value);
             const now = new Date();
             if (selected < now) {
-                alert("You cannot select a past date or time.");
+                CasaEstelaAlert.show('warning', 'Invalid Date', 'You cannot select a past date or time.');
                 this.value = "";
                 return;
             }
@@ -663,6 +770,151 @@
         }
         setMinGlobalDateTime();
     </script>
+
+    <script>
+        // ----- Casa Estela Inline Alerts -----
+        const CasaEstelaAlert = {
+            show: function (type, title, message, duration = 5000) {
+                const icons = {
+                    success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                    info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                };
+
+                const alert = document.createElement('div');
+                alert.className = `cea-inline-alert cea-inline-alert-${type}`;
+                alert.innerHTML = `
+                <div class="cea-inline-alert-icon">${icons[type]}</div>
+                <div class="cea-inline-alert-content">
+                    <div class="cea-inline-alert-title">${title}</div>
+                    <div class="cea-inline-alert-message">${message}</div>
+                </div>
+                <button class="cea-inline-alert-close" onclick="this.parentElement.classList.add('cea-inline-alert-closing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
+            `;
+
+                document.body.appendChild(alert);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        alert.classList.add('cea-inline-alert-closing');
+                        setTimeout(() => alert.remove(), 300);
+                    }, duration);
+                }
+            }
+        };
+
+        // ----- Casa Estela Modal System -----
+        const CasaEstelaModal = {
+            show: function (type, title, message, onConfirm = null, showCancel = false) {
+                const icons = {
+                    success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                    info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                };
+
+                const overlay = document.createElement('div');
+                overlay.className = 'cea-modal-overlay';
+                overlay.innerHTML = `
+                <div class="cea-modal-dialog">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper cea-modal-icon-wrapper-${type}">
+                            ${icons[type]}
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            ${showCancel ? '<button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.close(this)">Cancel</button>' : ''}
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">${showCancel ? 'Confirm' : 'OK'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+                document.body.appendChild(overlay);
+
+                overlay.addEventListener('click', function (e) {
+                    if (e.target === overlay) CasaEstelaModal.close(overlay);
+                });
+            },
+
+            confirm: function (title, message, onConfirm, onCancel = null) {
+                const overlay = document.createElement('div');
+                overlay.className = 'cea-modal-overlay';
+                overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-confirm">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper">
+                            <svg class="cea-icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.handleCancel(this)">Cancel</button>
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+                overlay.querySelector('.cea-modal-button-secondary').ceCancelCallback = onCancel;
+                document.body.appendChild(overlay);
+            },
+
+            handleConfirm: function (btn) {
+                if (btn.ceConfirmCallback && typeof btn.ceConfirmCallback === 'function') btn.ceConfirmCallback();
+                this.close(btn);
+            },
+
+            handleCancel: function (btn) {
+                if (btn.ceCancelCallback && typeof btn.ceCancelCallback === 'function') btn.ceCancelCallback();
+                this.close(btn);
+            },
+
+            close: function (element) {
+                const overlay = element.closest ? element.closest('.cea-modal-overlay') : element;
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 200);
+                }
+            }
+        };
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            <?php if (!empty($bookingSuccess)): ?>
+                CasaEstelaAlert.show(
+                    'success',
+                    'Casa Estela Confirmation',
+                    '<?= $bookingSuccess["message"] ?>',
+                    7000
+                );
+            <?php endif; ?>
+
+            <?php if (!empty($bookingError)): ?>
+                CasaEstelaAlert.show(
+                    'error',
+                    'Booking Failed',
+                    '<?= $bookingError ?>',
+                    7000
+                );
+            <?php endif; ?>
+        });
+    </script>
+
+    <script>
+        <?php if ($orderSuccess): ?>
+            document.addEventListener('DOMContentLoaded', () => {
+                CasaEstelaAlert.show('success', 'Order Confirmed', 'Advance order saved successfully!');
+            });
+        <?php endif; ?>
+    </script>
+
+
 
 </body>
 

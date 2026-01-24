@@ -25,6 +25,8 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Admin/adminFrontend/css/advance_orders.css">
+    <link rel="stylesheet" href="../Admin/adminFrontend/css/alerts.css">
+
 </head>
 
 <body>
@@ -363,6 +365,7 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
                     <h6><i class="fas fa-user"></i> Customer Information</h6>
                     <p><strong>Name:</strong> ${order.first} ${order.last}</p>
                     <p><strong>Contact:</strong> ${order.contact}</p>
+                    <p><strong>Email:</strong> ${order.email}</p>
                     <p><strong>Booking Date & Time:</strong> ${order.datetime}</p>
                 </div>
 
@@ -473,63 +476,72 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             const total = parseFloat(document.getElementById('orderTotal')?.textContent || 0);
 
             if (!paymentMethod) {
-                alert('Please select a payment method.');
+                CasaEstelaAlert.show('warning', 'Payment Method Required', 'Please select a payment method.');
                 return;
             }
 
             if (downpayment <= 0 || downpayment > total) {
-                alert('Invalid downpayment amount.');
+                CasaEstelaAlert.show('warning', 'Invalid Downpayment', 'Please enter a valid downpayment amount.');
                 return;
             }
 
-            const order = <?= json_encode($advanceOrder); ?>;
-            const formData = new FormData();
+            // Show Casa Estela confirmation modal
+            CasaEstelaModal.confirm(
+                'Confirm Advance Order?',
+                'Are you sure you want to confirm this advance order? This action cannot be undone.',
+                function () {
+                    // On Confirm: save the order
+                    const order = <?= json_encode($advanceOrder); ?>;
+                    const formData = new FormData();
 
-            formData.append('first', order.first);
-            formData.append('last', order.last);
-            formData.append('contact', order.contact);
-            formData.append('datetime', order.datetime);
+                    formData.append('first', order.first);
+                    formData.append('last', order.last);
+                    formData.append('email', order.email);
+                    formData.append('contact', order.contact);
+                    formData.append('datetime', order.datetime);
 
-            formData.append('downpayment', downpayment.toFixed(2));
-            formData.append('dp_payment_method', paymentMethod);
+                    formData.append('downpayment', downpayment.toFixed(2));
+                    formData.append('dp_payment_method', paymentMethod);
 
-            let subtotal = 0;
-            cart.forEach(item => {
-                let itemTotal = item.price * item.qty;
-                item.addons.forEach(a => {
-                    itemTotal += a.price * a.qty * item.qty;
-                });
-                subtotal += itemTotal;
+                    let subtotal = 0;
+                    cart.forEach(item => {
+                        let itemTotal = item.price * item.qty;
+                        item.addons.forEach(a => itemTotal += a.price * a.qty * item.qty);
+                        subtotal += itemTotal;
 
-                formData.append('cartItems[]', JSON.stringify({
-                    id: item.id,
-                    qty: item.qty,
-                    addons: item.addons.map(a => ({
-                        addon_id: a.addon_id,
-                        qty: a.qty
-                    }))
-                }));
-            });
+                        formData.append('cartItems[]', JSON.stringify({
+                            id: item.id,
+                            qty: item.qty,
+                            addons: item.addons.map(a => ({
+                                addon_id: a.addon_id,
+                                qty: a.qty
+                            }))
+                        }));
+                    });
 
-            formData.append('total', subtotal.toFixed(2));
+                    formData.append('total', subtotal.toFixed(2));
 
-            fetch('../Admin/adminBackend/booking_save_order_advance.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(res => res.json())
-                .then(res => {
-                    if (res.status === 'success') {
-                        alert('Advance order saved successfully!');
-                        window.location.href = '../Admin/index.php?table-booking';
-                    } else {
-                        alert(res.message || 'Error saving order');
-                    }
-                })
-                .catch(err => {
-                    alert('An error occurred while saving the order.');
-                    console.error(err);
-                });
+                    fetch('../Admin/adminBackend/booking_save_order_advance.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            if (res.status === 'success') {
+                                window.location.href = '../Admin/index.php?table-booking&order_success=1';
+                            } else {
+                                CasaEstelaAlert.show('error', 'Error', res.message || 'Error saving order.');
+                            }
+                        })
+                        .catch(err => {
+                            CasaEstelaAlert.show('error', 'Error', 'An error occurred while saving the order.');
+                            console.error(err);
+                        });
+                },
+                function () {
+                    CasaEstelaAlert.show('info', 'Cancelled', 'Advance order was not confirmed.');
+                }
+            );
         });
 
         function handlePaymentTypeChange() {
@@ -554,6 +566,90 @@ if ($advanceOrder && !empty($advanceOrder['tables'])) {
             }
         }
 
+    </script>
+
+    <script>
+        // ---------------- CASA ESTELA ALERT SYSTEM ----------------
+        const CasaEstelaAlert = {
+            show: function (type, title, message, duration = 5000) {
+                const icons = {
+                    success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                    warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                    info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+                };
+
+                const alert = document.createElement('div');
+                alert.className = `cea-inline-alert cea-inline-alert-${type}`;
+                alert.innerHTML = `
+                <div class="cea-inline-alert-icon">${icons[type]}</div>
+                <div class="cea-inline-alert-content">
+                    <div class="cea-inline-alert-title">${title}</div>
+                    <div class="cea-inline-alert-message">${message}</div>
+                </div>
+                <button class="cea-inline-alert-close" onclick="this.parentElement.classList.add('cea-inline-alert-closing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
+            `;
+
+                document.body.appendChild(alert);
+
+                if (duration > 0) {
+                    setTimeout(() => {
+                        alert.classList.add('cea-inline-alert-closing');
+                        setTimeout(() => alert.remove(), 300);
+                    }, duration);
+                }
+            }
+        };
+
+        // ---------------- CASA ESTELA MODAL SYSTEM ----------------
+        const CasaEstelaModal = {
+            confirm: function (title, message, onConfirm, onCancel = null) {
+                const overlay = document.createElement('div');
+                overlay.className = 'cea-modal-overlay';
+                overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-confirm">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper">
+                            <svg class="cea-icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.handleCancel(this)">Cancel</button>
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+                overlay.querySelector('.cea-modal-button-secondary').ceCancelCallback = onCancel;
+                document.body.appendChild(overlay);
+            },
+
+            handleConfirm: function (btn) {
+                if (btn.ceConfirmCallback && typeof btn.ceConfirmCallback === 'function') {
+                    btn.ceConfirmCallback();
+                }
+                this.close(btn);
+            },
+
+            handleCancel: function (btn) {
+                if (btn.ceCancelCallback && typeof btn.ceCancelCallback === 'function') {
+                    btn.ceCancelCallback();
+                }
+                this.close(btn);
+            },
+
+            close: function (element) {
+                const overlay = element.closest ? element.closest('.cea-modal-overlay') : element;
+                if (overlay) {
+                    overlay.style.opacity = '0';
+                    setTimeout(() => overlay.remove(), 200);
+                }
+            }
+        };
     </script>
 
 </body>

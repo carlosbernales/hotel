@@ -1,0 +1,397 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: #f3f4f6;
+  padding: 20px;
+}
+
+.cea-demo-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.cea-header {
+  background: linear-gradient(135deg, #d4af37 0%, #c5a028 100%);
+  color: white;
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cea-header h1 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.cea-demo-section {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cea-demo-section h2 {
+  color: #1f2937;
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.cea-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cea-demo-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cea-demo-btn-success {
+  background: #10b981;
+  color: white;
+}
+
+.cea-demo-btn-success:hover {
+  background: #059669;
+}
+
+.cea-demo-btn-error {
+  background: #ef4444;
+  color: white;
+}
+
+.cea-demo-btn-error:hover {
+  background: #dc2626;
+}
+
+.cea-demo-btn-warning {
+  background: #f59e0b;
+  color: white;
+}
+
+.cea-demo-btn-warning:hover {
+  background: #d97706;
+}
+
+.cea-demo-btn-info {
+  background: #3b82f6;
+  color: white;
+}
+
+.cea-demo-btn-info:hover {
+  background: #2563eb;
+}
+
+.cea-demo-btn-gold {
+  background: #d4af37;
+  color: white;
+}
+
+.cea-demo-btn-gold:hover {
+  background: #c5a028;
+}
+
+/* Alert Styles */
+.cea-inline-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 350px;
+  max-width: 450px;
+  padding: 16px 20px;
+  border-radius: 8px;
+  border-left: 4px solid;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: start;
+  gap: 12px;
+  z-index: 10000;
+  animation: ceaSlideInRight 0.3s ease-out;
+}
+
+.cea-inline-alert-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #6b7280;
+  line-height: 1;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+}
+
+.cea-inline-alert-close:hover {
+  color: #1f2937;
+}
+
+.cea-inline-alert-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.cea-inline-alert-content {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.cea-inline-alert-title {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: #1f2937;
+}
+
+.cea-inline-alert-message {
+  font-size: 14px;
+  color: #4b5563;
+  line-height: 1.5;
+}
+
+.cea-inline-alert-success {
+  background: #ecfdf5;
+  border-color: #10b981;
+}
+
+.cea-inline-alert-error {
+  background: #fef2f2;
+  border-color: #ef4444;
+}
+
+.cea-inline-alert-warning {
+  background: #fffbeb;
+  border-color: #f59e0b;
+}
+
+.cea-inline-alert-info {
+  background: #eff6ff;
+  border-color: #3b82f6;
+}
+
+/* Modal Overlay */
+.cea-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+  animation: ceaFadeIn 0.2s ease-out;
+}
+
+/* Modal Styles */
+.cea-modal-dialog {
+  background: white;
+  border-radius: 12px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: ceaScaleIn 0.2s ease-out;
+}
+
+.cea-modal-body {
+  padding: 30px;
+  text-align: center;
+}
+
+.cea-modal-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.cea-modal-icon-wrapper svg {
+  width: 40px;
+  height: 40px;
+}
+
+.cea-modal-icon-wrapper-success {
+  background: #d1fae5;
+}
+
+.cea-modal-icon-wrapper-error {
+  background: #fee2e2;
+}
+
+.cea-modal-icon-wrapper-warning {
+  background: #fef3c7;
+}
+
+.cea-modal-icon-wrapper-info {
+  background: #dbeafe;
+}
+
+.cea-modal-heading {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 12px;
+}
+
+.cea-modal-text {
+  font-size: 15px;
+  color: #6b7280;
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.cea-modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.cea-modal-button {
+  padding: 12px 30px;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cea-modal-button-primary {
+  background: #d4af37;
+  color: white;
+}
+
+.cea-modal-button-primary:hover {
+  background: #c5a028;
+}
+
+.cea-modal-button-secondary {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+.cea-modal-button-secondary:hover {
+  background: #d1d5db;
+}
+
+/* Casa Estela Themed Confirmation */
+.cea-modal-confirm {
+  background: #1f2937;
+  border-top: 4px solid #d4af37;
+}
+
+.cea-modal-confirm .cea-modal-heading {
+  color: #d4af37;
+}
+
+.cea-modal-confirm .cea-modal-text {
+  color: #d1d5db;
+}
+
+.cea-modal-confirm .cea-modal-icon-wrapper {
+  background: #d4af37;
+}
+
+.cea-modal-confirm .cea-modal-button-secondary {
+  background: #374151;
+  color: #d1d5db;
+}
+
+.cea-modal-confirm .cea-modal-button-secondary:hover {
+  background: #4b5563;
+}
+
+/* Animations */
+@keyframes ceaFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes ceaScaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes ceaSlideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes ceaSlideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+.cea-inline-alert-closing {
+  animation: ceaSlideOutRight 0.3s ease-out forwards;
+}
+
+/* SVG Icons */
+.cea-icon-success {
+  fill: #10b981;
+}
+
+.cea-icon-error {
+  fill: #ef4444;
+}
+
+.cea-icon-warning {
+  fill: #f59e0b;
+}
+
+.cea-icon-info {
+  fill: #3b82f6;
+}
+
+.cea-icon-white {
+  fill: white;
+}

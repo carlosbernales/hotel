@@ -57,6 +57,7 @@ $profileImg = !empty($user['profile_photo'])
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../Admin/adminFrontend/css/header.css">
+    <link rel="stylesheet" href="../Admin/adminFrontend/css/alerts.css">
 </head>
 
 
