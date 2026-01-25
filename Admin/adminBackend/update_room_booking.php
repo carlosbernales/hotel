@@ -1,4 +1,5 @@
 <?php
+session_start();
 include '../adminBackend/mydb.php';
 
 $data = json_decode(file_get_contents("php://input"), true);
@@ -76,6 +77,14 @@ foreach ($rooms as $r) {
     );
     $updateRoom->execute();
 }
+
+$_SESSION['cea_success'] = [
+    'title' => 'Booking Updated',
+    'message' => ($status === 'checkin')
+        ? 'Guest has been successfully checked in.'
+        : 'Booking has been successfully reserved.'
+];
+
 
 echo "success";
 ?>

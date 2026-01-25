@@ -63,9 +63,8 @@ while ($b = $bed_res->fetch_assoc()) {
             <h3 class="m-0 fw-bold" style="color: var(--dark-bg);">
                 <i class="fas fa-file-alt" style="color: var(--gold);"></i> Booking Details
             </h3>
-            <a href="../Admin/adminBackend/delete_roomBook_cancelBtn.php?booking_id=<?= $booking['booking_id'] ?>"
-                class="btn btn-danger"
-                onclick="return confirm('Are you sure you want to cancel this booking? This action cannot be undone.')">
+            <a href="#" class="btn btn-danger" onclick="cancelBooking(<?= $booking['booking_id'] ?>)">
+
                 <i class="fas fa-times-circle"></i> Cancel Booking
             </a>
         </div>
@@ -396,24 +395,31 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => res.json())
             .then(data => {
                 roomNumberSelect.innerHTML = '';
-
                 if (data[roomTypeSelect.value] && data[roomTypeSelect.value].length > 0) {
-                    if (!defaultNumber || defaultNumber === "0") {
-                        const placeholder = document.createElement('option');
-                        placeholder.textContent = "Please choose a room number";
-                        placeholder.disabled = true;
-                        placeholder.selected = true;
-                        roomNumberSelect.appendChild(placeholder);
-                    }
+
+                    // 🔹 ALWAYS add placeholder
+                    const placeholder = document.createElement('option');
+                    placeholder.value = "";
+                    placeholder.textContent = "Please choose a room number";
+                    placeholder.disabled = true;
+                    placeholder.selected = true;
+                    roomNumberSelect.appendChild(placeholder);
 
                     data[roomTypeSelect.value].forEach(rn => {
                         const option = document.createElement('option');
                         option.value = rn.room_number_id;
                         option.textContent = rn.room_number + (rn.note ? ` (${rn.note})` : '');
-                        if (defaultNumber && rn.room_number_id == defaultNumber) option.selected = true;
+
+                        if (defaultNumber && rn.room_number_id == defaultNumber) {
+                            option.selected = true;
+                            placeholder.selected = false; // unselect placeholder
+                        }
+
                         roomNumberSelect.appendChild(option);
                     });
-                } else {
+
+                }
+                else {
                     const option = document.createElement('option');
                     option.textContent = 'No available rooms';
                     option.disabled = true;
@@ -477,7 +483,12 @@ while ($b = $bed_res->fetch_assoc()) {
         });
 
         if (totalCapacity < numberGuest) {
-            alert('Total room capacity is less than the number of guests!');
+            CasaEstelaAlert.show(
+                'warning',
+                'Capacity Mismatch',
+                'Total room capacity is less than the number of guests.'
+            );
+
 
             rows.forEach(row => {
                 const roomTypeSelect = row.querySelector('.roomTypeSelect');
@@ -582,18 +593,14 @@ while ($b = $bed_res->fetch_assoc()) {
 <script>
     function processBooking(status) {
 
+        // ---------- VALIDATIONS ----------
         const roomSelects = document.querySelectorAll('.roomNumberSelect');
         let allSelected = true;
 
         roomSelects.forEach(select => {
-            const selectedOption = select.selectedOptions[0];
-            if (
-                !selectedOption ||
-                selectedOption.value === "" ||
-                selectedOption.text.includes("Select room number") ||
-                selectedOption.text.includes("Please choose a room number") ||
-                selectedOption.text.includes("No available rooms")
-            ) {
+            const opt = select.selectedOptions[0];
+            if (!opt || opt.value === "") {
+
                 select.classList.add('is-invalid');
                 allSelected = false;
             } else {
@@ -602,41 +609,52 @@ while ($b = $bed_res->fetch_assoc()) {
         });
 
         if (!allSelected) {
-            alert('Please select a room number for all booked rooms.');
+            CasaEstelaAlert.show(
+                'warning',
+                'Room Selection Required',
+                'Please select a room number for all booked rooms.'
+            );
             return;
         }
 
-        const paymentField = document.getElementById('paymentInput');
-        const paymentValue = parseFloat(paymentField.value);
+        const paymentInput = document.getElementById('paymentInput');
+        const paymentValue = parseFloat(paymentInput.value);
 
-        if (!paymentField.value || isNaN(paymentValue) || paymentValue <= 0) {
-            alert('Please enter a downpayment amount before proceeding.');
-            paymentField.focus();
-            paymentField.classList.add('is-invalid');
+        if (!paymentValue || paymentValue <= 0) {
+            CasaEstelaAlert.show(
+                'warning',
+                'Payment Required',
+                'Please enter a downpayment amount before proceeding.'
+            );
+            paymentInput.focus();
             return;
-        } else {
-            paymentField.classList.remove('is-invalid');
         }
 
-
-        const confirmed = confirm(
-            `Are you sure you want to ${status === 'checkin' ? 'check in' : 'reserve'} this booking?`
+        // ---------- CASA ESTELA CONFIRMATION ----------
+        CasaEstelaModal.confirm(
+            "Casa Estela Confirmation",
+            `Are you sure you want to ${status === 'checkin' ? 'check in' : 'reserve'
+            } this booking?`,
+            () => submitBooking(status)
         );
-        if (!confirmed) return;
+    }
 
+    function submitBooking(status) {
 
-        const totalAmountNew = parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')) || 0;
-        const oldDownpayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
-        const paymentInput = parseFloat(document.getElementById('paymentInput').value) || 0;
+        const totalAmountNew =
+            parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')) || 0;
+
+        const oldDownpayment =
+            parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
+
+        const paymentInput =
+            parseFloat(document.getElementById('paymentInput').value) || 0;
 
         let newDownPayment = oldDownpayment + paymentInput;
-        let remainingBal = 0;
+        let remainingBal = Math.max(totalAmountNew - newDownPayment, 0);
 
-        if (newDownPayment >= totalAmountNew) {
+        if (newDownPayment > totalAmountNew) {
             newDownPayment = totalAmountNew;
-            remainingBal = 0;
-        } else {
-            remainingBal = totalAmountNew - newDownPayment;
         }
 
         const rooms = [];
@@ -650,16 +668,13 @@ while ($b = $bed_res->fetch_assoc()) {
 
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
-            // check_in: status === 'checkin'
-            //     ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
-            //     : document.getElementById('check_in').value,
             check_in: document.getElementById('check_in').value,
             check_out: document.getElementById('check_out').value,
             total_amount: totalAmountNew,
             downpayment_amount: newDownPayment,
             remaining_balance: remainingBal,
             payment_input: paymentInput,
-            payment_method: document.querySelector('select[name="payment_method"]').value,
+            payment_method: document.querySelector('[name="payment_method"]').value,
             rooms: rooms,
             status: status
         };
@@ -672,14 +687,25 @@ while ($b = $bed_res->fetch_assoc()) {
             .then(res => res.text())
             .then(res => {
                 if (res === "success") {
-                    alert(`Booking ${status === 'checkin' ? 'checked in' : 'reserved'} successfully!`);
                     window.location.href = "../Admin/index.php?room_booking";
+
                 } else {
-                    alert('Something went wrong. Please try again.');
+                    CasaEstelaAlert.show(
+                        'error',
+                        'Process Failed',
+                        'Something went wrong. Please try again.'
+                    );
                 }
             })
-            .catch(err => console.error(err));
+            .catch(() => {
+                CasaEstelaAlert.show(
+                    'error',
+                    'Network Error',
+                    'Unable to connect to the server.'
+                );
+            });
     }
+
     document.getElementById('processCheckinBtn').addEventListener('click', () => processBooking('checkin'));
     document.getElementById('processReserveBtn').addEventListener('click', () => processBooking('reserved'));
 </script>
@@ -705,13 +731,117 @@ while ($b = $bed_res->fetch_assoc()) {
 
         checkOut.addEventListener("change", () => {
             if (checkOut.value < checkIn.value) {
-                alert("Check-out cannot be earlier than check-in.");
+                CasaEstelaAlert.show(
+                    'error',
+                    'Invalid Date',
+                    'Check-out cannot be earlier than check-in.'
+                );
+
                 checkOut.value = checkIn.value;
             }
         });
     });
 
 </script>
+
+<script>
+    function cancelBooking(bookingId) {
+        CasaEstelaModal.confirm(
+            "Casa Estela Confirmation",
+            "Are you sure you want to cancel this booking? This action cannot be undone.",
+            () => {
+                window.location.href =
+                    `../Admin/adminBackend/delete_roomBook_cancelBtn.php?booking_id=${bookingId}`;
+            }
+        );
+    }
+</script>
+
+
+<script>
+    // ---------------- CASA ESTELA ALERT SYSTEM ----------------
+    const CasaEstelaAlert = {
+        show: function (type, title, message, duration = 5000) {
+            const icons = {
+                success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            };
+
+            const alert = document.createElement('div');
+            alert.className = `cea-inline-alert cea-inline-alert-${type}`;
+            alert.innerHTML = `
+                <div class="cea-inline-alert-icon">${icons[type]}</div>
+                <div class="cea-inline-alert-content">
+                    <div class="cea-inline-alert-title">${title}</div>
+                    <div class="cea-inline-alert-message">${message}</div>
+                </div>
+                <button class="cea-inline-alert-close" onclick="this.parentElement.classList.add('cea-inline-alert-closing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
+            `;
+
+            document.body.appendChild(alert);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    alert.classList.add('cea-inline-alert-closing');
+                    setTimeout(() => alert.remove(), 300);
+                }, duration);
+            }
+        }
+    };
+
+    // ---------------- CASA ESTELA MODAL SYSTEM ----------------
+    const CasaEstelaModal = {
+        confirm: function (title, message, onConfirm, onCancel = null) {
+            const overlay = document.createElement('div');
+            overlay.className = 'cea-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-confirm">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper">
+                            <svg class="cea-icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.handleCancel(this)">Cancel</button>
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+            overlay.querySelector('.cea-modal-button-secondary').ceCancelCallback = onCancel;
+            document.body.appendChild(overlay);
+        },
+
+        handleConfirm: function (btn) {
+            if (btn.ceConfirmCallback && typeof btn.ceConfirmCallback === 'function') {
+                btn.ceConfirmCallback();
+            }
+            this.close(btn);
+        },
+
+        handleCancel: function (btn) {
+            if (btn.ceCancelCallback && typeof btn.ceCancelCallback === 'function') {
+                btn.ceCancelCallback();
+            }
+            this.close(btn);
+        },
+
+        close: function (element) {
+            const overlay = element.closest ? element.closest('.cea-modal-overlay') : element;
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 200);
+            }
+        }
+    };
+</script>
+
 
 
 <?php include 'adminFrontend/footer.php'; ?>
