@@ -13,6 +13,7 @@ if ($result) {
 }
 ?>
 <link rel="stylesheet" href="../Admin/adminFrontend/css/event_accepted_booking.css">
+<link rel="stylesheet" href="../Admin/adminFrontend/css/alerts.css">
 
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
@@ -238,13 +239,18 @@ if ($result) {
 
 </script>
 
-<script>
-    function acceptEvent(id) {
-        window.location.href = "index.php?event-receipt-accepted=1&event_id=" + id;
-    }
-</script>
 
 <script>
+    function acceptEvent(id) {
+        CasaEstelaModal.confirm(
+            'Accept Booking',
+            'Are you sure you want to accept this booking?',
+            function () {
+                window.location.href = "index.php?event-receipt-accepted=1&event_id=" + id;
+            }
+        );
+    }
+
     function rejectEvent(id) {
         document.getElementById('rejectEventId').value = id;
         document.getElementById('rejectReason').value = '';
@@ -258,26 +264,151 @@ if ($result) {
         var reason = document.getElementById('rejectReason').value.trim();
 
         if (reason === '') {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Missing Information',
-                text: 'Please enter a reason for rejection.',
-                confirmButtonColor: '#d33'
-            });
+            CasaEstelaModal.show(
+                'warning',
+                'Missing Information',
+                'Please enter a reason for rejection.'
+            );
             return;
         }
 
-        Swal.fire({
-            title: 'Processing Rejection...',
-            text: 'Please wait while we update the booking status.',
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            }
-        });
+        CasaEstelaModal.show(
+            'info',
+            'Processing Rejection',
+            'Please wait while we update the booking status...',
+            null
+        );
 
         setTimeout(function () {
-            window.location.href = "../Admin/adminBackend/event_reject.php?event_id=" + id + "&reason=" + encodeURIComponent(reason);
+            window.location.href = "../Admin/adminBackend/event_reject.php?event_id=" + id + "&reason=" + encodeURIComponent(reason) + "&callback=success";
         }, 800);
     }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('callback') === 'success') {
+            CasaEstelaModal.show(
+                'success',
+                'Booking Updated',
+                'The booking status has been successfully updated.',
+                function () {
+                    window.location.href = 'index.php?event-bookings';
+                }
+            );
+        }
+    });
+</script>
+
+
+<script>
+    // ----- Casa Estela Inline Alerts -----
+    const CasaEstelaAlert = {
+        show: function (type, title, message, duration = 5000) {
+            const icons = {
+                success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            };
+
+            const alert = document.createElement('div');
+            alert.className = `cea-inline-alert cea-inline-alert-${type}`;
+            alert.innerHTML = `
+                <div class="cea-inline-alert-icon">${icons[type]}</div>
+                <div class="cea-inline-alert-content">
+                    <div class="cea-inline-alert-title">${title}</div>
+                    <div class="cea-inline-alert-message">${message}</div>
+                </div>
+                <button class="cea-inline-alert-close" onclick="this.parentElement.classList.add('cea-inline-alert-closing'); setTimeout(() => this.parentElement.remove(), 300)">×</button>
+            `;
+
+            document.body.appendChild(alert);
+
+            if (duration > 0) {
+                setTimeout(() => {
+                    alert.classList.add('cea-inline-alert-closing');
+                    setTimeout(() => alert.remove(), 300);
+                }, duration);
+            }
+        }
+    };
+
+    // ----- Casa Estela Modal System -----
+    const CasaEstelaModal = {
+        show: function (type, title, message, onConfirm = null, showCancel = false) {
+            const icons = {
+                success: '<svg class="cea-icon-success" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                error: '<svg class="cea-icon-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>',
+                warning: '<svg class="cea-icon-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>',
+                info: '<svg class="cea-icon-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>'
+            };
+
+            const overlay = document.createElement('div');
+            overlay.className = 'cea-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cea-modal-dialog">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper cea-modal-icon-wrapper-${type}">
+                            ${icons[type]}
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            ${showCancel ? '<button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.close(this)">Cancel</button>' : ''}
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">${showCancel ? 'Confirm' : 'OK'}</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+            document.body.appendChild(overlay);
+
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) CasaEstelaModal.close(overlay);
+            });
+        },
+
+        confirm: function (title, message, onConfirm, onCancel = null) {
+            const overlay = document.createElement('div');
+            overlay.className = 'cea-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-confirm">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-icon-wrapper">
+                            <svg class="cea-icon-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                            </svg>
+                        </div>
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-secondary" onclick="CasaEstelaModal.handleCancel(this)">Cancel</button>
+                            <button class="cea-modal-button cea-modal-button-primary" onclick="CasaEstelaModal.handleConfirm(this)">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            overlay.querySelector('.cea-modal-button-primary').ceConfirmCallback = onConfirm;
+            overlay.querySelector('.cea-modal-button-secondary').ceCancelCallback = onCancel;
+            document.body.appendChild(overlay);
+        },
+
+        handleConfirm: function (btn) {
+            if (btn.ceConfirmCallback && typeof btn.ceConfirmCallback === 'function') btn.ceConfirmCallback();
+            this.close(btn);
+        },
+
+        handleCancel: function (btn) {
+            if (btn.ceCancelCallback && typeof btn.ceCancelCallback === 'function') btn.ceCancelCallback();
+            this.close(btn);
+        },
+
+        close: function (element) {
+            const overlay = element.closest ? element.closest('.cea-modal-overlay') : element;
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.remove(), 200);
+            }
+        }
+    };
 </script>

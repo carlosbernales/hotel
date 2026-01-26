@@ -717,19 +717,22 @@
                         .then(res => res.text())
                         .then(response => {
                             if (response === 'CONFLICT') {
-                                CasaEstelaAlert.show('error', 'Booking Failed', 'Time slot already taken.');
+                                CasaEstelaModal.show('error', 'Booking Failed', 'Time slot already taken.');
                             } else if (response === 'SUCCESS') {
-                                CasaEstelaAlert.show('success', 'Booking Confirmed',
+                                CasaEstelaModal.show(
+                                    'success',
+                                    'Booking Confirmed',
                                     `Your booking has been successfully made.<br>
                                         Package: <strong>${document.getElementById('bookingPackageName').textContent}</strong><br>
-                                        Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong>`);
-
-                                setTimeout(() => location.reload(), 2500);
+                                        Total: <strong>${document.getElementById('bookingTotalPrice').textContent}</strong>`,
+                                    () => location.reload()
+                                );
                             } else {
-                                CasaEstelaAlert.show('error', 'Booking Failed', 'Something went wrong. Check console.');
+                                CasaEstelaModal.show('error', 'Booking Failed', 'Something went wrong. Check console.');
                                 console.error(response);
                             }
                         });
+
                 }
             );
 
@@ -867,6 +870,29 @@
                 }
             }
         };
+
+        CasaEstelaModal.show = function (type, title, message, onClose = null) {
+            const overlay = document.createElement('div');
+            overlay.className = 'cea-modal-overlay';
+            overlay.innerHTML = `
+                <div class="cea-modal-dialog cea-modal-${type}">
+                    <div class="cea-modal-body">
+                        <div class="cea-modal-heading">${title}</div>
+                        <div class="cea-modal-text">${message}</div>
+                        <div class="cea-modal-actions">
+                            <button class="cea-modal-button cea-modal-button-primary">OK</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const okBtn = overlay.querySelector('.cea-modal-button-primary');
+            okBtn.addEventListener('click', () => {
+                CasaEstelaModal.close(overlay);
+                if (onClose) onClose();
+            });
+            document.body.appendChild(overlay);
+        };
+
     </script>
 
 

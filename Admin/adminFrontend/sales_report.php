@@ -56,7 +56,7 @@ $tableSql = "
     FROM orders_table ot
     LEFT JOIN orders_table_type ott
         ON ott.table_booking_fk_id = ot.id
-    WHERE ot.status = 'Finished'
+    WHERE ot.status = 'Completed'
 ";
 
 if ($fromDate && $toDate) {

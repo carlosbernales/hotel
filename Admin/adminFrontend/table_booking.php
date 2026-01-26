@@ -522,19 +522,26 @@ unset($_SESSION['booking_error']);
                                 .then(res => res.json())
                                 .then(res => {
                                     if (res.status === "success") {
-                                        CasaEstelaAlert.show(
+                                        CasaEstelaModal.show(
                                             'success',
                                             'Casa Estela Confirmation',
                                             `Your booking was successful! Order ID: ${res.order_id}`,
-                                            7000
+                                            function () {
+                                                window.location.href = "../Admin/index.php?table-booking";
+                                            }
                                         );
-                                        setTimeout(() => location.reload(), 2500);
                                     } else {
-                                        CasaEstelaAlert.show('error', 'Booking Failed', res.msg || 'Unable to complete booking.');
+                                        CasaEstelaModal.show(
+                                            'error',
+                                            'Booking Failed',
+                                            res.msg || 'Unable to complete booking.',
+                                            function () {
+                                                CasaEstelaModal.close(this);
+                                            }
+                                        );
                                     }
                                 })
                                 .catch(err => console.error("Checkout error:", err));
-
                         }
 
                         if (action === "advance") {

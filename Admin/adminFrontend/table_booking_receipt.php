@@ -200,38 +200,41 @@ $order = $res->fetch_assoc();
         <?php endif; ?>
 
         <!-- PAYMENT SUMMARY -->
-        <div class="section-title">Payment Summary</div>
+        <?php if (!empty($order['total'])): ?>
+            <div class="section-title">Payment Summary</div>
 
-        <div class="total-row">
-            <span>Total:</span>
-            <span>₱<?= number_format($order['total'], 2) ?></span>
-        </div>
-
-        <?php if (!empty($order['downpayment'])): ?>
             <div class="total-row">
-                <span>Downpayment:</span>
-                <span>₱<?= number_format($order['downpayment'], 2) ?></span>
+                <span>Total:</span>
+                <span>₱<?= number_format($order['total'], 2) ?></span>
             </div>
 
-            <?php if (!empty($order['dp_payment_method'])): ?>
+            <?php if (!empty($order['downpayment'])): ?>
+                <div class="total-row">
+                    <span>Downpayment:</span>
+                    <span>₱<?= number_format($order['downpayment'], 2) ?></span>
+                </div>
+
+                <?php if (!empty($order['dp_payment_method'])): ?>
+                    <div class="detail-row">
+                        <span>DP Payment Method:</span>
+                        <span><?= htmlspecialchars($order['dp_payment_method']) ?></span>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
+
+            <div class="total-row grand-total">
+                <span>Remaining Balance:</span>
+                <span>₱<?= number_format($order['remaining_balance'], 2) ?></span>
+            </div>
+
+            <?php if (!empty($order['payment_method'])): ?>
                 <div class="detail-row">
-                    <span>DP Payment Method:</span>
-                    <span><?= htmlspecialchars($order['dp_payment_method']) ?></span>
+                    <span>Payment Method:</span>
+                    <span><?= htmlspecialchars($order['payment_method']) ?></span>
                 </div>
             <?php endif; ?>
         <?php endif; ?>
 
-        <div class="total-row grand-total">
-            <span>Remaining Balance:</span>
-            <span>₱<?= number_format($order['remaining_balance'], 2) ?></span>
-        </div>
-
-        <?php if (!empty($order['payment_method'])): ?>
-            <div class="detail-row">
-                <span>Payment Method:</span>
-                <span><?= htmlspecialchars($order['payment_method']) ?></span>
-            </div>
-        <?php endif; ?>
 
 
         <!-- FOOTER -->

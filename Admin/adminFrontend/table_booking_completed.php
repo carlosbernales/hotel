@@ -17,6 +17,107 @@ if ($result) {
 }
 ?>
 
+
+<style>
+    .receipt-modal-dialog {
+        max-width: fit-content;
+        width: auto;
+        margin: 1.75rem auto;
+    }
+
+    @media (max-width: 768px) {
+        .receipt-modal-dialog {
+            max-width: 95vw;
+        }
+    }
+
+    #receiptModal .modal-content {
+        width: auto;
+        border-radius: 12px;
+    }
+
+    #receiptModal .modal-body {
+        padding: 0;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+
+    .receipt-container {
+        width: 100%;
+        max-width: 780px;
+        margin: 0 auto;
+    }
+
+    .receipt-container {
+        font-family: "Courier New", monospace;
+        background: #fff;
+        padding: 40px;
+        max-width: 800px;
+        margin: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .receipt-container .header {
+        text-align: center;
+        border-bottom: 2px dashed #333;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .receipt-container .section-title {
+        font-weight: bold;
+        border-bottom: 1px solid #333;
+        margin: 25px 0 10px;
+    }
+
+    .receipt-container .detail-row,
+    .receipt-container .total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        padding: 5px 0;
+    }
+
+    .receipt-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .receipt-container th,
+    .receipt-container td {
+        padding: 8px;
+        border-bottom: 1px dotted #ccc;
+    }
+
+    .receipt-container th {
+        text-align: left;
+    }
+
+    .receipt-container .grand-total {
+        font-size: 18px;
+        font-weight: bold;
+        border-top: 2px solid #333;
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+
+    .receipt-container .footer {
+        text-align: center;
+        font-size: 12px;
+        border-top: 2px dashed #333;
+        margin-top: 40px;
+        padding-top: 20px;
+    }
+
+    .receipt-container .no-data {
+        font-style: italic;
+        color: #777;
+    }
+</style>
+
+
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
@@ -83,14 +184,56 @@ if ($result) {
                                     <span class="badge bg-success">Accepted</span>
                                 <?php endif; ?>
                             </td>
+
+                            <?php
+                            // TABLES
+                            $stmt = $conn->prepare("
+                                SELECT table_name, table_number
+                                FROM orders_table_type
+                                WHERE table_booking_fk_id = ?
+                            ");
+                            $stmt->bind_param("i", $order_id);
+                            $stmt->execute();
+                            $tables = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+
+                            // ITEMS + ADDONS
+                            $stmt = $conn->prepare("SELECT * FROM order_items WHERE order_fk_id = ?");
+                            $stmt->bind_param("i", $order_id);
+                            $stmt->execute();
+                            $itemRes = $stmt->get_result();
+
+                            $items = [];
+                            while ($item = $itemRes->fetch_assoc()) {
+                                $stmt2 = $conn->prepare("SELECT * FROM order_item_addons WHERE order_item_fk_id = ?");
+                                $stmt2->bind_param("i", $item['id']);
+                                $stmt2->execute();
+                                $item['addons'] = $stmt2->get_result()->fetch_all(MYSQLI_ASSOC);
+                                $items[] = $item;
+                            }
+
+                            ?>
                             <td class="d-flex gap-2 align-items-center">
+                                <!-- View Order Summary -->
                                 <button class="btn btn-sm btn-info" data-bs-toggle="modal"
                                     data-bs-target="#viewModal<?= $order_id ?>">
                                     <i class="bi bi-eye"></i> View
                                 </button>
+                                <button class="btn btn-sm btn-warning open-receipt" data-bs-toggle="modal"
+                                    data-bs-target="#receiptModal"
+                                    data-order='<?= json_encode($order, JSON_HEX_APOS | JSON_HEX_QUOT) ?>'
+                                    data-tables='<?= json_encode($tables, JSON_HEX_APOS | JSON_HEX_QUOT) ?>'
+                                    data-items='<?= json_encode($items, JSON_HEX_APOS | JSON_HEX_QUOT) ?>'>
+                                    <i class="bi bi-receipt"></i> Receipt
+                                </button>
+
+
+
                             </td>
 
+
                         </tr>
+
+
 
 
                         <div class="modal fade" id="viewModal<?= $order_id ?>" tabindex="-1">
@@ -310,10 +453,153 @@ if ($result) {
                                 </div>
                             </div>
                         </div>
+
+
                     <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="receiptModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered receipt-modal-dialog">
+
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-body">
+
+                <div class="receipt-container">
+
+                    <!-- HEADER -->
+                    <div class="header">
+                        <h2>Casa Estela Boutique Hotel & Cafe</h2>
+                        <p>Gov B Marasigan St, Calapan City</p>
+                        <p><strong>TABLE BOOKING ACCEPTED RECEIPT</strong></p>
+                        <p>Order ID: <span id="r-order-id"></span></p>
+                        <p>Date: <span id="r-date"></span></p>
+                    </div>
+
+                    <div class="section-title">Customer Information</div>
+                    <div class="detail-row"><span>Name:</span><span id="r-name"></span></div>
+                    <div class="detail-row"><span>Email:</span><span id="r-email"></span></div>
+                    <div class="detail-row"><span>Contact:</span><span id="r-contact"></span></div>
+
+                    <div class="section-title">Table Information</div>
+                    <table id="r-tables"></table>
+
+                    <div class="section-title">Order Items</div>
+                    <table id="r-items"></table>
+
+                    <div id="r-payment"></div>
+
+                    <div class="footer">
+                        <p>Thank you for dining with us!</p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="modal-footer border-0">
+                <button class="btn btn-light fw-bold px-4" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <?php include 'adminFrontend/footer.php'; ?>
+<script>
+    document.querySelectorAll('.open-receipt').forEach(btn => {
+        btn.addEventListener('click', () => {
+
+            const order = JSON.parse(btn.dataset.order);
+            const tables = JSON.parse(btn.dataset.tables);
+            const items = JSON.parse(btn.dataset.items);
+
+            // Header
+            r('r-order-id', order.order_id);
+            r('r-date', new Date(order.date_time).toLocaleString());
+
+            // Customer
+            r('r-name', `${order.firstname} ${order.lastname}`);
+            r('r-email', order.email);
+            r('r-contact', order.contact);
+
+            let tableHTML = '';
+            if (tables.length) {
+                tableHTML += `<tr><th>Table</th><th>Number</th></tr>`;
+                tables.forEach(t => {
+                    tableHTML += `<tr><td>${t.table_name}</td><td>${t.table_number}</td></tr>`;
+                });
+            } else {
+                tableHTML = `<tr><td class="no-data">No table assigned.</td></tr>`;
+            }
+            document.getElementById('r-tables').innerHTML = tableHTML;
+
+            let itemHTML = '';
+            if (items.length) {
+                itemHTML += `<tr><th>Item</th><th>Qty</th><th style="text-align:right;">Price</th></tr>`;
+                items.forEach(i => {
+                    itemHTML += `
+                    <tr>
+                        <td>${i.item_name}</td>
+                        <td>${i.quantity}</td>
+                        <td style="text-align:right;">₱${Number(i.unit_price).toFixed(2)}</td>
+                    </tr>
+                `;
+                    i.addons.forEach(ad => {
+                        itemHTML += `
+                        <tr>
+                            <td style="padding-left:30px;">+ ${ad.addon_name}</td>
+                            <td>${ad.quantity}</td>
+                            <td style="text-align:right;">₱${Number(ad.price).toFixed(2)}</td>
+                        </tr>
+                    `;
+                    });
+                });
+            } else {
+                itemHTML = `<tr><td class="no-data">No items ordered.</td></tr>`;
+            }
+            document.getElementById('r-items').innerHTML = itemHTML;
+
+            let paymentHTML = '';
+            if (order.total) {
+                paymentHTML += `
+                <div class="section-title">Payment Summary</div>
+                <div class="total-row"><span>Total:</span><span>₱${Number(order.total).toFixed(2)}</span></div>
+            `;
+
+                if (order.downpayment) {
+                    paymentHTML += `
+                    <div class="total-row"><span>Downpayment:</span><span>₱${Number(order.downpayment).toFixed(2)}</span></div>
+                `;
+                    if (order.dp_payment_method) {
+                        paymentHTML += `
+                        <div class="detail-row"><span>DP Payment Method:</span><span>${order.dp_payment_method}</span></div>
+                    `;
+                    }
+                }
+
+                paymentHTML += `
+                <div class="total-row grand-total">
+                    <span>Remaining Balance:</span>
+                    <span>₱${Number(order.remaining_balance).toFixed(2)}</span>
+                </div>
+            `;
+
+                if (order.payment_method) {
+                    paymentHTML += `
+                    <div class="detail-row"><span>Payment Method:</span><span>${order.payment_method}</span></div>
+                `;
+                }
+            }
+            document.getElementById('r-payment').innerHTML = paymentHTML;
+        });
+    });
+
+    function r(id, val) {
+        document.getElementById(id).textContent = val ?? '-';
+    }
+</script>

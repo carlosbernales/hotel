@@ -1,9 +1,12 @@
 <?php
 include '../adminBackend/mydb.php';
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-        die("Invalid order ID.");
+        echo json_encode(['success' => false, 'message' => 'Invalid order ID.']);
+        exit;
     }
     $orderId = (int) $_GET['id'];
 
@@ -11,7 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $extraGuestCharge = isset($_POST['extra_guest_charge']) ? (float) $_POST['extra_guest_charge'] : 0.0;
 
     if ($extraGuests < 1 || $extraGuestCharge < 0) {
-        die("Invalid input values.");
+        echo json_encode(['success' => false, 'message' => 'Invalid input values.']);
+        exit;
     }
 
     $sql = "SELECT total_amount, paid_amount, extra_guests, extra_guest_charge 
@@ -22,9 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
     $result = $stmt->get_result();
     $order = $result->fetch_assoc();
-
     if (!$order) {
-        die("Order not found.");
+        echo json_encode(['success' => false, 'message' => 'Order not found.']);
+        exit;
     }
 
     $newExtraGuests = $order['extra_guests'] + $extraGuests;
@@ -45,12 +49,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updateStmt->execute();
 
     if ($updateStmt->affected_rows > 0) {
-        header("Location: ../index.php?event-acp-list");
+        echo json_encode(['success' => true]);
         exit;
     } else {
-        die("Failed to update order.");
+        echo json_encode(['success' => false, 'message' => 'Failed to update order.']);
+        exit;
     }
 } else {
-    die("Invalid request method.");
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    exit;
 }
-?>

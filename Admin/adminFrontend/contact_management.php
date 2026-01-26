@@ -232,8 +232,8 @@ if ($result) {
                                                 <label class="form-label package-label">Description</label>
                                                 <textarea name="description" class="form-control package-input" rows="5"
                                                     required>
-                                                    <?= htmlspecialchars($about['description']) ?>
-                                                </textarea>
+                                                        <?= htmlspecialchars($about['description']) ?>
+                                                    </textarea>
                                             </div>
                                         </div>
                                         <div class="modal-footer">

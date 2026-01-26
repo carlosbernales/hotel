@@ -532,7 +532,13 @@ if ($amenitiesResult->num_rows > 0) {
                         </option>
                     </select>
                 </div>
+
                 <div class="info-item">
+                    <label><i class="fas fa-percent"></i> Discount Type</label>
+                    <input class="form-control" value="<?= $booking['discount_type'] ?>" readonly>
+                </div>
+
+                <div class=" info-item">
                     <label><i class="fas fa-percent"></i> Discount Applied</label>
                     <input class="form-control" id="discountPercentage"
                         value="<?= (int) $booking['discount_percentage'] ?>%" readonly>
