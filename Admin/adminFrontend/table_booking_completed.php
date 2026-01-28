@@ -225,16 +225,8 @@ if ($result) {
                                     data-items='<?= json_encode($items, JSON_HEX_APOS | JSON_HEX_QUOT) ?>'>
                                     <i class="bi bi-receipt"></i> Receipt
                                 </button>
-
-
-
                             </td>
-
-
                         </tr>
-
-
-
 
                         <div class="modal fade" id="viewModal<?= $order_id ?>" tabindex="-1">
                             <div class="modal-dialog modal-xl modal-dialog-centered">

@@ -1,0 +1,565 @@
+/* Casa Estela Profile Theme */
+.modal-content.casa-estela-theme {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.modal-header-banner {
+  background: #1e1e1e;
+  /* Matches your sidebar */
+  height: 120px;
+  position: relative;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.profile-avatar-wrapper {
+  position: absolute;
+  bottom: -40px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.profile-avatar-wrapper img,
+.profile-avatar-wrapper .placeholder-icon {
+  width: 100px;
+  height: 100px;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: #d4af37;
+  /* Gold accent */
+  object-fit: cover;
+}
+
+.modal-body-custom {
+  padding: 60px 30px 20px 30px;
+}
+
+.form-label-gold {
+  color: #d4af37;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.casa-input {
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 10px;
+  transition: all 0.3s;
+}
+
+.casa-input:focus {
+  border-color: #d4af37;
+  box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+}
+
+.btn-save-gold {
+  background-color: #d4af37;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.btn-save-gold:hover {
+  background-color: #b8962e;
+  color: white;
+}
+
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.user-icon-link {
+  cursor: pointer;
+  color: inherit;
+  text-decoration: none;
+}
+
+.dropdown-menu-custom {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 10px;
+  background-color: white;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.user-dropdown:hover .dropdown-menu-custom,
+.dropdown-menu-custom:hover {
+  display: block;
+}
+
+.dropdown-item-custom {
+  color: #333;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  transition: background-color 0.3s;
+}
+
+.dropdown-item-custom:hover {
+  background-color: #f1f1f1;
+  color: #333;
+}
+
+.dropdown-item-custom i {
+  margin-right: 8px;
+  width: 16px;
+}
+/* --- CASA ESTELA THEME: CONSOLIDATED STYLES --- */
+
+/* 1. Modal Design - Aligned with Dashboard Cards */
+.notification-modal-content {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  background-color: #ffffff;
+  overflow: hidden;
+}
+
+.notification-modal-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #f1f1f1;
+  padding: 1.5rem;
+}
+
+.notification-modal-header .modal-title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #2c2c2c;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.notification-modal-header .modal-title i {
+  color: #d4af37;
+  /* Gold Accent from Dashboard */
+  margin-right: 12px;
+}
+
+/* 2. Detail Sections & Content */
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: #999;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-label i {
+  color: #d4af37;
+}
+
+.detail-content {
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border: 1px solid #eee;
+  color: #444;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* 3. Dropdown & Item Styling */
+.notification-dropdown {
+  min-width: 350px;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+.notification-item {
+  position: relative;
+  padding: 15px 15px 15px 45px;
+  border-bottom: 1px solid #f8f9fa;
+  transition: 0.2s ease;
+}
+
+.notification-item.unread {
+  background-color: #fffef5;
+  border-left: 4px solid #d4af37;
+}
+
+.unread-indicator {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: #d4af37;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
+}
+
+/* 4. Badges & Buttons */
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4d4d;
+  /* Bright red from screenshot */
+  color: white;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: 2px solid white;
+  animation: pulse 2s infinite;
+}
+
+.badge-custom {
+  background-color: #f1f4f9;
+  color: #555;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.btn-theme-close {
+  background: #2c2c2c;
+  color: #fff;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-weight: 600;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-theme-close:hover {
+  background: #d4af37;
+  color: #fff;
+}
+
+/* 5. Utility */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 10px;
+}
+
+/* Notification Modal Styles */
+.notification-modal-content {
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.notification-modal-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px 24px;
+  border-bottom: none;
+}
+
+.notification-modal-header .modal-title {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.notification-modal-header .modal-title i {
+  font-size: 1.2rem;
+}
+
+.notification-modal-header .btn-close {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+
+.notification-modal-header .btn-close:hover {
+  opacity: 1;
+}
+
+/* Notification Bell Badge */
+.notification-bell {
+  position: relative;
+  display: inline-block;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* Notification Dropdown */
+.notification-dropdown {
+  min-width: 320px;
+  max-width: 90vw;
+  width: 380px;
+  max-height: 500px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 0;
+}
+
+@media (max-width: 576px) {
+  .notification-dropdown {
+    width: calc(100vw - 32px);
+    max-width: 380px;
+  }
+}
+
+.notification-dropdown .dropdown-header {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.notification-list {
+  max-height: 400px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+/* Notification Item */
+.notification-item {
+  position: relative;
+  padding: 12px 16px 12px 40px;
+  border-bottom: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: block;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  background-color: white;
+}
+
+.notification-item:hover {
+  background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+  background-color: #fff3cd;
+  border-left: 4px solid #ffc107;
+}
+
+.notification-item.unread:hover {
+  background-color: #ffe69c;
+}
+
+/* Unread Indicator Dot */
+.unread-indicator {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background: #ffc107;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
+  animation: blink 2s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Notification Content */
+.notification-content {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.notif-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: #212529;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.notification-item.unread .notif-title {
+  color: #856404;
+}
+
+.notif-message {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 6px;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+}
+
+.notif-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 6px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.notif-type {
+  font-size: 0.75rem;
+  color: #6c757d;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 60%;
+}
+
+.notif-time {
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Modal Detail Sections */
+.notification-detail {
+  padding: 10px 0;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.detail-label i {
+  color: #667eea;
+  width: 16px;
+}
+
+.detail-content {
+  padding: 12px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #667eea;
+  color: #212529;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Scrollbar Styling */
+.notification-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Ensure no horizontal overflow */
+.notification-dropdown * {
+  box-sizing: border-box;
+}

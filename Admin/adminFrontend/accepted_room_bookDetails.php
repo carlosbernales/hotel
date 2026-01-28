@@ -1190,7 +1190,6 @@ while ($b = $bed_res->fetch_assoc()) {
 </script>
 
 <script>
-    // ----- Casa Estela Inline Alerts -----
     const CasaEstelaAlert = {
         show: function (type, title, message, duration = 5000) {
             const icons = {
@@ -1222,7 +1221,6 @@ while ($b = $bed_res->fetch_assoc()) {
         }
     };
 
-    // ----- Casa Estela Modal System -----
     const CasaEstelaModal = {
         show: function (type, title, message, onConfirm = null, showCancel = false) {
             const icons = {

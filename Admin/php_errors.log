@@ -75527,3 +75527,151 @@ Stack trace:
 [26-Jan-2026 11:01:11 UTC] Database connected successfully to: hotelms
 [26-Jan-2026 11:02:36 UTC] Database connected successfully to: hotelms
 [26-Jan-2026 11:02:36 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:40:11 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:41:50 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:41:57 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:44:54 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:44:55 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:45:05 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:45:23 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:45:26 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:46:27 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:46:29 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:46:59 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:47:02 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:07 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:09 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:16 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:18 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:19 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:19 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:20 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:22 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:23 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:48:25 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:49:13 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:49:13 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:49:20 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 135
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 139
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 140
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 145
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 152
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 158
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 164
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 170
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 177
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 184
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 191
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 198
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 204
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 210
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 217
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 224
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 230
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 236
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 243
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 250
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 256
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 262
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 268
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 274
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 281
+[27-Jan-2026 13:49:20 Asia/Manila] PHP Warning:  Undefined variable $currentPage in C:\laragon\www\hotel\Admin\message.php on line 288
+[27-Jan-2026 05:49:21 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:49:23 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 05:49:24 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:06:14 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:06:17 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:06:19 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:06:20 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:06:24 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:06:25 UTC] Database connected successfully to: hotelms
+[27-Jan-2026 06:50:42 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:52:54 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:53:10 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:53:17 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:54:41 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:54:45 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:54:49 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:55:16 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:55:42 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:55:45 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:55:57 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:56:22 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:56:33 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:56:37 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:58:59 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:59:01 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 07:59:27 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:04:31 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:05:48 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 251
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 251
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 251
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 259
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 259
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 259
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 259
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 263
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 263
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 263
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 267
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 267
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 267
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 274
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 274
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 274
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 278
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 278
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  strtotime(): Passing null to parameter #1 ($datetime) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 278
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 282
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 282
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 286
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 286
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 286
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 286
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 287
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 287
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 291
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 291
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 383
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 383
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 383
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 383
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 385
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 385
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 393
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 393
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 393
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 397
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 397
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  number_format(): Passing null to parameter #1 ($num) of type float is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 397
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Undefined variable $booking in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 401
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 401
+[28-Jan-2026 16:05:49 Asia/Manila] PHP Deprecated:  htmlspecialchars(): Passing null to parameter #1 ($string) of type string is deprecated in C:\laragon\www\hotel\Admin\adminFrontend\finished_room_bookings_list.php on line 401
+[28-Jan-2026 08:07:43 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:08:02 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:09:36 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:09:50 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:09:54 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:09:58 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:10:14 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:10:16 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:12:15 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:13:12 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:13:51 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:14:54 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:15:05 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:15:55 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:16:41 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:17:37 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:17:42 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:19:04 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:19:32 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:20:29 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:21:49 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:21:59 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:22:11 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:22:17 UTC] Database connected successfully to: hotelms
+[28-Jan-2026 08:22:20 UTC] Database connected successfully to: hotelms

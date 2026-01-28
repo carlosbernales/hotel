@@ -94,6 +94,11 @@ while ($g = $resGuests->fetch_assoc()) {
                                     data-bs-target="#viewModal<?= $id ?>">
                                     <i class="bi bi-eye"></i>
                                 </button>
+                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                    data-bs-target="#receiptModal<?= $id ?>">
+                                    <i class="bi bi-receipt"></i> Receipt
+                                </button>
+
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -103,6 +108,378 @@ while ($g = $resGuests->fetch_assoc()) {
         </div>
     </div>
 </div>
+
+<style>
+    .receipt-modal * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Courier New', monospace;
+    }
+
+    .receipt-modal .receipt-container {
+        max-width: 800px;
+        margin: 0 auto;
+        background-color: white;
+        padding: 40px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .receipt-modal .header {
+        text-align: center;
+        border-bottom: 2px dashed #333;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .receipt-modal .header h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+    }
+
+    .receipt-modal .header p {
+        font-size: 12px;
+        margin: 3px 0;
+    }
+
+    .receipt-modal .section-title {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 20px 0 10px 0;
+        text-transform: uppercase;
+        border-bottom: 1px solid #333;
+        padding-bottom: 5px;
+    }
+
+    .receipt-modal .detail-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        font-size: 14px;
+    }
+
+    .receipt-modal .detail-label {
+        font-weight: bold;
+    }
+
+    .receipt-modal table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 15px 0;
+        font-size: 13px;
+    }
+
+    .receipt-modal table th {
+        text-align: left;
+        border-bottom: 1px solid #333;
+        padding: 8px 5px;
+        font-weight: bold;
+    }
+
+    .receipt-modal table td {
+        padding: 8px 5px;
+        border-bottom: 1px dotted #ccc;
+    }
+
+    .receipt-modal .total-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 2px dashed #333;
+    }
+
+    .receipt-modal .total-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 15px;
+    }
+
+    .receipt-modal .total-row.grand-total {
+        font-size: 18px;
+        font-weight: bold;
+        border-top: 2px solid #333;
+        padding-top: 15px;
+        margin-top: 10px;
+    }
+
+    .receipt-modal .footer {
+        text-align: center;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 2px dashed #333;
+        font-size: 12px;
+    }
+
+    .receipt-modal .no-data {
+        font-style: italic;
+        color: #666;
+        font-size: 13px;
+    }
+</style>
+
+<?php foreach ($bookings as $id => $data): ?>
+    <?php $booking = $data['booking']; ?>
+    <div class="modal fade" id="receiptModal<?= $id ?>" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" style="width: auto; max-width: 800px;">
+            <div class="modal-content receipt-modal">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-receipt"></i> Booking Receipt – <?= $b['booking_reference'] ?>
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-0">
+                    <div class="receipt-container">
+                        <!-- HEADER -->
+                        <div class="header">
+                            <h1>Casa Estela Boutique Hotel & Cafe</h1>
+                            <p>Gov B Marasigan St, Calapan City, Oriental Mindoro</p>
+                            <p>Phone: 0908 747 4892 | Email: casaestelaboutiquehotelandcafe@gmail.com</p>
+                            <p style="margin-top: 15px; font-size: 14px;"><strong>BOOKING RECEIPT</strong></p>
+                            <p>Reference: <?= htmlspecialchars($booking['booking_reference']) ?></p>
+                            <p>Date Issued: <?= date("F j, Y") ?></p>
+                        </div>
+
+                        <!-- GUEST INFORMATION -->
+                        <div class="section-title">Guest Information</div>
+                        <div class="detail-row">
+                            <span class="detail-label">Name:</span>
+                            <span><?= htmlspecialchars($booking['first_name'] . ' ' . $booking['last_name']) ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Email:</span>
+                            <span><?= htmlspecialchars($booking['email']) ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Contact:</span>
+                            <span><?= htmlspecialchars($booking['contact']) ?></span>
+                        </div>
+
+                        <!-- BOOKING INFORMATION -->
+                        <div class="section-title">Booking Information</div>
+                        <?php
+                        $stmt = $conn->prepare("SELECT check_in, check_out FROM booking_check_inout WHERE booking_fk_id = ?");
+                        $stmt->bind_param("i", $booking['booking_id']);
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+                        $original_check_in = $original_check_out = null;
+                        if ($res->num_rows > 0) {
+                            $row = $res->fetch_assoc();
+                            $original_check_in = $row['check_in'];
+                            $original_check_out = $row['check_out'];
+                        }
+
+                        // Latest reschedule
+                        $stmt = $conn->prepare("SELECT check_in, check_out FROM reschedule_bookings WHERE booking_fk_id = ? ORDER BY date_resched DESC LIMIT 1");
+                        $stmt->bind_param("i", $booking['booking_id']);
+                        $stmt->execute();
+                        $res = $stmt->get_result();
+                        $reschedCheckIn = $reschedCheckOut = null;
+                        if ($res->num_rows > 0) {
+                            $row = $res->fetch_assoc();
+                            $reschedCheckIn = $row['check_in'];
+                            $reschedCheckOut = $row['check_out'];
+                        }
+
+                        $actualCheckIn = date('Y-m-d', strtotime($booking['check_in']));
+                        $actualCheckOut = date('Y-m-d', strtotime($booking['check_out']));
+                        $bookedCheckIn = $original_check_in ? date('Y-m-d', strtotime($original_check_in)) : null;
+                        $bookedCheckOut = $original_check_out ? date('Y-m-d', strtotime($original_check_out)) : null;
+                        ?>
+
+                        <?php if ($bookedCheckIn && $bookedCheckIn !== $actualCheckIn): ?>
+                            <div class="detail-row">
+                                <span class="detail-label">Booked Check-in:</span>
+                                <span><?= date("F j, Y", strtotime($bookedCheckIn)) ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($bookedCheckOut && $bookedCheckOut !== $actualCheckOut): ?>
+                            <div class="detail-row">
+                                <span class="detail-label">Booked Check-out:</span>
+                                <span><?= date("F j, Y", strtotime($bookedCheckOut)) ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($reschedCheckIn && $reschedCheckIn !== $actualCheckIn): ?>
+                            <div class="detail-row">
+                                <span class="detail-label">Reschedule Check-in:</span>
+                                <span><?= date("F j, Y", strtotime($reschedCheckIn)) ?></span>
+                            </div>
+                        <?php endif; ?>
+                        <?php if ($reschedCheckOut && $reschedCheckOut !== $actualCheckOut): ?>
+                            <div class="detail-row">
+                                <span class="detail-label">Reschedule Check-out:</span>
+                                <span><?= date("F j, Y", strtotime($reschedCheckOut)) ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Check-in:</span>
+                            <span>
+                                <?= date("F j, Y", strtotime($booking['check_in'])) ?>
+                                <?php if ($bookedCheckIn && $actualCheckIn < $bookedCheckIn)
+                                    echo "<strong style='color:green;'>(Advance Check-in)</strong>"; ?>
+                            </span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Check-out:</span>
+                            <span>
+                                <?= date("F j, Y", strtotime($booking['check_out'])) ?>
+                                <?php if ($bookedCheckOut && $actualCheckOut > $bookedCheckOut)
+                                    echo "<strong style='color:orange;'>(Extended Booking)</strong>"; ?>
+                            </span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Number of Nights:</span>
+                            <span><?= $booking['nights'] ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Number of Guests:</span>
+                            <span><?= $booking['number_of_guests'] ?> (<?= $booking['num_adults'] ?> Adults,
+                                <?= $booking['num_children'] ?> Children)</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Room Quantity:</span>
+                            <span><?= $booking['room_quantity'] ?></span>
+                        </div>
+
+                        <!-- BOOKED ROOMS -->
+                        <div class="section-title">Booked Rooms</div>
+                        <?php if (!empty($data['rooms'])): ?>
+                            <table>
+                                <tr>
+                                    <th>Room Type</th>
+                                    <th>Room Number</th>
+                                    <th>Floor</th>
+                                    <th style="text-align:right;">Price</th>
+                                </tr>
+                                <?php foreach ($data['rooms'] as $room): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($room['room_type_name']) ?></td>
+                                        <td><?= htmlspecialchars($room['room_number'] ?? 'N/A') ?></td>
+                                        <td><?= htmlspecialchars($room['floor_number'] ?? 'N/A') ?></td>
+                                        <td style="text-align:right;">₱<?= number_format($room['price'], 2) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        <?php else: ?>
+                            <p class="no-data">No rooms booked</p>
+                        <?php endif; ?>
+
+                        <!-- AMENITIES -->
+                        <div class="section-title">Amenities</div>
+                        <?php if (!empty($data['amenities'])): ?>
+                            <table>
+                                <tr>
+                                    <th>Amenity</th>
+                                    <th>Quantity</th>
+                                    <th style="text-align:right;">Price</th>
+                                </tr>
+                                <?php foreach ($data['amenities'] as $amenity): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($amenity['amenity_name']) ?></td>
+                                        <td><?= $amenity['quantity'] ?></td>
+                                        <td style="text-align:right;">₱<?= number_format($amenity['price'], 2) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        <?php else: ?>
+                            <p class="no-data">No amenities added</p>
+                        <?php endif; ?>
+
+                        <!-- ROOM TRANSFERS -->
+                        <?php if (!empty($data['transfers'])): ?>
+                            <div class="section-title">Room Transfers</div>
+                            <table>
+                                <tr>
+                                    <th>Room Type</th>
+                                    <th>Transfer Date</th>
+                                    <th>Reason</th>
+                                    <th style="text-align:right;">Price</th>
+                                </tr>
+                                <?php foreach ($data['transfers'] as $transfer): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($transfer['room_type_name']) ?></td>
+                                        <td><?= date("F j, Y", strtotime($transfer['transfer_date'])) ?></td>
+                                        <td><?= htmlspecialchars($transfer['reason']) ?></td>
+                                        <td style="text-align:right;">₱<?= number_format($transfer['price'], 2) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        <?php endif; ?>
+
+                        <!-- GUEST LIST -->
+                        <div class="section-title">Guest List</div>
+                        <?php if (!empty($data['guests'])): ?>
+                            <table>
+                                <tr>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Guest Type</th>
+                                </tr>
+                                <?php foreach ($data['guests'] as $guest): ?>
+                                    <tr>
+                                        <td><?= htmlspecialchars($guest['first_name']) ?></td>
+                                        <td><?= htmlspecialchars($guest['last_name']) ?></td>
+                                        <td><?= htmlspecialchars($guest['guest_type']) ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </table>
+                        <?php else: ?>
+                            <p class="no-data">No guests added</p>
+                        <?php endif; ?>
+
+                        <!-- RESCHEDULE HISTORY -->
+                        <?php if (!empty($data['reschedules'])): ?>
+                            <div class="section-title">Reschedule History</div>
+                            <?php foreach ($data['reschedules'] as $resched): ?>
+                                <p style="font-size:13px; line-height:1.6; margin:10px 0;">
+                                    Rescheduled on <strong><?= date("F j, Y", strtotime($resched['date_resched'])) ?></strong>:
+                                    from <?= date("F j, Y", strtotime($resched['check_in'])) ?> -
+                                    <?= date("F j, Y", strtotime($resched['check_out'])) ?>.
+                                    Reason: <em><?= htmlspecialchars($resched['reason']) ?></em>
+                                </p>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+
+                        <!-- PAYMENT SUMMARY -->
+                        <div class="total-section">
+                            <div class="section-title">Payment Summary</div>
+                            <div class="total-row">
+                                <span>Subtotal:</span>
+                                <span>₱<?= number_format($booking['total_amount'] + $booking['discount_amount'], 2) ?></span>
+                            </div>
+                            <?php if ($booking['discount_percentage'] > 0): ?>
+                                <div class="total-row">
+                                    <span>Discount (<?= $booking['discount_percentage'] ?>%):</span>
+                                    <span>-₱<?= number_format($booking['discount_amount'], 2) ?></span>
+                                </div>
+                            <?php endif; ?>
+                            <div class="total-row grand-total">
+                                <span>Total Amount:</span>
+                                <span>₱<?= number_format($booking['total_amount'], 2) ?></span>
+                            </div>
+                            <div class="total-row" style="font-weight:bold;">
+                                <span>Remaining Balance:</span>
+                                <span>₱<?= number_format($booking['remaining_balance'], 2) ?></span>
+                            </div>
+                            <div class="detail-row" style="margin-top:15px;">
+                                <span class="detail-label">Payment Method:</span>
+                                <span><?= htmlspecialchars($booking['payment_method']) ?></span>
+                            </div>
+                        </div>
+
+                        <div class="footer">
+                            <p>Thank you for your booking!</p>
+                            <p>For inquiries, please contact us at casaestelaboutiquehotelandcafe@gmail.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
+
 
 
 <?php
@@ -428,17 +805,18 @@ function getRoomInfo($conn, $room_number_fk_id)
                                 <h6 class="mb-0"><i class="fas fa-concierge-bell"></i> Reschedule Details</h6>
                             </div>
                             <div class="card-body p-0">
-                                <textarea class="form-control border-0" rows="3" readonly> <?php
-                                while ($r = $resched_res->fetch_assoc()) {
-                                    $oldCI = date("F j, Y", strtotime($r['check_in']));
-                                    $oldCO = date("F j, Y", strtotime($r['check_out']));
-                                    $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                    $reason = $r['reason'];
+                                <textarea class="form-control border-0" rows="3"
+                                    readonly> <?php
+                                    while ($r = $resched_res->fetch_assoc()) {
+                                        $oldCI = date("F j, Y", strtotime($r['check_in']));
+                                        $oldCO = date("F j, Y", strtotime($r['check_out']));
+                                        $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                        $reason = $r['reason'];
 
-                                    echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
-                                }
-                                ?>
-                                                                        </textarea>
+                                        echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                                    }
+                                    ?>
+                                                                                                                                                                                                                                                                        </textarea>
                             </div>
                         </div>
                     <?php endif; ?>
