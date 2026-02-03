@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Jan 26, 2026 at 11:44 AM
+-- Generation Time: Feb 03, 2026 at 09:08 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -1916,9 +1916,9 @@ CREATE TABLE `offers` (
 --
 
 INSERT INTO `offers` (`id`, `title`, `image`, `discount`, `description`, `active`, `created_at`, `updated_at`) VALUES
-(1, 'Weekend Getaway', 'images/offer_67f946a852068.jpg', '12', 'Perfect weekend escape with breakfast included', 1, '2025-03-05 11:14:57', '2026-01-23 02:30:08'),
+(1, 'Weekend Getaway', 'images/offer_67f946a852068.jpg', '12', 'Perfect weekend escape with breakfast included', 0, '2025-03-05 11:14:57', '2026-02-03 05:56:54'),
 (2, 'Family Time', 'images/couple.jpg', '0% OFF', 'Special rate for family stays with complimentary activities', 1, '2025-03-05 11:14:57', '2026-01-26 11:01:18'),
-(3, 'Events', 'images/4.jpg', '12', 'Stay longer, save more with our weekly rates', 1, '2025-03-05 11:14:57', '2026-01-26 11:00:37');
+(3, 'Events', 'images/4.jpg', '12', 'Stay longer, save more with our weekly rates', 0, '2025-03-05 11:14:57', '2026-02-03 05:57:33');
 
 -- --------------------------------------------------------
 
@@ -2852,6 +2852,41 @@ INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `img1`, `img2`, `img3
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `terms_and_conditions`
+--
+
+CREATE TABLE `terms_and_conditions` (
+  `id` int NOT NULL,
+  `hotel_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `title` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
+  `rule_text` text COLLATE utf8mb4_general_ci NOT NULL,
+  `display_order` int DEFAULT '1',
+  `is_active` tinyint(1) DEFAULT '1',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `terms_and_conditions`
+--
+
+INSERT INTO `terms_and_conditions` (`id`, `hotel_name`, `title`, `rule_text`, `display_order`, `is_active`, `created_at`, `updated_at`) VALUES
+(1, 'Casa Estela Boutique Hotel & Cafe', 'Hotel Day & Check-out', 'A hotel day starts at any time after 1:00 PM during the day of arrival and ends at 11:00 AM of the following day. Late check-outs shall be charged at Php 200.00 per hour for a maximum of two hours extension only. Exceeding beyond 2:00 PM will be considered as a one-night stay and will be charged automatically.', 1, 1, '2026-01-13 11:39:25', '2026-02-03 08:32:49'),
+(2, 'Casa Estela Boutique Hotel & Cafe', 'Breakfast Schedule', 'Breakfast will be served between 7:00 AM and 8:00 AM only.', 2, 1, '2026-01-13 11:39:25', '2026-02-03 05:57:15'),
+(3, 'Casa Estela Boutique Hotel & Cafe', 'Security Deposit', 'A refundable deposit of Php 500.00 is required upon issuance of the room key and card.', 3, 1, '2026-01-13 11:39:25', '2026-02-03 05:53:27'),
+(4, 'Casa Estela Boutique Hotel & Cafe', 'Extra Amenities', 'Request for an extra pillow, duvet, bath towel or bath mat will incur an additional charge.', 4, 1, '2026-01-13 11:39:25', '2026-02-03 05:58:26'),
+(5, 'Casa Estela Boutique Hotel & Cafe', 'Room Key Policy', 'Kindly deposit your room key and card at the front desk whenever you leave the hotel premises.', 5, 1, '2026-01-13 11:39:25', '2026-02-03 05:58:27'),
+(6, 'Casa Estela Boutique Hotel & Cafe', 'Energy Saving', 'Kindly turn-off lights, water supply fixtures and electrical appliances before leaving the room and when not in use.', 6, 1, '2026-01-13 11:39:25', '2026-02-03 05:59:35'),
+(7, 'Casa Estela Boutique Hotel & Cafe', 'Smoking Policy', 'Smoking inside the room is strictly prohibited. If found, a penalty of Php 500.00 will be imposed.', 7, 1, '2026-01-13 11:39:25', '2026-02-03 05:59:36'),
+(8, 'Casa Estela Boutique Hotel & Cafe', 'Loss & Valuables', 'The management will not be held liable in any case of loss in personal property. A security box is available at the front desk where you can deposit your valuables. However, the management has the right to refuse to store money and other belongings if they pose a threat to safety, exceed the hotel standard value, or take up too much space.', 8, 1, '2026-01-13 11:39:25', '2026-02-03 05:59:40'),
+(9, 'Casa Estela Boutique Hotel & Cafe', 'Property Damage', 'Damage to any hotel equipment, fixtures, or property shall result in corresponding financial charges.', 9, 1, '2026-01-13 11:39:25', '2026-02-03 05:59:38'),
+(10, 'Casa Estela Boutique Hotel & Cafe', 'Lost & Found', 'Left and unclaimed items will be kept for a period of one (1) month from your departure date, unless otherwise instructed.', 10, 1, '2026-01-13 11:39:25', '2026-02-03 05:58:29'),
+(11, 'Casa Estela Boutique Hotel & Cafe', 'Discount Policy', 'PWD and Senior Citizen discounts are applicable to cash payments only.', 11, 1, '2026-01-13 11:39:25', '2026-01-13 11:39:25'),
+(12, 'Casa Estela Boutique Hotel & Cafe', 'Closing', 'Thank you for your cooperation.', 12, 1, '2026-01-13 11:39:25', '2026-01-13 11:39:25');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `userss`
 --
 
@@ -3336,6 +3371,12 @@ ALTER TABLE `table_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `terms_and_conditions`
+--
+ALTER TABLE `terms_and_conditions`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `userss`
 --
 ALTER TABLE `userss`
@@ -3630,6 +3671,12 @@ ALTER TABLE `table_packages`
 --
 ALTER TABLE `table_types`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `terms_and_conditions`
+--
+ALTER TABLE `terms_and_conditions`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `userss`

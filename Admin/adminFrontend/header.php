@@ -650,7 +650,7 @@ $profileImg = !empty($user['profile_photo'])
 
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['offers.php', 'contact_management.php', 'room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php', 'facilities_management.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['terms_and_condition.php', 'offers.php', 'contact_management.php', 'room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php', 'facilities_management.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-cogs"></i> Settings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -703,6 +703,13 @@ $profileImg = !empty($user['profile_photo'])
                 <div class="sidebar-submenu">
                     <a href="index.php?offers" class="<?php echo ($currentPage == 'offers.php') ? 'active' : ''; ?>">
                         <i class="fas fa-address-book"></i> Offers
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?terms-condition"
+                        class="<?php echo ($currentPage == 'terms_and_condition.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-address-book"></i> Terms and Condition
                     </a>
                 </div>
 
