@@ -833,100 +833,99 @@ function getRoomInfo($conn, $room_number_fk_id)
                                 <h6 class="mb-0"><i class="fas fa-concierge-bell"></i> Reschedule Details</h6>
                             </div>
                             <div class="card-body p-0">
-                                <textarea class="form-control border-0" rows="3"
-                                    readonly> <?php
-                                    while ($r = $resched_res->fetch_assoc()) {
-                                        $oldCI = date("F j, Y", strtotime($r['check_in']));
-                                        $oldCO = date("F j, Y", strtotime($r['check_out']));
-                                        $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
-                                        $reason = $r['reason'];
+                                <textarea class="form-control border-0" rows="3" readonly> <?php
+                                while ($r = $resched_res->fetch_assoc()) {
+                                    $oldCI = date("F j, Y", strtotime($r['check_in']));
+                                    $oldCO = date("F j, Y", strtotime($r['check_out']));
+                                    $dateRes = date("F j, Y g:i A", strtotime($r['date_resched']));
+                                    $reason = $r['reason'];
 
-                                        echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
-                                    }
-                                    ?>
-                                                                                                                                                                                                                                                                                                                        </textarea>
+                                    echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
+                                }
+                                ?>
+                                                                                                                                                                                                                                                                                                                                </textarea>
+                                    </div>
+                                </div>
+                        <?php endif; ?>
+
+                        <!-- BOOKED ROOMS TABLE -->
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-header bg-dark text-warning">
+                                <h6 class="mb-0"><i class="bi bi-door-open"></i> Booked Rooms</h6>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Room Type</th>
+                                                <th>Price</th>
+                                                <th>Room Number</th>
+                                                <th>Floor Number</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (!empty($data['rooms'])): ?>
+                                                    <?php foreach ($data['rooms'] as $room): ?>
+                                                            <tr>
+                                                                <td class="fw-semibold"><?= $room['room_type_name'] ?></td>
+                                                                <td>₱<?= number_format($room['price'], 2) ?></td>
+                                                                <td><?= $room['room_number'] ?? 'N/A' ?></td>
+                                                                <td><?= $room['floor_number'] ?? 'N/A' ?></td>
+                                                            </tr>
+                                                    <?php endforeach; ?>
+                                            <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="4" class="text-center text-muted py-3">No rooms found
+                                                        </td>
+                                                    </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    <?php endif; ?>
 
-                    <!-- BOOKED ROOMS TABLE -->
-                    <div class="card mb-3 border-0 shadow-sm">
-                        <div class="card-header bg-dark text-warning">
-                            <h6 class="mb-0"><i class="bi bi-door-open"></i> Booked Rooms</h6>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Room Type</th>
-                                            <th>Price</th>
-                                            <th>Room Number</th>
-                                            <th>Floor Number</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (!empty($data['rooms'])): ?>
-                                            <?php foreach ($data['rooms'] as $room): ?>
-                                                <tr>
-                                                    <td class="fw-semibold"><?= $room['room_type_name'] ?></td>
-                                                    <td>₱<?= number_format($room['price'], 2) ?></td>
-                                                    <td><?= $room['room_number'] ?? 'N/A' ?></td>
-                                                    <td><?= $room['floor_number'] ?? 'N/A' ?></td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
-                                            <tr>
-                                                <td colspan="4" class="text-center text-muted py-3">No rooms found
-                                                </td>
-                                            </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
+                        <!-- GUEST LIST TABLE -->
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-header bg-dark text-warning">
+                                <h6 class="mb-0"><i class="bi bi-people-fill"></i> Guest List</h6>
                             </div>
-                        </div>
-                    </div>
-
-                    <!-- GUEST LIST TABLE -->
-                    <div class="card border-0 shadow-sm">
-                        <div class="card-header bg-dark text-warning">
-                            <h6 class="mb-0"><i class="bi bi-people-fill"></i> Guest List</h6>
-                        </div>
-                        <div class="card-body p-0">
-                            <div class="table-responsive">
-                                <table class="table table-hover mb-0">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>First Name</th>
-                                            <th>Last Name</th>
-                                            <th>Guest Type</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php if (!empty($data['guests'])): ?>
-                                            <?php foreach ($data['guests'] as $guest): ?>
-                                                <tr>
-                                                    <td><?= $guest['first_name'] ?></td>
-                                                    <td><?= $guest['last_name'] ?></td>
-                                                    <td><span class="badge bg-secondary"><?= ucfirst($guest['guest_type']) ?></span>
-                                                    </td>
-                                                </tr>
-                                            <?php endforeach; ?>
-                                        <?php else: ?>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover mb-0">
+                                        <thead class="table-light">
                                             <tr>
-                                                <td colspan="3" class="text-center text-muted py-3">No guests found
-                                                </td>
+                                                <th>First Name</th>
+                                                <th>Last Name</th>
+                                                <th>Guest Type</th>
                                             </tr>
-                                        <?php endif; ?>
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <?php if (!empty($data['guests'])): ?>
+                                                    <?php foreach ($data['guests'] as $guest): ?>
+                                                            <tr>
+                                                                <td><?= $guest['first_name'] ?></td>
+                                                                <td><?= $guest['last_name'] ?></td>
+                                                                <td><span class="badge bg-secondary"><?= ucfirst($guest['guest_type']) ?></span>
+                                                                </td>
+                                                            </tr>
+                                                    <?php endforeach; ?>
+                                            <?php else: ?>
+                                                    <tr>
+                                                        <td colspan="3" class="text-center text-muted py-3">No guests found
+                                                        </td>
+                                                    </tr>
+                                            <?php endif; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 <?php endforeach; ?>
 
 
