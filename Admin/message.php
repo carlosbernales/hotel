@@ -126,9 +126,15 @@ if ($selectedUserId > 0) {
 
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <img src="https://via.placeholder.com/80/D4AF37/2c2c2c?text=CE" alt="Logo">
-            <h5>Admin</h5>
+            <?php
+            $sidebarProfile = !empty($user['profile_photo'])
+                ? "../Admin/adminBackend/user_photo/" . htmlspecialchars($user['profile_photo'])
+                : "../Admin/adminBackend/user_photo/default.png";
+            ?>
+            <img src="<?= $sidebarProfile ?>" alt="Profile Photo" class="rounded-circle" width="80" height="80">
+            <h5><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></h5>
         </div>
+
         <div class="sidebar-menu">
 
             <a href="index.php?admin-dashboard"
@@ -136,13 +142,39 @@ if ($selectedUserId > 0) {
                 <i class="fas fa-tachometer-alt"></i>Dashboard
             </a>
 
-            <a href="<?php echo ($currentPage == 'customers.php') ? 'javascript:void(0)' : 'customers.php'; ?>"
-                class="<?php echo ($currentPage == 'customers.php') ? 'active' : ''; ?>">
-                <i class="fas fa-users"></i> Customer Info
+            <div
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['room_report.php', 'sales_report.php']) ? 'active' : ''; ?>">
+                <a href="#" class="dropdown-toggle">
+                    <span><i class="fas fa-chart-bar"></i> Reports</span>
+                    <i class="fas fa-chevron-down dropdown-icon"></i>
+                </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?sales-report"
+                        class="<?php echo ($currentPage == 'sales_report.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-chart-line"></i> Sales Report
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?room-report"
+                        class="<?php echo ($currentPage == 'room_report.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-door-open"></i> Room Reports
+                    </a>
+                </div>
+            </div>
+
+
+            <a href="index.php?users" class="<?php echo ($currentPage == 'users.php') ? 'active' : ''; ?>">
+                <i class="fas fa-users"></i> Users
+            </a>
+
+            <a href="index.php?feedbacks" class="<?php echo ($currentPage == 'feedback.php') ? 'active' : ''; ?>">
+                <i class="fas fa-star"></i> Reviews
             </a>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['rejected_room_bookings_list.php', 'pending_room_bookings_list.php', 'accepted_room_bookings_list.php', 'room_booking_list.php', 'finished_room_bookings_list.php', 'checkInDetails_room_booking.php', 'accepted_room_bookDetails.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-bed"></i> Room Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -171,47 +203,97 @@ if ($selectedUserId > 0) {
                         <i class="fas fa-check-double"></i> Finished
                     </a>
                 </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?rejected-room-bookings"
+                        class="<?php echo ($currentPage == 'rejected_room_bookings_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-exclamation-circle"></i>
+                        Rejected
+                    </a>
+                </div>
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['table_booking_accepted.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['table_booking_completed.php', 'table_booking_rejected.php', 'table_booking_pending.php', 'table_booking_accepted.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-chair"></i> Table Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table-booking-pend"
+                        class="<?php echo ($currentPage == 'table_booking_pending.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-hourglass-half"></i> Pending
+                    </a>
+                </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?table-booking-acptd"
                         class="<?php echo ($currentPage == 'table_booking_accepted.php') ? 'active' : ''; ?>">
                         <i class="fas fa-check-circle"></i> Accepted
                     </a>
                 </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table-booking-completed"
+                        class="<?php echo ($currentPage == 'table_booking_completed.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-clipboard-check"></i> Completed
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?table-booking-rejected"
+                        class="<?php echo ($currentPage == 'table_booking_rejected.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </a>
+                </div>
+
             </div>
 
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['event_accepted_booking.php', 'event_ongoing_booking.php', 'event_completed_booking.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['event_rejected_list.php', 'event_pending_booking.php', 'event_accepted_booking.php', 'event_ongoing_booking.php', 'event_completed_booking.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-calendar-alt"></i> Event Bookings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
                 </a>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?event-pend-list"
+                        class="<?php echo ($currentPage == 'event_pending_booking.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-hourglass-start"></i> Pending
+                    </a>
+                </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?event-acp-list"
                         class="<?php echo ($currentPage == 'event_accepted_booking.php') ? 'active' : ''; ?>">
                         <i class="fas fa-check-circle"></i> Accepted
                     </a>
                 </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?event-ongoing"
                         class="<?php echo ($currentPage == 'event_ongoing_booking.php') ? 'active' : ''; ?>">
                         <i class="fas fa-spinner"></i> Ongoing
                     </a>
                 </div>
+
                 <div class="sidebar-submenu">
                     <a href="index.php?event-complete-list"
                         class="<?php echo ($currentPage == 'event_completed_booking.php') ? 'active' : ''; ?>">
                         <i class="fas fa-check-double"></i> Completed
                     </a>
                 </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?event-rej-list"
+                        class="<?php echo ($currentPage == 'event_rejected_list.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-times-circle"></i> Rejected
+                    </a>
+                </div>
             </div>
+
+
 
             <div
                 class="sidebar-dropdown <?php echo in_array($currentPage, ['room_booking.php', 'table_booking.php', 'event_booking.php']) ? 'active' : ''; ?>">
@@ -239,8 +321,13 @@ if ($selectedUserId > 0) {
                 </div>
             </div>
 
+            <a href="index.php?staff-management" class="<?php echo ($currentPage == 'staffs.php') ? 'active' : ''; ?>">
+                <i class="fas fa-users"></i> Staff Management
+            </a>
+
+
             <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['contact_management.php', 'room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php', 'facilities_management.php']) ? 'active' : ''; ?>">
+                class="sidebar-dropdown <?php echo in_array($currentPage, ['terms_and_condition.php', 'offers.php', 'contact_management.php', 'room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php', 'facilities_management.php']) ? 'active' : ''; ?>">
                 <a href="#" class="dropdown-toggle">
                     <span><i class="fas fa-cogs"></i> Settings</span>
                     <i class="fas fa-chevron-down dropdown-icon"></i>
@@ -272,23 +359,37 @@ if ($selectedUserId > 0) {
                 <div class="sidebar-submenu">
                     <a href="index.php?event_management"
                         class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-alt"></i> Event Management
+                        <i class="fas fa-calendar-check"></i> Event Management
                     </a>
                 </div>
 
                 <div class="sidebar-submenu">
                     <a href="index.php?facilities"
                         class="<?php echo ($currentPage == 'facilities_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-alt"></i> Facility Management
+                        <i class="fas fa-building"></i> Facility Management
                     </a>
                 </div>
 
                 <div class="sidebar-submenu">
                     <a href="index.php?contact_management"
                         class="<?php echo ($currentPage == 'contact_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-alt"></i> Contact Management
+                        <i class="fas fa-address-book"></i> Contact and About Us Management
                     </a>
                 </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?offers" class="<?php echo ($currentPage == 'offers.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-address-book"></i> Offers
+                    </a>
+                </div>
+
+                <div class="sidebar-submenu">
+                    <a href="index.php?terms-condition"
+                        class="<?php echo ($currentPage == 'terms_and_condition.php') ? 'active' : ''; ?>">
+                        <i class="fas fa-address-book"></i> Terms and Condition
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>

@@ -108,129 +108,157 @@ while ($g = $resGuests->fetch_assoc()) {
         </div>
     </div>
 </div>
-
 <style>
-    .receipt-modal * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+    /* ===== RECEIPT BASE STYLE ===== */
+    .receipt-modal,
+    .receipt-print {
         font-family: 'Courier New', monospace;
+        color: #000;
     }
 
-    .receipt-modal .receipt-container {
+    .receipt-container {
         max-width: 800px;
-        margin: 0 auto;
-        background-color: white;
+        margin: auto;
+        background: #fff;
         padding: 40px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    .receipt-modal .header {
+    /* Header */
+    .receipt-container .header {
         text-align: center;
         border-bottom: 2px dashed #333;
         padding-bottom: 20px;
         margin-bottom: 30px;
     }
 
-    .receipt-modal .header h1 {
+    .receipt-container .header h1 {
         font-size: 24px;
-        margin-bottom: 5px;
         text-transform: uppercase;
+        margin-bottom: 5px;
     }
 
-    .receipt-modal .header p {
+    .receipt-container .header p {
         font-size: 12px;
         margin: 3px 0;
     }
 
-    .receipt-modal .section-title {
-        font-size: 16px;
+    /* Sections */
+    .section-title {
+        font-size: 15px;
         font-weight: bold;
-        margin: 20px 0 10px 0;
-        text-transform: uppercase;
+        margin: 25px 0 10px;
         border-bottom: 1px solid #333;
-        padding-bottom: 5px;
+        padding-bottom: 4px;
+        text-transform: uppercase;
     }
 
-    .receipt-modal .detail-row {
+    /* Rows */
+    .detail-row {
         display: flex;
         justify-content: space-between;
-        padding: 5px 0;
         font-size: 14px;
+        padding: 4px 0;
     }
 
-    .receipt-modal .detail-label {
+    .detail-label {
         font-weight: bold;
     }
 
-    .receipt-modal table {
+    /* Tables */
+    .receipt-container table {
         width: 100%;
         border-collapse: collapse;
-        margin: 15px 0;
         font-size: 13px;
-    }
-
-    .receipt-modal table th {
-        text-align: left;
-        border-bottom: 1px solid #333;
-        padding: 8px 5px;
-        font-weight: bold;
-    }
-
-    .receipt-modal table td {
-        padding: 8px 5px;
-        border-bottom: 1px dotted #ccc;
-    }
-
-    .receipt-modal .total-section {
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 2px dashed #333;
-    }
-
-    .receipt-modal .total-row {
-        display: flex;
-        justify-content: space-between;
-        padding: 8px 0;
-        font-size: 15px;
-    }
-
-    .receipt-modal .total-row.grand-total {
-        font-size: 18px;
-        font-weight: bold;
-        border-top: 2px solid #333;
-        padding-top: 15px;
         margin-top: 10px;
     }
 
-    .receipt-modal .footer {
-        text-align: center;
-        margin-top: 40px;
-        padding-top: 20px;
-        border-top: 2px dashed #333;
-        font-size: 12px;
+    .receipt-container th {
+        border-bottom: 1px solid #333;
+        text-align: left;
+        padding: 6px;
     }
 
-    .receipt-modal .no-data {
-        font-style: italic;
-        color: #666;
-        font-size: 13px;
+    .receipt-container td {
+        border-bottom: 1px dotted #ccc;
+        padding: 6px;
+    }
+
+    /* Totals */
+    .total-section {
+        margin-top: 30px;
+        border-top: 2px dashed #333;
+        padding-top: 15px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 15px;
+        padding: 6px 0;
+    }
+
+    .total-row.grand-total {
+        font-size: 18px;
+        font-weight: bold;
+        border-top: 2px solid #000;
+        padding-top: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 30px;
+        border-top: 2px dashed #333;
+        padding-top: 15px;
+    }
+
+    /* ===== PRINT FIX ===== */
+    @media print {
+        body {
+            margin: 0;
+        }
+
+        .modal,
+        .modal-header,
+        .btn,
+        .btn-close {
+            display: none !important;
+        }
+
+        .receipt-container {
+            padding: 0;
+            box-shadow: none;
+        }
     }
 </style>
+
 
 <?php foreach ($bookings as $id => $data): ?>
     <?php $booking = $data['booking']; ?>
     <div class="modal fade" id="receiptModal<?= $id ?>" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered" style="width: auto; max-width: 800px;">
             <div class="modal-content receipt-modal">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold">
-                        <i class="bi bi-receipt"></i> Booking Receipt – <?= $b['booking_reference'] ?>
+                <div class="modal-header bg-success text-white d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title fw-bold m-0">
+                        <i class="bi bi-receipt"></i> Booking Receipt – <?= $booking['booking_reference'] ?>
                     </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+
+                    <div class="d-flex gap-2">
+                        <!-- PRINT BUTTON -->
+                        <button type="button" class="btn btn-light btn-sm"
+                            onclick="printReceipt('receipt-content-<?= $id ?>')">
+                            <i class="bi bi-printer"></i> Print
+                        </button>
+
+                        <!-- CLOSE BUTTON -->
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
                 </div>
+
                 <div class="modal-body p-0">
-                    <div class="receipt-container">
+                    <div class="receipt-container" id="receipt-content-<?= $id ?>">
+
                         <!-- HEADER -->
                         <div class="header">
                             <h1>Casa Estela Boutique Hotel & Cafe</h1>
@@ -816,7 +844,7 @@ function getRoomInfo($conn, $room_number_fk_id)
                                         echo "On $dateRes, the guest requested a reschedule, changing the stay from $oldCI - $oldCO to $newCI - $newCO due to the reason: \"$reason\".\n";
                                     }
                                     ?>
-                                                                                                                                                                                                                                                                        </textarea>
+                                                                                                                                                                                                                                                                                                                        </textarea>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -902,6 +930,33 @@ function getRoomInfo($conn, $room_number_fk_id)
 <?php endforeach; ?>
 
 
+<script>
+    function printReceipt(elementId) {
+        const receiptHTML = document.getElementById(elementId).outerHTML;
+        const styles = document.querySelector("style").innerHTML;
+
+        const printWindow = window.open("", "", "width=900,height=700");
+
+        printWindow.document.write(`
+        <html>
+        <head>
+            <title>Receipt</title>
+            <style>
+                ${styles}
+            </style>
+        </head>
+        <body class="receipt-print">
+            ${receiptHTML}
+        </body>
+        </html>
+    `);
+
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+    }
+</script>
 
 
 

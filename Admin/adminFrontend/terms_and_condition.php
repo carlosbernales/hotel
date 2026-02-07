@@ -1,4 +1,8 @@
 <?php
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'admin') {
+    header("Location: /Admin/Customer/aa/login.php");
+    exit;
+}
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
@@ -14,7 +18,7 @@ if ($result) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"> Offers Management</i>
+            <i class="fas fa-home"> Rules Management</i>
         </div>
         <button class="btn btn-sm"
             style="background: var(--gold); color: #2c2c2c; border: none; padding: 8px 20px; border-radius: 5px; font-weight: 500;"
@@ -24,7 +28,7 @@ if ($result) {
     </div>
 
     <div class="info-card">
-        <h4><i class="fas fa-tag" style="color: var(--gold); margin-right: 10px;"></i>Offers List</h4>
+        <h4><i class="fas fa-tag" style="color: var(--gold); margin-right: 10px;"></i>List of Rules</h4>
         <div class="table-responsive">
             <table class="table table-hover" id="offersTable" style="vertical-align: middle;">
                 <thead>

@@ -68,7 +68,16 @@ if ($result) {
                                     <?php echo htmlspecialchars($display_type); ?>
                                 </span>
                             </td>
-                            <td><?php echo $userss['is_verified']; ?></td>
+                            <td>
+                                <?php
+                                if ($userss['is_verified'] == 0) {
+                                    echo '<span class="badge bg-success">Verified</span>';
+                                } else {
+                                    echo '<span class="badge bg-warning text-dark">Unverified</span>';
+                                }
+                                ?>
+                            </td>
+
                             <td>
                                 <button type="button" class="btn btn-sm table-action-btn table-action-edit"
                                     data-bs-toggle="modal" data-bs-target="#editModal<?php echo $userss['id']; ?>"

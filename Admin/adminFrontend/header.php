@@ -649,70 +649,92 @@ $profileImg = !empty($user['profile_photo'])
             </a>
 
 
-            <div
-                class="sidebar-dropdown <?php echo in_array($currentPage, ['terms_and_condition.php', 'offers.php', 'contact_management.php', 'room_management.php', 'table_management.php', 'cafe_management.php', 'event_management.php', 'amenity_list.php', 'facilities_management.php']) ? 'active' : ''; ?>">
-                <a href="#" class="dropdown-toggle">
-                    <span><i class="fas fa-cogs"></i> Settings</span>
-                    <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <div class="sidebar-submenu">
-                    <a href="index.php?room_management"
-                        class="<?php echo ($currentPage == 'room_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-bed"></i> Room Management
-                    </a>
-                </div>
-                <div class="sidebar-submenu">
-                    <a href="index.php?amenity_list"
-                        class="<?php echo ($currentPage == 'amenity_list.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-concierge-bell"></i> Amenities
-                    </a>
-                </div>
-                <div class="sidebar-submenu">
-                    <a href="index.php?table_management"
-                        class="<?php echo ($currentPage == 'table_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-chair"></i> Table Management
-                    </a>
-                </div>
-                <div class="sidebar-submenu">
-                    <a href="index.php?cafe_management"
-                        class="<?php echo ($currentPage == 'cafe_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-coffee"></i> Cafe Management
-                    </a>
-                </div>
-                <div class="sidebar-submenu">
-                    <a href="index.php?event_management"
-                        class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-calendar-check"></i> Event Management
-                    </a>
-                </div>
+            <?php
+            $isAdmin = isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin';
 
-                <div class="sidebar-submenu">
-                    <a href="index.php?facilities"
-                        class="<?php echo ($currentPage == 'facilities_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-building"></i> Facility Management
-                    </a>
-                </div>
+            $settingsPages = [
+                'terms_and_condition.php',
+                'offers.php',
+                'contact_management.php',
+                'room_management.php',
+                'table_management.php',
+                'cafe_management.php',
+                'event_management.php',
+                'amenity_list.php',
+                'facilities_management.php'
+            ];
+            ?>
 
-                <div class="sidebar-submenu">
-                    <a href="index.php?contact_management"
-                        class="<?php echo ($currentPage == 'contact_management.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-address-book"></i> Contact and About Us Management
+            <?php if ($isAdmin): ?>
+                <div class="sidebar-dropdown <?php echo in_array($currentPage, $settingsPages) ? 'active' : ''; ?>">
+                    <a href="#" class="dropdown-toggle">
+                        <span><i class="fas fa-cogs"></i> Settings</span>
+                        <i class="fas fa-chevron-down dropdown-icon"></i>
                     </a>
-                </div>
 
-                <div class="sidebar-submenu">
-                    <a href="index.php?offers" class="<?php echo ($currentPage == 'offers.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-address-book"></i> Offers
-                    </a>
-                </div>
+                    <div class="sidebar-submenu">
+                        <a href="index.php?room_management"
+                            class="<?php echo ($currentPage == 'room_management.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-bed"></i> Room Management
+                        </a>
+                    </div>
 
-                <div class="sidebar-submenu">
-                    <a href="index.php?terms-condition"
-                        class="<?php echo ($currentPage == 'terms_and_condition.php') ? 'active' : ''; ?>">
-                        <i class="fas fa-address-book"></i> Terms and Condition
-                    </a>
-                </div>
+                    <div class="sidebar-submenu">
+                        <a href="index.php?amenity_list"
+                            class="<?php echo ($currentPage == 'amenity_list.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-concierge-bell"></i> Amenities
+                        </a>
+                    </div>
 
-            </div>
+                    <div class="sidebar-submenu">
+                        <a href="index.php?table_management"
+                            class="<?php echo ($currentPage == 'table_management.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-chair"></i> Table Management
+                        </a>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <a href="index.php?cafe_management"
+                            class="<?php echo ($currentPage == 'cafe_management.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-coffee"></i> Cafe Management
+                        </a>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <a href="index.php?event_management"
+                            class="<?php echo ($currentPage == 'event_management.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-calendar-check"></i> Event Management
+                        </a>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <a href="index.php?facilities"
+                            class="<?php echo ($currentPage == 'facilities_management.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-building"></i> Facility Management
+                        </a>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <a href="index.php?contact_management"
+                            class="<?php echo ($currentPage == 'contact_management.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-address-book"></i> Contact and About Us Management
+                        </a>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <a href="index.php?offers" class="<?php echo ($currentPage == 'offers.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-tags"></i> Offers
+                        </a>
+                    </div>
+
+                    <div class="sidebar-submenu">
+                        <a href="index.php?terms-condition"
+                            class="<?php echo ($currentPage == 'terms_and_condition.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-file-contract"></i> Terms and Condition
+                        </a>
+                    </div>
+                </div>
+            <?php endif; ?>
+
         </div>
     </div>
