@@ -80,7 +80,7 @@ if ($result) {
                                 <?php if ($order['status'] === 'confirmed'): ?>
                                     <span class="badge bg-warning text-dark">Pending</span>
                                 <?php else: ?>
-                                    <span class="badge bg-success">Accepted</span>
+                                    <span class="badge bg-success">Pending</span>
                                 <?php endif; ?>
                             </td>
                             <td class="d-flex gap-2 align-items-center">

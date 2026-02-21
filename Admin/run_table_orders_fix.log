@@ -1,27 +1,63 @@
-[29-Dec-2025 08:32:46 UTC] Session data: Array
+[20-Nov-2025 08:40:18 UTC] Session data: Array
 (
-    [redirect_url] => http://localhost/hotel/Admin/Customer/aa/login.php
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
     [user_id] => 1
     [user_type] => admin
     [email] => admin@example.com
-    [csrf_token] => b667d32bd5299b31693a3f2b9c4d81961d89abb00764c20602ad232b4d2758d8
-    [advance_order] => Array
-        (
-            [first] => Carlos
-            [last] => Bernales
-            [contact] => 9951776920
-            [datetime] => 2025-12-29T15:00
-            [tableTypes] => Array
-                (
-                    [0] => 3
-                )
+    [csrf_token] => 378159539324e0ae2f04e273600a4c009ecde582a971befac60a2594e53514db
+)
 
-            [tables] => Array
-                (
-                    [0] => 2
-                )
+[20-Nov-2025 08:40:23 UTC] Session data: Array
+(
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => 378159539324e0ae2f04e273600a4c009ecde582a971befac60a2594e53514db
+)
 
-        )
+[20-Nov-2025 08:40:32 UTC] Session data: Array
+(
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => 378159539324e0ae2f04e273600a4c009ecde582a971befac60a2594e53514db
+)
 
+[20-Nov-2025 08:40:36 UTC] Session data: Array
+(
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => 378159539324e0ae2f04e273600a4c009ecde582a971befac60a2594e53514db
+)
+
+[20-Nov-2025 10:22:35 UTC] Session data: Array
+(
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => 8a83304e43174456536554132f38422c0d695957de473304fea9ee8faaf9bb3b
+)
+
+[23-Nov-2025 08:03:48 UTC] Session data: Array
+(
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => 10e18d87d47a9e47eaa231b6907c3ca95d82d80224e11393c0017291234fd375
+)
+
+[23-Nov-2025 08:03:57 UTC] Session data: Array
+(
+    [redirect_url] => https://indigo-shark-198239.hostingersite.com/Admin/Customer/aa/login.php
+    [user_id] => 1
+    [user_type] => admin
+    [email] => admin@example.com
+    [csrf_token] => 10e18d87d47a9e47eaa231b6907c3ca95d82d80224e11393c0017291234fd375
 )
 

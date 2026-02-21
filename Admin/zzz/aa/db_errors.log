@@ -1,0 +1,10 @@
+[12-Jan-2026 14:03:52 Europe/Berlin] PHP Warning:  Undefined array key "user_id" in D:\casaaa\htdocs\Admin\Customer\aa\chat_handler.php on line 171
+[12-Jan-2026 14:03:52 Europe/Berlin] PHP Fatal error:  Uncaught TypeError: mysqli_prepare(): Argument #1 ($mysql) must be of type mysqli, PDO given in D:\casaaa\htdocs\Admin\Customer\aa\chat_handler.php:176
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\chat_handler.php(176): mysqli_prepare(Object(PDO), 'SELECT COUNT(*)...')
+#1 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\chat_handler.php on line 176
+[12-Jan-2026 14:03:53 Europe/Berlin] PHP Fatal error:  Uncaught Error: Class "Database" not found in D:\casaaa\htdocs\Admin\Customer\aa\get_notification_count.php:8
+Stack trace:
+#0 {main}
+  thrown in D:\casaaa\htdocs\Admin\Customer\aa\get_notification_count.php on line 8

@@ -1,68 +1,47 @@
 <?php
 require_once 'db.php';
 
-header('Content-Type: application/json; charset=UTF-8');
+header('Content-Type: application/json');
 
 try {
-    // Validate category ID
-    if (!isset($_GET['category_id'])) {
-        throw new Exception('Category ID is required');
+    // Fetch menu items with categories
+    $stmt = $pdo->prepare("
+        SELECT 
+            mi.id,
+            mi.name,
+            mi.price,
+            mi.description,
+            mi.category_id,
+            mc.display_name as category_name,
+            mi.image_path
+        FROM menu_items mi
+        LEFT JOIN menu_categories mc ON mi.category_id = mc.id
+        WHERE mi.availability = 1
+        ORDER BY mc.display_name, mi.name
+    ");
+    $stmt->execute();
+    $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Group items by category
+    $groupedItems = [];
+    foreach ($menuItems as $item) {
+        $category = $item['category_name'] ?: 'Uncategorized';
+        if (!isset($groupedItems[$category])) {
+            $groupedItems[$category] = [];
+        }
+        $groupedItems[$category][] = $item;
     }
     
-    $categoryId = filter_var($_GET['category_id'], FILTER_VALIDATE_INT);
-    if ($categoryId === false || $categoryId <= 0) {
-        throw new Exception('Invalid category ID');
-    }
-
-    // Prepare SQL query - simplified to match your database structure
-    $sql = "SELECT id, name, price 
-            FROM menu_items 
-            WHERE category_id = ?";
-            
-    $stmt = $connection->prepare($sql);
-    if (!$stmt) {
-        throw new Exception($connection->error);
-    }
-
-    $stmt->bind_param('i', $categoryId);
-    
-    if (!$stmt->execute()) {
-        throw new Exception($stmt->error);
-    }
-
-    $result = $stmt->get_result();
-    $items = [];
-
-    while ($row = $result->fetch_assoc()) {
-        $items[] = [
-            'id' => (int)$row['id'],
-            'name' => $row['name'],
-            'price' => (float)$row['price']
-        ];
-    }
-
-    // Return success response
     echo json_encode([
         'success' => true,
-        'items' => $items
+        'menu_items' => $groupedItems
     ]);
-
-} catch (Exception $e) {
-    // Log error for debugging
-    error_log('Menu Items Error: ' . $e->getMessage());
     
-    // Return error response
+} catch (PDOException $e) {
+    error_log("Error fetching menu items: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'Failed to load menu items'
+        'message' => 'Database error: ' . $e->getMessage()
     ]);
-
-} finally {
-    // Clean up
-    if (isset($stmt)) {
-        $stmt->close();
-    }
-    if (isset($connection)) {
-        $connection->close();
-    }
-} 
+}
+?>

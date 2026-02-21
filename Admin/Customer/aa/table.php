@@ -1,2778 +1,2564 @@
 <?php
-
+session_start();
+require_once 'includes/security_helper.php';
+if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] !== 'customer') {
+    header('Location: login.php');
+    exit();
+}
 try {
     // Get database connection
     require 'db_con.php';
-    $db = $pdo; // Assuming your db_con.php creates a $conn PDO object
-    echo "<!-- Database connection successful -->";
-
-    // Fetch Regular Packages with full details
-    $regularQuery = "SELECT 
-        id,
-        package_name,
-        description,
-        capacity,
-        NULL as price, /* Changed to always return NULL for price */
-        image_path,
-        available_tables,
-        menu_items, /* Added menu_items column */
-        status,
-        reason
-    FROM table_packages 
-    WHERE capacity < 30";
-
-    $regularStmt = $db->prepare($regularQuery);
-    $regularStmt->execute();
-    $regularPackages = $regularStmt->fetchAll();
-
-    echo "<!-- Regular packages count: " . count($regularPackages) . " -->";
-
-    // Fetch Ultimate Packages with full details
-    $ultimateQuery = "SELECT 
-        id,
-        package_name,
-        description,
-        capacity,
-        COALESCE(price, 0) as price,
-        image_path,
-        available_tables,
-        menu_items,
-        image1,
-        image2,
-        image3,
-        image4,
-        image5,
-        status,
-        reason
-    FROM table_packages 
-    WHERE capacity >= 30";
-
-    $ultimateStmt = $db->prepare($ultimateQuery);
-    $ultimateStmt->execute();
-    $ultimatePackages = $ultimateStmt->fetchAll();
-
-    echo "<!-- Ultimate packages count: " . count($ultimatePackages) . " -->";
-
-    // Fetch menu items with their categories
-    $menuQuery = "SELECT mi.*, mc.name as category_name 
-                 FROM menu_items mi 
-                 JOIN menu_categories mc ON mi.category_id = mc.id";
-    $menuStmt = $db->prepare($menuQuery);
-    $menuStmt->execute();
-    $menuItems = $menuStmt->fetchAll();
-
-    echo "<!-- Menu items count: " . count($menuItems) . " -->";
-
-    // Fetch menu item addons
-    $addonsQuery = "SELECT * FROM menu_item_addons";
-    $addonsStmt = $db->prepare($addonsQuery);
-    $addonsStmt->execute();
-    $menuAddons = $addonsStmt->fetchAll();
-
-    echo "<!-- Menu addons count: " . count($menuAddons) . " -->";
-
-    // Fetch payment methods
-    $paymentMethodsQuery = "SELECT id, name, display_name 
-                           FROM payment_methods 
-                           WHERE is_active = 1";
-    $paymentMethodsStmt = $db->prepare($paymentMethodsQuery);
-    $paymentMethodsStmt->execute();
-    $paymentMethods = $paymentMethodsStmt->fetchAll();
-
-    // At the top of your file, after fetching menu items
-    $menuByCategory = [];
-    foreach ($menuItems as $item) {
-        $category = $item['category_name'];
-        if (!isset($menuByCategory[$category])) {
-            $menuByCategory[$category] = [];
-        }
-        $menuByCategory[$category][] = $item;
-    }
-
-    // Add this after the database queries
-    echo "<!-- Debug image paths: -->";
-    foreach ($regularPackages as $package) {
-        echo "<!-- Regular package image: " . htmlspecialchars($package['image_path']) . " -->";
-    }
-    foreach ($ultimatePackages as $package) {
-        echo "<!-- Ultimate package image: " . htmlspecialchars($package['image_path']) . " -->";
-    }
-
+    $db = $pdo;
+    
+    // Fetch all table types with available table counts
+    $query = "SELECT tt.*, 
+                     (SELECT COUNT(*) FROM table_number tn 
+                      WHERE tn.table_type_fk_id = tt.id AND tn.status = 'available') as available_tables
+              FROM table_types tt 
+              ORDER BY tt.capacity ASC";
+    $stmt = $db->prepare($query);
+    $stmt->execute();
+    $packages = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
 } catch (Exception $e) {
     echo "Error: " . $e->getMessage();
     die();
 }
-
-// Check if nav.php exists and is readable
-if (file_exists('nav.php')) {
-    echo "<!-- nav.php exists -->";
-} else {
-    echo "<!-- nav.php not found -->";
-}
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Package Reservation</title>
+    <title>Table Packages - Casa de Alfonso</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <style>
+        /* Floating Cart Icon */
+        .floating-cart {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            z-index: 1000;
+            background-color: #fff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .floating-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .floating-cart i {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+        
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        :root {
+            --primary-color: #b6860a;
+            --secondary-color: #2c3e50;
+            --light-gray: #f8f9fa;
+            --dark-gray: #6c757d;
+        }
+        
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
+            background-color: var(--light-gray);
+            color: var(--secondary-color);
+            padding-top: 80px;
         }
-
-        .package-section {
-            margin-top: 110px;
-            padding: 2.5rem;
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-        }
-
-        /* Styles for package images */
-        img[src*="../../uploads/table_packages"] {
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
-        img[src*="../../uploads/table_packages"]:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        #modalImage {
-            max-height: 80vh;
-            object-fit: contain;
-        }
-
-        .header-title {
-            font-size: 2.25rem;
-            color: #b6860a;
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../../images/hero-bg.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 100px 0;
+            margin-bottom: 50px;
             text-align: center;
+        }
+        
+        .hero-section h1 {
+            font-size: 3rem;
             font-weight: 700;
-            margin-bottom: 2.5rem;
-            position: relative;
-            text-transform: capitalize;
-        }
-
-        .header-title:after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(90deg, #b6860a, #d4a012);
-            border-radius: 2px;
-        }
-
-        .card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
-
-        .card img {
-            height: 280px;
-            object-fit: cover;
+        
+        .package-section {
+            padding: 50px 0;
+            display: none; /* Hide by default */
         }
-
-        .card-body {
-            padding: 2rem;
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+        
+        .section-title h2 {
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .section-title:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 15px auto 0;
+        }
+        
+        .package-card {
             background: white;
-            position: relative;
-        }
-
-        .card-title {
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 1.2rem;
-            font-size: 1.4rem;
-            line-height: 1.4;
-        }
-
-        .card-text {
-            color: #666;
-            margin-bottom: 0.8rem;
-            line-height: 1.6;
-        }
-
-        .card-text.text-warning {
-            font-size: 1.25rem;
-            margin: 1rem 0;
-            background: -webkit-linear-gradient(45deg, #b6860a, #d4a012);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .card-text.text-warning i {
-            color: #b6860a;
-            -webkit-text-fill-color: initial;
-        }
-
-        .btn-warning {
-            background-color: #e6b800;
-            border: none;
-            color: white;
-            padding: 0.8rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-        }
-
-        .btn-advanced {
-            float: right;
-            background-color: #fff;
-            color: #b6860a;
-            border: 2px solid #b6860a;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-        }
-
-        .notes-section {
-            background: linear-gradient(145deg, #fff9e6, #fffdf2);
-            border-radius: 20px;
-            padding: 2.5rem;
-            margin-top: 3rem;
-            box-shadow: 0 10px 30px rgba(182, 134, 10, 0.1);
-            border: 1px solid rgba(182, 134, 10, 0.1);
-        }
-
-        .notes-section h5 {
-            color: #b6860a;
-            font-weight: 700;
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .notes-section h5:before {
-            content: "📝";
-            font-size: 1.4rem;
-        }
-
-        .notes-section ul {
-            padding-left: 1.8rem;
-            margin: 0;
-        }
-
-        .notes-section li {
-            color: #555;
-            margin-bottom: 1rem;
-            position: relative;
-            line-height: 1.6;
-            padding-left: 0.5rem;
-        }
-
-        .notes-section li:before {
-            content: "•";
-            color: #b6860a;
-            font-weight: bold;
-            position: absolute;
-            left: -1.2rem;
-            font-size: 1.4rem;
-        }
-
-        .text-danger {
-            font-size: 0.95rem;
-            font-style: italic;
-            color: #dc3545;
-            margin-top: 1rem;
-            padding: 0.8rem;
-            background-color: rgba(220, 53, 69, 0.1);
             border-radius: 10px;
-            display: inline-block;
-        }
-
-        /* Modal Styling */
-        .modal-content {
-            border-radius: 20px;
-            border: none;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
             overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
         }
-
-        .modal-header {
-            background: linear-gradient(45deg, #b6860a, #d4a012);
-            color: white;
-            border: none;
-            padding: 1.8rem;
+        
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
         }
-
-        .modal-title {
-            font-weight: 700;
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .carousel {
-            border-radius: 15px;
-            overflow: hidden;
-            margin: -1rem -1rem 1.5rem -1rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .carousel-item img {
-            height: 450px;
+        
+        .package-img {
+            width: 100%;
+            height: 200px;
             object-fit: cover;
         }
-
-        .form-control {
-            padding: 0.8rem 1.2rem;
-            border-radius: 10px;
-            border: 2px solid #eee;
+        
+        .package-body {
+            padding: 25px;
         }
-
-        .form-control:focus {
-            border-color: #b6860a;
-            box-shadow: 0 0 0 0.2rem rgba(182, 134, 10, 0.15);
+        
+        .package-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
         }
-
-        .form-label {
+        
+        .package-capacity, .package-availability {
+            color: var(--dark-gray);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .package-availability {
+            font-size: 0.9rem;
+        }
+        
+        .package-availability.text-success {
+            color: #198754 !important;
+        }
+        
+        .package-capacity i {
+            margin-right: 8px;
+        }
+        
+        .package-description {
+            color: var(--dark-gray);
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        
+        .btn-reserve {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
             font-weight: 600;
-            color: #2c3e50;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .btn-reserve:hover {
+            background-color: #9a7209;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .no-image {
+            height: 200px;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-gray);
+        }
+        
+        /* Availability Section Styles */
+        .availability-card {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .availability-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--secondary-color);
             margin-bottom: 0.5rem;
         }
-
-        /* Button styles */
-        .btn {
-            padding: 8px 16px !important;
-            font-size: 14px !important;
+        
+        .input-group-text {
+            background-color: #f8f9fa;
+            border-right: none;
         }
-
-        .btn-primary-custom {
-            padding: 8px 20px !important;
-            font-size: 14px !important;
-            background-color: #d4af37;
-            border: 2px solid #d4af37;
-            color: white;
-            border-radius: 25px;
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(182, 134, 10, 0.25);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-
-        .btn-secondary-custom {
-            padding: 6px 15px !important;
-            font-size: 13px !important;
-            background-color: #6c757d;
-            border: 1px solid #6c757d;
-            color: white;
-            border-radius: 20px;
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: #9a7209;
+            border-color: #9a7209;
+            transform: translateY(-1px);
         }
-
-        .action-buttons .btn {
-            margin: 0 3px;
-            padding: 6px 12px !important;
-            font-size: 13px !important;
+        
+        /* Form validation styles */
+        .is-invalid {
+            border-color: #dc3545 !important;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
         }
-
-        @media (max-width: 768px) {
-            .package-section {
-                padding: 1.5rem;
-                margin: 1rem;
-            }
-
-            .header-title {
-                font-size: 1.8rem;
-            }
-
-            .card-body {
-                padding: 1.5rem;
-            }
-
-            .carousel-item img {
-                height: 300px;
-            }
-
-            .btn-warning,
-            .btn-advanced {
-                width: 100%;
-                margin-bottom: 1rem;
-            }
-
-            .btn {
-                padding: 6px 14px !important;
-                font-size: 13px !important;
-            }
-
-            .btn-primary-custom {
-                padding: 7px 18px !important;
-                font-size: 13px !important;
-            }
+        
+        .is-invalid:focus {
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
         }
-
-        .payment-details {
-            font-size: 1rem;
-        }
-
-        .payment-details .card-title {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        .payment-details hr {
-            margin: 1rem 0;
-        }
-
-        #downpaymentDetails {
-            background-color: #f8f9fa;
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin: 0.5rem 0;
-        }
-
-        .modal-body .card {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-        }
-
-        .modal-body .card-body {
-            padding: 1rem;
-        }
-
-        .policy-content {
-            font-size: 0.95rem;
-        }
-
-        .policy-content h5 {
-            color: #b6860a;
-            font-weight: 600;
-            margin: 1.5rem 0 1rem;
-        }
-
-        .policy-content h5:first-child {
-            margin-top: 0;
-        }
-
-        .policy-content ul {
-            padding-left: 1.2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .policy-content li {
-            margin-bottom: 0.8rem;
-            color: #555;
-            line-height: 1.5;
-        }
-
-        .form-check-label a {
-            color: #b6860a;
-            text-decoration: none;
-        }
-
-        .form-check-label a:hover {
-            text-decoration: underline;
-        }
-
-        .form-check-input:checked {
-            background-color: #b6860a;
-            border-color: #b6860a;
-        }
-
-        .booking-summary-popup {
-            max-width: 600px !important;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .booking-summary-popup .swal2-html-container {
-            margin: 1em 1.6em 0.3em;
-        }
-
-        .booking-summary-popup .table {
-            margin-bottom: 0;
-        }
-
-        .booking-summary-popup .table td {
-            padding: 0.5rem 1rem;
-            vertical-align: middle;
-        }
-
-        .booking-summary-popup .text-warning {
-            color: #d4af37 !important;
-        }
-
-        .booking-summary-popup hr {
-            margin: 1.5rem 0;
-            opacity: 0.15;
-        }
-
-        .booking-summary-popup .text-success {
-            color: #28a745 !important;
-        }
-
-        .btn:disabled {
-            opacity: 0.65;
-            cursor: not-allowed;
-        }
-
-        .btn-primary:disabled {
-            background-color: #6c757d;
-            border-color: #6c757d;
-        }
-
-        .menu-items {
-            max-height: 60vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .menu-item {
-            transition: all 0.3s ease;
-        }
-
-        .menu-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .menu-item img {
+        
+        .invalid-feedback {
+            display: none;
             width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px 0 0 8px;
-        }
-
-        .item-quantity {
-            width: 50px !important;
-            text-align: center;
-        }
-
-        .btn-group .btn-outline-warning.active {
-            background-color: #d4af37;
-            color: white;
-            border-color: #d4af37;
-        }
-
-        .menu-categories {
-            position: sticky;
-            top: 0;
-            background: white;
-            z-index: 1;
-            padding: 1rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .addon-checkbox {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .addon-checkbox:checked {
-            background-color: #d4af37;
-            border-color: #d4af37;
-        }
-
-        #addonsModal .card {
-            border: 1px solid rgba(0, 0, 0, .125);
-            transition: all 0.3s ease;
-        }
-
-        #addonsModal .card:hover {
-            border-color: #d4af37;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        #addonsModal .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        #addonsModal .form-check {
-            margin: 0;
-            padding: 0;
-        }
-
-        .package-details {
-            padding: 1rem;
-        }
-
-        .package-details .package-image {
-            position: relative;
-            overflow: hidden;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .package-details h4 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #b6860a;
-        }
-
-        .package-details p {
-            line-height: 1.6;
-        }
-
-        .package-details strong {
-            color: #2c3e50;
-        }
-
-        .package-details .text-muted {
-            color: #6c757d !important;
-        }
-
-        .modal-dialog {
-            max-width: 600px;
-        }
-
-        .package-details {
-            background: #fff;
-        }
-
-        .package-details h4 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #b6860a;
-        }
-
-        .package-details h6 {
-            font-weight: 600;
-            color: #2c3e50;
-        }
-
-        .package-details .text-muted {
-            color: #6c757d !important;
-        }
-
-        .modal-header.bg-warning {
-            background-color: #b6860a !important;
-        }
-
-        .modal-dialog {
-            max-width: 500px;
-        }
-
-        #detailsImage {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        /* Modal width adjustments */
-        .modal-lg {
-            max-width: 800px;
-            /* Increased from default 500px */
-        }
-
-        .modal-xl {
-            max-width: 1140px;
-            /* Increased from default 800px */
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 992px) {
-
-            .modal-lg,
-            .modal-xl {
-                max-width: 95%;
-                margin: 1rem auto;
-            }
-        }
-
-        /* Modal content styling */
-        .modal-content {
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .modal-body {
-            padding: 2rem;
-        }
-
-        .menu-items-container {
-            max-height: 70vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        /* Add-ons Modal Styling */
-        .addon-item .card {
-            border: 1px solid #dee2e6;
-            transition: all 0.3s ease;
-        }
-
-        .addon-item .card:hover {
-            border-color: #ffc107;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .addon-item .form-check-input {
-            width: 1.2rem;
-            height: 1.2rem;
-            margin-top: 0;
-            cursor: pointer;
-        }
-
-        .addon-item .form-check-input:checked {
-            background-color: #ffc107;
-            border-color: #ffc107;
-        }
-
-        .addon-item .form-check-label {
-            font-size: 1rem;
-            cursor: pointer;
-            padding-left: 0.5rem;
-        }
-
-        .addon-name {
-            color: #2c3e50;
-            font-weight: 500;
-        }
-
-        .addon-price {
-            font-size: 1rem;
-            color: #ffc107;
-        }
-
-        .modal-body {
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .modal-body::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .modal-body::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        .modal-body::-webkit-scrollbar-thumb {
-            background: #ffc107;
-            border-radius: 3px;
-        }
-
-        .modal-body::-webkit-scrollbar-thumb:hover {
-            background: #e0a800;
-        }
-
-        .cart-summary {
-            position: sticky;
-            top: 1rem;
-        }
-
-        .cart-item {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .cart-item:last-child {
-            border-bottom: none;
-        }
-
-        .cart-item-name {
-            font-weight: 500;
-            color: #2c3e50;
-        }
-
-        .cart-item-price {
-            color: #28a745;
-            font-weight: 600;
-        }
-
-        .cart-item-addons {
-            font-size: 0.85rem;
-            color: #6c757d;
-            padding-left: 1rem;
-        }
-
-        .cart-item-remove {
+            margin-top: 0.25rem;
+            font-size: 0.875em;
             color: #dc3545;
-            cursor: pointer;
-            font-size: 1.1rem;
         }
-
-        #cartItems {
-            max-height: 400px;
-            overflow-y: auto;
+        
+        .is-invalid ~ .invalid-feedback {
+            display: block;
         }
-
-        .package-inclusions {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        .package-inclusions li {
-            margin-bottom: 0.5rem;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-
-        .package-inclusions li:before {
-            content: "✓";
-            color: #b6860a;
-            position: absolute;
-            left: 0;
-        }
-
-        #ultimatePackageModal .card {
-            border: 1px solid rgba(182, 134, 10, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        #ultimatePackageModal .card:hover {
-            border-color: #b6860a;
-            box-shadow: 0 2px 4px rgba(182, 134, 10, 0.1);
-        }
-
-        #ultimatePackageModal .card-title {
-            color: #b6860a;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        #ultimatePackageModal .list-unstyled li {
-            margin-bottom: 0.5rem;
-            color: #666;
-        }
-
-        #paymentProofSection {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-
-        #paymentPreview {
-            text-align: center;
-            background: #fff;
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px dashed #dee2e6;
-        }
-
-        #removeProof {
-            font-size: 0.875rem;
-            padding: 0.25rem 0.5rem;
-        }
-
-        .input-group-text {
-            background-color: #b6860a;
-            color: white;
-            border-color: #b6860a;
-            cursor: pointer;
-        }
-
-        .input-group-text:hover {
-            background-color: #95700a;
-        }
-
-        .payment-breakdown {
-            font-size: 0.95rem;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .payment-breakdown hr {
-            margin: 0.8rem 0;
-            opacity: 0.15;
-        }
-
-        .payment-breakdown .text-warning {
-            color: #b6860a !important;
-            font-size: 1.1rem;
-        }
-
-        .payment-breakdown .text-danger {
-            color: #dc3545 !important;
-            font-size: 1.1rem;
-        }
-
-        .payment-breakdown .text-success {
-            color: #28a745 !important;
-            font-size: 1.1rem;
-        }
-
-        .payment-breakdown small.text-muted {
-            font-size: 0.85rem;
-            font-style: italic;
-        }
-
-        .booking-summary {
-            font-family: 'Poppins', sans-serif;
-            padding: 1rem;
-        }
-
-        .booking-summary p {
-            margin-bottom: 0.5rem;
-        }
-
-        .booking-summary h6 {
-            color: #b6860a;
-            font-weight: 600;
-            margin-top: 1rem;
-        }
-
-        .booking-summary hr {
-            margin: 1rem 0;
-            opacity: 0.15;
-        }
-
-        .booking-summary .fw-bold {
-            color: #28a745;
-            margin-top: 1rem;
-        }
-
-        .swal2-popup {
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .swal2-html-container {
-            text-align: left;
-        }
-
-        /* Add these styles to your existing CSS */
-        .menu-list {
-            margin: 0;
-            padding: 0;
-        }
-
-        .menu-list .menu-item {
-            padding: 8px 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            align-items: center;
-        }
-
-        .menu-list .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .menu-list .menu-item:before {
-            content: "•";
-            color: #b6860a;
-            margin-right: 10px;
-        }
-
-        #packageImageCarousel {
-            background-color: #000;
-        }
-
-        #packageImageCarousel .carousel-item {
-            height: 400px;
-        }
-
-        #packageImageCarousel .carousel-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        #packageImageCarousel .carousel-control-prev,
-        #packageImageCarousel .carousel-control-next {
-            background: rgba(0, 0, 0, 0.5);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            top: 50%;
-            transform: translateY(-50%);
-            margin: 0 10px;
-        }
-
-        #packageImageCarousel .carousel-indicators {
-            margin-bottom: 0;
-        }
-
-        #packageImageCarousel .carousel-indicators button {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            margin: 0 4px;
-        }
-
-        .status-banner {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            z-index: 1;
-        }
-
-        .status-banner .badge {
-            font-size: 0.9rem;
-            padding: 8px 12px;
-            background-color: #dc3545;
-            color: white;
-        }
-
-        .package-image {
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .alert {
-            font-size: 0.9rem;
-            margin-bottom: 0;
-        }
-
-        .package-details {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .card {
-            position: relative;
-        }
-
-        <?php if ($package['status'] === 'inactive'): ?>
-            .card {
-                opacity: 0.85;
+        
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 60px 0;
             }
-
-        <?php endif; ?>
-
-        .login-message {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
-        }
-
-        .login-required-popup {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-        }
-
-        .login-content h4 {
-            color: #333;
-            margin-bottom: 1rem;
-        }
-
-        .login-buttons {
-            margin-top: 1.5rem;
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-        }
-
-        .login-buttons .btn {
-            padding: 0.5rem 1.5rem;
+            
+            .hero-section h1 {
+                font-size: 2.2rem;
+            }
+            
+            .package-section {
+                padding: 30px 0;
+            }
         }
     </style>
 </head>
-
 <body>
     <?php include 'nav.php'; ?>
-    <?php include 'message_box.php'; ?>
+    
+    <!-- Floating Cart Icon -->
+    <div class="floating-cart" data-bs-toggle="modal" data-bs-target="#cartModal">
+        <i class="fas fa-shopping-cart"></i>
+        <span class="cart-badge" id="cartItemCount">0</span>
+    </div>
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <h1>Our Table Packages</h1>
+            <p class="lead">Experience the perfect dining experience with our exclusive table packages</p>
+        </div>
+    </section>
 
-    <div id="alertPlaceholder" class="container mt-3"></div>
-
-    <div class="container">
-        <!-- Table Packages Section -->
-        <div class="package-section">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="header-title">Table Packagess</h2>
-            </div>
-
-            <div class="row g-4">
-                <?php foreach ($regularPackages as $package): ?>
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <?php if ($package['status'] === 'inactive'): ?>
-                                <div class="status-banner">
-                                    <span class="badge badge-warning">Currently Unavailable</span>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="position-relative overflow-hidden">
-                                <img src="../Admin/adminBackend/table_packages_image/<?php echo basename(path: $package['image_path']); ?>"
-                                    class="card-img-top" alt="<?php echo htmlspecialchars($package['package_name']); ?>">
+    <!-- Availability Checker Section -->
+    <section class="availability-section py-5 bg-light">
+        <div class="container">
+            <div class="availability-card p-4 rounded-3 shadow-sm bg-white">
+                <h3 class="text-center mb-4">Check Table Availability</h3>
+                <form id="checkAvailabilityForm" class="row g-3">
+                    <div class="col-md-10">
+                        <label for="reservationDateTime" class="form-label">Date & Time</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                            <input type="datetime-local" class="form-control" id="reservationDateTime" name="reservationDateTime" required>
+                        </div>
+                        <small class="text-muted">Cafe hours: 7:00 AM - 11:00 PM (Monday-Sunday)</small>
+                        <!-- Availability Results -->
+                        <div id="availabilityResults" class="mt-3" style="display: none;">
+                            <div class="alert alert-success mb-0">
+                                <i class="fas fa-check-circle me-2"></i>
+                                <span id="availabilityMessage"></span>
+                                <div id="tableAvailability" class="mt-2"></div>
                             </div>
-                            <div class="card-body text-center">
-                                <h5 class="card-title"><?php echo htmlspecialchars($package['package_name']); ?></h5>
-                                <p class="card-text">
-                                    <i class="fas fa-users me-2"></i>Capacity:
-                                    <?php echo htmlspecialchars($package['capacity']); ?>
-                                </p>
-                                <?php if (isset($package['price'])): ?>
-                                    <p class="card-text text-warning fw-bold mb-3">
-                                        <i
-                                            class="fas fa-tag me-2"></i>₱<?php echo number_format((float) $package['price'], 2); ?>
-                                    </p>
-                                <?php endif; ?>
+                        </div>
+                    </div>
+                    <div class="col-md-2 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100" id="checkAvailabilityBtn">
+                            <i class="fas fa-search me-2"></i> Check
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
 
-                                <?php if ($package['status'] === 'inactive'): ?>
-                                    <div class="alert alert-warning mt-2 mb-3">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <strong>Notice:</strong><br>
-                                        <?php echo htmlspecialchars($package['reason']); ?>
+    <!-- Packages Section -->
+    <section class="package-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Choose Your Perfect Table</h2>
+                <p>Select from our range of table packages to suit your needs</p>
+            </div>
+            
+            <div class="row">
+                <?php if (count($packages) > 0): ?>
+                    <?php foreach ($packages as $package): ?>
+                        <div class="col-md-4 mb-4">
+                            <div class="package-card" data-table-id="<?php echo $package['id']; ?>">
+                                <?php if (!empty($package['img1'])): ?>
+                                    <img src="../../../Admin/adminBackend/table_types_images/<?php echo htmlspecialchars($package['img1']); ?>" 
+                                         alt="<?php echo htmlspecialchars($package['table_name']); ?>" 
+                                         class="package-img">
+                                <?php else: ?>
+                                    <div class="no-image">
+                                        <i class="fas fa-utensils fa-3x"></i>
                                     </div>
                                 <?php endif; ?>
-
-                                <div class="d-flex flex-column align-items-center gap-2">
-                                    <button type="button" class="btn btn-outline-warning view-details-btn w-100"
-                                        data-bs-toggle="modal" data-bs-target="#packageDetailsModal"
-                                        data-package-id="<?php echo $package['id']; ?>"
-                                        data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
-                                        data-package-description="<?php echo htmlspecialchars($package['description']); ?>"
-                                        data-package-capacity="<?php echo $package['capacity']; ?>"
-                                        data-package-image="<?php echo basename($package['image_path']); ?>">
-                                        <i class="fas fa-info-circle me-2"></i>View Details
-                                    </button>
-                                    <?php if ($package['status'] === 'active'): ?>
-                                        <button type="button" class="btn btn-warning reserve-btn w-100" data-bs-toggle="modal"
-                                            data-bs-target="#reservationModal" data-package-id="<?php echo $package['id']; ?>"
-                                            data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
-                                            data-package-price="<?php echo $package['price']; ?>"
-                                            data-package-capacity="<?php echo $package['capacity']; ?>">
-                                            <i class="fas fa-calendar-check me-2"></i>Reserve
-                                        </button>
-                                    <?php else: ?>
-                                        <button type="button" class="btn btn-secondary w-100" disabled>
-                                            <i class="fas fa-ban me-2"></i>Currently Unavailable
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-
-            </div>
-        </div>
-
-
-        <!-- Ultimate Food Package Section -->
-        <div class="package-section">
-            <h2 class="header-title">Intimate Food Package 30 PAX for Cafe Events </h2>
-            <div class="row g-4">
-                <?php foreach ($ultimatePackages as $package): ?>
-                    <div class="col-md-4">
-                        <div class="card h-100">
-                            <?php if ($package['status'] === 'inactive'): ?>
-                                <div class="status-banner">
-                                    <span class="badge badge-warning">Currently Unavailable</span>
-                                </div>
-                            <?php endif; ?>
-
-                            <div class="position-relative overflow-hidden">
-                                <img src="../../uploads/table_packages/<?php echo basename($package['image_path']); ?>"
-                                    class="card-img-top" alt="<?php echo htmlspecialchars($package['package_name']); ?>">
-                            </div>
-                            <div class="card-body text-center">
-                                <h5 class="card-title"><?php echo htmlspecialchars($package['package_name']); ?></h5>
-                                <p class="card-text">
-                                    <i class="fas fa-users me-2"></i>Capacity: Up to
-                                    <?php echo htmlspecialchars($package['capacity']); ?>
-                                </p>
-                                <?php if ($package['capacity'] >= 30 && isset($package['price']) && is_numeric($package['price'])): ?>
-                                    <p class="card-text text-warning fw-bold mb-3">
-                                        <i
-                                            class="fas fa-tag me-2"></i>₱<?php echo number_format((float) $package['price'], 2); ?>
-                                    </p>
-                                <?php endif; ?>
-
-                                <?php if ($package['status'] === 'inactive'): ?>
-                                    <div class="alert alert-warning mt-2 mb-3">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                        <strong>Notice:</strong><br>
-                                        <?php echo htmlspecialchars($package['reason']); ?>
-                                    </div>
-                                <?php endif; ?>
-
-                                <div class="d-flex flex-column align-items-center gap-2">
-                                    <button type="button" class="btn btn-outline-warning view-details-btn w-100"
-                                        data-bs-toggle="modal" data-bs-target="#ultimatePackageModal"
-                                        data-package-id="<?php echo $package['id']; ?>"
-                                        data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
-                                        data-package-description="<?php echo htmlspecialchars($package['description']); ?>"
-                                        data-package-capacity="<?php echo $package['capacity']; ?>"
-                                        data-package-image="<?php echo basename($package['image_path']); ?>"
-                                        data-package-price="<?php echo $package['price']; ?>"
-                                        data-package-menu-items="<?php echo htmlspecialchars($package['menu_items']); ?>">
-                                        <i class="fas fa-info-circle me-2"></i>View Details
-                                    </button>
-                                    <?php if ($package['status'] === 'active'): ?>
-                                        <button type="button" class="btn btn-warning reserve-btn w-100" data-bs-toggle="modal"
-                                            data-bs-target="#reservationModal" data-package-id="<?php echo $package['id']; ?>"
-                                            data-package-name="<?php echo htmlspecialchars($package['package_name']); ?>"
-                                            data-package-price="<?php echo $package['price']; ?>"
-                                            data-package-capacity="<?php echo $package['capacity']; ?>">
-                                            <i class="fas fa-calendar-check me-2"></i>Reserve
-                                        </button>
-                                    <?php else: ?>
-                                        <button type="button" class="btn btn-secondary w-100" disabled>
-                                            <i class="fas fa-ban me-2"></i>Currently Unavailable
-                                        </button>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Notes Section -->
-            <div class="notes-section">
-                <h5><i class="fas fa-info-circle me-2"></i>NOTES:</h5>
-                <ul class="list-unstyled">
-                    <li>Exclusive use of café dining area for 4 hours</li>
-                    <li>Corkage fee charges on each outside purchase (food, cake, beverage, and alcoholic drinks)</li>
-                    <li>50% partial payment on selected package upon one-week reservation is non-refundable</li>
-                </ul>
-                <p class="text-danger mt-3">
-                    <i class="fas fa-exclamation-circle me-2"></i>* This package is only available until 2:00 PM<br>
-                    <i class="fas fa-exclamation-circle me-2"></i>** Assumes 3,000g (100g per person) of Wagyu Steak
-                    will be served
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Menu Modal -->
-    <div class="modal fade" id="menuModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">
-                        <i class="fas fa-clipboard-list me-2"></i>Menu Selection
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Add your menu content here -->
-                    <div class="menu-categories mb-4">
-                        <h6 class="text-warning mb-3">Categories</h6>
-                        <div class="btn-group mb-3" role="group">
-                            <button type="button" class="btn btn-outline-warning active"
-                                data-category="all">All</button>
-                            <button type="button" class="btn btn-outline-warning"
-                                data-category="appetizers">Appetizers</button>
-                            <button type="button" class="btn btn-outline-warning" data-category="main">Main
-                                Course</button>
-                            <button type="button" class="btn btn-outline-warning"
-                                data-category="desserts">Desserts</button>
-                            <button type="button" class="btn btn-outline-warning"
-                                data-category="beverages">Beverages</button>
-                        </div>
-                    </div>
-
-                    <div class="menu-items">
-                        <!-- Menu items will be loaded here -->
-                        <p class="text-center text-muted">Loading menu items...</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <div class="d-flex justify-content-between w-100">
-                        <div>
-                            <strong>Total Order: </strong>
-                            <span id="totalOrderAmount">₱0.00</span>
-                        </div>
-                        <div>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="button" class="btn btn-warning" id="confirmOrder">Confirm Order</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Menu Items Modal -->
-    <div class="modal fade" id="menuItemsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">Select Menu Items</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <!-- Category Filter -->
-                    <div class="category-filter mb-4">
-                        <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-warning active"
-                                data-category="all">All</button>
-                            <?php foreach ($menuByCategory as $category => $items): ?>
-                                <button type="button" class="btn btn-outline-warning"
-                                    data-category="<?php echo htmlspecialchars($category); ?>">
-                                    <?php echo htmlspecialchars($category); ?>
-                                </button>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <!-- Menu Items Section -->
-                        <div class="col-md-8">
-                            <div class="menu-items-container">
-                                <?php foreach ($menuByCategory as $category => $items): ?>
-                                    <div class="category-section mb-4"
-                                        data-category="<?php echo htmlspecialchars($category); ?>">
-                                        <h5 class="category-title mb-3"><?php echo htmlspecialchars($category); ?></h5>
-                                        <div class="row g-3">
-                                            <?php foreach ($items as $item): ?>
-                                                <div class="col-md-6">
-                                                    <div class="card menu-item">
-                                                        <div class="row g-0">
-                                                            <div class="col-4">
-                                                                <img src="<?php echo htmlspecialchars($item['image_path']); ?>"
-                                                                    class="img-fluid rounded-start"
-                                                                    alt="<?php echo htmlspecialchars($item['name']); ?>"
-                                                                    style="height: 100px; object-fit: cover;">
-                                                            </div>
-                                                            <div class="col-8">
-                                                                <div class="card-body">
-                                                                    <h6 class="card-title">
-                                                                        <?php echo htmlspecialchars($item['name']); ?>
-                                                                    </h6>
-                                                                    <p class="card-text text-success mb-2">
-                                                                        ₱<?php echo number_format($item['price'], 2); ?></p>
-                                                                    <div
-                                                                        class="d-flex justify-content-between align-items-center">
-                                                                        <button type="button"
-                                                                            class="btn btn-warning btn-sm add-to-cart"
-                                                                            data-item-id="<?php echo $item['id']; ?>"
-                                                                            data-item-name="<?php echo htmlspecialchars($item['name']); ?>"
-                                                                            data-item-price="<?php echo $item['price']; ?>">
-                                                                            <i class="fas fa-cart-plus me-1"></i> Add to Cart
-                                                                        </button>
-                                                                        <button type="button"
-                                                                            class="btn btn-outline-warning btn-sm show-addons"
-                                                                            data-item-id="<?php echo $item['id']; ?>">
-                                                                            Add-ons
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
+                                
+                                <div class="package-body">
+                                    <!-- Availability Badge -->
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <div class="package-capacity mb-0">
+                                            <i class="fas fa-users me-1"></i>
+                                            <span>Up to <?php echo htmlspecialchars($package['capacity']); ?> persons</span>
                                         </div>
+                                        <?php 
+                                        $availableTables = (int)$package['available_tables'];
+                                        $isAvailable = $availableTables > 0;
+                                        ?>
+                                        <span class="badge <?php echo $isAvailable ? 'bg-success' : 'bg-danger'; ?> p-2 availability-badge">
+                                            <i class="fas <?php echo $isAvailable ? 'fa-check' : 'fa-times'; ?>-circle me-1"></i>
+                                            <?php echo $isAvailable ? 'Available' : 'Unavailable'; ?>
+                                        </span>
                                     </div>
-                                <?php endforeach; ?>
+                                    
+                                    <!-- Table Availability -->
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="fas fa-table me-2 text-muted"></i>
+                                        <span class="small text-muted table-count">
+                                            <?php echo $availableTables; ?> table<?php echo $availableTables != 1 ? 's' : ''; ?> available
+                                        </span>
+                                    </div>
+                                    
+                                    <p class="package-description small text-muted mb-3">
+                                        <?php echo !empty($package['description']) ? htmlspecialchars($package['description']) : 'Perfect for your dining experience.'; ?>
+                                    </p>
+                                    
+                                    <button class="btn w-100 <?php echo $isAvailable ? 'btn-primary' : 'btn-secondary'; ?> add-to-cart" 
+                                            data-package-id="<?php echo $package['id']; ?>"
+                                            data-package-name="<?php echo htmlspecialchars($package['table_name']); ?>"
+                                            data-capacity="<?php echo $package['capacity']; ?>"
+                                            data-available="<?php echo $isAvailable ? '1' : '0'; ?>"
+                                            <?php echo $isAvailable ? '' : 'disabled'; ?>>
+                                        <i class="fas <?php echo $isAvailable ? 'fa-plus' : 'fa-times'; ?> me-2"></i>
+                                        <?php echo $isAvailable ? 'ADD TO LIST' : 'UNAVAILABLE'; ?>
+                                    </button>
+                                </div>
                             </div>
                         </div>
-
-                        <!-- Order Summary Section -->
-                        <div class="col-md-4">
-                            <div class="card">
-                                <div class="card-header bg-warning text-white">
-                                    <h6 class="mb-0">Order Summary</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div id="cartItems">
-                                        <div class="text-muted text-center" id="emptyCartMessage">
-                                            No items in cart
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="d-flex justify-content-between fw-bold">
-                                        <span>Total:</span>
-                                        <span id="cartTotal">₱0.00</span>
-                                    </div>
-                                </div>
-                            </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i> No table packages available at the moment.
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                    <button type="button" class="btn btn-warning" id="confirmMenuItems">
-                        Confirm Orders <span id="cartItemCount" class="badge bg-light text-dark ms-2">0</span>
-                    </button>
-                </div>
+                <?php endif; ?>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Update the add-ons modal -->
-    <div class="modal fade" id="addonsModal" tabindex="-1">
+    <!-- Cart Modal -->
+    <div class="modal fade" id="cartModal" tabindex="-1" aria-labelledby="cartModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">Select Add-ons</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="cartModalLabel">Your Cart</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div id="addonsList">
-                        <?php foreach ($menuAddons as $addon): ?>
-                            <div class="addon-item mb-3">
-                                <div class="card">
-                                    <div class="card-body p-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div class="d-flex align-items-center">
-                                                <div class="form-check mb-0">
-                                                    <input class="form-check-input addon-checkbox" type="checkbox"
-                                                        value="<?php echo $addon['id']; ?>"
-                                                        data-name="<?php echo htmlspecialchars($addon['name']); ?>"
-                                                        data-price="<?php echo $addon['price']; ?>"
-                                                        id="addon<?php echo $addon['id']; ?>">
-                                                    <label class="form-check-label ms-2"
-                                                        for="addon<?php echo $addon['id']; ?>">
-                                                        <span
-                                                            class="addon-name"><?php echo htmlspecialchars($addon['name']); ?></span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <span
-                                                class="addon-price text-success fw-bold">₱<?php echo number_format($addon['price'], 2); ?></span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
+                <div class="modal-body" id="cartModalBody">
+                    <div class="text-center py-4" id="emptyCartMessage">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <p class="mb-0">Your cart is empty</p>
+                    </div>
+                    <div id="cartItemsContainer" style="display: none;">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Item</th>
+                                        <th class="text-center">Capacity</th>
+                                        <th class="text-center">Qty</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cartItemsList">
+                                    <!-- Cart items will be dynamically inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back</button>
-                    <button type="button" class="btn btn-warning" id="confirmAddons">Add Selected</button>
+                <div class="modal-footer" id="cartModalFooter" style="display: none;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Continue Browsing</button>
+                    <button type="button" class="btn btn-primary" id="proceedToCheckout">Proceed to Form</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Update the Package Details Modal -->
-    <div class="modal fade" id="packageDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+    <!-- Reservation Form Modal -->
+    <div class="modal fade" id="reservationFormModal" tabindex="-1" aria-labelledby="reservationFormModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">Package Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="package-details">
-                        <!-- Package Info -->
-                        <div class="mb-4">
-                            <h4 id="detailsPackageName" class="text-warning mb-0"></h4>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6 class="mb-2">Capacity:</h6>
-                            <p id="detailsCapacity" class="text-muted"></p>
-                        </div>
-
-                        <div class="mb-4">
-                            <h6 class="mb-2">Description:</h6>
-                            <p id="detailsDescription" class="text-muted"></p>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-warning reserve-package-btn">
-                <i class="fas fa-calendar-check me-2"></i>Reserve Now
-            </button>
-        </div>
-    </div>
-    </div>
-    </div>
-
-    <!-- Update the reservation modal content for ultimate packages -->
-    <div class="modal fade" id="reservationModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">
-                        <i class="fas fa-calendar-check me-2"></i>Package Reservation
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="reservationFormModalLabel">Complete Your Reservation</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="reservationForm">
-                        <input type="hidden" id="packageId" name="package_id">
-                        <input type="hidden" id="basePrice" name="base_price">
-                        <input type="hidden" id="isUltimatePackage" name="is_ultimate" value="0">
-                        <input type="hidden" id="packageName" name="package_name">
-
-                        <!-- Package Info -->
-                        <div class="mb-4">
-                            <h6 class="package-name mb-2"></h6>
-                        </div>
-
-                        <!-- Date and Guests -->
                         <div class="row mb-3">
                             <div class="col-md-6">
-                                <label class="form-label">Date</label>
-                                <input type="date" class="form-control" id="reservationDate" name="date" required
-                                    min="<?php echo date('Y-m-d'); ?>">
+                                <label for="reservationDate" class="form-label">Reservation Date</label>
+                                <input type="date" class="form-control" id="reservationDate" required disabled>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Number of Guests</label>
-                                <input type="number" class="form-control" id="guestCount" name="guest_count" min="1"
-                                    required>
-                                <small class="text-muted">Max: <span id="maxGuests"></span></small>
+                                <label for="reservationTime" class="form-label">Reservation Time</label>
+                                <input type="time" class="form-control" id="reservationTime" min="07:00" max="23:00" required disabled>
+                                <small class="text-muted">Cafe hours: 7:00 AM - 11:00 PM</small>
                             </div>
                         </div>
-
-                        <!-- Time Selection -->
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Arrival Time</label>
-                                <input type="time" class="form-control" id="arrivalTime" name="arrival_time" min="06:30"
-                                    max="23:00" required>
-                                <small class="text-muted">Operating hours: 6:30 AM - 11:00 PM</small>
-                            </div>
-                            <div class="col-md-6" id="durationSection" style="display: none;">
-                                <label class="form-label">Duration</label>
-                                <select class="form-select" id="duration" name="duration">
-                                    <option value="4">4 hours (Standard)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <!-- Payment Section (Only visible for Ultimate Package) -->
-                        <div id="ultimatePaymentSection" style="display: none;">
-                            <hr class="my-4">
-                            <h6 class="mb-3">Payment Details</h6>
-
-                            <!-- Payment Option -->
-                            <div class="mb-3">
-                                <label class="form-label">Payment Option</label>
-                                <select class="form-select" id="paymentOption" name="payment_option" required>
-                                    <option value="">Select Payment Option</option>
-                                    <option value="full">Full Payment</option>
-                                    <option value="partial">50% Partial Payment</option>
-                                </select>
-                            </div>
-
-                            <!-- Payment Method -->
-                            <div class="mb-3">
-                                <label class="form-label">Payment Method</label>
-                                <select class="form-select" id="paymentMethod" name="payment_method" required>
-                                    <option value="">Select Payment Method</option>
-                                    <?php foreach ($paymentMethods as $method): ?>
-                                        <option value="<?php echo htmlspecialchars($method['name']); ?> ">
-                                            <?php echo htmlspecialchars($method['display_name']); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <!-- Payment Details Display -->
-                            <div id="paymentDetails" class="card mb-3" style="display: none;">
-                                <div class="card-body">
-
-                                </div>
-                            </div>
-
-                            <!-- Payment Proof Upload -->
-                            <div class="mb-3" id="paymentProofSection" style="display: none;">
-                                <label class="form-label">Payment Proof</label>
-                                <div class="input-group">
-                                    <input type="file" class="form-control" id="paymentProof" name="payment_proof"
-                                        accept="image/*">
-                                    <label class="input-group-text" for="paymentProof">
-                                        <i class="fas fa-upload"></i>
-                                    </label>
-                                </div>
-                                <div id="paymentPreview" class="mt-2" style="display: none;">
-                                    <img src="" alt="Payment Proof Preview" class="img-fluid"
-                                        style="max-height: 200px;">
-                                    <button type="button" class="btn btn-sm btn-outline-danger mt-2" id="removeProof">
-                                        <i class="fas fa-times"></i> Remove
-                                    </button>
-                                </div>
-                                <small class="text-muted">Please upload a screenshot or photo of your payment</small>
-                            </div>
-
-                            <!-- Payment Reference -->
-                            <div class="mb-3" id="referenceNumberSection" style="display: none;">
-                                <label class="form-label">Payment Reference Number</label>
-                                <input type="text" class="form-control" id="referenceNumber" name="reference_number"
-                                    placeholder="Enter reference number">
-                                <small class="text-muted reference-format">
-                                    GCash: 13 digits | Maya: 12 characters (letters and numbers)
-                                </small>
-                            </div>
-                        </div>
-
-                        <!-- Add this before the form's closing tag in the reservation modal -->
                         <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="policyCheck" required>
-                                <label class="form-check-label" for="policyCheck">
-                                    I agree to the <a href="#" data-bs-toggle="modal"
-                                        data-bs-target="#policyModal">Terms & Policies</a>
-                                </label>
+                            <h6>Selected Tables</h6>
+                            <div id="selectedTablesList" class="mb-3">
+                                <!-- Tables will be dynamically inserted here -->
+                                <div class="text-muted">Loading tables from cart...</div>
                             </div>
+                            
+                            <!-- Order Summary Section -->
+                            <div id="orderSummary" class="mb-3">
+                                <!-- Order items will be displayed here -->
+                            </div>
+                            
+                            <!-- Payment Section (initially hidden) -->
+                            <div id="paymentSection" style="display: none;">
+                                <h6 class="mt-4 mb-3">Payment Details</h6>
+                                <div class="mb-3">
+                                    <label for="paymentMethod" class="form-label">Payment Method</label>
+                                    <select class="form-select" id="paymentMethod" name="paymentMethod" required>
+                                        <option value="">Select Payment Method</option>
+                                        
+                                        <option value="online">
+                                            <i class="fas fa-credit-card me-2"></i>Gcash
+                                        </option>
+                                        <option value="online">
+                                            <i class="fas fa-credit-card me-2"></i>Maya
+                                        </option>
+                                    </select>
+                                </div>
+                                <div id="paymentOptions" class="mb-3" style="display: none;">
+                                    <label for="paymentOption" class="form-label">Payment Option</label>
+                                    <select class="form-select" id="paymentOption" name="paymentOption">
+                                        <option value="select">Select Payment Option</option>
+                                        <option value="full">Full Payment</option>
+                                        <option value="partial">Partial Payment (50% downpayment)</option>
+                                        <option value="custom">Custom Payment</option>
+                                    </select>
+                                    
+                                    <!-- Payment Breakdown Section -->
+                                    <!-- Payment Breakdown Container -->
+                                <div id="paymentBreakdown" class="mt-3 p-3 bg-light rounded" style="display: none;">
+                                    <h6 class="mb-3">Payment Breakdown</h6>
+                                    <div class="d-flex justify-content-between mb-2">
+                                        <span>Total Amount:</span>
+                                        <span id="breakdownTotal" class="fw-bold">₱0.00</span>
+                                    </div>
+                                    <div id="downpaymentRow" class="d-flex justify-content-between mb-2">
+                                        <span>50% Downpayment:</span>
+                                        <span id="breakdownDownpayment" class="fw-bold text-primary">₱0.00</span>
+                                    </div>
+                                    <div id="customPaymentRow" class="mb-2" style="display: none;">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Custom Amount:</span>
+                                            <input type="number" class="form-control" id="customAmount" min="1" step="0.01" placeholder="Enter amount">
+                                        </div>
+                                        <div class="text-danger small mt-1" id="customAmountError"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between mt-2 pt-2 border-top">
+                                        <div>
+                                            <span class="fw-bold">Remaining Balance:</span>
+                                            <span class="badge bg-warning ms-2">Pending</span>
+                                        </div>
+                                        <span id="breakdownBalance" class="fw-bold">₱0.00</span>
+                                    </div>
+                                    <div class="small text-muted mt-2">* Remaining balance to be paid upon arrival</div>
+                                </div>
+                                </div>
+                            </div>
+                            
+
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-warning" id="confirmReservation">
-                        Confirm Reservation
+                    <button type="button" class="btn btn-success" id="confirmBookingBtn">
+                        <i class="fas fa-check-circle me-2"></i>Confirm Booking
                     </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- First, add the advance order confirmation modal -->
-    <div class="modal fade" id="advanceOrderConfirmModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <style>
+        /* Menu item card hover effect */
+        .card {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Custom scrollbar for order items */
+        #orderItems {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        /* Quantity input number arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button {  
+            -webkit-appearance: none;
+            margin: 0; 
+        }
+        
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        /* Add-ons select styling */
+        .item-addon {
+            font-size: 0.85rem;
+        }
+        
+        /* Nav tabs styling */
+        .nav-tabs .nav-link {
+            color: #495057;
+            font-weight: 500;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            border-radius: 0.25rem 0.25rem 0 0;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            background-color: rgba(13, 110, 253, 0.05);
+            border-bottom: 2px solid #0d6efd;
+        }
+        
+        .nav-tabs .nav-link:hover:not(.active) {
+            border-color: transparent;
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 1rem;
+            }
+            
+            .nav-tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+            
+            .nav-tabs .nav-item {
+                display: inline-block;
+                float: none;
+            }
+        }
+    </style>
+    
+    <!-- Menu Modal -->
+    <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">Advance Order</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="menuModalLabel">Advance Order - Menu</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you want to add advance orders?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="noAdvanceOrder">No</button>
-                    <button type="button" class="btn btn-warning" id="yesAdvanceOrder">Yes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add this new modal for booking summary -->
-    <div class="modal fade" id="bookingSummaryModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">
-                        <i class="fas fa-clipboard-check me-2"></i>Booking Summary
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="booking-summary">
-                        <h6 class="mb-3">Reservation Details</h6>
-                        <p><strong>Package:</strong> <span id="summaryPackage"></span></p>
-                        <p><strong>Date:</strong> <span id="summaryDate"></span></p>
-                        <p><strong>Time:</strong> <span id="summaryTime"></span></p>
-                        <p><strong>Duration:</strong> <span id="summaryDuration"></span></p>
-                        <p><strong>Number of Guests:</strong> <span id="summaryGuests"></span></p>
-
-                        <hr>
-                        <h6 class="mb-3">Cost Breakdown</h6>
-                        <p><strong>Base Price:</strong> <span id="summaryBasePrice"></span></p>
-                        <div id="summaryExtraHours" style="display: none;">
-                            <p><strong>Extra Hours:</strong> <span id="summaryHoursCost"></span></p>
+                    <!-- Menu Categories Tabs -->
+                    <ul class="nav nav-tabs mb-4" id="menuCategories" role="tablist">
+                        <!-- Will be populated by JavaScript -->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="loading-tab" data-bs-toggle="tab" data-bs-target="#loading" type="button" role="tab" aria-controls="loading" aria-selected="true">
+                                <i class="fas fa-spinner fa-spin"></i> Loading...
+                            </button>
+                        </li>
+                    </ul>
+                    
+                    <!-- Menu Items -->
+                    <div class="tab-content" id="menuItems">
+                        <div class="tab-pane fade show active" id="loading" role="tabpanel" aria-labelledby="loading-tab">
+                            <div class="text-center py-5">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading menu items...</p>
+                            </div>
                         </div>
-                        <div id="summaryExtraGuests" style="display: none;">
-                            <p><strong>Extra Guests:</strong> <span id="summaryGuestsCost"></span></p>
+                    </div>
+                    
+                    <!-- Order Summary -->
+                    <div class="card mt-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">Order Summary</h5>
                         </div>
-                        <p class="fw-bold text-success">Total Amount: <span id="summaryTotal"></span></p>
-
-                        <div id="summaryPayment"></div>
+                        <div class="card-body">
+                            <div id="orderItems">
+                                <p class="text-muted text-center py-3">Your order will appear here</p>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h5>Total: <span id="orderTotal">₱0.00</span></h5>
+                                <button type="button" class="btn btn-outline-danger btn-sm" id="clearOrderBtn">
+                                    <i class="fas fa-trash-alt me-1"></i> Clear Order
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Make Changes</button>
-                    <button type="button" class="btn btn-warning" id="confirmBookingBtn">
-                        <i class="fas fa-check me-2"></i>Proceed to Payment
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-outline-primary" id="advanceOrderBtn">
+                        <i class="fas fa-calendar-plus me-2"></i>Advance Order
                     </button>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        // Global variable to track if availability has been checked
+        let availabilityChecked = false;
+        
+        // Function to load menu data
+        function loadMenuData() {
+            fetch('table_get_menu_data.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        renderMenu(data.data);
+                    } else {
+                        showAlert(data.message || 'Failed to load menu', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading menu:', error);
+                    showAlert('Error loading menu. Please try again.', 'error');
+                });
+        }
 
-    <!-- Add this after the existing modals -->
-    <div class="modal fade" id="ultimatePackageModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">
-                        <i class="fas fa-star me-2"></i>Intimate Package Details
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="package-details">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4 id="ultimatePackageName" class="text-warning mb-3"></h4>
-                                <div class="mb-3">
-                                    <h6 class="mb-2">Capacity:</h6>
-                                    <p id="ultimateCapacity" class="text-muted"></p>
-                                </div>
-                                <div class="mb-3">
-                                    <h6 class="mb-2">Package Includes:</h6>
-                                    <ul class="package-inclusions">
-                                        <li>Exclusive use of café dining area for 4 hours</li>
-                                        <li>Complete table setup and decorations</li>
-                                        <li>Dedicated service staff</li>
-                                        <li>Premium dining experience</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Update the menu section in the ultimate package modal -->
-                        <div class="mt-4">
-                            <h6 class="mb-2">Menu Selection:</h6>
-                            <div class="row g-3">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <h6 class="card-title">Included Menu Items</h6>
-                                            <ul id="ultimateMenuItems" class="list-unstyled menu-list">
-                                                <!-- Menu items will be populated here -->
-                                            </ul>
+        // Function to render menu
+        function renderMenu(categories) {
+            const categoriesNav = document.getElementById('menuCategories');
+            const menuItemsContainer = document.getElementById('menuItems');
+            
+            // Clear loading state
+            categoriesNav.innerHTML = '';
+            menuItemsContainer.innerHTML = '';
+            
+            if (categories.length === 0) {
+                menuItemsContainer.innerHTML = `
+                    <div class="alert alert-warning">
+                        No menu items available. Please check back later.
+                    </div>
+                `;
+                return;
+            }
+            
+            // Create category tabs
+            categories.forEach((category, index) => {
+                const isFirst = index === 0;
+                const tabId = `cat-${category.id}`;
+                
+                // Create tab button
+                const tabButton = document.createElement('li');
+                tabButton.className = 'nav-item';
+                tabButton.role = 'presentation';
+                tabButton.innerHTML = `
+                    <button class="nav-link ${isFirst ? 'active' : ''}" 
+                            id="${tabId}-tab" 
+                            data-bs-toggle="tab" 
+                            data-bs-target="#${tabId}" 
+                            type="button" 
+                            role="tab" 
+                            aria-controls="${tabId}" 
+                            aria-selected="${isFirst ? 'true' : 'false'}">
+                        ${category.name}
+                    </button>
+                `;
+                categoriesNav.appendChild(tabButton);
+                
+                // Create tab content
+                const tabContent = document.createElement('div');
+                tabContent.className = `tab-pane fade ${isFirst ? 'show active' : ''}`;
+                tabContent.id = tabId;
+                tabContent.role = 'tabpanel';
+                tabContent.ariaLabelledby = `${tabId}-tab`;
+                
+                // Add menu items
+                if (category.items && category.items.length > 0) {
+                    const row = document.createElement('div');
+                    row.className = 'row g-4';
+                    
+                    category.items.forEach(item => {
+                        const itemHtml = `
+                            <div class="col-md-6 col-lg-4">
+                                <div class="card h-100">
+                                    <div class="position-relative">
+                                    ${item.image_path ? 
+                                            `<img src="${item.image_path}" class="card-img-top" alt="${item.name}" style="height: 160px; object-fit: cover;">` : 
+                                            `<div class="bg-light d-flex align-items-center justify-content-center" style="height: 160px;">
+                                                <i class="fas fa-utensils fa-3x text-muted"></i>
+                                            </div>`
+                                        }
+                                        <div class="position-absolute top-0 end-0 m-2">
+                                            <span class="badge bg-success">₱${parseFloat(item.price).toFixed(2)}</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">${item.name}</h5>
+                                        ${item.description ? `<p class="card-text text-muted small">${item.description}</p>` : ''}
+                                        
+                                        ${item.addons && item.addons.length > 0 ? `
+                                            <div class="mt-2">
+                                                <label class="form-label small text-muted mb-1">Add-ons:</label>
+                                                <select class="form-select form-select-sm item-addon" data-item-id="${item.id}">
+                                                    <option value="" selected>Select add-on</option>
+                                                    ${item.addons.map(addon => 
+                                                        `<option value="${addon.id}" data-price="${addon.price}">
+                                                            ${addon.name} (+₱${parseFloat(addon.price).toFixed(2)})
+                                                        </option>`
+                                                    ).join('')}
+                                                </select>
+                                            </div>
+                                        ` : ''}
+                                        
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div class="input-group input-group-sm" style="width: 120px;">
+                                                <button class="btn btn-outline-secondary minus-item" type="button" data-item-id="${item.id}">-</button>
+                                                <input type="number" class="form-control text-center quantity-input" 
+                                                    value="0" min="0" data-item-id="${item.id}" 
+                                                    style="width: 40px;">
+                                                <button class="btn btn-outline-primary plus-item" type="button" data-item-id="${item.id}">+</button>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-primary add-to-order" data-item-id="${item.id}">
+                                                <i class="fas fa-plus"></i> Add
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        `;
+                        row.innerHTML += itemHtml;
+                    });
+                    
+                    tabContent.appendChild(row);
+                } else {
+                    tabContent.innerHTML = `
+                        <div class="alert alert-info">
+                            No items available in this category.
                         </div>
-
-                        <div class="mt-4">
-                            <div class="alert alert-warning">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Important Notes:</strong>
-                                <ul class="mb-0 mt-2">
-                                    <li>Package is only available until 2:00 PM</li>
-                                    <li>Corkage fee applies for outside food and beverages</li>
-                                    <li>50% non-refundable deposit required for reservation</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-warning" id="ultimateReserveBtn">
-                        <i class="fas fa-calendar-check me-2"></i>Make Reservation
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Image Modal for displaying package images in full size -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white" id="imageModalLabel">Package Image</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center p-0">
-                    <img id="modalImage" src="" alt="Package image" class="img-fluid">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Image Modal for displaying package images in full size -->
-    <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white" id="imageModalLabel">Package Image</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-center p-0">
-                    <img id="modalImage" src="" alt="Package image" class="img-fluid">
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add this new modal for policies -->
-    <div class="modal fade" id="policyModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header bg-warning">
-                    <h5 class="modal-title text-white">
-                        <i class="fas fa-file-contract me-2"></i>Reservation Policies
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="policy-content">
-                        <h5>Reservation Terms</h5>
-                        <ul>
-                            <li>Reservations are confirmed only upon payment of the required amount.</li>
-                            <li>For intimate packages, 50% downpayment is non-refundable.</li>
-                            <li>Remaining balance must be paid on the day of the event.</li>
-                            <li>Changes to the reservation must be made at least 48 hours before the event.</li>
-                        </ul>
-
-                        <h5>Cancellation Policy</h5>
-                        <ul>
-                            <li>Cancellations made 7 days before the event: 80% refund</li>
-                            <li>Cancellations made 3-6 days before: 50% refund</li>
-                            <li>Cancellations made less than 48 hours: No refund</li>
-                        </ul>
-
-                        <h5>Usage Guidelines</h5>
-                        <ul>
-                            <li>Maximum duration for standard reservation is 4 hours</li>
-                            <li>Additional hours will be charged ₱2,000 per hour</li>
-                            <li>Corkage fees apply for outside food and beverages</li>
-                            <li>Damage to café property will be charged accordingly</li>
-                        </ul>
-
-                        <h5>Other Terms</h5>
-                        <ul>
-                            <li>The café reserves the right to refuse service to anyone</li>
-                            <li>Prices and policies are subject to change without prior notice</li>
-                            <li>By making a reservation, you agree to all terms and conditions</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" data-bs-dismiss="modal">I Understand</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php include('footer.php'); ?>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="package_image_modal.js"></script>
-    <script>
-        // Add this helper function at the start of your JavaScript
-        function formatNumber(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-
-        // Add this function at the start of your JavaScript code
-        function closeAllModals() {
-            const modals = ['reservationModal', 'policyModal', 'bookingSummaryModal', 'ultimatePackageModal'];
-            modals.forEach(modalId => {
-                const modalInstance = bootstrap.Modal.getInstance(document.getElementById(modalId));
-                if (modalInstance) {
-                    modalInstance.hide();
+                    `;
                 }
+                
+                menuItemsContainer.appendChild(tabContent);
+            });
+            
+            // Initialize tooltips
+            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Initialize event listeners for the menu
+            initializeMenuEventListeners();
+        }
+        
+        // Initialize event listeners for menu items
+        function initializeMenuEventListeners() {
+            // Quantity controls
+            document.querySelectorAll('.plus-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-item-id');
+                    const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+                    input.value = parseInt(input.value) + 1;
+                    updateAddButtonState(itemId, input.value);
+                });
+            });
+            
+            document.querySelectorAll('.minus-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-item-id');
+                    const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+                    const newValue = Math.max(0, parseInt(input.value) - 1);
+                    input.value = newValue;
+                    updateAddButtonState(itemId, newValue);
+                });
+            });
+            
+            // Quantity input change
+            document.querySelectorAll('.quantity-input').forEach(input => {
+                input.addEventListener('change', function() {
+                    const itemId = this.getAttribute('data-item-id');
+                    const value = Math.max(0, parseInt(this.value) || 0);
+                    this.value = value;
+                    updateAddButtonState(itemId, value);
+                });
+            });
+            
+            // Add to order button
+            document.querySelectorAll('.add-to-order').forEach(button => {
+                button.addEventListener('click', function() {
+                    const itemId = this.getAttribute('data-item-id');
+                    addToOrder(itemId);
+                });
             });
         }
+        
+        // Update add button state based on quantity
+        function updateAddButtonState(itemId, quantity) {
+            const button = document.querySelector(`.add-to-order[data-item-id="${itemId}"]`);
+            if (button) {
+                button.disabled = quantity <= 0;
+            }
+        }
+        
+        // Add item to order
+        function addToOrder(itemId) {
+            const input = document.querySelector(`.quantity-input[data-item-id="${itemId}"]`);
+            const quantity = parseInt(input.value) || 0;
+            
+            if (quantity <= 0) return;
+            
+            // Get item details
+            const itemCard = input.closest('.card');
+            const itemName = itemCard.querySelector('.card-title').textContent;
+            const itemPrice = parseFloat(itemCard.querySelector('.badge').textContent.replace('₱', ''));
+            
+            // Get selected add-on if any
+            let addonId = '';
+            let addonName = '';
+            let addonPrice = 0;
+            
+            const addonSelect = itemCard.querySelector('.item-addon');
+            if (addonSelect && addonSelect.value) {
+                addonId = addonSelect.value;
+                const selectedOption = addonSelect.options[addonSelect.selectedIndex];
+                addonName = selectedOption.text.split(' (')[0];
+                addonPrice = parseFloat(selectedOption.getAttribute('data-price'));
+            }
+            
+            // Add to order
+            const orderItem = {
+                id: `item-${Date.now()}`,
+                itemId,
+                name: itemName,
+                price: itemPrice,
+                quantity,
+                addonId,
+                addonName,
+                addonPrice,
+                total: (itemPrice + addonPrice) * quantity
+            };
+            
+            // Add to order in localStorage
+            let order = JSON.parse(localStorage.getItem('currentOrder')) || [];
+            order.push(orderItem);
+            localStorage.setItem('currentOrder', JSON.stringify(order));
+            
+            // Reset input
+            input.value = '0';
+            updateAddButtonState(itemId, 0);
+            
+            // Update order summary
+            updateOrderSummary();
+            
+            // Show success message
+            showAlert(`${quantity}x ${itemName} ${addonName ? 'with ' + addonName : ''} added to order`, 'success');
+        }
+        
+        // Clear current order
+        function clearCurrentOrder() {
+            localStorage.removeItem('currentOrder');
+            updateOrderSummary();
+            showAlert('Order has been cleared', 'info');
+        }
+        
+        // Update order summary
+        function updateOrderSummary() {
+            const order = JSON.parse(localStorage.getItem('currentOrder')) || [];
+            const orderItemsContainer = document.getElementById('orderItems');
+            const orderTotalElement = document.getElementById('orderTotal');
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            const clearOrderBtn = document.getElementById('clearOrderBtn');
+            
+            if (order.length === 0) {
+                orderItemsContainer.innerHTML = '<p class="text-muted text-center py-3">Your order will appear here</p>';
+                orderTotalElement.textContent = '₱0.00';
+                addToCartBtn.disabled = true;
+                if (clearOrderBtn) clearOrderBtn.style.display = 'none';
+                return;
+            }
+            
+            // Calculate total
+            let total = 0;
+            let itemsHtml = '';
+            
+            order.forEach((item, index) => {
+                total += item.total;
+                
+                itemsHtml += `
+                    <div class="d-flex justify-content-between align-items-center mb-2 pb-2 border-bottom">
+                        <div>
+                            <h6 class="mb-0">${item.quantity}x ${item.name}</h6>
+                            ${item.addonName ? `<small class="text-muted">Add-on: ${item.addonName} (₱${item.addonPrice.toFixed(2)})</small><br>` : ''}
+                            <small class="text-muted">₱${item.price.toFixed(2)} each</small>
+                        </div>
+                        <div class="text-end">
+                            <div class="fw-bold">₱${item.total.toFixed(2)}</div>
+                            <button class="btn btn-sm btn-outline-danger remove-item" data-index="${index}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            orderItemsContainer.innerHTML = itemsHtml;
+            orderTotalElement.textContent = `₱${total.toFixed(2)}`;
+            addToCartBtn.disabled = false;
+            if (clearOrderBtn) clearOrderBtn.style.display = 'inline-flex';
+            
+            // Add event listeners to remove buttons
+            document.querySelectorAll('.remove-item').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeFromOrder(index);
+                });
+            });
+        }
+        
+        // Remove item from order
+        function removeFromOrder(index) {
+            let order = JSON.parse(localStorage.getItem('currentOrder')) || [];
+            if (index >= 0 && index < order.length) {
+                order.splice(index, 1);
+                localStorage.setItem('currentOrder', JSON.stringify(order));
+                updateOrderSummary();
+            }
+        }
+        
+        // Add to cart button click
+        document.getElementById('addToCartBtn')?.addEventListener('click', function() {
+            const order = JSON.parse(localStorage.getItem('currentOrder')) || [];
+            
+            if (order.length === 0) {
+                showAlert('Your order is empty', 'warning');
+                return;
+            }
+            
+            // Get current cart or initialize empty array
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Add order items to cart
+            order.forEach(item => {
+                cart.push({
+                    id: `menu-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                    type: 'menu',
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    addon: item.addonName ? {
+                        name: item.addonName,
+                        price: item.addonPrice
+                    } : null,
+                    total: item.total,
+                    timestamp: new Date().toISOString()
+                });
+            });
+            
+            // Save updated cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Clear current order
+            localStorage.removeItem('currentOrder');
+            
+            // Update UI
+            updateOrderSummary();
+            updateCartItemCount();
+            
+            // Show success message
+            showAlert('Items added to cart successfully!', 'success');
+        });
+        
+        // View cart button click
+        document.getElementById('viewCartBtn')?.addEventListener('click', function() {
+            // Close menu modal
+            const menuModal = bootstrap.Modal.getInstance(document.getElementById('menuModal'));
+            menuModal.hide();
+            
+            // Open cart modal
+            const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+            cartModal.show();
+        });
+        
+        // Clear order button click
+        document.getElementById('clearOrderBtn')?.addEventListener('click', function() {
+            Swal.fire({
+                title: 'Clear Order',
+                text: 'Are you sure you want to clear your current order?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, clear it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    clearCurrentOrder();
+                }
+            });
+        });
+        
+        // Load menu when modal is shown
+        document.getElementById('menuModal')?.addEventListener('shown.bs.modal', function() {
+            loadMenuData();
+            updateOrderSummary();
+        });
+        
+        // Clear order when modal is hidden
+        document.getElementById('menuModal')?.addEventListener('hidden.bs.modal', function() {
+            // Optionally clear the current order when modal is closed
+            // localStorage.removeItem('currentOrder');
+        });
 
-        // Function to display package image in modal
-        function displayPackageImage(imageUrl, title = 'Package Image') {
-            const imageModal = new bootstrap.Modal(document.getElementById('imageModal'));
-            const modalImage = document.getElementById('modalImage');
-            const modalTitle = document.getElementById('imageModalLabel');
-
-            // Set the image source and title
-            modalImage.src = imageUrl;
-            modalTitle.textContent = title;
-
-            // Show the modal
-            imageModal.show();
+        // Function to update cart item count and modal
+        function updateCartItemCount() {
+            // Get cart from localStorage or initialize empty array
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            // Calculate total quantity of items in cart
+            const totalItems = cart.reduce((total, item) => total + (parseInt(item.quantity) || 0), 0);
+            // Update the cart badge
+            const cartBadge = document.getElementById('cartItemCount');
+            if (cartBadge) {
+                cartBadge.textContent = totalItems;
+                cartBadge.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+            
+            // Update cart modal
+            updateCartModal(cart);
         }
 
-        // Add click event listener to package images
-        document.addEventListener('click', function (event) {
-            const target = event.target;
+        // Function to update cart modal with current cart items
+        function updateCartModal(cart) {
+            const cartItemsList = document.getElementById('cartItemsList');
+            const emptyCartMessage = document.getElementById('emptyCartMessage');
+            const cartItemsContainer = document.getElementById('cartItemsContainer');
+            const cartModalFooter = document.getElementById('cartModalFooter');
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            
+            if (cart.length === 0) {
+                emptyCartMessage.style.display = 'block';
+                cartItemsContainer.style.display = 'none';
+                cartModalFooter.style.display = 'none';
+                return;
+            }
+            
+            // Show cart items and footer
+            emptyCartMessage.style.display = 'none';
+            cartItemsContainer.style.display = 'block';
+            cartModalFooter.style.display = 'flex';
+            
+            // Clear existing items
+            cartItemsList.innerHTML = '';
+            
+            // Add each item to the cart
+            cart.forEach((item, index) => {
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.name || 'Unnamed Item'}</td>
+                    <td class="text-center">${item.capacity || '2'} persons</td>
+                    <td class="text-center align-middle">
+                        <div class="d-flex justify-content-center align-items-center">
+                            <button class="btn btn-sm btn-outline-secondary decrement-qty" data-index="${index}" style="min-width: 30px;">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <input type="text" class="form-control form-control-sm text-center mx-1 quantity-input" 
+                                   value="${item.quantity || 1}" 
+                                   data-index="${index}" 
+                                   style="width: 45px;">
+                            <button class="btn btn-sm btn-outline-secondary increment-qty" data-index="${index}" style="min-width: 30px;">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </td>
+                    <td class="text-center align-middle">
+                        <button class="btn btn-sm btn-outline-danger" onclick="removeFromCart(${index}, event)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                cartItemsList.appendChild(row);
+            });
+            
+        }
+        
+        // Function to remove item from cart
+        function removeFromCart(index, event) {
+            event.stopPropagation();
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartItemCount();
+            
+            // Dispatch storage event to update other tabs/windows
+            window.dispatchEvent(new Event('storage'));
+        }
+        
+        // Function to update quantity in cart
+        function updateCartItemQuantity(index, newQuantity) {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart[index]) {
+                // Ensure quantity is at least 1
+                newQuantity = Math.max(1, parseInt(newQuantity) || 1);
+                cart[index].quantity = newQuantity;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCartItemCount();
+                window.dispatchEvent(new Event('storage'));
+            }
+        }
 
-            // Check if the clicked element is a package image
-            if (target.tagName === 'IMG' && target.classList.contains('package-image')) {
-                event.preventDefault();
-                displayPackageImage(target.src, target.alt || 'Package Image');
+        // Handle quantity changes
+        document.addEventListener('click', function(e) {
+            // Increment quantity
+            if (e.target.closest('.increment-qty')) {
+                const button = e.target.closest('.increment-qty');
+                const index = parseInt(button.dataset.index);
+                const input = button.previousElementSibling;
+                const newQty = parseInt(input.value) + 1;
+                updateCartItemQuantity(index, newQty);
+            }
+            
+            // Decrement quantity
+            if (e.target.closest('.decrement-qty')) {
+                const button = e.target.closest('.decrement-qty');
+                const index = parseInt(button.dataset.index);
+                const input = button.nextElementSibling;
+                const newQty = Math.max(1, parseInt(input.value) - 1);
+                updateCartItemQuantity(index, newQty);
             }
         });
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // Update the reservation modal handler
-            const reservationModal = document.getElementById('reservationModal');
-            if (reservationModal) {
-                reservationModal.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-                    const packageId = button.getAttribute('data-package-id');
-                    const packageName = button.getAttribute('data-package-name');
-                    const packageCapacity = button.getAttribute('data-package-capacity');
-                    const packagePrice = button.getAttribute('data-package-price');
-
-                    // Set form values
-                    document.getElementById('packageId').value = packageId;
-                    document.getElementById('packageName').value = packageName;
-                    document.getElementById('basePrice').value = packagePrice;
-                    document.querySelectorAll('.package-name').forEach(el => el.textContent = packageName);
-
-                    // Set max guests
-                    document.getElementById('maxGuests').textContent = packageCapacity;
-                    document.getElementById('guestCount').max = packageCapacity;
-
-                    // Show/hide sections based on package type
-                    const isUltimate = parseInt(packageCapacity) >= 30;
-                    document.getElementById('isUltimatePackage').value = isUltimate ? "1" : "0";
-                    document.getElementById('ultimatePaymentSection').style.display = isUltimate ? "block" : "none";
-                    document.getElementById('durationSection').style.display = isUltimate ? "block" : "none";
-
-                    // Set fixed duration for regular packages
-                    if (!isUltimate) {
-                        document.getElementById('duration').value = '4';
-                    }
-                });
+        // Handle manual input changes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('quantity-input')) {
+                const input = e.target;
+                const index = parseInt(input.dataset.index);
+                const newQty = Math.max(1, parseInt(input.value) || 1);
+                updateCartItemQuantity(index, newQty);
             }
+        });
 
-            // Handle payment method change
-            document.getElementById('paymentMethod').addEventListener('change', function () {
-                const selectedOption = this.options[this.selectedIndex];
-                const paymentDetails = document.getElementById('paymentDetails');
-                const referenceSection = document.getElementById('referenceNumberSection');
-                const proofSection = document.getElementById('paymentProofSection');
-
-                if (this.value) {
-                    // Update payment details
-                    document.getElementById('qrCode').src = selectedOption.dataset.qr;
-                    document.getElementById('accountName').textContent = selectedOption.dataset.name;
-                    document.getElementById('accountNumber').textContent = selectedOption.dataset.account;
-
-                    // Show payment details, reference number section, and proof upload
-                    paymentDetails.style.display = 'block';
-                    referenceSection.style.display = 'block';
-                    proofSection.style.display = 'block';
-                } else {
-                    paymentDetails.style.display = 'none';
-                    referenceSection.style.display = 'none';
-                    proofSection.style.display = 'none';
-                }
-            });
-
-            // Handle payment option change
-            document.getElementById('paymentOption').addEventListener('change', function () {
-                updateTotalAmount();
-            });
-
-            // Add duration change handler
-            document.getElementById('duration').addEventListener('change', function () {
-                updateTotalAmount();
-            });
-
-            // Update the updateTotalAmount function to include extra guest charges
-            function updateTotalAmount() {
-                const basePrice = parseFloat(document.getElementById('basePrice').value);
-                const isUltimate = document.getElementById('isUltimatePackage').value === "1";
-                const paymentOption = document.getElementById('paymentOption').value;
-                const amountDisplay = document.getElementById('amountToPay');
-
-                let totalPrice = basePrice;
-                let extraHoursCost = 0;
-                let extraGuestsCost = 0;
-
-                // Calculate extra costs only for ultimate packages
-                if (isUltimate) {
-                    // Calculate extra hours cost
-                    const duration = parseInt(document.getElementById('duration').value);
-                    const extraHours = Math.max(0, duration - 4);
-                    extraHoursCost = extraHours * 2000;
-
-                    // Calculate extra guest charges
-                    const capacity = parseInt(document.getElementById('maxGuests').textContent);
-                    const actualGuests = parseInt(document.getElementById('guestCount').value) || 0;
-                    const extraGuests = Math.max(0, actualGuests - capacity);
-                    extraGuestsCost = extraGuests * 1000;
-
-                    totalPrice = basePrice + extraHoursCost + extraGuestsCost;
-                }
-
-                if (paymentOption === 'partial') {
-                    const partialAmount = totalPrice * 0.5;
-                    const remainingBalance = totalPrice - partialAmount;
-                    amountDisplay.innerHTML = `
-                        <div class="mb-2">Base Price: ₱${formatNumber(basePrice.toFixed(2))}</div>
-                        ${isUltimate && extraHoursCost > 0 ? `<div class="mb-2">Extra Hours: ₱${formatNumber(extraHoursCost.toFixed(2))}</div>` : ''}
-                        ${isUltimate && extraGuestsCost > 0 ? `<div class="mb-2">Extra Guests: ₱${formatNumber(extraGuestsCost.toFixed(2))}</div>` : ''}
-                        <div class="mb-2">Total Price: ₱${formatNumber(totalPrice.toFixed(2))}</div>
-                        <hr>
-                        <div class="text-warning fw-bold">Required Downpayment: ₱${formatNumber(partialAmount.toFixed(2))}</div>
-                        <div class="text-danger">Remaining Balance: ₱${formatNumber(remainingBalance.toFixed(2))}</div>
-                        <small class="text-muted d-block mt-2">* Remaining balance to be paid on the day of the event</small>
-                    `;
-                } else if (paymentOption === 'full') {
-                    amountDisplay.innerHTML = `
-                        <div class="mb-2">Base Price: ₱${formatNumber(basePrice.toFixed(2))}</div>
-                        ${isUltimate && extraHoursCost > 0 ? `<div class="mb-2">Extra Hours: ₱${formatNumber(extraHoursCost.toFixed(2))}</div>` : ''}
-                        ${isUltimate && extraGuestsCost > 0 ? `<div class="mb-2">Extra Guests: ₱${formatNumber(extraGuestsCost.toFixed(2))}</div>` : ''}
-                        <hr>
-                        <div class="fw-bold text-success">Total Amount: ₱${formatNumber(totalPrice.toFixed(2))}</div>
-                    `;
-                }
-            }
-
-            // Update the guest count change handler
-            document.getElementById('guestCount').addEventListener('input', function () {
-                const capacity = parseInt(document.getElementById('maxGuests').textContent);
-                const guests = parseInt(this.value) || 0;
-                const isUltimate = document.getElementById('isUltimatePackage').value === "1";
-
-                if (isUltimate && guests > capacity) {
-                    // Show warning about extra charges only for ultimate packages
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Extra Guest Charges',
-                        text: `Additional charge of ₱1,000 per person will apply for guests exceeding the package capacity of ${capacity}.`,
-                        confirmButtonColor: '#b6860a'
-                    });
-                } else if (!isUltimate && guests > capacity) {
-                    // Show warning about capacity limit for regular packages
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Capacity Limit Reached',
-                        text: `This package has a maximum capacity of ${capacity} guests.`,
-                        confirmButtonColor: '#b6860a'
-                    });
-                    this.value = capacity; // Reset to maximum capacity
-                }
-
-                // Update total amount if payment option is selected
-                if (document.getElementById('paymentOption').value) {
-                    updateTotalAmount();
-                }
-            });
-
-            // Handle payment proof upload
-            const paymentProof = document.getElementById('paymentProof');
-            const paymentPreview = document.getElementById('paymentPreview');
-            const previewImage = paymentPreview.querySelector('img');
-            const removeProofBtn = document.getElementById('removeProof');
-
-            paymentProof.addEventListener('change', function (e) {
-                if (this.files && this.files[0]) {
-                    const file = this.files[0];
-                    const reader = new FileReader();
-
-                    // Check file size (max 5MB)
-                    if (file.size > 5 * 1024 * 1024) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'File Too Large',
-                            text: 'Please select an image under 5MB',
-                            confirmButtonColor: '#b6860a'
-                        });
-                        this.value = '';
-                        return;
-                    }
-
-                    // Check file type
-                    if (!file.type.startsWith('image/')) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Invalid File Type',
-                            text: 'Please select an image file',
-                            confirmButtonColor: '#b6860a'
-                        });
-                        this.value = '';
-                        return;
-                    }
-
-                    reader.onload = function (e) {
-                        previewImage.src = e.target.result;
-                        paymentPreview.style.display = 'block';
-                    };
-
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            removeProofBtn.addEventListener('click', function () {
-                paymentProof.value = '';
-                paymentPreview.style.display = 'none';
-                previewImage.src = '';
-            });
-
-            // Update the confirm reservation button click handler
-            document.getElementById('confirmReservation').addEventListener('click', function () {
-                const form = document.getElementById('reservationForm');
-                const isUltimate = document.getElementById('isUltimatePackage').value === "1";
-                const policyCheck = document.getElementById('policyCheck');
-
-                // Validate policy check
-                if (!policyCheck.checked) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Policy Agreement Required',
-                        text: 'Please read and agree to our policies before proceeding',
-                        confirmButtonColor: '#b6860a'
-                    });
-                    return;
-                }
-
-
-                // Get all reservation details
-                const packageName = document.querySelector('.package-name').textContent;
-                const date = document.getElementById('reservationDate').value;
-                const time = document.getElementById('arrivalTime').value;
-                const duration = document.getElementById('duration').value;
-                const guests = document.getElementById('guestCount').value;
-                const basePrice = parseFloat(document.getElementById('basePrice').value);
-
-                // Calculate extra costs
-                const extraHours = Math.max(0, parseInt(duration) - 4);
-                const extraHoursCost = extraHours * 2000;
-
-                const capacity = parseInt(document.getElementById('maxGuests').textContent);
-                const extraGuests = Math.max(0, parseInt(guests) - capacity);
-                const extraGuestsCost = extraGuests * 1000;
-
-                const totalPrice = basePrice + extraHoursCost + extraGuestsCost;
-
-                // Get payment details for ultimate packages
-                let paymentDetails = '';
-                if (isUltimate) {
-                    const paymentOption = document.getElementById('paymentOption').value;
-                    const paymentMethod = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
-                    const referenceNumber = document.getElementById('referenceNumber').value;
-
-                    const partialAmount = totalPrice * 0.5;
-                    const remainingBalance = totalPrice - partialAmount;
-
-                    paymentDetails = `
-                        <hr>
-                        <h6 class="mb-3">Payment Information</h6>
-                        <p><strong>Payment Option:</strong> ${paymentOption === 'full' ? 'Full Payment' : '50% Partial Payment'}</p>
-                        <p><strong>Payment Method:</strong> ${paymentMethod}</p>
-                        <p><strong>Reference Number:</strong> ${referenceNumber}</p>
-                        <p><strong>Amount Paid:</strong> ₱${formatNumber(paymentOption === 'full' ? totalPrice.toFixed(2) : partialAmount.toFixed(2))}</p>
-                        ${paymentOption === 'partial' ? `<p class="text-danger"><strong>Remaining Balance:</strong> ₱${formatNumber(remainingBalance.toFixed(2))}</p>` : ''}
-                    `;
-                }
-
-                // Format date and time
-                const formattedDate = new Date(date).toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-
-                const formattedTime = new Date(`2000/01/01 ${time}`).toLocaleTimeString('en-US', {
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    hour12: true
-                });
-
-                // Update summary modal content
-                document.getElementById('summaryPackage').textContent = packageName;
-                document.getElementById('summaryDate').textContent = formattedDate;
-                document.getElementById('summaryTime').textContent = formattedTime;
-                document.getElementById('summaryDuration').textContent = `${duration} hours`;
-                document.getElementById('summaryGuests').textContent = guests;
-                document.getElementById('summaryBasePrice').textContent = `₱${formatNumber(basePrice.toFixed(2))}`;
-
-                // Handle extra hours
-                const extraHoursDiv = document.getElementById('summaryExtraHours');
-                const extraHoursCostSpan = document.getElementById('summaryHoursCost');
-                if (extraHours > 0) {
-                    extraHoursDiv.style.display = 'block';
-                    extraHoursCostSpan.textContent = `₱${formatNumber(extraHoursCost.toFixed(2))} (${extraHours} hours)`;
-                } else {
-                    extraHoursDiv.style.display = 'none';
-                }
-
-                // Handle extra guests
-                const extraGuestsDiv = document.getElementById('summaryExtraGuests');
-                const extraGuestsCostSpan = document.getElementById('summaryGuestsCost');
-                if (extraGuests > 0) {
-                    extraGuestsDiv.style.display = 'block';
-                    extraGuestsCostSpan.textContent = `₱${formatNumber(extraGuestsCost.toFixed(2))} (${extraGuests} guests)`;
-                } else {
-                    extraGuestsDiv.style.display = 'none';
-                }
-
-                document.getElementById('summaryTotal').textContent = `₱${formatNumber(totalPrice.toFixed(2))}`;
-
-                // Handle payment details for ultimate packages
-                const paymentSummary = document.getElementById('summaryPayment');
-                if (isUltimate) {
-                    const paymentOption = document.getElementById('paymentOption').value;
-                    const paymentMethod = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
-                    const referenceNumber = document.getElementById('referenceNumber').value;
-                    const partialAmount = totalPrice * 0.5;
-                    const remainingBalance = totalPrice - partialAmount;
-
-                    paymentSummary.innerHTML = `
-                        <hr>
-                        <h6 class="mb-3">Payment Information</h6>
-                        <p><strong>Payment Option:</strong> ${paymentOption === 'full' ? 'Full Payment' : '50% Partial Payment'}</p>
-                        <p><strong>Payment Method:</strong> ${paymentMethod}</p>
-                        <p><strong>Reference Number:</strong> ${referenceNumber}</p>
-                        <p><strong>Amount Paid:</strong> ₱${formatNumber(paymentOption === 'full' ? totalPrice.toFixed(2) : partialAmount.toFixed(2))}</p>
-                        ${paymentOption === 'partial' ? `<p class="text-danger"><strong>Remaining Balance:</strong> ₱${formatNumber(remainingBalance.toFixed(2))}</p>` : ''}
-                    `;
-
-                    // For ultimate packages, go straight to booking summary
-                    closeAllModals();
-                    const summaryModal = new bootstrap.Modal(document.getElementById('bookingSummaryModal'));
-                    summaryModal.show();
-                } else {
-                    paymentSummary.innerHTML = '';
-
-                    // For regular packages, show advance order confirmation dialog
-                    closeAllModals();
-
-                    // Show advance order confirmation dialog
-                    Swal.fire({
-                        title: 'Advance Order',
-                        text: 'Do you want to make an advance order?',
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonText: 'Yes, make advance order',
-                        cancelButtonText: 'No, continue to summary',
-                        confirmButtonColor: '#b6860a',
-                        cancelButtonColor: '#6c757d'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Store booking details in session storage
-                            const bookingDetails = {
-                                packageId: document.getElementById('packageId').value,
-                                packageName: document.querySelector('.package-name').textContent,
-                                date: document.getElementById('reservationDate').value,
-                                time: document.getElementById('arrivalTime').value,
-                                duration: document.getElementById('duration').value,
-                                guests: document.getElementById('guestCount').value,
-                                isUltimate: "0",
-                                basePrice: document.getElementById('basePrice').value,
-                                totalAmount: totalPrice
-                            };
-
-                            // Store booking details
-                            sessionStorage.setItem('pendingBooking', JSON.stringify(bookingDetails));
-
-                            // Redirect to cafe page with booking details in URL parameters
-                            const params = new URLSearchParams({
-                                booking: 'true',
-                                package_id: bookingDetails.packageId,
-                                package_name: bookingDetails.packageName,
-                                date: bookingDetails.date,
-                                time: bookingDetails.time,
-                                guests: bookingDetails.guests,
-                                total: bookingDetails.totalAmount
-                            });
-                            window.location.href = 'cafes.php?' + params.toString();
-                        } else {
-                            // Continue with showing booking summary
-                            closeAllModals();
-
-                            // Show the summary modal
-                            const summaryModal = new bootstrap.Modal(document.getElementById('bookingSummaryModal'));
-                            summaryModal.show();
-                        }
-                    });
-                }
-            });
-
-            // Update the policy modal link handler
-            document.querySelector('[data-bs-target="#policyModal"]').addEventListener('click', function (e) {
+        // Prevent form submission when pressing enter in quantity input
+        document.addEventListener('keydown', function(e) {
+            if (e.target.classList.contains('quantity-input') && e.key === 'Enter') {
                 e.preventDefault();
+                const input = e.target;
+                const index = parseInt(input.dataset.index);
+                const newQty = Math.max(1, parseInt(input.value) || 1);
+                updateCartItemQuantity(index, newQty);
+                input.blur(); // Remove focus after updating
+            }
+        });
 
-                // Close all modals before showing policy modal
-                closeAllModals();
-
-                // Show policy modal
-                const policyModal = new bootstrap.Modal(document.getElementById('policyModal'));
-                policyModal.show();
-            });
-
-            // Update the policy modal's "I Understand" button
-            document.querySelector('#policyModal .btn-warning').addEventListener('click', function () {
-                // Close policy modal
-                closeAllModals();
-
-                // Reopen reservation modal
-                const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
-                reservationModal.show();
-            });
-
-            // Add time validation
-            const arrivalTimeInput = document.getElementById('arrivalTime');
-            arrivalTimeInput.addEventListener('change', function () {
-                const selectedTime = this.value;
-                if (!selectedTime) return; // Don't validate if empty
-
-                const [hours, minutes] = selectedTime.split(':');
-                const selectedDateTime = new Date();
-                selectedDateTime.setHours(parseInt(hours), parseInt(minutes));
-
-                const openingTime = new Date();
-                openingTime.setHours(6, 30); // 6:30 AM
-
-                const closingTime = new Date();
-                closingTime.setHours(23, 0); // 11:00 PM
-
-                // Store the current value
-                const currentValue = this.value;
-
-                // Check if selected time is within operating hours
-                if (selectedDateTime < openingTime || selectedDateTime > closingTime) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Time',
-                        text: 'Please select a time between 6:30 AM and 11:00 PM',
-                        confirmButtonColor: '#b6860a'
-                    }).then(() => {
-                        // Focus back on the input after the alert is closed
-                        this.focus();
-                    });
-                    return;
-                }
-
-                // Check if selected time plus duration exceeds closing time
-                const duration = parseInt(document.getElementById('duration').value);
-                const endDateTime = new Date(selectedDateTime);
-                endDateTime.setHours(endDateTime.getHours() + duration);
-
-                if (endDateTime > closingTime) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Duration',
-                        text: 'Your reservation would exceed our closing time (11:00 PM). Please select an earlier time or shorter duration.',
-                        confirmButtonColor: '#b6860a'
-                    }).then(() => {
-                        // Focus back on the input after the alert is closed
-                        this.focus();
-                    });
-                    return;
+        // Update cart count when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCartItemCount();
+            
+            // Listen for storage events to update cart count when changed in other tabs/windows
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'cart') {
+                    updateCartItemCount();
                 }
             });
-
-            // Add duration change validation
-            document.getElementById('duration').addEventListener('change', function () {
-                const arrivalTime = document.getElementById('arrivalTime').value;
-                if (arrivalTime) {
-                    const [hours, minutes] = arrivalTime.split(':');
-                    const startDateTime = new Date();
-                    startDateTime.setHours(parseInt(hours), parseInt(minutes));
-
-                    const duration = parseInt(this.value);
-                    const endDateTime = new Date(startDateTime);
-                    endDateTime.setHours(endDateTime.getHours() + duration);
-
-                    const closingTime = new Date();
-                    closingTime.setHours(23, 0); // 11:00 PM
-
-                    if (endDateTime > closingTime) {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Invalid Duration',
-                            text: 'Your reservation would exceed our closing time (11:00 PM). Please select an earlier time or shorter duration.',
-                            confirmButtonColor: '#b6860a'
-                        });
-                        this.value = '4'; // Reset to standard duration
-                        updateTotalAmount(); // Update the total amount
-                        return;
-                    }
-                }
-            });
-
-            // Update the confirm booking button handler
-            document.getElementById('confirmBookingBtn').addEventListener('click', function (e) {
-                e.preventDefault(); // Prevent form submission
-                const form = document.getElementById('reservationForm');
-                const formData = new FormData(form);
-                const params = new URLSearchParams();
-
-                // Get package name from the page
-                const packageName = document.querySelector('.package-name')?.textContent;
-                if (packageName) {
-                    params.append('package_name', packageName);
-                }
-
-                // Add all form data to URL parameters
-                for (let [key, value] of formData.entries()) {
-                    // Skip file inputs as they can't be sent via URL
-                    if (key !== 'payment_proof' && value) {
-                        params.append(encodeURIComponent(key), encodeURIComponent(value));
-                    }
-                }
-
-                // Validate required fields
-                const requiredFields = ['package_id', 'date', 'guest_count', 'arrival_time'];
-                const missingFields = [];
-                requiredFields.forEach(field => {
-                    if (!formData.get(field)) {
-                        missingFields.push(field.replace('_', ' '));
-                    }
-                });
-
-                if (missingFields.length > 0) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Missing Information',
-                        text: `Please fill in the following fields: ${missingFields.join(', ')}`,
-                        confirmButtonColor: '#b6860a'
-                    });
-                    return;
-                }
-
-                // Get the base URL and add parameters
-                const baseUrl = 'table_payment_process.php';
-                const url = `${baseUrl}?${params.toString()}`;
-
-                // Redirect to payment page with URL parameters
-                window.location.href = url;
-            });
-
-            // Update the "Make Changes" button in booking summary
-            document.querySelector('#bookingSummaryModal .btn-secondary').addEventListener('click', function () {
-                // Close summary modal
-                closeAllModals();
-
-                // Reopen reservation modal
-                const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
-                reservationModal.show();
-            });
-
-            // Add this in the DOMContentLoaded event listener
-            const packageDetailsModal = document.getElementById('packageDetailsModal');
-            if (packageDetailsModal) {
-                packageDetailsModal.addEventListener('show.bs.modal', function (event) {
-                    const button = event.relatedTarget;
-
-                    // Get data from button attributes
-                    const packageName = button.getAttribute('data-package-name');
-                    const description = button.getAttribute('data-package-description');
-                    const capacity = button.getAttribute('data-package-capacity');
-                    const tables = button.getAttribute('data-package-tables');
-                    const imagePath = button.getAttribute('data-package-image');
-                    const price = button.getAttribute('data-package-price');
-
-                    // Update modal content
-                    document.getElementById('detailsImage').src = imagePath;
-                    document.getElementById('detailsPackageName').textContent = packageName;
-                    document.getElementById('detailsCapacity').textContent = `${capacity} persons`;
-                    document.getElementById('detailsTables').textContent = `${tables} tables`;
-                    document.getElementById('detailsDescription').textContent = description;
-
-                    // Format and display price
-                    const formattedPrice = new Intl.NumberFormat('en-PH', {
-                        style: 'currency',
-                        currency: 'PHP'
-                    }).format(price);
-                    document.getElementById('detailsPrice').textContent = formattedPrice;
+            
+            // Initialize cart modal
+            const cartModal = document.getElementById('cartModal');
+            if (cartModal) {
+                cartModal.addEventListener('show.bs.modal', function () {
+                    updateCartItemCount();
                 });
             }
         });
 
-        // Update the ultimate reserve button handler
-        document.getElementById('ultimateReserveBtn').addEventListener('click', function () {
-            // Close ultimate package modal
-            closeAllModals();
 
-            // Show reservation modal
-            const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+        // Function to show alert messages using SweetAlert2
+        function showAlert(message, type = 'info', duration = 3000) {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: duration,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                }
+            });
+            
+            Toast.fire({
+                icon: type,
+                title: message
+            });
+        }
+
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Set minimum date to today
+        // Function to update the summary modal with cart items
+        function updateSummaryModal() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const summaryContent = document.getElementById('summaryContent');
+            
+            if (!summaryContent) return;
+            
+            if (cart.length === 0) {
+                summaryContent.innerHTML = '<p>Your cart is empty.</p>';
+                return;
+            }
+            
+            // Build the summary content
+            let html = `
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-end">Capacity</th>
+                                <th class="text-end">Qty</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            let total = 0;
+            
+            cart.forEach((item) => {
+                const itemTotal = parseFloat(item.price) * parseInt(item.quantity);
+                total += itemTotal;
+                
+                html += `
+                    <tr>
+                        <td>${item.name}</td>
+                        <td class="text-end">${item.capacity || 'N/A'}</td>
+                        <td class="text-end">${item.quantity}</td>
+                        <td class="text-end">₱${itemTotal.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-3">
+                    <h5>Total: ₱${total.toFixed(2)}</h5>
+                </div>
+            `;
+            
+            summaryContent.innerHTML = html;
+        }
+        
+        // Handle Advance Order button click
+        // Toggle payment options based on payment method selection
+        let currentOrderTotal = 0;
+
+        function updateOrderSummary() {
+            const order = JSON.parse(localStorage.getItem('currentOrder')) || [];
+            let itemsHtml = '';
+            let total = 0;
+            
+            order.forEach((item, index) => {
+                total += item.total;
+                // ... rest of the existing updateOrderSummary code ...
+            });
+            
+            // Store the total for payment breakdown
+            currentOrderTotal = total;
+            
+            // Update the order summary display
+            document.getElementById('orderTotal').textContent = `₱${total.toFixed(2)}`;
+            document.getElementById('orderItems').innerHTML = itemsHtml;
+        }
+
+        document.addEventListener('change', function(e) {
+            // Handle payment method change (show/hide payment options)
+            if (e.target && e.target.id === 'paymentMethod') {
+                const paymentOptions = document.getElementById('paymentOptions');
+                const confirmBookingBtn = document.getElementById('confirmBookingBtn');
+                
+                if (e.target.value === 'online') {
+                    paymentOptions.style.display = 'block';
+                    // Update button text when a payment method is selected
+                    confirmBookingBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Proceed to Payment';
+                } else {
+                    paymentOptions.style.display = 'none';
+                    document.getElementById('paymentBreakdown').style.display = 'none';
+                    // Reset button text if no payment method is selected
+                    confirmBookingBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Confirm Booking';
+                }
+            }
+            
+            // Handle payment option change (show/hide breakdown based on selection)
+            if (e.target && e.target.id === 'paymentOption') {
+                const paymentBreakdown = document.getElementById('paymentBreakdown');
+                const downpaymentRow = document.getElementById('downpaymentRow');
+                const customPaymentRow = document.getElementById('customPaymentRow');
+                const customAmountInput = document.getElementById('customAmount');
+                const customAmountError = document.getElementById('customAmountError');
+                
+                // Reset error and input
+                customAmountError.textContent = '';
+                customAmountInput.value = '';
+                
+                if (e.target.value === 'partial' || e.target.value === 'full') {
+                    paymentBreakdown.style.display = 'block';
+                    
+                    // Show/hide appropriate rows
+                    downpaymentRow.style.display = e.target.value === 'partial' ? 'flex' : 'none';
+                    customPaymentRow.style.display = 'none';
+                    
+                    // Calculate and display payment breakdown
+                    const downpayment = e.target.value === 'partial' ? currentOrderTotal * 0.5 : currentOrderTotal;
+                    const remaining = currentOrderTotal - downpayment;
+                    
+                    document.getElementById('breakdownTotal').textContent = `₱${currentOrderTotal.toFixed(2)}`;
+                    document.getElementById('breakdownDownpayment').textContent = e.target.value === 'partial' ? 
+                        `₱${downpayment.toFixed(2)}` : `₱${downpayment.toFixed(2)} (Full Payment)`;
+                    document.getElementById('breakdownBalance').textContent = `₱${remaining.toFixed(2)}`;
+                } 
+                else if (e.target.value === 'custom') {
+                    paymentBreakdown.style.display = 'block';
+                    downpaymentRow.style.display = 'none';
+                    customPaymentRow.style.display = 'block';
+                    
+                    // Set max value to total amount
+                    customAmountInput.max = currentOrderTotal.toFixed(2);
+                    customAmountInput.placeholder = `Enter amount (max: ₱${currentOrderTotal.toFixed(2)})`;
+                    
+                    document.getElementById('breakdownTotal').textContent = `₱${currentOrderTotal.toFixed(2)}`;
+                    document.getElementById('breakdownBalance').textContent = `₱${currentOrderTotal.toFixed(2)}`;
+                }
+                else {
+                    paymentBreakdown.style.display = 'none';
+                }
+            }
+            
+            // Handle custom amount input
+            if (e.target && e.target.id === 'customAmount') {
+                const customAmount = parseFloat(e.target.value) || 0;
+                const total = currentOrderTotal;
+                const customAmountError = document.getElementById('customAmountError');
+                
+                if (customAmount > total) {
+                    customAmountError.textContent = 'Amount cannot exceed total amount';
+                    e.target.value = total.toFixed(2);
+                    updateCustomPaymentBreakdown(total);
+                } else if (customAmount <= 0) {
+                    customAmountError.textContent = 'Amount must be greater than 0';
+                    updateCustomPaymentBreakdown(0);
+                } else {
+                    customAmountError.textContent = '';
+                    updateCustomPaymentBreakdown(customAmount);
+                }
+            }
+            
+            // Function to update the payment breakdown for custom payments
+            function updateCustomPaymentBreakdown(amount) {
+                const total = currentOrderTotal;
+                const remaining = total - amount;
+                
+                document.getElementById('breakdownTotal').textContent = `₱${total.toFixed(2)}`;
+                document.getElementById('breakdownBalance').textContent = `₱${remaining.toFixed(2)}`;
+                
+                // Update the payment amount display
+                const customPaymentDisplay = document.getElementById('breakdownDownpayment');
+                customPaymentDisplay.textContent = `₱${amount.toFixed(2)} (Custom Payment)`;
+                customPaymentDisplay.style.display = 'block';
+            }
+        });
+        
+        document.getElementById('advanceOrderBtn')?.addEventListener('click', function() {
+            const menuModal = bootstrap.Modal.getInstance(document.getElementById('menuModal'));
+            if (menuModal) menuModal.hide();
+            
+            // Get the current order from localStorage
+            const currentOrder = JSON.parse(localStorage.getItem('currentOrder')) || [];
+            
+            // Create a hidden input for the order data if it doesn't exist
+            let orderInput = document.getElementById('orderData');
+            if (!orderInput) {
+                orderInput = document.createElement('input');
+                orderInput.type = 'hidden';
+                orderInput.name = 'order_data';
+                orderInput.id = 'orderData';
+                document.getElementById('reservationForm').appendChild(orderInput);
+            }
+            
+            // Store the order data in the hidden input
+            orderInput.value = JSON.stringify(currentOrder);
+            
+            // Show the order summary in the form
+            const orderSummary = document.getElementById('orderSummary');
+            
+            // Show payment section for advance orders
+            const paymentSection = document.getElementById('paymentSection');
+            if (paymentSection) {
+                paymentSection.style.display = 'block';
+                
+                // Set a flag to indicate this is an advance order
+                let advanceOrderInput = document.getElementById('advanceOrderInput');
+                if (!advanceOrderInput) {
+                    advanceOrderInput = document.createElement('input');
+                    advanceOrderInput.type = 'hidden';
+                    advanceOrderInput.name = 'is_advance_order';
+                    advanceOrderInput.id = 'advanceOrderInput';
+                    advanceOrderInput.value = '1';
+                    document.getElementById('reservationForm').appendChild(advanceOrderInput);
+                }
+            }
+            
+            if (orderSummary) {
+                let html = '<h6>Your Order:</h6><ul class="list-group mb-3">';
+                let total = 0;
+                
+                currentOrder.forEach(item => {
+                    const itemPrice = item.addonPrice ? (item.price + item.addonPrice) : item.price;
+                    const itemTotal = itemPrice * item.quantity;
+                    total += itemTotal;
+                    
+                    html += `
+                        <li class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span>${item.name} x ${item.quantity}</span>
+                                <span class="badge bg-primary rounded-pill">₱${itemTotal.toFixed(2)}</span>
+                            </div>`;
+                    
+                    // Add add-on information if it exists
+                    if (item.addonName) {
+                        html += `
+                            <div class="ms-3 mt-1 text-muted small">
+                                + ${item.addonName} (₱${parseFloat(item.addonPrice).toFixed(2)} each)
+                            </div>`;
+                    }
+                    
+                    html += `</li>`;
+                });
+                
+                html += `
+                    <li class="list-group-item d-flex justify-content-between fw-bold">
+                        <span>Total:</span>
+                        <span>₱${total.toFixed(2)}</span>
+                    </li>
+                </ul>`;
+                
+                orderSummary.innerHTML = html;
+            }
+            
+            // Show the reservation form modal
+            const reservationModal = new bootstrap.Modal(document.getElementById('reservationFormModal'));
             reservationModal.show();
         });
 
-        // Add this validation function
-        function validateReferenceNumber(method, number) {
-            if (method === 'GCash') {
-                // GCash: 13 digits
-                return /^\d{13}$/.test(number);
-            } else if (method === 'Maya') {
-                // Maya: 12 characters (letters and numbers)
-                return /^[A-Za-z0-9]{12}$/.test(number);
-            }
-            return true; // For other payment methods
-        }
-
-        // Update the payment method change handler
-        document.getElementById('paymentMethod').addEventListener('change', function () {
-            const selectedMethod = this.options[this.selectedIndex].text;
-            const referenceInput = document.getElementById('referenceNumber');
-
-            // Update placeholder and pattern based on payment method
-            if (selectedMethod === 'GCash') {
-                referenceInput.placeholder = '13-digit reference number';
-                referenceInput.pattern = '\\d{13}';
-                referenceInput.maxLength = 13;
-            } else if (selectedMethod === 'Maya') {
-                referenceInput.placeholder = '12-character reference number';
-                referenceInput.pattern = '[A-Za-z0-9]{12}';
-                referenceInput.maxLength = 12;
-            }
-        });
-
-        // Add reference number input validation
-        document.getElementById('referenceNumber').addEventListener('input', function () {
-            const selectedMethod = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
-            const referenceNumber = this.value;
-
-            if (selectedMethod === 'GCash') {
-                // Only allow digits for GCash
-                this.value = this.value.replace(/[^\d]/g, '');
-            } else if (selectedMethod === 'Maya') {
-                // Allow letters and numbers for Maya, convert to uppercase
-                this.value = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
-            }
-        });
-
-        // Update the confirm reservation button handler to include reference number validation
-        document.getElementById('confirmReservation').addEventListener('click', function () {
-            // ... existing validation code ...
-
-            if (isUltimate) {
-                const paymentMethod = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
-                const referenceNumber = document.getElementById('referenceNumber').value;
-
-                if (!validateReferenceNumber(paymentMethod, referenceNumber)) {
-                    let errorMessage = '';
-                    if (paymentMethod === 'GCash') {
-                        errorMessage = 'Please enter a valid 13-digit GCash reference number';
-                    } else if (paymentMethod === 'Maya') {
-                        errorMessage = 'Please enter a valid 12-character Maya reference number';
+        // Handle Confirm Booking/Proceed to Payment button click
+        document.getElementById('confirmBookingBtn')?.addEventListener('click', function() {
+            const button = this;
+            const buttonText = button.textContent.trim();
+            
+            // If button says "Proceed to Payment", validate payment fields
+            if (buttonText.includes('Proceed to Payment')) {
+                // Get form elements
+                const paymentMethod = document.getElementById('paymentMethod');
+                const paymentOption = document.getElementById('paymentOption');
+                const customAmount = document.getElementById('customAmount');
+                let isValid = true;
+                let errorMessage = '';
+                
+                // Validate payment method
+                if (!paymentMethod.value) {
+                    isValid = false;
+                    errorMessage = 'Please select a payment method';
+                } 
+                // If payment method is online, validate payment option
+                else if (paymentMethod.value === 'online') {
+                    if (!paymentOption.value || paymentOption.value === 'select') {
+                        isValid = false;
+                        errorMessage = 'Please select a payment option';
+                        // Reset button state if validation fails
+                        if (button.classList.contains('btn-spin')) {
+                            button.innerHTML = originalButtonHTML;
+                            button.classList.remove('btn-spin');
+                            button.disabled = false;
+                        }
+                    } 
+                    // If custom payment, validate amount
+                    else if (paymentOption.value === 'custom') {
+                        const amount = parseFloat(customAmount.value);
+                        if (isNaN(amount) || amount <= 0) {
+                            isValid = false;
+                            errorMessage = 'Please enter a valid custom payment amount';
+                            // Reset button state if validation fails
+                            if (button.classList.contains('btn-spin')) {
+                                button.innerHTML = originalButtonHTML;
+                                button.classList.remove('btn-spin');
+                                button.disabled = false;
+                            }
+                        }
                     }
-
+                }
+                
+                if (!isValid) {
+                    // Reset button state if validation fails
+                    if (button.classList.contains('btn-spin')) {
+                        button.innerHTML = originalButtonHTML;
+                        button.classList.remove('btn-spin');
+                        button.disabled = false;
+                    }
+                    
                     Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Reference Number',
+                        title: 'Required Fields',
                         text: errorMessage,
-                        confirmButtonColor: '#b6860a'
+                        icon: 'warning',
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#3085d6'
                     });
                     return;
                 }
-            }
+                // Add spinning effect to the button
+                const originalButtonHTML = button.innerHTML;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                button.classList.add('btn-spin');
+                button.disabled = true;
+                
+                // Prepare the data to be sent to the payment processor
+                const reservationData = window.pendingReservation || {};
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const order = [];
+                
+                // Get package ID from multiple possible sources
+                const urlParams = new URLSearchParams(window.location.search);
+                let packageId = 
+                    reservationData.package_id || 
+                    urlParams.get('package_id') ||
+                    (cart[0] && cart[0].package_id) ||
+                    (cart[0] && cart[0].id);
+                
+                // Get the selected tables from cart data directly
+                const selectedTables = [];
+                cart.forEach((item, index) => {
+                    const quantity = parseInt(item.quantity) || 1;
+                    const capacity = parseInt(item.capacity) || 1;
+                    
+                    // Create separate entries for each quantity unit
+                    for (let i = 0; i < quantity; i++) {
+                        selectedTables.push({
+                            id: item.id || index.toString(),
+                            name: item.name || `Table ${index + 1}`,
+                            capacity: capacity,
+                        });
+                    }
+                });
 
-            // ... rest of the confirmation code ...
+                console.log('Selected tables:', selectedTables); // Debug log
+                                
+                // Calculate totals
+                const totalAmountElement = document.getElementById('breakdownTotal');
+                if (!totalAmountElement) {
+                    console.error('Could not find totalAmount element');
+                    return;
+                }
+                const totalAmount = parseFloat(totalAmountElement.textContent.replace('₱', '').replace(/,/g, ''));
+                let paymentAmount = 0;
+                let remainingAmount = 0;
+                
+                if (paymentOption.value === 'full') {
+                    paymentAmount = totalAmount;
+                    remainingAmount = 0;
+                } else if (paymentOption.value === 'partial') {
+                    // 50% downpayment
+                    paymentAmount = totalAmount * 0.5;
+                    remainingAmount = totalAmount - paymentAmount;
+                } else if (paymentOption.value === 'custom') {
+                    paymentAmount = parseFloat(customAmount.value);
+                    remainingAmount = totalAmount - paymentAmount;
+                }
+                
+                // Prepare order items
+                cart.forEach(item => {
+                    order.push({
+                        id: item.id,
+                        name: item.name,
+                        price: item.price,
+                        quantity: item.quantity,
+                        type: item.type || 'table_package'
+                    });
+                });
+                
+                // Create a form to submit the data
+                const form = document.createElement('form');
+                form.method = 'GET';
+                form.action = 'table_payment_process.php';
+                
+                // Get the current order from localStorage and prepare it with addons
+                const currentOrder = JSON.parse(localStorage.getItem('currentOrder')) || [];
+                
+                // Process the order to include addons in the correct format
+                const processedOrder = currentOrder.map(item => ({
+                    id: item.itemId || item.id,
+                    name: item.name,
+                    price: item.price,
+                    quantity: item.quantity,
+                    addons: item.addonId ? [{
+                        id: item.addonId,
+                        name: item.addonName,
+                        price: item.addonPrice
+                    }] : []
+                }));
+                
+                // Add hidden inputs for all the data
+                function addHiddenInput(name, value) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = name;
+                    input.value = value;
+                    form.appendChild(input);
+                }
+                
+                addHiddenInput('tables', JSON.stringify(selectedTables));
+                addHiddenInput('date', document.getElementById('reservationDate').value);
+                addHiddenInput('time', document.getElementById('reservationTime').value);
+                
+                // Add order items to the form with addons
+                addHiddenInput('order', JSON.stringify(processedOrder));
+                
+                addHiddenInput('payment_method', paymentMethod.value);
+                addHiddenInput('payment_option', paymentOption.value);
+                addHiddenInput('payment_amount', paymentAmount.toFixed(2));
+                addHiddenInput('remaining_amount', remainingAmount.toFixed(2));
+                addHiddenInput('total_amount', totalAmount.toFixed(2));
+                
+                // Add customer details if available
+                if (reservationData.name) addHiddenInput('customer_name', reservationData.name);
+                if (reservationData.email) addHiddenInput('customer_email', reservationData.email);
+                if (reservationData.phone) addHiddenInput('customer_phone', reservationData.phone);
+                
+                // Add the form to the document and submit it
+                document.body.appendChild(form);
+                form.submit();
+                
+            } else {
+                // Original behavior for "Confirm Booking"
+                Swal.fire({
+                    title: 'Advance Order',
+                    text: 'Do you want to make an advance order?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No, just book the table',
+                    showDenyButton: false,
+                    cancelButtonText: 'No',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // If user clicks Yes, open the menu modal
+                            const menuModal = new bootstrap.Modal(document.getElementById('menuModal'));
+                        menuModal.show();
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        // User clicked No, send data to table_without_order.php
+                        const reservationData = window.pendingReservation || {};
+                        
+                        // Get package ID from multiple possible sources
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                        
+                        // Try to get package ID from different sources in order of priority
+                        let packageId = 
+                            reservationData.package_id || 
+                            urlParams.get('package_id') ||
+                            (cart[0] && cart[0].package_id) ||
+                            (cart[0] && cart[0].id);
+                        
+                        console.log('Package ID sources:', {
+                            fromReservationData: reservationData.package_id,
+                            fromURL: urlParams.get('package_id'),
+                            fromCartPackageId: cart[0] && cart[0].package_id,
+                            fromCartId: cart[0] && cart[0].id
+                        });
+                        
+                        if (!packageId) {
+                            console.error('Package ID not found in any source');
+                            throw new Error('Unable to determine package ID. Please try again.');
+                        }
+                        
+                        // Get the selected tables from the form
+                        const selectedTables = [];
+                        document.querySelectorAll('.table-guest-input').forEach(input => {
+                            selectedTables.push({
+                                id: input.dataset.tableId || input.dataset.tableId,
+                                capacity: parseInt(input.value) || 1
+                            });
+                        });
+                        
+                        // Get the reservation date and time from the form
+                        const reservationDate = document.getElementById('reservationDate')?.value || reservationData.date;
+                        const reservationTime = document.getElementById('reservationTime')?.value || reservationData.time;
+                        const partySize = document.getElementById('partySize')?.value || reservationData.party_size || selectedTables.reduce((sum, table) => sum + (table.capacity || 1), 0);
+                        
+                        // Prepare the data to send in the format expected by the backend
+                        const requestData = {
+                            tables: [{
+                                packageId: packageId,
+                                quantity: 1 // Sending as a single table for now
+                            }],
+                            reservationDate: reservationDate,
+                            reservationTime: reservationTime
+                        };
+                        
+                        // If we have selected tables from the cart, use those instead
+                        if (selectedTables.length > 0) {
+                            requestData.tables = selectedTables.map(table => ({
+                                packageId: table.id,
+                                quantity: 1
+                            }));
+                        }
+                        
+                        console.log('Sending data to table_without_order.php:', requestData);
+                        
+                        // Send the reservation data to table_without_order.php
+                        fetch('table_without_order.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(requestData)
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Show success message
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Your table has been reserved successfully!',
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    // Clear the cart
+                                    localStorage.removeItem('cart');
+                                    updateCartItemCount();
+                                    
+                                    // Hide any open modals
+                                    const cartModal = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
+                                    if (cartModal) cartModal.hide();
+                                    
+                                    const reservationFormModal = bootstrap.Modal.getInstance(document.getElementById('reservationFormModal'));
+                                    if (reservationFormModal) reservationFormModal.hide();
+                                    
+                                    // Redirect or refresh the page
+                                    window.location.href = 'table.php';
+                                });
+                            } else {
+                                throw new Error(data.message || 'Failed to process reservation');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Failed to process your reservation. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                    }
+                });
+            }
         });
 
-        // Update the modal event handler for ultimate package
-        const ultimatePackageModal = document.getElementById('ultimatePackageModal');
-        if (ultimatePackageModal) {
-            ultimatePackageModal.addEventListener('show.bs.modal', function (event) {
-                const button = event.relatedTarget;
-
-                // Get data from button attributes
-                const packageName = button.getAttribute('data-package-name');
-                const description = button.getAttribute('data-package-description');
-                const capacity = button.getAttribute('data-package-capacity');
-                const imagePath = button.getAttribute('data-package-image');
-                const price = button.getAttribute('data-package-price');
-                const menuItems = button.getAttribute('data-package-menu-items');
-
-                console.log('Menu items from data attribute:', menuItems); // Debug log
-
-                // Update package info
-                document.getElementById('ultimatePackageName').textContent = packageName;
-                document.getElementById('ultimateCapacity').textContent = capacity + ' persons';
-
-                // Populate carousel with main image only
-                const carouselInner = document.querySelector('#packageImageCarousel .carousel-inner');
-                if (carouselInner) {
-                    carouselInner.innerHTML = ''; // Clear existing items
-
-                    // Add main image as the only slide
-                    if (imagePath) {
-                        const mainSlide = document.createElement('div');
-                        mainSlide.className = 'carousel-item active';
-                        mainSlide.innerHTML = `<img src="../../uploads/table_packages/${imagePath}" class="d-block w-100" alt="${packageName}" style="height: 300px; object-fit: cover;">`;
-                        carouselInner.appendChild(mainSlide);
-                    }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle Proceed to Checkout button
+            document.getElementById('proceedToCheckout')?.addEventListener('click', function() {
+                // Close the cart modal
+                const cartModal = bootstrap.Modal.getInstance(document.getElementById('cartModal'));
+                if (cartModal) cartModal.hide();
+                
+                // Get cart items
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                if (cart.length === 0) {
+                    showAlert('Your cart is empty', 'warning');
+                    return;
                 }
-
-
-                // Update menu items display
-                const menuItemsContainer = document.getElementById('ultimateMenuItems');
-                if (menuItemsContainer) {
-                    if (menuItems) {
-                        try {
-                            // Check if menuItems is a JSON string or a simple string
-                            let menuItemsArray = [];
-                            try {
-                                // Try to parse as JSON first
-                                const parsedMenu = JSON.parse(menuItems);
-                                if (Array.isArray(parsedMenu)) {
-                                    menuItemsArray = parsedMenu;
-                                } else if (typeof parsedMenu === 'string') {
-                                    // If it's a string, split by comma
-                                    menuItemsArray = parsedMenu.split(',').map(item => item.trim());
-                                }
-                            } catch (e) {
-                                // If not valid JSON, treat as comma-separated string
-                                menuItemsArray = menuItems.split(',').map(item => item.trim());
-                            }
-
-                            // Create list items
-                            const menuList = menuItemsArray
-                                .filter(item => item) // Remove empty items
-                                .map(item => `<li class="menu-item"><i class="fas fa-utensils me-2"></i>${item}</li>`)
-                                .join('');
-
-                            menuItemsContainer.innerHTML = menuList || '<li class="text-muted">No menu items specified for this package.</li>';
-                        } catch (error) {
-                            console.error('Error processing menu items:', error);
-                            menuItemsContainer.innerHTML = '<li class="text-muted">Error loading menu items. Please contact support.</li>';
-                        }
-                    } else {
-                        menuItemsContainer.innerHTML = '<li class="text-muted">No menu items available for this package.</li>';
-                    }
+                
+                // Get the selected date and time from the availability check
+                const dateTimeStr = document.getElementById('reservationDateTime').value;
+                let dateStr, timeStr;
+                
+                if (dateTimeStr) {
+                    // If we have a datetime from the availability check, use it
+                    const dateTime = new Date(dateTimeStr);
+                    dateStr = dateTime.toISOString().split('T')[0];
+                    timeStr = dateTime.getHours().toString().padStart(2, '0') + ':' + 
+                             dateTime.getMinutes().toString().padStart(2, '0');
+                } else {
+                    // Fallback to current date and time if no selection
+                    const now = new Date();
+                    dateStr = now.toISOString().split('T')[0];
+                    timeStr = now.getHours().toString().padStart(2, '0') + ':' + 
+                             now.getMinutes().toString().padStart(2, '0');
                 }
-            });
-        }
-
-        // Update the handleReserveClick function
-        function handleReserveClick(event) {
-            event.preventDefault();
-
-            // Make an AJAX call to check login status
-            fetch('check_login.php')
-                .then(response => response.json())
-                .then(data => {
-                    if (!data.loggedIn) {
-                        // Store current URL in session storage to redirect back after login
-                        sessionStorage.setItem('redirectAfterLogin', window.location.href);
-
-                        // Show login required message
-                        const loginMessage = document.createElement('div');
-                        loginMessage.className = 'login-message';
-                        loginMessage.innerHTML = `
-                            <div class="login-required-popup">
-                                <div class="login-content">
-                                    <h4>Login Required</h4>
-                                    <p>Please login to make a reservation</p>
-                                    <div class="login-buttons">
-                                        <button class="btn btn-warning" onclick="window.location.href='login.php'">Login Now</button>
-                                        <button class="btn btn-secondary" onclick="closeLoginMessage()">Cancel</button>
+                
+                // Fill the form with the selected values
+                document.getElementById('reservationDate').value = dateStr;
+                document.getElementById('reservationTime').value = timeStr;
+                
+                // Populate tables list
+                const tablesList = document.getElementById('selectedTablesList');
+                let html = '';
+                let totalCapacity = 0;
+                
+                cart.forEach((item, index) => {
+                    const tableName = item.name || `Table ${index + 1}`;
+                    const capacity = parseInt(item.capacity) || 1;
+                    const quantity = parseInt(item.quantity) || 1;
+                    totalCapacity += capacity * quantity;
+                    
+                    html += `
+                        <div class="card mb-2">
+                            <div class="card-body p-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0">${tableName}</h6>
+                                        <small class="text-muted">Capacity: ${capacity} guests</small>
+                                        <input type="hidden" 
+                                               class="table-guest-input" 
+                                               value="${capacity}"
+                                               data-table-id="${item.id || index}"
+                                               data-quantity="${quantity}"
+                                               data-item-index="${index}">
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-primary">${quantity}x</span>
                                     </div>
                                 </div>
                             </div>
-                        `;
-                        document.body.appendChild(loginMessage);
+                        </div>
+                    `;
+                });
+                
+                tablesList.innerHTML = html;
+                
+                // Show the reservation form modal
+                const reservationModal = new bootstrap.Modal(document.getElementById('reservationFormModal'));
+                reservationModal.show();
+            });
+            
+      
+            
+            // Set minimum datetime to now
+            const now = new Date();
+            // Format as YYYY-MM-DDThh:mm
+            const nowStr = now.toISOString().slice(0, 16);
+            document.getElementById('reservationDateTime').min = nowStr;
+            
+            // Function to validate time within cafe hours (7:00 AM - 11:00 PM)
+            function isValidDateTime(datetimeStr) {
+                const date = new Date(datetimeStr);
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+                
+                // Convert to minutes since midnight for easier comparison
+                const totalMinutes = hours * 60 + minutes;
+                
+                // Check if time is within 7:00 AM to 11:00 PM (23:00)
+                const isWithinHours = totalMinutes >= 7 * 60 && totalMinutes <= 23 * 60;
+                
+                // Allow all days of the week
+                return isWithinHours;
+            }
+            
+            // Handle availability form submission
+            document.getElementById('checkAvailabilityForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Form submission started');
+                
+                const checkButton = document.getElementById('checkAvailabilityBtn');
+                const originalButtonText = checkButton.innerHTML;
+                
+                // Show loading state
+                checkButton.disabled = true;
+                checkButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Checking...';
+                
+                const dateTimeStr = document.getElementById('reservationDateTime').value;
+                
+                console.log('Form values:', { dateTime: dateTimeStr });
+                
+                if (!dateTimeStr) {
+                    console.log('Validation failed: Missing date and time');
+                    // Reset button state
+                    checkButton.disabled = false;
+                    checkButton.innerHTML = originalButtonText;
+                    showAlert('Please select date and time', 'danger');
+                    return;
+                }
+                
+                // Validate the selected date and time
+                if (!isValidDateTime(dateTimeStr)) {
+                    // Reset button state
+                    checkButton.disabled = false;
+                    checkButton.innerHTML = originalButtonText;
+                    showAlert('Please select a valid date and time (Monday-Saturday, 11:00 AM - 9:00 PM)', 'danger');
+                    return;
+                }
+                
+                // Split the datetime string into date and time components for the API
+                const dateTime = new Date(dateTimeStr);
+                const date = dateTime.toISOString().split('T')[0];
+                const time = dateTime.toTimeString().slice(0, 5); // HH:MM
+                
+                // Show loading state (only set once)
+                if (!checkButton.disabled) {
+                    checkButton.disabled = true;
+                    checkButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Checking...';
+                }
+                
+                console.log('Sending request to table_availability.php');
+                
+                // Make AJAX call to check availability
+                fetch('table_availability.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `datetime=${encodeURIComponent(dateTimeStr)}`,
+                    credentials: 'same-origin' // Include cookies if needed
+                })
+                .then(response => {
+                    console.log('Response received, status:', response.status);
+                    if (!response.ok) {
+                        console.error('Response not OK, status:', response.status);
+                        return response.text().then(text => {
+                            console.error('Response text:', text);
+                            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Availability response:', data);
+                    
+                    // Reset button state
+                    checkButton.disabled = false;
+                    checkButton.innerHTML = '<i class="fas fa-search me-2"></i> Check';
+                    
+                    if (data && data.success && data.data) {
+                        // Set the flag to true when availability is successfully checked
+                        availabilityChecked = true;
+                        const availableTables = data.data;
+                        const count = availableTables.filter(table => table.available_tables > 0).length;
+                        
+                        // Store available tables data for later use
+                        window.availableTables = availableTables;
+                        
+                        if (count > 0) {
+                            let message = `Found ${count} table type${count > 1 ? 's' : ''} with available tables for your selected time!`;
+                            // Add booking count to the message if available
+                            if (data.total_bookings !== undefined) {
+                                message += `\nTotal bookings for this time: ${data.total_bookings}`;
+                            }
+                            console.log(message);
+                            
+                            // Show success message
+                            Swal.fire({
+                                title: 'Tables Available!',
+                                text: message,
+                                icon: 'success',
+                                confirmButtonText: 'Great!',
+                                confirmButtonColor: '#28a745',
+                                timer: 5000,
+                                timerProgressBar: true,
+                                showCloseButton: true
+                            });
+                            
+                            // Also show the toast notification
+                            showAlert(message, 'success', 5000);
+                            
+                            console.log('Available tables:', availableTables);
+                            
+                            // Show the package section and update with available tables
+                            document.querySelector('.package-section').style.display = 'block';
+                            updateAvailableTables(availableTables);
+                            
+                            // Scroll to packages section
+                            document.querySelector('.package-section').scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            // Store available tables data for later use
+                            window.availableTables = availableTables;
+                            
+                        } else {
+                            console.log('No tables available');
+                            showAlert('No tables available for the selected date and time. Please try a different time.', 'warning');
+                        }
+                    } else if (data && data.conflict) {
+                        // Handle time slot conflict with next available time
+                        let message = data.message || 'Time slot not available';
+                        if (data.available_after) {
+                            message += `. Next available time: ${data.available_after}`;
+                        }
+                        console.log('Time slot conflict:', message);
+                        showAlert(message, 'warning');
                     } else {
-                        // User is logged in, proceed with reservation
-                        const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
-                        reservationModal.show();
+                        console.error('Unexpected response format:', data);
+                        showAlert(data && data.message ? data.message : 'Error checking availability', 'danger');
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while checking login status');
+                    console.error('Error in fetch:', error);
+                    // Reset button state on error
+                    checkButton.disabled = false;
+                    checkButton.innerHTML = originalButtonText;
+                    const errorMessage = error.message || 'An error occurred while checking availability';
+                    console.error('Error details:', errorMessage);
+                    showAlert(errorMessage, 'danger');
+                    // Ensure button is reset even if there's an error in showAlert
+                    setTimeout(() => {
+                        checkButton.disabled = false;
+                        checkButton.innerHTML = originalButtonText;
+                    }, 100);
                 });
-        }
-
-        // Add function to close login message
-        function closeLoginMessage() {
-            const loginMessage = document.querySelector('.login-message');
-            if (loginMessage) {
-                loginMessage.remove();
-            }
-        }
-
-        // Add CSS for the login message popup
-        const style = document.createElement('style');
-        style.textContent = `
-            .login-message {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 9999;
+            });
+            
+            // Function to check if user is logged in
+            function checkLogin() {
+                return fetch('check_session.php')
+                    .then(response => response.json())
+                    .then(data => data.logged_in)
+                    .catch(error => {
+                        console.error('Error checking login status:', error);
+                        return false;
+                    });
             }
 
-            .login-required-popup {
-                background: white;
-                padding: 2rem;
-                border-radius: 10px;
-                text-align: center;
-                max-width: 400px;
-                width: 90%;
-            }
-
-            .login-content h4 {
-                color: #333;
-                margin-bottom: 1rem;
-            }
-
-            .login-buttons {
-                margin-top: 1.5rem;
-                display: flex;
-                gap: 1rem;
-                justify-content: center;
-            }
-
-            .login-buttons .btn {
-                padding: 0.5rem 1.5rem;
-            }
-        `;
-        document.head.appendChild(style);
-
-        // Handle package details modal
-        document.addEventListener('DOMContentLoaded', function () {
-            // Add event listeners to all buttons that open the package details modal
-            const detailButtons = document.querySelectorAll('[data-bs-target="#packageDetailsModal"]');
-            detailButtons.forEach(button => {
-                button.addEventListener('click', function () {
-                    // Get package details from data attributes
-                    const packageName = this.getAttribute('data-package-name');
-                    const description = this.getAttribute('data-package-description');
-                    const capacity = this.getAttribute('data-package-capacity');
-
-                    // Get main image path
-                    const mainImage = this.getAttribute('data-package-image');
-
-                    // Update modal content
-                    document.getElementById('detailsPackageName').textContent = packageName;
-                    document.getElementById('detailsCapacity').textContent = capacity + ' persons';
-                    document.getElementById('detailsDescription').textContent = description || 'No description available';
-
-                    // Clear existing carousel items
-                    const carouselInner = document.querySelector('#packageDetailsCarousel .carousel-inner');
-                    carouselInner.innerHTML = '';
-
-                    // Add main image to carousel
-                    if (mainImage) {
-                        const mainImageItem = document.createElement('div');
-                        mainImageItem.className = 'carousel-item active';
-                        mainImageItem.innerHTML = `<img src="../../uploads/table_packages/${mainImage}" class="d-block w-100" alt="${packageName}" style="height: 300px; object-fit: cover;">`;
-                        carouselInner.appendChild(mainImageItem);
+            // Handle add to cart button click
+            document.addEventListener('click', async function(e) {
+                if (e.target.closest('.add-to-cart')) {
+                    e.preventDefault();
+                    
+                    // Check if user is logged in
+                    const isLoggedIn = await checkLogin();
+                    if (!isLoggedIn) {
+                        showAlert('Please log in to add items to your cart.', 'warning');
+                        window.location.href = 'login.php?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+                        return;
                     }
-
+                    
+                    // Check if availability has been checked
+                    if (!availabilityChecked) {
+                        showAlert('Please check table availability first by selecting a date and time and clicking the CHECK button.', 'warning');
+                        // Optionally, scroll to the availability form
+                        document.getElementById('checkAvailabilityForm').scrollIntoView({ behavior: 'smooth' });
+                        return;
+                    }
+                    
+                    const button = e.target.closest('.add-to-cart');
+                    const tableId = button.dataset.packageId;
+                    const item = {
+                        id: tableId,
+                        name: button.dataset.packageName,
+                        quantity: 1,
+                        type: 'table',
+                        capacity: button.dataset.capacity || '2'
+                    };
+                    
+                    // Get existing cart or initialize empty array
+                    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    
+                    // Get current cart quantity for this table type
+                    const currentQuantity = cart
+                        .filter(cartItem => cartItem.id === tableId && cartItem.type === 'table')
+                        .reduce((total, item) => total + (parseInt(item.quantity) || 0), 0);
+                    
+                    // Find available tables for this table type
+                    const tableAvailability = window.availableTables?.find(t => t.table_type_id == tableId);
+                    const availableTables = tableAvailability?.available_tables || 0;
+                    
+                    // Check if adding one more would exceed availability
+                    if (currentQuantity >= availableTables) {
+                        showAlert(`Sorry, only ${availableTables} ${availableTables === 1 ? 'table is' : 'tables are'} available for ${item.name}.`, 'warning');
+                        return;
+                    }
+                    
+                    // Check if item already exists in cart
+                    const existingItemIndex = cart.findIndex(cartItem => 
+                        cartItem.id === tableId && cartItem.type === 'table'
+                    );
+                    
+                    if (existingItemIndex > -1) {
+                        // Update quantity if item exists
+                        cart[existingItemIndex].quantity += 1;
+                    } else {
+                        // Add new item to cart
+                        cart.push(item);
+                    }
+                    
+                    // Save back to localStorage
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    
+                    // Update cart UI
+                    updateCartItemCount();
+                    
+                    // Show success message
+                    showAlert('Item added to cart!', 'success');
+                    
+                    // Dispatch storage event to update other tabs/windows
+                    window.dispatchEvent(new Event('storage'));
+                }
+            });
+            
+            // Handle reservation button click (for existing reservation functionality)
+            const reservationModal = new bootstrap.Modal(document.getElementById('reservationModal'));
+            const reserveButtons = document.querySelectorAll('.btn-reserve:not(.add-to-cart)');
+            
+            reserveButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const packageId = this.getAttribute('data-package-id');
+                    const packageName = this.getAttribute('data-package-name');
+                    const capacity = this.getAttribute('data-package-capacity');
+                    
+                    // Set values in the modal
+                    document.getElementById('packageId').value = packageId;
+                    document.getElementById('packageName').value = packageName;
+                    document.getElementById('partySizeInput').max = capacity;
+                    document.getElementById('partySizeInput').value = ''; // Remove default value
+                    
+                    // Set minimum date to today
+                    const today = new Date().toISOString().split('T')[0];
+                    document.getElementById('reservationDateInput').min = today;
+                    
                     // Show the modal
-                    const packageModal = new bootstrap.Modal(document.getElementById('packageDetailsModal'));
-                    packageModal.show();
+                    reservationModal.show();
                 });
             });
-
-            // Update all reserve buttons
-            const reserveButtons = document.querySelectorAll('.reserve-btn');
-            reserveButtons.forEach(button => {
-                button.addEventListener('click', handleReserveClick);
+            
+            // Function to show flash alert
+            function showAlert(message, type = 'danger') {
+                // Remove any existing alerts
+                const existingAlert = document.getElementById('formAlert');
+                if (existingAlert) {
+                    existingAlert.remove();
+                }
+                
+                // Also show a toast notification for better visibility
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer);
+                        toast.addEventListener('mouseleave', Swal.resumeTimer);
+                    }
+                });
+                
+                Toast.fire({
+                    icon: type === 'danger' ? 'error' : type,
+                    title: message
+                });
+                
+                // Create alert element
+                const alertDiv = document.createElement('div');
+                alertDiv.id = 'formAlert';
+                alertDiv.className = `alert alert-${type} alert-dismissible fade show mb-4`;
+                alertDiv.role = 'alert';
+                alertDiv.innerHTML = `
+                    ${message}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                
+                // Insert alert at the top of the form
+                const form = document.getElementById('reservationForm');
+                form.insertBefore(alertDiv, form.firstChild);
+                
+                // Auto-dismiss after 5 seconds
+                setTimeout(() => {
+                    if (alertDiv) {
+                        alertDiv.remove();
+                    }
+                }, 5000);
+            }
+            
+            // Handle reservation form submission
+            document.getElementById('reservationForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form elements
+                const dateInput = document.getElementById('reservationDateInput');
+                const timeInput = document.getElementById('reservationTimeInput');
+                const partySizeInput = document.getElementById('partySizeInput');
+                
+                // Reset any previous error states
+                [dateInput, timeInput, partySizeInput].forEach(input => {
+                    input.classList.remove('is-invalid');
+                });
+                
+                // Validate required fields
+                let isValid = true;
+                const errors = [];
+                
+                if (!dateInput.value) {
+                    dateInput.classList.add('is-invalid');
+                    errors.push('Please select a date');
+                    isValid = false;
+                }
+                
+                if (!timeInput.value) {
+                    timeInput.classList.add('is-invalid');
+                    errors.push('Please select a time');
+                    isValid = false;
+                }
+                
+                if (!partySizeInput.value) {
+                    partySizeInput.classList.add('is-invalid');
+                    errors.push('Please enter the number of guests');
+                    isValid = false;
+                } else if (isNaN(parseInt(partySizeInput.value)) || parseInt(partySizeInput.value) < 1) {
+                    partySizeInput.classList.add('is-invalid');
+                    errors.push('Please enter a valid number of guests (minimum 1)');
+                    isValid = false;
+                }
+                
+                if (!isValid) {
+                    showAlert(`<i class="fas fa-exclamation-circle me-2"></i>${errors.join('<br>')}`);
+                    return;
+                }
+                
+                const selectedTime = timeInput.value;
+                const partySize = parseInt(partySizeInput.value);
+                const capacity = parseInt(partySizeInput.max);
+                
+                // Validate time is within cafe hours
+                const time = new Date(`2000-01-01T${selectedTime}`);
+                const hours = time.getHours();
+                const minutes = time.getMinutes();
+                const totalMinutes = hours * 60 + minutes;
+                
+                // Check if time is within 7:00 AM to 11:00 PM
+                if (totalMinutes < 7 * 60 || totalMinutes > 23 * 60) {
+                    timeInput.classList.add('is-invalid');
+                    showAlert('<i class="fas fa-exclamation-circle me-2"></i>Please select a time between 7:00 AM and 11:00 PM. Dining is available for up to 4 hours.');
+                    timeInput.focus();
+                    return;
+                }
+                
+                // Validate number of guests doesn't exceed capacity
+                if (partySize > capacity) {
+                    partySizeInput.classList.add('is-invalid');
+                    showAlert(`<i class="fas fa-exclamation-circle me-2"></i>Number of guests (${partySize}) exceeds package capacity (${capacity}). Please select a smaller party size.`);
+                    partySizeInput.focus();
+                    return;
+                }
+                
+                // Get form data
+                const formData = {
+                    package_id: document.getElementById('packageId').value,
+                    package_name: document.getElementById('packageName').value,
+                    date: document.getElementById('reservationDateInput').value,
+                    time: selectedTime,
+                    party_size: partySize
+                };
+                
+                // Store form data for later use
+                window.pendingReservation = formData;
+                
+                // Hide the current modal
+                const reservationModal = bootstrap.Modal.getInstance(document.getElementById('reservationModal'));
+                reservationModal.hide();
+                
+                // Show the action selection modal
+                const actionModal = new bootstrap.Modal(document.getElementById('actionModal'));
+                actionModal.show();
+            });
+        });
+        
+        // Function to update available tables in the UI
+        function updateAvailableTables(availableTables) {
+            console.log('Updating available tables:', availableTables);
+            
+            // Show the availability results section
+            const resultsContainer = document.getElementById('availabilityResults');
+            const availabilityMessage = document.getElementById('availabilityMessage');
+            const tableAvailability = document.getElementById('tableAvailability');
+            
+            // Clear previous results
+            tableAvailability.innerHTML = '';
+            
+            // Safely get the tables array
+            const tablesData = Array.isArray(availableTables) ? availableTables : 
+                             (availableTables && Array.isArray(availableTables.data) ? availableTables.data : []);
+            
+            // Count available table types
+            const availableCount = tablesData.filter(table => table.available_tables > 0).length;
+            
+            if (availableCount > 0) {
+                // Update the message
+                availabilityMessage.textContent = `Found ${availableCount} table type${availableCount > 1 ? 's' : ''} with available tables!`;
+                
+                // Create a list of available tables
+                const list = document.createElement('div');
+                list.className = 'mt-2';
+                
+                tablesData.forEach(table => {
+                    if (table.available_tables > 0) {
+                        const item = document.createElement('div');
+                        item.className = 'd-flex justify-content-between align-items-center mb-2';
+                        item.innerHTML = `
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-utensils me-2"></i>
+                                <span class="fw-medium">${table.table_name || 'Table'}</span>
+                            </div>
+                            <span class="badge bg-success">${table.available_tables} available</span>
+                        `;
+                        list.appendChild(item);
+                    }
+                });
+                
+                tableAvailability.appendChild(list);
+                resultsContainer.style.display = 'block';
+            } else {
+                availabilityMessage.textContent = 'No tables available for the selected date and time.';
+                resultsContainer.style.display = 'block';
+            }
+            
+            // Update all table cards with current availability
+            updateTableCards(tablesData);
+            
+            // Scroll to show the results
+            resultsContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Function to update table cards with availability information
+        function updateTableCards(availableTables) {
+            const tableCards = document.querySelectorAll('.package-card');
+            
+            if (tableCards.length === 0) {
+                console.warn('No table cards found to update');
+                return;
+            }
+            
+            // Ensure availableTables is an array
+            const tablesData = Array.isArray(availableTables) ? availableTables : [];
+            
+            tableCards.forEach(card => {
+                const tableId = parseInt(card.dataset.tableId);
+                const tableData = tablesData.find(t => t.table_type_id === tableId);
+                
+                if (tableData) {
+                    const availableCount = parseInt(tableData.available_tables) || 0;
+                    const isAvailable = availableCount > 0;
+                    
+                    // Update availability badge
+                    const availabilityBadge = card.querySelector('.availability-badge');
+                    if (availabilityBadge) {
+                        availabilityBadge.className = `badge ${isAvailable ? 'bg-success' : 'bg-danger'} p-2 availability-badge`;
+                        availabilityBadge.innerHTML = `
+                            <i class="fas ${isAvailable ? 'fa-check' : 'fa-times'}-circle me-1"></i>
+                            ${isAvailable ? 'Available' : 'Unavailable'}
+                        `;
+                    }
+                    
+                    // Update table count
+                    const tableCountElement = card.querySelector('.table-count');
+                    if (tableCountElement) {
+                        tableCountElement.textContent = `${availableCount} table${availableCount !== 1 ? 's' : ''} available`;
+                    }
+                    
+                    // Update add to cart button
+                    const addToCartBtn = card.querySelector('.add-to-cart');
+                    if (addToCartBtn) {
+                        addToCartBtn.disabled = !isAvailable;
+                        addToCartBtn.className = `btn w-100 ${isAvailable ? 'btn-primary' : 'btn-secondary'} add-to-cart`;
+                        addToCartBtn.innerHTML = `
+                            <i class="fas ${isAvailable ? 'fa-plus' : 'fa-times'} me-2"></i>
+                            ${isAvailable ? 'ADD TO LIST' : 'UNAVAILABLE'}
+                        `;
+                        addToCartBtn.dataset.available = isAvailable ? '1' : '0';
+                    }
+                } else {
+                    // If no data for this table, mark as unavailable
+                    const availabilityBadge = card.querySelector('.availability-badge');
+                    if (availabilityBadge) {
+                        availabilityBadge.className = 'badge bg-danger p-2 availability-badge';
+                        availabilityBadge.innerHTML = '<i class="fas fa-times-circle me-1"></i> Unavailable';
+                    }
+                    
+                    const tableCountElement = card.querySelector('.table-count');
+                    if (tableCountElement) {
+                        tableCountElement.textContent = '0 tables available';
+                    }
+                    
+                    const addToCartBtn = card.querySelector('.add-to-cart');
+                    if (addToCartBtn) {
+                        addToCartBtn.disabled = true;
+                        addToCartBtn.className = 'btn w-100 btn-secondary add-to-cart';
+                        addToCartBtn.innerHTML = '<i class="fas fa-times me-2"></i>UNAVAILABLE';
+                        addToCartBtn.dataset.available = '0';
+                    }
+                }
+            });
+        }
+        
+        // Handle action selection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Proceed to Summary
+            document.getElementById('proceedToSummary').addEventListener('click', function() {
+                const actionModal = bootstrap.Modal.getInstance(document.getElementById('actionModal'));
+                actionModal.hide();
+                
+                // Populate the summary modal with reservation details
+                const res = window.pendingReservation;
+                document.getElementById('summaryPackage').textContent = res.package_name;
+                
+                // Format the date to be more readable (e.g., "Monday, January 1, 2023")
+                const date = new Date(res.date);
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                document.getElementById('summaryDate').textContent = date.toLocaleDateString('en-US', options);
+                
+                // Format the time (e.g., "2:30 PM")
+                const time = new Date(`2000-01-01T${res.time}`);
+                document.getElementById('summaryTime').textContent = time.toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+                
+                document.getElementById('summaryGuests').textContent = res.party_size + (res.party_size > 1 ? ' Guests' : ' Guest');
+                
+                // Show the summary modal
+                const summaryModal = new bootstrap.Modal(document.getElementById('summaryModal'));
+                summaryModal.show();
             });
 
-            // Update ultimate reserve button
-            const ultimateReserveBtn = document.getElementById('ultimateReserveBtn');
-            if (ultimateReserveBtn) {
-                ultimateReserveBtn.removeEventListener('click', null); // Remove existing handler
-                ultimateReserveBtn.addEventListener('click', handleReserveClick);
-            }
+            
         });
     </script>
 </body>
-
 </html>

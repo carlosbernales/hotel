@@ -7,7 +7,13 @@ $booking_id = $data['booking_id'];
 $checkin = $data['check_in'];
 $checkout = $data['check_out'];
 $total_amount = $data['total_amount'];
+$down_payment = $data['down_payment'];
 $payment_input = $data['payment_input'];
+$payment_amount = $down_payment + $payment_input;
+$change_amount = floatval($data['change_amount'] ?? 0);
+
+
+
 $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
 $status = $data['status'];
@@ -34,7 +40,7 @@ $checkOutDate = new DateTime($checkout);
 $interval = $checkInDate->diff($checkOutDate);
 $nights = (int) $interval->format('%a');
 
-$updateBooking = $conn->prepare("
+$sql = "
     UPDATE bookings
     SET 
         check_in = ?, 
@@ -45,12 +51,55 @@ $updateBooking = $conn->prepare("
         remaining_balance = ?, 
         payment_method = ?,  
         status = ?,
-        discount_amount = ?
-    WHERE booking_id = ?
-");
-$updateBooking->bind_param("ssiddsssdi", $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $discount_amount, $booking_id);
-$updateBooking->execute();
+        discount_amount = ?,
+        payment_amount = ?
+";
 
+if (!empty($change_amount) && $change_amount > 0) {
+    $sql .= ", payment_change = ?";
+}
+
+$sql .= " WHERE booking_id = ?";
+
+$updateBooking = $conn->prepare($sql);
+
+if (!empty($change_amount) && $change_amount > 0) {
+
+    $updateBooking->bind_param(
+        "ssidddssddddi",
+        $checkin,
+        $checkout,
+        $nights,
+        $total_amount,
+        $downpayment_amount,
+        $remaining_balance,
+        $payment_method,
+        $status,
+        $discount_amount,
+        $payment_amount,
+        $change_amount,
+        $booking_id
+    );
+
+} else {
+
+    $updateBooking->bind_param(
+        "ssidddssdddi",
+        $checkin,
+        $checkout,
+        $nights,
+        $total_amount,
+        $downpayment_amount,
+        $remaining_balance,
+        $payment_method,
+        $status,
+        $discount_amount,
+        $payment_amount,
+        $booking_id
+    );
+}
+
+$updateBooking->execute();
 
 if ($status === "checkin") {
 

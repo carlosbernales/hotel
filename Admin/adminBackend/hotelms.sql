@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.3
+-- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Generation Time: Feb 03, 2026 at 09:08 AM
--- Server version: 8.0.30
--- PHP Version: 8.1.10
+-- Host: 127.0.0.1:3306
+-- Generation Time: Feb 21, 2026 at 01:14 AM
+-- Server version: 11.8.3-MariaDB-log
+-- PHP Version: 7.2.34
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `hotelms`
+-- Database: `u763377220_hotelms`
 --
 
 -- --------------------------------------------------------
@@ -28,10 +28,10 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `about_content` (
-  `id` int NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'About Casa Estela',
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL DEFAULT 'About Casa Estela',
+  `description` text NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -48,12 +48,12 @@ INSERT INTO `about_content` (`id`, `title`, `description`, `last_updated`) VALUE
 --
 
 CREATE TABLE `about_slideshow` (
-  `id` int NOT NULL,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `alt_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `display_order` int NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `alt_text` varchar(255) NOT NULL,
+  `display_order` int(11) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -76,11 +76,11 @@ INSERT INTO `about_slideshow` (`id`, `image_path`, `alt_text`, `display_order`, 
 --
 
 CREATE TABLE `activities` (
-  `activity_id` int NOT NULL,
-  `activity_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `reference_id` int DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `activity_id` int(11) NOT NULL,
+  `activity_type` varchar(50) NOT NULL,
+  `description` text DEFAULT NULL,
+  `reference_id` int(11) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -90,19 +90,19 @@ CREATE TABLE `activities` (
 --
 
 CREATE TABLE `admin` (
-  `id` int NOT NULL,
-  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `first_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `middle_initial` varchar(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `age` int DEFAULT NULL,
-  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `position` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contact` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `profile_image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `middle_initial` varchar(1) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `position` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `profile_image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -122,10 +122,10 @@ INSERT INTO `admin` (`id`, `username`, `password`, `first_name`, `middle_initial
 --
 
 CREATE TABLE `admin_sessions` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `session_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_activity` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `session_id` varchar(255) NOT NULL,
+  `last_activity` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -135,10 +135,10 @@ CREATE TABLE `admin_sessions` (
 --
 
 CREATE TABLE `admin_status` (
-  `id` int NOT NULL,
-  `admin_id` int NOT NULL,
-  `last_active` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `is_online` tinyint(1) DEFAULT '0'
+  `id` int(11) NOT NULL,
+  `admin_id` int(11) NOT NULL,
+  `last_active` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `is_online` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -156,12 +156,12 @@ INSERT INTO `admin_status` (`id`, `admin_id`, `last_active`, `is_online`) VALUES
 --
 
 CREATE TABLE `advance_orders` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `quantity` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -209,9 +209,9 @@ INSERT INTO `advance_orders` (`id`, `booking_id`, `menu_item_id`, `quantity`, `p
 --
 
 CREATE TABLE `advance_order_addons` (
-  `id` int NOT NULL,
-  `advance_order_id` int NOT NULL,
-  `addon_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `advance_order_id` int(11) NOT NULL,
+  `addon_id` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -222,9 +222,9 @@ CREATE TABLE `advance_order_addons` (
 --
 
 CREATE TABLE `amenities` (
-  `amenity_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `amenity_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `icon` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -236,7 +236,8 @@ INSERT INTO `amenities` (`amenity_id`, `name`, `icon`) VALUES
 (2, 'Private Bathroom', 'fa-bath'),
 (3, 'Flat-screen TV', 'fa-television'),
 (4, 'Free WiFi', 'fa-wifi'),
-(5, 'Hot Shower', 'fa-shower');
+(5, 'Hot Shower', 'fa-shower'),
+(8, 'Bath Thub', NULL);
 
 -- --------------------------------------------------------
 
@@ -245,10 +246,10 @@ INSERT INTO `amenities` (`amenity_id`, `name`, `icon`) VALUES
 --
 
 CREATE TABLE `announcements` (
-  `id` int NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type` enum('gcash','maya','general') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` enum('gcash','maya','general') NOT NULL,
   `created_at` datetime NOT NULL,
   `valid_until` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -267,12 +268,12 @@ INSERT INTO `announcements` (`id`, `title`, `message`, `type`, `created_at`, `va
 --
 
 CREATE TABLE `beds` (
-  `id` int NOT NULL,
-  `item_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `available_quantity` int NOT NULL DEFAULT '0',
-  `total_quantity` int NOT NULL DEFAULT '0',
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `price` decimal(10,2) NOT NULL DEFAULT '0.00'
+  `id` int(11) NOT NULL,
+  `item_type` varchar(50) NOT NULL,
+  `available_quantity` int(11) NOT NULL DEFAULT 0,
+  `total_quantity` int(11) NOT NULL DEFAULT 0,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -282,7 +283,7 @@ CREATE TABLE `beds` (
 INSERT INTO `beds` (`id`, `item_type`, `available_quantity`, `total_quantity`, `last_updated`, `price`) VALUES
 (1, 'Single Bed', 10, 10, '2025-12-07 09:04:28', 1000.00),
 (2, 'Queens Bed', 10, 10, '2025-05-13 06:44:32', 1000.00),
-(3, 'Toothbrush', 0, 0, '2025-12-04 05:56:50', 0.00),
+(3, 'Toothbrush', 1, 2, '2026-02-13 15:31:20', 0.00),
 (4, 'Towel', 0, 0, '2025-12-04 05:56:50', 0.00),
 (5, 'Slippers', 0, 0, '2025-12-04 05:56:50', 0.00),
 (6, 'Shampoo', 0, 0, '2025-12-04 05:56:50', 0.00),
@@ -296,14 +297,36 @@ INSERT INTO `beds` (`id`, `item_type`, `available_quantity`, `total_quantity`, `
 --
 
 CREATE TABLE `booked_rooms` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `room_number_fk_id` int DEFAULT NULL,
-  `room_type_id` int NOT NULL,
-  `room_type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `room_number_fk_id` int(11) DEFAULT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_type_name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `booked_rooms`
+--
+
+INSERT INTO `booked_rooms` (`id`, `booking_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `created_at`) VALUES
+(1, 1, 5, 2, 'Double Occupancy', 5000.00, '2026-02-20 16:20:03'),
+(2, 1, 5, 2, 'Double Occupancy', 5000.00, '2026-02-20 16:20:03'),
+(3, 1, 1, 3, 'Triple Occupancy', 1700.00, '2026-02-20 16:20:03'),
+(4, 1, 1, 3, 'Triple Occupancy', 1700.00, '2026-02-20 16:20:03'),
+(5, 1, 1, 3, 'Triple Occupancy', 1700.00, '2026-02-20 16:20:03'),
+(6, 1, 2, 4, 'Family', 4500.00, '2026-02-20 16:20:03'),
+(7, 1, 2, 4, 'Family', 4500.00, '2026-02-20 16:20:03'),
+(8, 1, 2, 4, 'Family', 4500.00, '2026-02-20 16:20:03'),
+(9, 2, 5, 2, 'Double Occupancy', 5000.00, '2026-02-20 16:36:04'),
+(10, 2, 5, 2, 'Double Occupancy', 5000.00, '2026-02-20 16:36:04'),
+(11, 2, 1, 3, 'Triple Occupancy', 1700.00, '2026-02-20 16:36:04'),
+(12, 2, 1, 3, 'Triple Occupancy', 1700.00, '2026-02-20 16:36:04'),
+(13, 2, 1, 3, 'Triple Occupancy', 1700.00, '2026-02-20 16:36:04'),
+(14, 2, 2, 4, 'Family', 4500.00, '2026-02-20 16:36:04'),
+(15, 2, 2, 4, 'Family', 4500.00, '2026-02-20 16:36:04'),
+(16, 2, 2, 4, 'Family', 4500.00, '2026-02-20 16:36:04');
 
 -- --------------------------------------------------------
 
@@ -312,37 +335,47 @@ CREATE TABLE `booked_rooms` (
 --
 
 CREATE TABLE `bookings` (
-  `booking_id` int NOT NULL,
-  `booking_reference` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_id` int UNSIGNED DEFAULT NULL,
-  `first_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contact` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `booking_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `booking_id` int(11) NOT NULL,
+  `booking_reference` varchar(255) NOT NULL,
+  `user_id` int(10) UNSIGNED DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `booking_type` varchar(255) DEFAULT NULL,
   `check_in` datetime DEFAULT NULL,
   `check_out` datetime DEFAULT NULL,
   `arrival_time` time DEFAULT NULL,
-  `number_of_guests` int DEFAULT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `room_quantity` int DEFAULT NULL,
-  `payment_option` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `number_of_guests` int(11) DEFAULT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `room_quantity` int(11) DEFAULT NULL,
+  `payment_option` varchar(50) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
   `total_amount` decimal(10,2) DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `nights` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nights` int(11) NOT NULL,
   `downpayment_amount` decimal(10,2) DEFAULT NULL,
   `remaining_balance` decimal(10,2) DEFAULT NULL,
-  `user_types` enum('admin','frontdesk') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'frontdesk',
-  `num_adults` int DEFAULT '0',
-  `num_children` int DEFAULT '0',
-  `extra_bed` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `discount_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `user_types` enum('admin','frontdesk') NOT NULL DEFAULT 'frontdesk',
+  `num_adults` int(11) DEFAULT 0,
+  `num_children` int(11) DEFAULT 0,
+  `extra_bed` varchar(50) DEFAULT NULL,
+  `discount_type` varchar(50) DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
   `discount_amount` decimal(10,2) DEFAULT NULL,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `rejection_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+  `status` varchar(255) NOT NULL,
+  `rejection_reason` text DEFAULT NULL,
+  `payment_amount` double(10,2) DEFAULT NULL,
+  `payment_change` double(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `booking_reference`, `user_id`, `first_name`, `last_name`, `email`, `contact`, `booking_type`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `room_type_id`, `room_quantity`, `payment_option`, `payment_method`, `total_amount`, `created_at`, `nights`, `downpayment_amount`, `remaining_balance`, `user_types`, `num_adults`, `num_children`, `extra_bed`, `discount_type`, `discount_percentage`, `discount_amount`, `status`, `rejection_reason`, `payment_amount`, `payment_change`) VALUES
+(1, 'BOOK-8LK5JV3KBXI', 54, 'christian realisan Christian Realisan', 'christian realisan Christian Realisan', 'iansilang123@gmail.com', '09123454545', 'online', '2026-02-21 00:00:00', '2026-02-22 00:00:00', '14:00:00', 1, NULL, 8, 'down_payment', 'maya', 28600.00, '2026-02-20 16:20:03', 1, 1500.00, 27100.00, '', 1, 0, NULL, NULL, NULL, NULL, 'pending', NULL, NULL, NULL),
+(2, 'BOOK-XNEDUENSE0C', 54, 'christian realisan Christian Realisan', 'christian realisan Christian Realisan', 'iansilang123@gmail.com', '09123454545', 'online', '2026-02-22 00:00:00', '2026-02-23 00:00:00', '14:00:00', 1, NULL, 8, 'down_payment', 'maya', 28600.00, '2026-02-20 16:36:04', 1, 1500.00, 27100.00, '', 1, 0, NULL, NULL, NULL, NULL, 'pending', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -351,14 +384,22 @@ CREATE TABLE `bookings` (
 --
 
 CREATE TABLE `booking_amenities` (
-  `id` int NOT NULL,
-  `amenities_fk_id` int NOT NULL,
-  `booking_fk_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `amenities_fk_id` int(11) NOT NULL,
+  `booking_fk_id` int(11) NOT NULL,
   `bedOrNot` varchar(255) DEFAULT NULL,
-  `quantity` int NOT NULL,
+  `quantity` int(11) NOT NULL,
   `amenity_name` varchar(255) NOT NULL,
   `price` double(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking_amenities`
+--
+
+INSERT INTO `booking_amenities` (`id`, `amenities_fk_id`, `booking_fk_id`, `bedOrNot`, `quantity`, `amenity_name`, `price`) VALUES
+(1, 7, 7, NULL, 1, 'Soap', 0.00),
+(3, 6, 7, NULL, 1, 'Shampoo', 0.00);
 
 -- --------------------------------------------------------
 
@@ -367,10 +408,10 @@ CREATE TABLE `booking_amenities` (
 --
 
 CREATE TABLE `booking_cancellations` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reason` text NOT NULL,
   `cancelled_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -395,11 +436,58 @@ INSERT INTO `booking_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `c
 --
 
 CREATE TABLE `booking_check_inout` (
-  `id` int NOT NULL,
-  `booking_fk_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_fk_id` int(11) NOT NULL,
   `check_in` datetime NOT NULL,
   `check_out` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `booking_check_inout`
+--
+
+INSERT INTO `booking_check_inout` (`id`, `booking_fk_id`, `check_in`, `check_out`) VALUES
+(1, 1, '2026-02-06 00:00:00', '2026-02-07 00:00:00'),
+(2, 2, '2026-02-09 00:00:00', '2026-02-10 00:00:00'),
+(3, 3, '2026-02-09 00:00:00', '2026-02-10 00:00:00'),
+(4, 4, '2026-02-10 00:00:00', '2026-02-13 00:00:00'),
+(5, 5, '2026-02-11 00:00:00', '2026-02-12 00:00:00'),
+(6, 6, '2026-02-13 00:00:00', '2026-02-14 00:00:00'),
+(7, 7, '2026-02-12 00:00:00', '2026-02-15 00:00:00'),
+(8, 8, '2026-02-17 00:00:00', '2026-02-18 00:00:00'),
+(9, 9, '2026-02-19 00:00:00', '2026-02-21 00:00:00'),
+(10, 10, '2026-02-19 00:00:00', '2026-02-20 00:00:00'),
+(11, 11, '2026-02-19 00:00:00', '2026-02-20 00:00:00'),
+(12, 12, '2026-02-19 00:00:00', '2026-02-20 00:00:00'),
+(13, 13, '2026-02-22 00:00:00', '2026-02-24 00:00:00'),
+(14, 14, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(15, 15, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(16, 16, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(17, 17, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(18, 18, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(19, 19, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(20, 20, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(21, 21, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(22, 22, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(23, 23, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(24, 24, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(25, 1, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(26, 2, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(27, 3, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(28, 4, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(29, 5, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(30, 6, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(31, 7, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(32, 8, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(33, 9, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(34, 10, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(35, 11, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(36, 12, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(37, 13, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(38, 14, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(39, 1, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(40, 1, '2026-02-20 00:00:00', '2026-02-21 00:00:00'),
+(41, 2, '2026-02-22 00:00:00', '2026-02-23 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -408,13 +496,13 @@ CREATE TABLE `booking_check_inout` (
 --
 
 CREATE TABLE `booking_display_settings` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `booking_type` enum('room','table','event') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `display_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
   `image_settings` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL,
-  `layout_order` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `layout_order` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -436,14 +524,14 @@ INSERT INTO `booking_display_settings` (`id`, `booking_type`, `display_fields`, 
 --
 
 CREATE TABLE `booking_extensions` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
   `original_checkout` date NOT NULL,
   `new_checkout` date NOT NULL,
-  `days_extended` int NOT NULL,
+  `days_extended` int(11) NOT NULL,
   `additional_cost` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `extension_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `payment_method` varchar(50) NOT NULL,
+  `extension_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -462,12 +550,12 @@ INSERT INTO `booking_extensions` (`id`, `booking_id`, `original_checkout`, `new_
 --
 
 CREATE TABLE `booking_history` (
-  `id` int NOT NULL,
-  `booking_id` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `action` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `performed_by` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `booking_id` varchar(50) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `details` text DEFAULT NULL,
+  `performed_by` varchar(50) NOT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -484,10 +572,10 @@ INSERT INTO `booking_history` (`id`, `booking_id`, `action`, `details`, `perform
 --
 
 CREATE TABLE `booking_list` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `room_type_id` int NOT NULL,
-  `added_on` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `added_on` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -497,11 +585,11 @@ CREATE TABLE `booking_list` (
 --
 
 CREATE TABLE `cashier` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `username` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -511,13 +599,13 @@ CREATE TABLE `cashier` (
 --
 
 CREATE TABLE `chat_messages` (
-  `id` int NOT NULL,
-  `user_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sender_type` enum('user','admin','system') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `read_status` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `reply_to_id` int DEFAULT NULL
+  `id` int(11) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `sender_type` enum('user','admin','system') NOT NULL,
+  `read_status` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `reply_to_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -571,22 +659,22 @@ INSERT INTO `chat_messages` (`id`, `user_id`, `message`, `sender_type`, `read_st
 --
 
 CREATE TABLE `checked_in` (
-  `id` int NOT NULL,
-  `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `room_type_id` int NOT NULL,
-  `room_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `contact_number` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_type` varchar(50) NOT NULL,
   `check_in_date` date NOT NULL,
   `check_out_date` date NOT NULL,
-  `nights_staying` int NOT NULL,
-  `number_of_guests` int NOT NULL,
-  `special_requests` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nights_staying` int(11) NOT NULL,
+  `number_of_guests` int(11) NOT NULL,
+  `special_requests` text DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'active',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` varchar(20) DEFAULT 'active',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -611,22 +699,22 @@ INSERT INTO `checked_in` (`id`, `first_name`, `last_name`, `contact_number`, `em
 --
 
 CREATE TABLE `checked_out` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `room_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `room_type` varchar(50) NOT NULL,
   `check_in` date NOT NULL,
   `check_out` date NOT NULL,
-  `checkout_timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `nights` int NOT NULL,
-  `number_of_guests` int NOT NULL,
+  `checkout_timestamp` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nights` int(11) NOT NULL,
+  `number_of_guests` int(11) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Checked Out',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `payment_method` varchar(50) NOT NULL,
+  `status` varchar(20) DEFAULT 'Checked Out',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -636,13 +724,13 @@ CREATE TABLE `checked_out` (
 --
 
 CREATE TABLE `contact_info` (
-  `id` int NOT NULL,
-  `icon_class` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `display_text` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `link` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_external` tinyint(1) DEFAULT '1',
-  `display_order` int DEFAULT '0',
-  `active` tinyint(1) DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `icon_class` varchar(50) NOT NULL,
+  `display_text` varchar(255) NOT NULL,
+  `link` varchar(255) NOT NULL,
+  `is_external` tinyint(1) DEFAULT 1,
+  `display_order` int(11) DEFAULT 0,
+  `active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -664,14 +752,14 @@ INSERT INTO `contact_info` (`id`, `icon_class`, `display_text`, `link`, `is_exte
 --
 
 CREATE TABLE `contact_messages` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('new','read','replied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'new',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('new','read','replied') DEFAULT 'new',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -697,14 +785,14 @@ INSERT INTO `contact_messages` (`id`, `first_name`, `last_name`, `email`, `messa
 --
 
 CREATE TABLE `customer` (
-  `customer_id` int NOT NULL,
+  `customer_id` int(11) NOT NULL,
   `customer_name` varchar(100) NOT NULL,
-  `contact_no` bigint NOT NULL,
+  `contact_no` bigint(20) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `id_card_type_id` int NOT NULL,
+  `id_card_type_id` int(11) NOT NULL,
   `id_card_no` varchar(20) NOT NULL,
   `address` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `customer`
@@ -727,12 +815,12 @@ INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_no`, `email`, `
 --
 
 CREATE TABLE `customers` (
-  `customer_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_vip` tinyint(1) DEFAULT '0'
+  `customer_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_vip` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -754,9 +842,9 @@ INSERT INTO `customers` (`customer_id`, `name`, `email`, `phone`, `created_at`, 
 
 CREATE TABLE `daily_occupancy` (
   `date` date NOT NULL,
-  `total_rooms` int NOT NULL,
-  `occupied_rooms` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `total_rooms` int(11) NOT NULL,
+  `occupied_rooms` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -781,8 +869,8 @@ INSERT INTO `daily_occupancy` (`date`, `total_rooms`, `occupied_rooms`, `created
 CREATE TABLE `daily_revenue` (
   `date` date NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `booking_count` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `booking_count` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -805,16 +893,16 @@ INSERT INTO `daily_revenue` (`date`, `total_amount`, `booking_count`, `created_a
 --
 
 CREATE TABLE `dining_tables` (
-  `id` int NOT NULL,
-  `table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `table_type` enum('Couple','Friends','Family','Package A','Package B','Package C') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `category` enum('regular','ultimate') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'regular',
-  `capacity` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `table_name` varchar(100) NOT NULL,
+  `table_type` enum('Couple','Friends','Family','Package A','Package B','Package C') NOT NULL,
+  `category` enum('regular','ultimate') NOT NULL DEFAULT 'regular',
+  `capacity` int(11) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `status` enum('available','occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'available',
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `status` enum('available','occupied') DEFAULT 'available',
+  `image_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -833,10 +921,10 @@ INSERT INTO `dining_tables` (`id`, `table_name`, `table_type`, `category`, `capa
 --
 
 CREATE TABLE `disable_reasons` (
-  `id` int NOT NULL,
-  `reason` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `reason` varchar(255) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -857,12 +945,12 @@ INSERT INTO `disable_reasons` (`id`, `reason`, `is_active`, `created_at`) VALUES
 --
 
 CREATE TABLE `discount_types` (
-  `id` int NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `percentage` int NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `percentage` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -881,13 +969,13 @@ INSERT INTO `discount_types` (`id`, `name`, `percentage`, `description`, `is_act
 --
 
 CREATE TABLE `emp_history` (
-  `id` int NOT NULL,
-  `emp_id` int NOT NULL,
-  `shift_id` int NOT NULL,
-  `from_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `emp_id` int(11) NOT NULL,
+  `shift_id` int(11) NOT NULL,
+  `from_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `to_date` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `emp_history`
@@ -912,11 +1000,11 @@ INSERT INTO `emp_history` (`id`, `emp_id`, `shift_id`, `from_date`, `to_date`, `
 --
 
 CREATE TABLE `events` (
-  `event_id` int NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `event_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
   `event_date` date NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -926,32 +1014,45 @@ CREATE TABLE `events` (
 --
 
 CREATE TABLE `event_bookings` (
-  `id` int NOT NULL,
-  `booking_refId` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `user_id` int DEFAULT NULL,
-  `customer_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `package_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `max_guest` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `booking_refId` varchar(255) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `package_id` int(11) DEFAULT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `package_name` varchar(100) NOT NULL,
+  `max_guest` int(11) DEFAULT NULL,
   `package_price` decimal(10,2) NOT NULL,
-  `overtime_hours` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '0',
-  `overtime_charge` decimal(10,2) DEFAULT '0.00',
-  `extra_guests` int DEFAULT '0',
-  `extra_guest_charge` decimal(10,2) DEFAULT '0.00',
+  `overtime_hours` varchar(255) DEFAULT '0',
+  `overtime_charge` decimal(10,2) DEFAULT 0.00,
+  `extra_guests` int(11) DEFAULT 0,
+  `extra_guest_charge` decimal(10,2) DEFAULT 0.00,
   `total_amount` decimal(10,2) NOT NULL,
   `paid_amount` decimal(10,2) DEFAULT NULL,
   `remaining_balance` decimal(10,2) DEFAULT NULL,
-  `event_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `event_type` varchar(50) DEFAULT NULL,
   `date_time_start` datetime NOT NULL,
   `date_time_end` datetime NOT NULL,
-  `number_of_guests` int NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `booking_status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `reserve_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Regular',
-  `place` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `rejection_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+  `number_of_guests` int(11) NOT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `payment_type` varchar(50) DEFAULT NULL,
+  `booking_status` varchar(20) DEFAULT 'pending',
+  `reserve_type` varchar(50) DEFAULT 'Regular',
+  `place` varchar(255) DEFAULT NULL,
+  `rejection_reason` text DEFAULT NULL,
+  `change_amount` double(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_bookings`
+--
+
+INSERT INTO `event_bookings` (`id`, `booking_refId`, `user_id`, `package_id`, `customer_name`, `email`, `package_name`, `max_guest`, `package_price`, `overtime_hours`, `overtime_charge`, `extra_guests`, `extra_guest_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `event_type`, `date_time_start`, `date_time_end`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `reserve_type`, `place`, `rejection_reason`, `change_amount`) VALUES
+(1, 'EVT-20260209-69896D31563A4', 40, 9, 'christian realisan Christian Realisan realisan', NULL, 'Package F', NULL, 1000.00, '0', 0.00, 0, 0.00, 1000.00, 500.00, 500.00, 'birthday', '2026-02-09 13:01:00', '2026-02-09 17:01:00', 1, 'cash', 'down_payment', 'Ongoing', 'event', 'garden', NULL, NULL),
+(2, 'EVT-20260211-698B5C2023FC8', 54, 9, 'christian realisan Christian Realisan christian realisan Christian Realisan', NULL, 'Package F', NULL, 1000.00, '0', 0.00, 0, 0.00, 1000.00, 500.00, 500.00, 'family', '2026-02-12 12:00:00', '2026-02-12 16:00:00', 2, 'cash', 'down_payment', 'Ongoing', 'event', 'garden', NULL, NULL),
+(3, 'EVT-20260211-698B5C4EA5416', 54, 9, 'christian realisan Christian Realisan christian realisan Christian Realisan', NULL, 'Package F', NULL, 1000.00, '0', 0.00, 0, 0.00, 1000.00, 500.00, 500.00, 'family', '2026-02-12 12:00:00', '2026-02-12 16:00:00', 2, 'cash', 'down_payment', 'pending', 'event', 'garden', NULL, NULL),
+(4, 'EVT-20260211-698BF6BB5BDBA', 54, 4, 'christian realisan Christian Realisan christian realisan Christian Realisan', NULL, 'Package C', NULL, 76800.00, '0', 0.00, 0, 0.00, 76800.00, 38400.00, 38400.00, 'corporate', '2026-02-11 11:14:00', '2026-02-11 15:14:00', 22, 'cash', 'down_payment', 'pending', 'event', 'garden', NULL, NULL),
+(5, 'EVT-20260212-698D583C9742A', 55, 4, 'Fammela  De Guzman', NULL, 'Package C', NULL, 76800.00, '0', 0.00, 0, 0.00, 76800.00, 38400.00, 38400.00, 'family', '2026-02-14 10:30:00', '2026-02-14 14:30:00', 50, 'cash', 'down_payment', 'pending', 'event', 'garden', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -960,12 +1061,12 @@ CREATE TABLE `event_bookings` (
 --
 
 CREATE TABLE `event_images` (
-  `id` int NOT NULL,
-  `package_id` int DEFAULT NULL,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `caption` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `is_featured` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `package_id` int(11) DEFAULT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `caption` varchar(255) DEFAULT NULL,
+  `is_featured` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -987,23 +1088,23 @@ INSERT INTO `event_images` (`id`, `package_id`, `image_path`, `caption`, `is_fea
 --
 
 CREATE TABLE `event_packages` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image_path2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image_path3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `max_guests` int NOT NULL DEFAULT '30',
-  `duration` int NOT NULL DEFAULT '5' COMMENT 'Duration in hours',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_available` tinyint(1) DEFAULT '1',
-  `menu_items` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `max_pax` int DEFAULT '50',
-  `time_limit` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT '5 hours',
-  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available',
-  `place` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `description` text DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `image_path2` varchar(255) DEFAULT NULL,
+  `image_path3` varchar(255) DEFAULT NULL,
+  `max_guests` int(11) NOT NULL DEFAULT 30,
+  `duration` int(11) NOT NULL DEFAULT 5 COMMENT 'Duration in hours',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_available` tinyint(1) DEFAULT 1,
+  `menu_items` text DEFAULT NULL,
+  `max_pax` int(11) DEFAULT 50,
+  `time_limit` varchar(50) DEFAULT '5 hours',
+  `notes` text DEFAULT NULL,
+  `status` varchar(255) NOT NULL DEFAULT 'available',
+  `place` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1011,11 +1112,11 @@ CREATE TABLE `event_packages` (
 --
 
 INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`, `image_path2`, `image_path3`, `max_guests`, `duration`, `created_at`, `is_available`, `menu_items`, `max_pax`, `time_limit`, `notes`, `status`, `place`) VALUES
-(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682691d939a20.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, 'Carlos,1 Appetizers', 50, '', '  HAHH', 'available', 'cafe'),
-(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'uploads/event_packages/682692c15a2eb.jpg', 'images/hall2.jpg', 'images/hall3.jpg', 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 30, '', '   Wala', 'available', 'cafe'),
-(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', 'uploads/event_packages/682693e94762a.jpg', 'images/hall.jpg', 'images/hall3.jpg', 40, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 40, '', '   **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available', 'cafe'),
-(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'uploads/event_packages/682693d33161e.jpg', 'images/hall2.jpg', 'images/hall.jpg', 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers, 2 Pasta, 2 Mains, Wagyu Steak Station, Salad Bar, Rice, 2desserts, Drinks ', 50, '5 hours', NULL, 'available', 'garden'),
-(9, 'Package F', 1000.00, 'Note', NULL, NULL, NULL, 2, 1, '2025-12-20 10:11:26', 1, 'Salad,1 Appetizers', 2, '', 'Note', 'available', 'garden');
+(1, 'Venue Rental Only', 20000.00, '5-hour venue rental\r\nTables and Tiffany chairs', '833746f73dfbbfeb5194b0b6.jpg', 'f47825776f7a7d130878f073.jpg', NULL, 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers', 50, '', '     HAHH', 'available', 'cafe'),
+(2, 'Package A', 47500.00, '5-hour venue rental      Tables     and Tiffany chairs', 'b0b2e31222cf4f8c02d9c310.jpg', NULL, NULL, 30, 5, '2025-02-12 02:48:46', 0, '1 Appetizers,2 Pasta,2 Mains,Salad Bar,Rice,Drinks,2 Drinks', 30, '', '    Wala', 'available', 'cafe'),
+(3, 'Package B', 55000.00, '5-hour venue rental\r\nTables and  Tiffany chairs', '417145ce8adce5e4a9e85f25.jpg', NULL, NULL, 40, 5, '2025-02-12 02:48:46', 0, '2 Appetizers,2 Pasta,3 Mains,Salad Bar,Rice,1 Dessert,Drinks', 40, '', '    **Assumes 5,000g (100g per person) of Wagyu steak will be served.', 'available', 'cafe'),
+(4, 'Package C', 76800.00, '5-hour venue rental\r\nTables and Tiffany chairs', 'b1f5ed68d570fc613b082da2.jpg', NULL, NULL, 30, 5, '2025-02-12 02:48:46', 1, '3 Appetizers,2 Pasta,2 Mains,Wagyu Steak Station,Salad Bar,Rice,2desserts,Drinks', 50, '', ' ', 'available', 'garden'),
+(9, 'Package F', 1000.00, 'Note', '8fb52dc2718d570082dfc257.jpg', NULL, NULL, 2, 1, '2025-12-20 10:11:26', 1, 'Salad,1 Appetizers', 2, '', ' Note', 'available', 'garden');
 
 -- --------------------------------------------------------
 
@@ -1024,14 +1125,14 @@ INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `image_path`
 --
 
 CREATE TABLE `facilities` (
-  `id` int NOT NULL,
-  `category_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `icon` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'check',
-  `display_order` int NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `icon` varchar(50) DEFAULT 'check',
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1075,12 +1176,12 @@ INSERT INTO `facilities` (`id`, `category_id`, `name`, `icon`, `display_order`, 
 --
 
 CREATE TABLE `facility_categories` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `display_order` int NOT NULL DEFAULT '0',
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `display_order` int(11) NOT NULL DEFAULT 0,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1103,12 +1204,12 @@ INSERT INTO `facility_categories` (`id`, `name`, `display_order`, `active`, `cre
 --
 
 CREATE TABLE `featured_rooms` (
-  `id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1125,16 +1226,16 @@ INSERT INTO `featured_rooms` (`id`, `room_type_id`, `start_date`, `end_date`, `c
 --
 
 CREATE TABLE `feedback` (
-  `id` int NOT NULL,
-  `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('pending','read','resolved') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('pending','read','resolved') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `resolved_at` timestamp NULL DEFAULT NULL,
-  `admin_response` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `resolve_status` tinyint(1) DEFAULT '0'
+  `admin_response` text DEFAULT NULL,
+  `resolve_status` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1144,9 +1245,9 @@ CREATE TABLE `feedback` (
 --
 
 CREATE TABLE `fix_booking_ids_log` (
-  `id` int NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `message` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -1169,11 +1270,11 @@ INSERT INTO `fix_booking_ids_log` (`id`, `message`, `created_at`) VALUES
 --
 
 CREATE TABLE `gallery_images` (
-  `id` int NOT NULL,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1183,12 +1284,12 @@ CREATE TABLE `gallery_images` (
 --
 
 CREATE TABLE `guests` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) NOT NULL,
+  `last_name` varchar(50) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -1198,15 +1299,23 @@ CREATE TABLE `guests` (
 --
 
 CREATE TABLE `guest_names` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `first_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `guest_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'Regular',
-  `age` int DEFAULT NULL,
-  `image_proof` varchar(44) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `first_name` varchar(100) NOT NULL,
+  `last_name` varchar(100) NOT NULL,
+  `guest_type` varchar(255) NOT NULL DEFAULT 'Regular',
+  `age` int(11) DEFAULT NULL,
+  `image_proof` varchar(44) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `guest_names`
+--
+
+INSERT INTO `guest_names` (`id`, `booking_id`, `first_name`, `last_name`, `guest_type`, `age`, `image_proof`, `created_at`) VALUES
+(1, 1, 'as', '12', 'regular', 34, NULL, '2026-02-20 16:20:03'),
+(2, 2, 'as', '12', 'regular', 34, NULL, '2026-02-20 16:36:04');
 
 -- --------------------------------------------------------
 
@@ -1215,10 +1324,10 @@ CREATE TABLE `guest_names` (
 --
 
 CREATE TABLE `hotel_policies` (
-  `id` int NOT NULL,
-  `policy_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `policy_content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `policy_type` varchar(50) NOT NULL,
+  `policy_content` text NOT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1235,11 +1344,11 @@ INSERT INTO `hotel_policies` (`id`, `policy_type`, `policy_content`, `last_updat
 --
 
 CREATE TABLE `housekeeping_requests` (
-  `request_id` int NOT NULL,
-  `room_id` int DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` enum('Pending','In Progress','Completed') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `request_id` int(11) NOT NULL,
+  `room_id` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `status` enum('Pending','In Progress','Completed') DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `completed_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1250,9 +1359,9 @@ CREATE TABLE `housekeeping_requests` (
 --
 
 CREATE TABLE `id_card_type` (
-  `id_card_type_id` int NOT NULL,
+  `id_card_type_id` int(11) NOT NULL,
   `id_card_type` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `id_card_type`
@@ -1272,9 +1381,9 @@ INSERT INTO `id_card_type` (`id_card_type_id`, `id_card_type`) VALUES
 --
 
 CREATE TABLE `items` (
-  `item_id` int NOT NULL,
-  `item_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `category` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `item_id` int(11) NOT NULL,
+  `item_name` varchar(100) DEFAULT NULL,
+  `category` varchar(50) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1316,14 +1425,14 @@ INSERT INTO `items` (`item_id`, `item_name`, `category`, `price`) VALUES
 --
 
 CREATE TABLE `location_info` (
-  `id` int NOT NULL,
-  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `address` text NOT NULL,
   `latitude` decimal(10,8) NOT NULL,
   `longitude` decimal(11,8) NOT NULL,
-  `map_zoom_level` int DEFAULT '15',
-  `contact_phone` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `contact_email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `map_zoom_level` int(11) DEFAULT 15,
+  `contact_phone` varchar(50) DEFAULT NULL,
+  `contact_email` varchar(255) DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1340,13 +1449,13 @@ INSERT INTO `location_info` (`id`, `address`, `latitude`, `longitude`, `map_zoom
 --
 
 CREATE TABLE `maintenance_settings` (
-  `id` int NOT NULL,
-  `is_enabled` tinyint(1) DEFAULT '0',
+  `id` int(11) NOT NULL,
+  `is_enabled` tinyint(1) DEFAULT 0,
   `start_time` datetime DEFAULT NULL,
   `end_time` datetime DEFAULT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `allowed_ips` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `message` text DEFAULT NULL,
+  `allowed_ips` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1363,9 +1472,9 @@ INSERT INTO `maintenance_settings` (`id`, `is_enabled`, `start_time`, `end_time`
 --
 
 CREATE TABLE `menu_categories` (
-  `id` int NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `display_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `display_name` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1379,10 +1488,10 @@ INSERT INTO `menu_categories` (`id`, `name`, `display_name`) VALUES
 (4, 'sandwiches', 'SANDWICHES'),
 (5, 'coffee', 'COFFEE & LATTE'),
 (6, 'iceblend', 'ICE BLENDED'),
-(7, 'tea', 'TEA'),
-(8, 'otherdrinks', 'OTHER DRINKS'),
-(9, 'SAD', 'SAD'),
-(18, 'GAGA', 'GAGA');
+(8, 'SMOOTHIE', 'SMOOTHIE'),
+(18, 'COFFEE & LATTE', 'COFFEE & LATTE'),
+(19, 'ALL DAY BREAKFAST', 'ALL DAY BREAKFAST'),
+(20, 'PERFECT PLATTERS', 'PERFECT PLATTERS');
 
 -- --------------------------------------------------------
 
@@ -1391,13 +1500,13 @@ INSERT INTO `menu_categories` (`id`, `name`, `display_name`) VALUES
 --
 
 CREATE TABLE `menu_items` (
-  `id` int NOT NULL,
-  `category_id` int NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `availability` tinyint(1) NOT NULL DEFAULT '1'
+  `image_path` varchar(255) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `availability` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1405,16 +1514,31 @@ CREATE TABLE `menu_items` (
 --
 
 INSERT INTO `menu_items` (`id`, `category_id`, `name`, `price`, `image_path`, `description`, `availability`) VALUES
-(1, 1, 'Hand-cut Potato Fries', 160.00, 'uploads/menus/menu_68120be0791bf.png', 'Crispy fries with seasoning', 0),
-(2, 1, 'Mozzarella Stick', 150.00, 'uploads/menus/menu_6810015e57a69.jpg', 'Fried mozzarella with marinara sauce', 0),
-(3, 1, 'Chicken Wings', 180.00, 'uploads/menus/menu_67f927bc54efc.jpg', 'Spicy chicken wings', 1),
-(4, 2, 'Salad', 200.00, 'uploads/menus/menu_67fb19926baf0.png', 'Fresh garden salad with dressing', 1),
-(5, 2, 'Coconut Salad', 200.00, 'uploads/menus/menu_67ff5aa2dae0f.jpg', 'Tropical coconut salad', 1),
-(6, 3, 'Spaghetti', 300.00, 'images/menu_67b427110a801.jpg', 'Classic spaghetti with tomato sauce', 1),
-(7, 4, 'Egg Sandwich', 500.00, '', 'Grilled egg sandwich', 0),
-(8, 1, 'Spaghetti maccaroni', 270.00, 'images/menu_67b4289215e15.jpg', 'Spaghetti with creamy sauce', 1),
-(431, 6, 'Matcha', 180.00, '', 'Matcha green tea drink', 1),
-(432, 1, 'Carbonara', 120.00, '', 'Carbonara pasta with bacon and cheese', 1);
+(1, 1, 'Hand-cut Potato Fries', 195.00, '5f3bfd0401f9a62f.jpg', 'Crispy fries with seasoning', 1),
+(2, 1, 'Mozzarella Stick', 150.00, '3845216e60731b54.jpg', 'Fried mozzarella with marinara sauce', 1),
+(3, 1, 'Siracha Buffalo Wings', 377.00, '6c71fbe6dc0478fa.jpg', 'Spicy chicken wings 6pcs', 1),
+(4, 2, 'Mozzarella with Caramelized Walnuts and Apples', 344.00, 'd231c45641dbd5dd.jpg', 'Fresh garden salad with dressing', 1),
+(5, 2, 'Chicken with Parmesan Shavings', 328.00, '8fa788798eca1d34.jpg', '', 1),
+(6, 3, 'Carbonara', 327.00, 'e833c5e13846b37f.jpg', 'No Cream', 1),
+(7, 4, 'Classic Cheeseburger', 370.00, '501ca9caad663e5b.jpg', '100% beef patty', 1),
+(8, 3, 'Seafood Marinara', 334.00, '6ea67d2709ee8bd4.jpg', 'Seafood', 1),
+(431, 6, 'Ube Ice Latte', 180.00, 'd4c99a9ba6da6dce.jpg', 'New in the Menu', 1),
+(432, 3, 'Chicken Alfredo with Mushrooms', 328.00, '2433b28ba7211a65.jpg', 'Carbonara pasta with bacon and cheese', 1),
+(433, 4, 'Philly Cheesesteak Panini', 307.00, 'menu_698f2ea6336fa7.35051650.jpg', 'Tenderloin steak strips, white onion , bell pepper , cheese slices, mayo , ciabatta bread', 1),
+(434, 5, 'Espresso', 95.00, 'menu_698f2f2c07f656.68999045.jpg', '', 1),
+(435, 5, 'Cappucino', 120.00, 'menu_698f2f607f8a41.81479806.jpg', '', 1),
+(436, 19, 'Homemade Daing na Bangus', 312.00, 'menu_698f3011b24bc9.96237492.jpg', '', 1),
+(437, 4, 'Katsu Sando', 294.00, 'menu_698f301c35e972.21014631.jpg', 'Pork Cutlet Sandwich', 1),
+(438, 4, 'Crispy Chicken Siracha Sandwich', 323.00, 'menu_698f309fd9ada1.82785831.jpg', 'Spicy ', 1),
+(439, 3, 'Alle Vongole', 321.00, 'menu_698f316bb25529.34631306.jpg', 'Mussels', 1),
+(440, 3, 'Shrimp Aligio Olio', 348.00, 'menu_698f31f8a90514.80954000.jpg', 'Shrimp', 1),
+(441, 20, 'Seafood Marinara & Chicken Pesto Panini', 338.00, 'menu_698f32a5124878.68798819.jpg', '', 1),
+(442, 1, 'Fried Calamari', 242.00, 'menu_698f33e55683e1.48881763.jpg', '', 1),
+(443, 2, 'Molo Soup', 158.00, 'menu_698f35119dfc17.29566440.jpg', 'Homemade shrimp and pork dumplings', 1),
+(444, 6, 'Cookies & Cream', 195.00, 'menu_698f35ab415c39.07047552.jpg', '', 1),
+(445, 6, 'Strawberry Milk', 165.00, 'menu_698f360ad525f4.92868473.jpg', '', 1),
+(446, 8, 'Mango', 175.00, 'menu_698f36b5ee1984.36442832.jpg', '', 1),
+(447, 8, 'Guyabano', 135.00, 'menu_698f37072a2971.14081935.jpg', '', 1);
 
 -- --------------------------------------------------------
 
@@ -1423,9 +1547,9 @@ INSERT INTO `menu_items` (`id`, `category_id`, `name`, `price`, `image_path`, `d
 --
 
 CREATE TABLE `menu_items_addons` (
-  `id` int NOT NULL,
-  `menu_item_id` int DEFAULT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `menu_item_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1436,7 +1560,9 @@ CREATE TABLE `menu_items_addons` (
 INSERT INTO `menu_items_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
 (1, 3, 'HAtdog', 15.00),
 (2, 3, 'cheese', 20.00),
-(3, 3, 'Gravy', 20.00);
+(3, 3, 'Gravy', 20.00),
+(4, 7, 'Extra beef patty', 160.00),
+(5, 7, 'Extra cheese', 45.00);
 
 -- --------------------------------------------------------
 
@@ -1445,9 +1571,9 @@ INSERT INTO `menu_items_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
 --
 
 CREATE TABLE `menu_item_addons` (
-  `id` int NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1474,13 +1600,13 @@ INSERT INTO `menu_item_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
 --
 
 CREATE TABLE `messages` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `sender_type` enum('user','admin','system') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `read_status` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'unread'
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `sender_type` enum('user','admin','system') NOT NULL,
+  `read_status` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `status` varchar(50) DEFAULT 'unread'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1513,9 +1639,9 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `sender_type`, `read_status`
 (23, 1, 'book', 'user', 1, '2025-04-19 10:32:03', 'unread'),
 (24, 1, 'Thank you for your message. Our team will get back to you soon.', 'system', 1, '2025-04-19 10:32:03', 'unread'),
 (25, 14, 'Hi', 'user', 1, '2025-04-21 06:57:37', 'unread'),
-(26, 14, 'Thank you for your message. Our team will get back to you soon.', 'system', 0, '2025-04-21 06:57:37', 'unread'),
+(26, 14, 'Thank you for your message. Our team will get back to you soon.', 'system', 1, '2025-04-21 06:57:37', 'unread'),
 (27, 14, 'Hello', 'user', 1, '2025-04-21 06:57:45', 'unread'),
-(28, 14, 'Thank you for your message. Our team will get back to you soon.', 'system', 0, '2025-04-21 06:57:45', 'unread'),
+(28, 14, 'Thank you for your message. Our team will get back to you soon.', 'system', 1, '2025-04-21 06:57:45', 'unread'),
 (29, 38, 'book', 'user', 1, '2025-04-23 23:18:32', 'unread'),
 (30, 38, 'Thank you for your message. Our team will get back to you soon.', 'system', 0, '2025-04-23 23:18:32', 'unread'),
 (41, 39, 'HEllo', 'user', 1, '2025-05-16 06:16:44', 'unread'),
@@ -1585,7 +1711,13 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `sender_type`, `read_status`
 (105, 45, 'asd', 'user', 1, '2025-12-30 04:41:40', 'unread'),
 (106, 45, 'asd', 'admin', 1, '2025-12-30 04:41:41', 'unread'),
 (107, 45, 'asd', 'admin', 1, '2025-12-30 04:49:31', 'unread'),
-(108, 45, 'asd', 'user', 1, '2025-12-30 04:49:52', 'unread');
+(108, 45, 'asd', 'user', 1, '2025-12-30 04:49:52', 'unread'),
+(109, 40, 'HEllo', 'user', 1, '2026-02-07 13:59:22', 'unread'),
+(110, 40, 'aa', 'user', 1, '2026-02-07 13:59:31', 'unread'),
+(111, 40, 'goo', 'user', 1, '2026-02-07 14:00:15', 'unread'),
+(112, 40, 'hello good evening', 'user', 1, '2026-02-07 14:02:35', 'unread'),
+(113, 40, 'asas', 'user', 1, '2026-02-09 07:26:23', 'unread'),
+(114, 56, 'hello', 'user', 1, '2026-02-10 15:12:01', 'unread');
 
 -- --------------------------------------------------------
 
@@ -1594,305 +1726,61 @@ INSERT INTO `messages` (`id`, `user_id`, `message`, `sender_type`, `read_status`
 --
 
 CREATE TABLE `notifications` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_read` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `booking_fk_id` int(11) DEFAULT NULL,
+  `event_fk_id` int(11) DEFAULT NULL,
+  `order_id` int(11) DEFAULT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `type` varchar(50) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `is_processing` tinyint(1) DEFAULT NULL,
+  `is_completed` tinyint(1) DEFAULT NULL,
+  `is_rejected` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `user_id`, `title`, `message`, `type`, `is_read`, `created_at`) VALUES
-(1, 1, 'Booking Confirmed', 'Your booking #86 has been confirmed. Check-in date: Feb 14, 2025', 'booking', 1, '2025-02-13 17:44:21'),
-(2, 1, 'New Booking Confirmation', 'Your booking #87 has been confirmed. Check-in date: Feb 14, 2025', 'booking', 1, '2025-02-13 17:50:57'),
-(3, 1, 'New Booking Confirmation', 'Your booking #88 has been confirmed. Check-in date: Feb 15, 2025', 'booking', 1, '2025-02-15 11:40:16'),
-(4, 3, 'New Booking Confirmation', 'Your booking #89 has been confirmed. Check-in date: Feb 15, 2025', 'booking', 1, '2025-02-15 14:58:51'),
-(5, 3, '', 'Your order has been placed successfully. Please pick up at 12:05', 'order', 1, '2025-02-15 15:06:00'),
-(6, 3, '', 'Your order has been placed successfully. Please pick up at 23:47', 'order', 1, '2025-02-15 15:47:34'),
-(7, 3, 'New Booking Confirmation', 'Your booking #90 has been confirmed. Check-in date: Feb 16, 2025', 'booking', 1, '2025-02-15 16:08:35'),
-(8, 3, '', 'Your order has been placed successfully. Please pick up at 00:18', 'order', 1, '2025-02-15 16:18:19'),
-(9, 3, '', 'Your order has been placed successfully. Please pick up at 00:29', 'order', 1, '2025-02-15 16:29:49'),
-(10, 1, '', 'Your order has been placed successfully. Please pick up at 20:11', 'order', 1, '2025-02-16 12:11:20'),
-(11, 1, '', 'Your order has been placed successfully. Please pick up at 21:19', 'order', 1, '2025-02-16 13:19:26'),
-(12, 1, '', 'Your order has been placed successfully. Please pick up at 21:19', 'order', 1, '2025-02-16 13:22:02'),
-(13, 1, '', 'Your order has been placed successfully. Please pick up at 21:28', 'order', 1, '2025-02-16 13:28:44'),
-(14, 1, '', 'Your order has been placed successfully. Please pick up at 01:28', 'order', 1, '2025-02-16 17:29:07'),
-(15, 4, 'New Booking Confirmation', 'Your booking #100 has been confirmed. Check-in date: Feb 17, 2025', 'booking', 1, '2025-02-17 12:11:57'),
-(16, 4, 'New Booking Confirmation', 'Your booking #101 has been confirmed. Check-in date: Feb 17, 2025', 'booking', 1, '2025-02-17 12:26:01'),
-(17, 3, '', 'Your order has been placed successfully. Please pick up at 03:54', 'order', 1, '2025-02-17 19:54:48'),
-(18, 3, 'New Booking Confirmation', 'Your booking #102 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 20:24:55'),
-(19, 3, 'New Booking Confirmation', 'Your booking #103 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 20:39:41'),
-(20, 2, 'New Booking Confirmation', 'Your booking #104 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 20:47:12'),
-(21, 2, 'New Booking Confirmation', 'Your booking #105 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 20:53:08'),
-(22, 2, 'New Booking Confirmation', 'Your booking #106 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 21:02:39'),
-(23, 2, 'New Booking Confirmation', 'Your booking #107 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 21:05:15'),
-(24, 2, 'New Booking Confirmation', 'Your booking #108 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 21:12:15'),
-(25, 2, 'New Booking Confirmation', 'Your booking #109 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 21:13:01'),
-(26, 2, 'New Booking Confirmation', 'Your booking #110 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 21:28:09'),
-(27, 2, 'New Booking Confirmation', 'Your booking #111 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 21:32:43'),
-(28, 2, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', 1, '2025-02-17 21:33:06'),
-(29, 1, 'New Booking Confirmation', 'Your booking #112 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 22:01:12'),
-(30, 1, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', 1, '2025-02-17 22:01:45'),
-(31, 1, 'New Booking Confirmation', 'Your booking #113 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 22:02:39'),
-(32, 3, '', 'Your order has been placed successfully. Please pick up at 06:34', 'order', 1, '2025-02-17 22:34:40'),
-(33, 3, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', 1, '2025-02-17 22:37:21'),
-(34, 3, 'New Booking Confirmation', 'Your booking #114 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 1, '2025-02-17 23:33:19'),
-(35, 1, '', 'Your order has been placed successfully. Please pick up at 15:11', 'order', 1, '2025-02-18 06:11:42'),
-(36, 1, 'New Booking Confirmation', 'Your booking #115 has been confirmed. Check-in date: Feb 19, 2025', 'booking', 1, '2025-02-18 06:17:34'),
-(37, 1, 'New Booking Confirmation', 'Your booking #118 has been confirmed. Check-in date: Feb 19, 2025', 'booking', 1, '2025-02-18 11:42:58'),
-(38, 1, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', 1, '2025-02-18 11:43:28'),
-(39, 1, '', 'Your order has been placed successfully. Please pick up at 14:22', 'order', 1, '2025-02-18 11:48:16'),
-(40, 1, 'New Booking Confirmation', 'Your booking #120 has been confirmed. Check-in date: Feb 01, 2025', 'booking', 1, '2025-02-18 12:18:14'),
-(41, 1, '', 'Your order has been placed successfully. Please pick up at 11:11', 'order', 1, '2025-02-18 12:28:29'),
-(42, 5, 'New Booking Confirmation', 'Your booking #121 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 11:57:47'),
-(43, 5, 'New Booking Confirmation', 'Your booking #122 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 11:59:22'),
-(44, 5, 'New Booking Confirmation', 'Your booking #123 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 12:07:08'),
-(45, 8, 'New Booking Confirmation', 'Your booking #126 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 13:20:23'),
-(46, 8, 'New Booking Confirmation', 'Your booking #127 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 13:22:36'),
-(47, 8, 'New Booking Confirmation', 'Your booking #128 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 13:35:20'),
-(48, 8, 'New Booking Confirmation', 'Your booking #129 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 13:42:59'),
-(49, 8, 'New Booking Confirmation', 'Your booking #130 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 13:51:23'),
-(50, 8, 'New Booking Confirmation', 'Your booking #131 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 13:59:43'),
-(51, 8, 'New Booking Confirmation', 'Your booking #132 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 14:07:16'),
-(52, 8, 'New Booking Confirmation', 'Your booking #133 has been confirmed. Check-in date: Mar 05, 2025', 'booking', 1, '2025-03-05 14:31:39'),
-(53, 8, '', 'Your order has been placed successfully. Please pick up at 20:48', 'order', 1, '2025-03-18 01:48:33'),
-(54, 8, '', 'Your order has been placed successfully. Please pick up at 08:05 PM', 'order', 1, '2025-03-18 02:05:36'),
-(55, 8, '', 'Your order has been placed successfully. Please pick up at 08:29 PM', 'order', 1, '2025-03-18 02:29:45'),
-(56, 8, '', 'Your order has been placed successfully. Please pick up at 10:11 PM', 'order', 1, '2025-03-18 04:11:39'),
-(57, 8, '', 'Your order has been placed successfully. Please pick up at 10:22 PM', 'order', 1, '2025-03-18 04:22:54'),
-(58, 8, '', 'Your order has been placed successfully. Please pick up at 02:20 PM', 'order', 1, '2025-03-18 00:20:17'),
-(59, 8, '', 'Your order has been placed successfully. Please pick up at 02:20 PM', 'order', 1, '2025-03-18 00:20:46'),
-(60, 8, '', 'Your order has been placed successfully. Please pick up at 02:37 PM', 'order', 1, '2025-03-18 00:37:37'),
-(70, 0, '', 'Booking #3 has been checked in', 'booking', 1, '2025-04-10 21:48:38'),
-(71, 0, '', 'Booking #2 has been checked in', 'booking', 1, '2025-04-10 21:48:58'),
-(72, 0, '', 'Booking #4 has been checked in', 'booking', 1, '2025-04-10 22:01:57'),
-(73, 0, '', 'Booking #1 has been checked out', 'booking', 1, '2025-04-10 22:02:48'),
-(74, 0, '', 'Booking #2 has been checked out', 'booking', 1, '2025-04-10 22:05:04'),
-(75, 0, '', 'Booking #5 has been checked in', 'booking', 1, '2025-04-10 22:10:34'),
-(76, 0, '', 'Booking #6 has been checked in', 'booking', 1, '2025-04-10 22:14:40'),
-(77, 0, '', 'Early checkout processed. Amount to return: ₱220,000.00', 'booking', 1, '2025-04-10 22:30:03'),
-(78, 0, '', 'Booking #6 has been ', 'booking', 1, '2025-04-10 22:30:03'),
-(79, 0, '', 'Booking #3 has been checked out', 'booking', 1, '2025-04-10 22:31:26'),
-(80, 0, '', 'Early checkout processed. Amount to return: ₱49,500.00', 'booking', 1, '2025-04-10 22:31:33'),
-(81, 0, '', 'Booking #4 has been ', 'booking', 1, '2025-04-10 22:31:34'),
-(82, 0, '', 'Early checkout processed. Amount to return: ₱49,500.00', 'booking', 1, '2025-04-10 22:31:36'),
-(83, 0, '', 'Booking #4 has been ', 'booking', 1, '2025-04-10 22:31:36'),
-(84, 0, '', 'Early checkout processed. Amount to return: ₱260,000.00', 'booking', 1, '2025-04-10 22:34:32'),
-(85, 0, '', 'Booking #7 has been checked in', 'booking', 1, '2025-04-10 22:35:59'),
-(86, 0, '', 'Early checkout processed. Amount to return: ₱135,000.00', 'booking', 1, '2025-04-10 22:37:22'),
-(87, 0, '', 'Booking #9 has been checked in', 'booking', 1, '2025-04-11 06:37:54'),
-(88, 0, '', 'Booking #11 has been checked in', 'booking', 1, '2025-04-11 06:54:04'),
-(89, 0, '', 'Booking #1 has been checked in', 'booking', 1, '2025-04-11 06:55:08'),
-(90, 0, '', 'Early checkout processed. Amount to return: ₱8,100.00', 'booking', 1, '2025-04-11 08:43:15'),
-(91, 0, '', 'Booking #3 has been checked in', 'booking', 1, '2025-04-11 08:44:59'),
-(92, 0, '', 'Booking #1 has been checked in', 'booking', 1, '2025-04-11 09:00:39'),
-(93, 0, '', 'Booking #2 has been checked in', 'booking', 1, '2025-04-11 09:04:32'),
-(94, 0, '', 'Booking #3 has been checked in', 'booking', 1, '2025-04-11 09:10:49'),
-(95, 0, '', 'Booking #4 has been checked in', 'booking', 1, '2025-04-11 09:14:09'),
-(96, 0, '', 'Booking #2 has been checked out', 'booking', 1, '2025-04-11 09:18:19'),
-(97, 0, '', 'Booking #1 has been checked in', 'booking', 1, '2025-04-12 04:44:01'),
-(98, 0, '', 'Booking #1 has been checked out', 'booking', 1, '2025-04-12 04:45:31'),
-(99, 0, '', 'Booking #4 has been checked in', 'booking', 1, '2025-04-12 04:47:23'),
-(100, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-503357 has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-13', 'booking', 1, '2025-04-12 02:28:23'),
-(101, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-8E7A2C has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-13', 'booking', 1, '2025-04-12 02:30:09'),
-(102, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-999830 has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-13', 'booking', 1, '2025-04-12 02:32:01'),
-(103, 0, '', 'Table Reservation #27 has been cancelled. Reason: booking_mistake', 'table_cancelled', 1, '2025-04-12 04:37:56'),
-(104, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-C25499 has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-13', 'booking', 1, '2025-04-12 05:04:52'),
-(105, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-129B01 has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-13', 'booking', 1, '2025-04-12 05:06:25'),
-(106, 0, '', 'Table Reservation #31 has been cancelled. Reason: found_better_option', 'table_cancelled', 1, '2025-04-12 05:47:17'),
-(107, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-E26DF1 has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-22', 'booking', 1, '2025-04-12 06:18:43'),
-(108, 5, 'New Booking Confirmation', 'Your booking #BK-20250412-66AFDF has been confirmed. Check-in date: 2025-04-12, Check-out date: 2025-04-22', 'booking', 1, '2025-04-12 06:22:42'),
-(109, 5, 'New Booking Confirmation', 'Your booking #BK-20250413-355ED6 has been confirmed. Check-in date: 2025-04-13, Check-out date: 2025-04-17', 'booking', 1, '2025-04-12 22:54:46'),
-(110, 1, 'New Booking Confirmation', 'Your booking #BK-20250413-747C66 has been confirmed. Check-in date: 2025-04-17, Check-out date: 2025-04-18', 'booking', 1, '2025-04-12 23:49:04'),
-(111, 0, '', 'Booking #3 has been checked in', 'booking', 1, '2025-04-13 00:48:47'),
-(112, 0, '', 'Booking #3 has been checked out', 'booking', 1, '2025-04-13 00:54:21'),
-(113, 0, '', 'Booking #2 has been checked in', 'booking', 1, '2025-04-13 02:18:09'),
-(114, 0, '', 'Booking #2 has been checked out', 'booking', 1, '2025-04-13 02:18:41'),
-(115, 29, 'New Booking Confirmation', 'Your booking #BK-20250415-625949 has been confirmed. Check-in date: 2025-04-15, Check-out date: 2025-05-01', 'booking', 1, '2025-04-15 08:05:50'),
-(116, 29, 'New Booking Confirmation', 'Your booking #BK-20250415-A4A7B0 has been confirmed. Check-in date: 2025-04-15, Check-out date: 2025-04-16', 'booking', 1, '2025-04-15 08:11:59'),
-(117, 31, 'New Booking Confirmation', 'Your booking #BK-20250415-472828 has been confirmed. Check-in date: 2025-04-15, Check-out date: 2025-04-16', 'booking', 1, '2025-04-15 08:56:55'),
-(118, 36, 'New Booking Confirmation', 'Your booking #BK-20250415-C71161 has been confirmed. Check-in date: 2025-04-16, Check-out date: 2025-04-22', 'booking', 1, '2025-04-15 13:17:48'),
-(119, 0, '', 'Table Reservation #1 has been cancelled. Reason: found_better_option', 'table_cancelled', 1, '2025-04-16 04:25:53'),
-(120, 0, '', 'Table Reservation #3 has been cancelled. Reason: booking_mistake', 'table_cancelled', 1, '2025-04-16 09:38:05'),
-(121, 0, '', 'Booking #2 has been checked out', 'booking', 1, '2025-04-16 23:26:55'),
-(122, 0, '', 'Booking #3 has been checked out', 'booking', 1, '2025-04-16 23:44:35'),
-(123, 0, '', 'Table Reservation #10 has been cancelled. Reason: emergency', 'table_cancelled', 1, '2025-04-19 10:36:31'),
-(124, 0, '', 'Room transfer processed for booking #7. Transferred to new room type.', 'room_transfer', 1, '2025-04-21 08:42:48'),
-(125, 32, 'New Booking Confirmation', 'Your booking #BK-20250421-109C53 has been confirmed. Check-in date: 2025-04-21, Check-out date: 2025-04-23', 'booking', 1, '2025-04-21 08:59:19'),
-(126, 38, 'New Booking Confirmation', 'Your booking #BK-20250428-40ACB4 has been confirmed. Check-in date: 2025-04-28, Check-out date: 2025-05-08', 'booking', 1, '2025-04-27 22:35:35'),
-(231, 8, 'New Order Placed', 'Order #46 has been successfully placed and is being processed.', 'order', 1, '2025-05-02 10:21:22'),
-(232, 8, 'New Order Placed', 'Order #47 has been successfully placed and is being processed.', 'order', 1, '2025-05-02 10:53:30'),
-(233, 8, 'New Order Placed', 'Order #49 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 09:41:40'),
-(234, 8, 'New Order Placed', 'Order #50 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 09:43:58'),
-(235, 8, 'New Order Placed', 'Order #51 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 09:57:03'),
-(236, 8, 'New Order Placed', 'Order #52 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 10:04:02'),
-(237, 8, 'New Order Placed', 'Order #53 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 10:21:12'),
-(238, 8, 'New Order Placed', 'Order #54 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 10:22:34'),
-(239, 8, 'New Order Placed', 'Order #55 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 11:44:04'),
-(240, 8, 'New Order Placed', 'Order #56 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 14:45:23'),
-(241, 8, 'New Order Placed', 'Order #57 has been successfully placed and is being processed.', 'order', 1, '2025-05-03 15:05:59'),
-(242, 8, 'New Order Placed', 'Order #58 has been successfully placed and is being processed.', 'order', 1, '2025-05-04 03:22:31'),
-(243, 8, 'New Order Placed', 'Order #59 has been successfully placed and is being processed.', 'order', 1, '2025-05-04 03:27:27'),
-(244, 8, 'New Order Placed', 'Order #60 has been successfully placed and is being processed.', 'order', 1, '2025-05-04 03:46:12'),
-(245, 8, 'New Order Placed', 'Order #61 has been successfully placed and is being processed.', 'order', 1, '2025-05-04 03:50:39'),
-(246, 8, '', 'Your order #58 has been rejected. Reason: Invalid Payment', 'order_rejected', 1, '2025-05-04 05:22:30'),
-(247, 8, '', 'Your order #55 has been rejected. Reason: Items are out of stock', 'order_rejected', 1, '2025-05-04 05:26:08'),
-(248, 8, '', 'Your order #57 has been rejected. Reason: Invalid payment proof provided', 'order_rejected', 1, '2025-05-04 05:26:16'),
-(249, 8, '', 'Your order #61 has been rejected. Reason: Items are out of stock', 'order_rejected', 1, '2025-05-04 05:26:23'),
-(250, 8, '', 'Your order #60 has been rejected. Reason: Invalid payment proof provided', 'order_rejected', 1, '2025-05-04 05:26:30'),
-(251, 8, '', 'Your order #56 has been rejected. Reason: Invalid payment proof provided', 'order_rejected', 1, '2025-05-04 05:26:54'),
-(252, 38, 'New Order Placed', 'Order #7 has been successfully placed and is being processed.', 'order', 1, '2025-05-07 02:59:08'),
-(253, 38, 'New Order Placed', 'Order #8 has been successfully placed and is being processed.', 'order', 1, '2025-05-07 03:01:00'),
-(254, 38, 'New Order Placed', 'Order #14 has been successfully placed and is being processed.', 'order', 1, '2025-05-07 23:12:30'),
-(255, 38, 'New Order Placed', 'Order #15 has been successfully placed and is being processed.', 'order', 1, '2025-05-07 23:29:41'),
-(256, 38, '', 'Your order #23 has been rejected. Reason: Items are out of stock', 'order_rejected', 1, '2025-05-08 05:31:41'),
-(257, 38, '', 'Your order #22 has been rejected. Reason: System error occurred', 'order_rejected', 1, '2025-05-08 05:31:48'),
-(258, 38, '', 'Your order #21 has been rejected. Reason: Incomplete payment', 'order_rejected', 1, '2025-05-08 05:31:54'),
-(259, 38, '', 'Your order #20 has been rejected. Reason: Incomplete payment', 'order_rejected', 1, '2025-05-08 05:31:59'),
-(260, 38, '', 'Your order #18 has been rejected. Reason: Incomplete payment', 'order_rejected', 1, '2025-05-08 05:32:04'),
-(261, 38, 'New Order Placed', 'Order #25 has been successfully placed and is being processed.', 'order', 1, '2025-05-08 06:11:48'),
-(262, 38, '', 'Your order #25 has been rejected. Reason: Invalid payment proof provided', 'order_rejected', 1, '2025-05-08 06:13:26'),
-(263, 38, '', 'Your order #19 has been rejected. Reason: System error occurred', 'order_rejected', 1, '2025-05-08 06:13:33'),
-(264, 38, '', 'Your order #17 has been rejected. Reason: Incomplete payment', 'order_rejected', 1, '2025-05-08 06:13:39'),
-(265, 38, '', 'Your order #16 has been rejected. Reason: Incomplete payment', 'order_rejected', 1, '2025-05-08 06:13:45'),
-(266, 38, '', 'Your order #24 has been rejected. Reason: System error occurred', 'order_rejected', 1, '2025-05-08 06:13:50'),
-(267, 38, 'New Order Placed', 'Order #26 has been successfully placed and is being processed.', 'order', 1, '2025-05-08 06:14:14'),
-(268, 38, 'New Order Placed', 'Order #28 has been successfully placed and is being processed.', 'order', 1, '2025-05-08 08:33:35'),
-(269, 0, '', 'Table Reservation #53 has been cancelled. Reason: booking_mistake', 'table_cancelled', 1, '2025-05-08 08:51:03'),
-(270, 0, '', 'Table Reservation #37 has been cancelled. Reason: found_better_option', 'table_cancelled', 1, '2025-05-08 22:04:44'),
-(271, 0, '', 'Table Reservation #38 has been cancelled. Reason: found_better_option', 'table_cancelled', 1, '2025-05-08 22:04:56'),
-(272, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-EC40F8 has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-22', 'booking', 1, '2025-05-08 22:42:28'),
-(273, 38, 'New Order Placed', 'Order #36 has been successfully placed and is being processed.', 'order', 1, '2025-05-09 01:46:41'),
-(274, 38, '', 'Your order #34 has been rejected. Reason: Items are out of stock', 'order_rejected', 1, '2025-05-09 01:48:03'),
-(275, 38, '', 'Your order #33 has been rejected. Reason: Invalid payment proof provided', 'order_rejected', 1, '2025-05-09 01:48:08'),
-(276, 38, 'New Order Placed', 'Order #6 has been successfully placed and is being processed.', 'order', 1, '2025-05-09 01:53:27'),
-(277, 38, 'New Order Placed', 'Order #7 has been successfully placed and is being processed.', 'order', 1, '2025-05-09 01:54:48'),
-(278, 38, 'New Order Placed', 'Order #2 has been successfully placed and is being processed.', 'order', 1, '2025-05-09 02:00:14'),
-(279, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-1B6396 has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-16', 'booking', 1, '2025-05-09 02:16:14'),
-(280, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-B6B4E4 has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-16', 'booking', 1, '2025-05-09 02:17:43'),
-(281, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-DFF81A has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-14', 'booking', 1, '2025-05-09 02:30:37'),
-(282, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-E944CD has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-10', 'booking', 1, '2025-05-09 02:31:28'),
-(283, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-ACC109 has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-10', 'booking', 1, '2025-05-09 02:36:51'),
-(284, 38, 'New Booking Confirmation', 'Your booking #BK-20250509-67D38A has been confirmed. Check-in date: 2025-05-09, Check-out date: 2025-05-11', 'booking', 1, '2025-05-09 05:07:08'),
-(285, 38, 'New Order Placed', 'Order #3 has been successfully placed and is being processed.', 'order', 1, '2025-05-09 05:34:01'),
-(286, 38, 'New Order Placed', 'Order #6 has been successfully placed and is being processed.', 'order', 1, '2025-05-09 10:44:56'),
-(287, 38, 'New Booking Confirmation', 'Your booking #BK-20250510-462F2A has been confirmed. Check-in date: 2025-05-10, Check-out date: 2025-05-11', 'booking', 1, '2025-05-10 01:36:11'),
-(288, 38, 'New Booking Confirmation', 'Your booking #BK-20250511-442E86 has been confirmed. Check-in date: 2025-05-11, Check-out date: 2025-05-28', 'booking', 1, '2025-05-11 07:49:05'),
-(289, 38, 'New Booking Confirmation', 'Your booking #BK-20250511-65EA5D has been confirmed. Check-in date: 2025-05-11, Check-out date: 2025-05-15', 'booking', 1, '2025-05-11 08:54:31'),
-(290, 38, 'New Booking Confirmation', 'Your booking #BK-20250511-09C811 has been confirmed. Check-in date: 2025-05-11, Check-out date: 2025-05-14', 'booking', 1, '2025-05-11 09:00:49'),
-(291, 38, 'New Booking Confirmation', 'Your booking #BK-20250511-CC8357 has been confirmed. Check-in date: 2025-05-11, Check-out date: 2025-05-12', 'booking', 1, '2025-05-11 09:10:15'),
-(292, 38, 'New Booking Confirmation', 'Your booking #BK-20250511-AADD5F has been confirmed. Check-in date: 2025-05-12, Check-out date: 2025-05-16', 'booking', 1, '2025-05-11 11:30:06'),
-(293, 38, 'New Booking Confirmation', 'Your booking #BK-20250511-AC437F has been confirmed. Check-in date: 2025-05-12, Check-out date: 2025-05-13', 'booking', 1, '2025-05-11 11:48:51'),
-(294, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-2CDF9D has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 13:25:14'),
-(295, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-35116A has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-19', 'booking', 1, '2025-05-14 13:29:56'),
-(296, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-224DFA has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 13:32:02'),
-(297, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-128321 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-28', 'booking', 1, '2025-05-14 13:37:31'),
-(298, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-965995 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 13:43:55'),
-(299, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-168953 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 13:48:35'),
-(300, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-2ADDD5 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-23', 'booking', 1, '2025-05-14 13:54:32'),
-(301, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-1072C9 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-22', 'booking', 1, '2025-05-14 13:55:13'),
-(302, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-541F8B has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-14 13:56:01'),
-(303, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-05AA07 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 13:57:08'),
-(304, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-E2596E has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-22', 'booking', 1, '2025-05-14 13:59:08'),
-(305, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-3A13F0 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-28', 'booking', 1, '2025-05-14 13:59:53'),
-(306, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-78C417 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:03:48'),
-(307, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-9B10F5 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:11:44'),
-(308, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-DDB161 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:17:06'),
-(309, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-DA09EB has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-14 14:22:52'),
-(310, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-DB1BF4 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:28:36'),
-(311, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-727DE2 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:31:49'),
-(312, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-F6403F has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-28', 'booking', 1, '2025-05-14 14:40:01'),
-(313, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-727331 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:40:32'),
-(314, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-8716FB has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-27', 'booking', 1, '2025-05-14 14:41:29'),
-(315, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-883AE3 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:48:19'),
-(316, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-950013 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:50:21'),
-(317, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-A05C6C has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 14:55:16'),
-(318, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-D4CBC4 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-24', 'booking', 1, '2025-05-14 14:58:22'),
-(319, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-1F8B82 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-14 14:59:31'),
-(320, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-3C4076 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 15:00:41'),
-(321, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-318D0D has been confirmed. Check-in date: 2025-05-14, Check-out date: 2025-05-23', 'booking', 1, '2025-05-14 15:04:00'),
-(322, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-BFBD61 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 15:19:23'),
-(323, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-4633E3 has been confirmed. Check-in date: 2025-05-17, Check-out date: 2025-05-27', 'booking', 1, '2025-05-14 15:21:14'),
-(324, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-C32AF9 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-27', 'booking', 1, '2025-05-14 15:21:56'),
-(325, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-08FFCC has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-17', 'booking', 1, '2025-05-14 15:26:03'),
-(326, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-4B5C97 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-14 15:29:39'),
-(327, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-7D7766 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 15:32:28'),
-(328, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-AB167E has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 15:34:05'),
-(329, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-4A65CB has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-27', 'booking', 1, '2025-05-14 15:53:20'),
-(330, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-E87E54 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 15:58:13'),
-(331, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-23F304 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 16:05:24'),
-(332, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-E6C1E5 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 16:06:35'),
-(333, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-14F4E0 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 16:07:12'),
-(334, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-053D4C has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 16:17:46'),
-(335, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-A4A344 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 16:25:25'),
-(336, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-3B8E9B has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-14 16:29:31'),
-(337, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-697D58 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-14 16:30:31'),
-(338, 1, 'New Booking Confirmation', 'Your booking #BK-20250514-2E8E8E has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-19', 'booking', 1, '2025-05-14 16:31:24'),
-(339, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-0AB923 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-28', 'booking', 1, '2025-05-15 06:05:59'),
-(340, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-47FCDC has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-15 06:06:45'),
-(341, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-D35654 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-15 06:10:36'),
-(342, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-ABBA93 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-20', 'booking', 1, '2025-05-15 06:14:55'),
-(343, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-2EE377 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-21', 'booking', 1, '2025-05-15 06:34:20'),
-(344, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-7C01D0 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-17', 'booking', 1, '2025-05-15 06:55:36'),
-(345, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-2C6BF4 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-19', 'booking', 1, '2025-05-15 07:01:21'),
-(346, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-10FFF9 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-15 07:17:22'),
-(347, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-DB5120 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-17', 'booking', 1, '2025-05-15 07:19:06'),
-(348, 38, 'New Booking Confirmation', 'Your booking #BK-20250515-E43384 has been confirmed. Check-in date: 2025-05-15, Check-out date: 2025-05-16', 'booking', 1, '2025-05-15 07:21:18'),
-(349, 3, 'New Order Placed', 'Order #13 has been successfully placed and is being processed.', 'order', 1, '2025-05-15 07:09:45'),
-(350, 3, 'New Order Placed', 'Order #15 has been successfully placed and is being processed.', 'order', 1, '2025-05-15 07:43:16'),
-(351, 1, 'New Booking Confirmation', 'Your booking #BK-20250517-730583 has been confirmed. Check-in date: 2025-05-17, Check-out date: 2025-05-20', 'booking', 1, '2025-05-17 15:45:29'),
-(352, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-EA8EBF has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-20', 'booking', 1, '2025-05-18 06:24:00'),
-(353, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-3FCCF3 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-21', 'booking', 1, '2025-05-18 06:29:03'),
-(354, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-DFB9F5 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-22', 'booking', 1, '2025-05-18 06:30:04'),
-(355, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-CAB9BA has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-22', 'booking', 1, '2025-05-18 06:31:49'),
-(356, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-ECFAE4 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-22', 'booking', 1, '2025-05-18 06:32:45'),
-(357, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-C96EAC has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 06:34:34'),
-(358, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-FF5C0A has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 06:40:20'),
-(359, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-576050 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-20', 'booking', 1, '2025-05-18 13:09:42'),
-(360, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-317018 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-22', 'booking', 1, '2025-05-18 13:13:44'),
-(361, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-C24A2A has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 13:15:57'),
-(362, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-E30E24 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-23', 'booking', 1, '2025-05-18 13:17:06'),
-(363, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-66ED84 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-29', 'booking', 1, '2025-05-18 13:18:18'),
-(364, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-01D19A has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 13:28:55'),
-(365, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-F13DF0 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-21', 'booking', 1, '2025-05-18 13:30:29'),
-(366, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-A67945 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 13:32:54'),
-(367, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-D17675 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-23', 'booking', 1, '2025-05-18 13:47:42'),
-(368, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-F25C29 has been confirmed. Check-in date: 2025-05-20, Check-out date: 2025-05-23', 'booking', 1, '2025-05-18 13:49:06'),
-(369, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-0A51D6 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 13:51:30'),
-(370, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-70063A has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 14:02:20'),
-(371, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-22870C has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-23', 'booking', 1, '2025-05-18 14:12:33'),
-(372, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-2ADE8C has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-23', 'booking', 1, '2025-05-18 14:16:45'),
-(373, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-AD3E95 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 14:32:50'),
-(374, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-77E039 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-30', 'booking', 1, '2025-05-18 14:45:23'),
-(375, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-616590 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 14:48:50'),
-(376, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-446A86 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 14:50:39'),
-(377, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-4AFF57 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-21', 'booking', 1, '2025-05-18 14:53:26'),
-(378, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-D88DF7 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 14:54:04'),
-(379, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-71484E has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 14:58:04'),
-(380, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-C4356B has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 15:22:26'),
-(381, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-B8E11C has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 15:27:30'),
-(382, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-2D137C has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-20', 'booking', 1, '2025-05-18 15:45:19'),
-(383, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-6DBCF5 has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 15:53:30'),
-(384, 1, 'New Booking Confirmation', 'Your booking #BK-20250518-8621FB has been confirmed. Check-in date: 2025-05-18, Check-out date: 2025-05-19', 'booking', 1, '2025-05-18 15:58:22'),
-(385, 39, 'New Booking Confirmation', 'Your booking #BK-20250528-FA41B8 has been confirmed. Check-in date: 2025-05-29, Check-out date: 2025-05-30', 'booking', 1, '2025-05-28 19:13:54'),
-(386, 39, 'New Order Placed', 'Order #9 has been successfully placed and is being processed.', 'order', 1, '2025-05-29 11:36:18'),
-(387, 39, 'New Order Placed', 'Order #10 has been successfully placed and is being processed.', 'order', 1, '2025-05-29 11:40:22'),
-(388, 39, 'New Order Placed', 'Order #14 has been successfully placed and is being processed.', 'order', 1, '2025-06-01 08:46:02'),
-(389, 39, 'New Order Placed', 'Order #15 has been successfully placed and is being processed.', 'order', 1, '2025-06-01 08:50:48'),
-(390, 39, 'New Order Placed', 'Order #19 has been successfully placed and is being processed.', 'order', 1, '2025-06-01 14:11:33'),
-(391, 39, 'New Order Placed', 'Order #23 has been successfully placed and is being processed.', 'order', 1, '2025-06-02 00:32:38'),
-(392, 39, 'New Order Placed', 'Order #24 has been successfully placed and is being processed.', 'order', 1, '2025-06-02 01:43:42'),
-(393, 39, 'New Order Placed', 'Order #27 has been successfully placed and is being processed.', 'order', 1, '2025-06-02 02:21:03'),
-(394, 39, 'New Booking Confirmation', 'Your booking #BK-20250603-62871C has been confirmed. Check-in date: 2025-06-03, Check-out date: 2025-06-04', 'booking', 1, '2025-06-03 01:31:43'),
-(395, 0, '', 'Booking #68 has been accepted', 'booking', 1, '2025-11-10 12:40:11'),
-(396, 0, '', 'Booking #69 has been accepted', 'booking', 1, '2025-11-10 12:57:19'),
-(397, 0, '', 'Booking #83 has been accepted', 'booking', 1, '2025-11-10 12:58:13'),
-(403, 0, '', 'Booking #1 has been accepted', 'booking', 1, '2025-11-17 12:46:35');
+INSERT INTO `notifications` (`id`, `user_id`, `booking_fk_id`, `event_fk_id`, `order_id`, `title`, `message`, `type`, `is_read`, `created_at`, `is_processing`, `is_completed`, `is_rejected`) VALUES
+(1, 40, NULL, NULL, 9, 'Order Completed', 'Your order #ORD-1770793549-2868 has been completed.', 'Order', 1, '2026-02-11 07:05:49', 0, 1, 0),
+(2, 40, 5, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-QNDNJLQQNLY has been confirmed. Check-in date: 2026-02-11. Total amount: ₱1,000.00', 'Room Booking', 1, '2026-02-11 07:20:36', 1, NULL, NULL),
+(3, 55, 6, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-DORQYEWWFXW has been confirmed. Check-in date: 2026-02-13. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-12 04:31:09', NULL, NULL, NULL),
+(4, 55, NULL, 5, NULL, 'Event Booking Pending', 'Your booking for event \'Package C\' has been confirmed. Booking reference: EVT-20260212-698D583C9742A.', 'Event Booking', 0, '2026-02-12 04:34:07', NULL, NULL, NULL),
+(5, 55, NULL, NULL, 12, 'Order Pending', 'Your order #ORD-1770871918-9814 has been paid successfully!', 'Order', 0, '2026-02-12 04:51:58', NULL, NULL, NULL),
+(6, 57, 8, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-TXLNSICTRS has been confirmed. Check-in date: 2026-02-17. Total amount: ₱6,200.00', 'Room Booking', 0, '2026-02-17 07:14:22', NULL, NULL, NULL),
+(7, 44, 13, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-7QORCFZA9A has been confirmed. Check-in date: 2026-02-22. Total amount: ₱3,400.00', 'Room Booking', 0, '2026-02-19 12:49:27', NULL, NULL, NULL),
+(8, 58, 14, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-4NFD5UTPWDQ has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,000.00', 'Room Booking', 0, '2026-02-20 07:24:05', NULL, NULL, NULL),
+(9, 58, 15, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-5QABKPPFEYC has been confirmed. Check-in date: 2026-02-20. Total amount: ₱5,000.00', 'Room Booking', 0, '2026-02-20 07:42:18', NULL, NULL, NULL),
+(10, 58, 16, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-BIUSLDFS63A has been confirmed. Check-in date: 2026-02-20. Total amount: ₱5,000.00', 'Room Booking', 0, '2026-02-20 07:58:43', NULL, NULL, NULL),
+(11, NULL, 17, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-MJUTZYORFT4 has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-20 12:11:19', NULL, NULL, NULL),
+(12, NULL, 18, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-BMPEPDKLLYU has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-20 12:31:54', NULL, NULL, NULL),
+(13, NULL, 19, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-TDO5OM6BAU has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-20 12:33:39', NULL, NULL, NULL),
+(14, NULL, 20, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-HA6OPUY4NK4 has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-20 12:39:55', NULL, NULL, NULL),
+(15, NULL, 21, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-W2XOUOJAB1Q has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-20 12:44:57', NULL, NULL, NULL),
+(16, NULL, 22, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-06OBIL3D3EC has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 0, '2026-02-20 12:53:11', NULL, NULL, NULL),
+(17, 54, 23, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-4K3AFI03K has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 1, '2026-02-20 12:57:11', NULL, NULL, NULL),
+(18, 54, 24, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-U4XIR6XVRCW has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 1, '2026-02-20 13:09:47', NULL, NULL, NULL),
+(19, 54, 1, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-OAINDCSTL8W has been confirmed. Check-in date: 2026-02-20. Total amount: ₱1,700.00', 'Room Booking', 1, '2026-02-20 13:11:27', NULL, NULL, NULL),
+(20, 54, 2, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-0YTX91ZYHBU has been confirmed. Check-in date: 2026-02-20. Total amount: ₱5,000.00', 'Room Booking', 1, '2026-02-20 13:27:12', NULL, NULL, NULL),
+(21, 54, 3, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-9HTCWFMYAC has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 14:15:44', NULL, NULL, NULL),
+(22, 54, 4, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-JFS3TFWKRU has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 14:31:42', NULL, NULL, NULL),
+(23, 54, 5, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-YPX4V3JW7QA has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 14:36:58', NULL, NULL, NULL),
+(24, 54, 6, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-LORF0BKJYYO has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 14:59:40', NULL, NULL, NULL),
+(25, 54, 7, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-JW3AAQJVUA has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 15:01:29', NULL, NULL, NULL),
+(26, 54, 8, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-AK12N5QA8DC has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 15:05:14', NULL, NULL, NULL),
+(27, 54, 9, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-F4WOQDGY3Z0 has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 15:08:28', NULL, NULL, NULL),
+(28, 54, 10, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-4SEH5B2JJZ4 has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 15:12:44', NULL, NULL, NULL),
+(29, 54, 11, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-HHQ6KSQPCOM has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 15:14:22', NULL, NULL, NULL),
+(30, 54, 12, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-SBHPE27ZCG has been confirmed. Check-in date: 2026-02-20. Total amount: ₱4,500.00', 'Room Booking', 1, '2026-02-20 15:19:02', NULL, NULL, NULL),
+(31, 54, 13, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-GYYBRIG3A has been confirmed. Check-in date: 2026-02-20. Total amount: ₱10,000.00', 'Room Booking', 0, '2026-02-20 16:03:21', NULL, NULL, NULL),
+(32, 54, 14, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-J32PMINSQCO has been confirmed. Check-in date: 2026-02-20. Total amount: ₱5,000.00', 'Room Booking', 0, '2026-02-20 16:05:12', NULL, NULL, NULL),
+(33, 54, 1, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-JAW5QLRQCG has been confirmed. Check-in date: 2026-02-20. Total amount: ₱28,600.00', 'Room Booking', 0, '2026-02-20 16:10:19', NULL, NULL, NULL),
+(34, 54, 1, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-8LK5JV3KBXI has been confirmed. Check-in date: 2026-02-20. Total amount: ₱28,600.00', 'Room Booking', 0, '2026-02-20 16:20:03', NULL, NULL, NULL),
+(35, 54, 2, NULL, NULL, 'Booking Confirmed', 'Your booking #BOOK-XNEDUENSE0C has been confirmed. Check-in date: 2026-02-22. Total amount: ₱28,600.00', 'Room Booking', 0, '2026-02-20 16:36:04', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1901,24 +1789,30 @@ INSERT INTO `notifications` (`id`, `user_id`, `title`, `message`, `type`, `is_re
 --
 
 CREATE TABLE `offers` (
-  `id` int NOT NULL,
-  `title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `discount` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `title` varchar(100) NOT NULL,
+  `image` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `discount` decimal(5,2) DEFAULT NULL,
+  `discounted_price` decimal(10,2) DEFAULT NULL,
+  `promo_type` varchar(255) DEFAULT NULL,
+  `discount_start` date DEFAULT NULL,
+  `discount_end` date DEFAULT NULL,
+  `description` text NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `offers`
 --
 
-INSERT INTO `offers` (`id`, `title`, `image`, `discount`, `description`, `active`, `created_at`, `updated_at`) VALUES
-(1, 'Weekend Getaway', 'images/offer_67f946a852068.jpg', '12', 'Perfect weekend escape with breakfast included', 0, '2025-03-05 11:14:57', '2026-02-03 05:56:54'),
-(2, 'Family Time', 'images/couple.jpg', '0% OFF', 'Special rate for family stays with complimentary activities', 1, '2025-03-05 11:14:57', '2026-01-26 11:01:18'),
-(3, 'Events', 'images/4.jpg', '12', 'Stay longer, save more with our weekly rates', 0, '2025-03-05 11:14:57', '2026-02-03 05:57:33');
+INSERT INTO `offers` (`id`, `title`, `image`, `price`, `discount`, `discounted_price`, `promo_type`, `discount_start`, `discount_end`, `description`, `active`, `created_at`, `updated_at`) VALUES
+(1, 'Weekend Getaway', 'offer_698f33c1751b85.60898150', 6000.00, 30.00, 4800.00, 'Table', '2026-03-01', '2026-06-30', 'Perfect weekend escape with breakfast included', 1, '2025-03-05 11:14:57', '2026-02-20 01:30:08'),
+(2, 'Family', 'offer_6997ba7126fcb4.91974811.jpg', 0.00, NULL, NULL, 'Room', NULL, NULL, 'Special rate for family stays with complimentary activities', 1, '2025-03-05 11:14:57', '2026-02-20 01:35:45'),
+(3, 'Events', 'offer_698f33c1751b85.60898150', 0.00, NULL, NULL, 'Events', NULL, NULL, 'Stay longer, save more with our weekly rates', 1, '2025-03-05 11:14:57', '2026-02-18 14:23:43'),
+(5, 'Summer Special', 'offer_698f33c1751b85.60898150', 6000.00, 30.00, 4800.00, 'Room', '2026-03-01', '2026-06-30', 'Limited time summer promo', 1, '2026-02-16 14:57:08', '2026-02-20 01:30:21');
 
 -- --------------------------------------------------------
 
@@ -1927,37 +1821,37 @@ INSERT INTO `offers` (`id`, `title`, `image`, `discount`, `description`, `active
 --
 
 CREATE TABLE `orders` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `table_id` int NOT NULL,
-  `customer_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` int NOT NULL,
-  `nickname` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `table_id` int(11) NOT NULL,
+  `customer_name` varchar(255) NOT NULL,
+  `contact_number` int(11) NOT NULL,
+  `nickname` varchar(255) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `amount_paid` int NOT NULL,
-  `change_amount` int NOT NULL,
-  `extra_fee` int NOT NULL,
-  `order_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_option` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `payment_status` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `remaining_balance` decimal(10,2) DEFAULT '0.00',
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `reject_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `final_total` int NOT NULL,
-  `order_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `discount_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'none',
-  `discount_amount` int NOT NULL,
-  `id_number` varchar(55) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `amount_paid` int(11) NOT NULL,
+  `change_amount` int(11) NOT NULL,
+  `extra_fee` int(11) NOT NULL,
+  `order_type` varchar(255) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `payment_option` varchar(255) NOT NULL,
+  `payment_status` varchar(255) NOT NULL,
+  `remaining_balance` decimal(10,2) DEFAULT 0.00,
+  `status` varchar(20) DEFAULT 'Pending',
+  `reject_reason` text DEFAULT NULL,
+  `final_total` int(11) NOT NULL,
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `discount_type` varchar(255) DEFAULT 'none',
+  `discount_amount` int(11) NOT NULL,
+  `id_number` varchar(55) NOT NULL,
   `completed_at` datetime DEFAULT NULL,
   `updated_at` date NOT NULL,
-  `cancellation_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `cancellation_reason` text DEFAULT NULL,
   `cancelled_at` datetime DEFAULT NULL,
-  `notification_status` tinyint(1) DEFAULT '0',
-  `cashier_id` int DEFAULT NULL,
-  `table_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `type_of_order` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `processed_by` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `notification_status` tinyint(1) DEFAULT 0,
+  `cashier_id` int(11) DEFAULT NULL,
+  `table_name` varchar(100) DEFAULT NULL,
+  `type_of_order` varchar(50) DEFAULT NULL,
+  `processed_by` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1976,8 +1870,8 @@ INSERT INTO `orders` (`id`, `user_id`, `table_id`, `customer_name`, `contact_num
 --
 
 CREATE TABLE `orders_table` (
-  `id` int NOT NULL,
-  `user_id` int DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `order_id` varchar(255) DEFAULT NULL,
   `firstname` varchar(255) DEFAULT NULL,
   `lastname` varchar(255) DEFAULT NULL,
@@ -1986,8 +1880,9 @@ CREATE TABLE `orders_table` (
   `date_time` datetime DEFAULT NULL,
   `order_type` varchar(255) DEFAULT NULL,
   `discount_type` varchar(255) DEFAULT NULL,
-  `discount_percentage` int DEFAULT NULL,
+  `discount_percentage` int(11) DEFAULT NULL,
   `discount_amount` double(10,2) DEFAULT NULL,
+  `id_number` varchar(255) DEFAULT NULL,
   `total` double(10,2) DEFAULT NULL,
   `balance` double(10,2) DEFAULT NULL,
   `downpayment` double(10,2) DEFAULT NULL,
@@ -1999,9 +1894,29 @@ CREATE TABLE `orders_table` (
   `payment_option` varchar(255) DEFAULT NULL,
   `dp_payment_method` varchar(255) DEFAULT NULL,
   `status` varchar(255) DEFAULT NULL,
-  `reject_reason` text,
-  `type_of_order` varchar(255) DEFAULT NULL
+  `reject_reason` text DEFAULT NULL,
+  `type_of_order` varchar(255) DEFAULT NULL,
+  `order_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders_table`
+--
+
+INSERT INTO `orders_table` (`id`, `user_id`, `order_id`, `firstname`, `lastname`, `contact`, `email`, `date_time`, `order_type`, `discount_type`, `discount_percentage`, `discount_amount`, `id_number`, `total`, `balance`, `downpayment`, `amount_paid`, `change_amount`, `remaining_balance`, `payment`, `payment_method`, `payment_option`, `dp_payment_method`, `status`, `reject_reason`, `type_of_order`, `order_at`) VALUES
+(4, 40, 'ORD-1770613893-3784', 'christian realisan Christian Realisan', 'realisan', '09124343343', 'chanomabalo@gmail.com', '2026-02-09 12:59:00', 'advance', NULL, NULL, NULL, NULL, 180.00, 90.00, 90.00, 90.00, NULL, NULL, NULL, 'online', 'partial', NULL, 'pending', NULL, NULL, NULL),
+(5, 40, 'ORD-1770618415-8992', 'christian realisan Christian Realisan', 'realisan', '09124343343', 'chanomabalo@gmail.com', '2026-02-09 14:25:00', 'advance', NULL, NULL, NULL, NULL, 1080.00, 540.00, 540.00, 540.00, NULL, NULL, NULL, 'online', 'partial', NULL, 'processing', NULL, NULL, NULL),
+(8, 3, 'ORD-20260209-5630', NULL, NULL, NULL, NULL, '2026-02-09 06:46:21', 'Walkin', NULL, NULL, 0.00, NULL, 150.00, NULL, NULL, 500.00, 350.00, 10.00, NULL, 'cash', NULL, NULL, 'Completed', NULL, 'dine-in', '2026-02-09 06:46:21'),
+(9, 40, 'ORD-1770793549-2868', NULL, NULL, NULL, NULL, '2026-02-11 07:05:49', 'Regular Order', NULL, NULL, NULL, NULL, 120.00, -20.00, 60.00, 140.00, 20.00, NULL, 'paid', 'Cash', 'downpayment', NULL, 'Completed', NULL, NULL, NULL),
+(10, 55, 'TB-1770870706-7524', 'Fammela ', 'De Guzman ', '09362846372', 'allysonmildred696@gmail.com', '2026-02-12 12:31:00', 'Table Booking', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'pending', NULL, NULL, NULL),
+(11, 55, 'ORD-1770870935-4196', '', '', '09362846372', 'allysonmildred696@gmail.com', '2026-02-14 12:30:00', 'advance', NULL, NULL, 0.00, NULL, 1212.00, -8.00, 0.00, 1220.00, 8.00, NULL, NULL, 'Cash', 'full', NULL, 'Completed', NULL, 'Dine-in', NULL),
+(12, 55, 'ORD-1770871918-9814', NULL, NULL, NULL, NULL, '2026-02-12 12:51:58', 'Regular Order', NULL, NULL, NULL, NULL, 720.00, 0.00, 0.00, NULL, NULL, NULL, 'paid', 'gcash', 'downpayment', NULL, 'pending', NULL, NULL, NULL),
+(13, NULL, 'ORD94296321889', 'FAMMELA', 'DE GUZMAN', '097826516731', 'fammeladeguzman21@gmail.com', '2026-02-14 10:00:00', NULL, NULL, NULL, NULL, NULL, 820.00, NULL, 410.00, NULL, NULL, 410.00, NULL, NULL, NULL, 'cash', 'Accepted', NULL, NULL, NULL),
+(16, 40, 'TB-1770908100-8044', 'christian realisan Christian Realisan', 'realisan', '09124343343', 'chanomabalo@gmail.com', '2026-02-20 22:44:00', 'Table Booking', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Rejected', 'as', NULL, NULL),
+(17, 3, 'ORD-20260217-9931', NULL, NULL, NULL, NULL, '2026-02-17 13:37:55', 'Walkin', 'pwP', 10, 157.00, 'PWD4567890098765', 1413.00, NULL, NULL, 1500.00, 87.00, NULL, NULL, 'cash', NULL, NULL, 'Completed', NULL, 'dine-in', '2026-02-17 13:37:55'),
+(18, 3, 'ORD-20260217-8453', NULL, NULL, NULL, NULL, '2026-02-17 13:40:30', 'Walkin', NULL, NULL, 0.00, '', 1796.00, NULL, NULL, 2000.00, 204.00, NULL, NULL, 'cash', NULL, NULL, 'processing', NULL, 'dine-in', '2026-02-17 13:40:30'),
+(19, 3, 'ORD-20260217-6584', NULL, NULL, NULL, NULL, '2026-02-17 13:58:49', 'Walkin', NULL, NULL, 0.00, '', 1336.00, NULL, NULL, 1500.00, 164.00, NULL, NULL, 'cash', NULL, NULL, 'processing', NULL, 'dine-in', '2026-02-17 13:58:49'),
+(20, 40, 'TB-1771550127-1317', 'christian realisan Christian Realisan', 'realisan', '09124343343', 'chanomabalo@gmail.com', '2026-02-20 09:14:00', 'Table Booking', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'pending', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2010,13 +1925,31 @@ CREATE TABLE `orders_table` (
 --
 
 CREATE TABLE `orders_table_type` (
-  `id` int NOT NULL,
-  `table_booking_fk_id` int NOT NULL,
-  `table_type_fk_id` int NOT NULL,
-  `table_number_fk_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `table_booking_fk_id` int(11) NOT NULL,
+  `table_type_fk_id` int(11) NOT NULL,
+  `table_number_fk_id` int(11) NOT NULL,
   `table_name` varchar(255) NOT NULL,
-  `table_number` int NOT NULL
+  `table_number` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `orders_table_type`
+--
+
+INSERT INTO `orders_table_type` (`id`, `table_booking_fk_id`, `table_type_fk_id`, `table_number_fk_id`, `table_name`, `table_number`) VALUES
+(1, 4, 4, 8, 'DAD', 8),
+(2, 5, 2, 3, 'dasd', 3),
+(3, 8, 2, 12, 'dasd', 11),
+(4, 10, 4, 8, 'DAD', 8),
+(5, 11, 4, 8, 'DAD', 8),
+(6, 13, 2, 3, 'dasd', 3),
+(7, 16, 4, 8, 'DAD', 8),
+(8, 16, 2, 3, 'dasd', 3),
+(9, 17, 4, 8, 'Couple', 8),
+(10, 18, 2, 1, 'Friends', 1),
+(11, 19, 4, 8, 'Couple', 8),
+(12, 20, 4, 8, 'Couple', 8);
 
 -- --------------------------------------------------------
 
@@ -2025,12 +1958,53 @@ CREATE TABLE `orders_table_type` (
 --
 
 CREATE TABLE `order_items` (
-  `id` int NOT NULL,
-  `order_fk_id` int NOT NULL,
-  `item_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `quantity` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_fk_id` int(11) NOT NULL,
+  `item_name` varchar(100) NOT NULL,
+  `quantity` int(11) NOT NULL,
   `unit_price` decimal(10,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_fk_id`, `item_name`, `quantity`, `unit_price`) VALUES
+(4, 4, 'Matcha', 1, 180.00),
+(5, 5, 'Matcha', 6, 180.00),
+(12, 8, 'Mozzarella Stick', 1, 150.00),
+(13, 9, 'Carbonara', 1, 120.00),
+(17, 12, 'Carbonara', 1, 120.00),
+(18, 12, 'Chicken Wings', 1, 180.00),
+(19, 12, 'Mozzarella Stick', 1, 150.00),
+(20, 12, 'Spaghetti maccaroni', 1, 270.00),
+(21, 13, 'Mozzarella Stick', 1, 150.00),
+(22, 13, 'Chicken Wings', 1, 180.00),
+(23, 13, 'Spaghetti maccaroni', 1, 270.00),
+(24, 13, 'Salad', 1, 200.00),
+(25, 11, 'Matcha', 1, 180.00),
+(26, 11, 'Spaghetti', 1, 300.00),
+(27, 11, 'Carbonara', 1, 120.00),
+(28, 11, 'Homemade Daing na Bangus', 1, 312.00),
+(29, 11, 'Strawberry Milk', 1, 165.00),
+(30, 11, 'Guyabano', 1, 135.00),
+(31, 17, 'Fried Calamari', 1, 242.00),
+(32, 17, 'Hand-cut Potato Fries', 1, 195.00),
+(33, 17, 'Mozzarella Stick', 1, 150.00),
+(34, 17, 'Chicken with Parmesan Shavings', 1, 328.00),
+(35, 17, 'Alle Vongole', 1, 321.00),
+(36, 17, 'Seafood Marinara', 1, 334.00),
+(37, 18, 'Fried Calamari', 1, 242.00),
+(38, 18, 'Hand-cut Potato Fries', 1, 195.00),
+(39, 18, 'Molo Soup', 1, 158.00),
+(40, 18, 'Mozzarella with Caramelized Walnuts and Apples', 1, 344.00),
+(41, 18, 'Carbonara', 1, 327.00),
+(42, 18, 'Classic Cheeseburger', 1, 370.00),
+(43, 19, 'Mozzarella Stick', 1, 150.00),
+(44, 19, 'Hand-cut Potato Fries', 1, 195.00),
+(45, 19, 'Alle Vongole', 1, 321.00),
+(46, 19, 'Classic Cheeseburger', 1, 370.00),
+(47, 19, 'Espresso', 1, 95.00);
 
 -- --------------------------------------------------------
 
@@ -2039,12 +2013,22 @@ CREATE TABLE `order_items` (
 --
 
 CREATE TABLE `order_item_addons` (
-  `id` int NOT NULL,
-  `order_item_fk_id` int NOT NULL,
-  `addon_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_item_fk_id` int(11) NOT NULL,
+  `addon_name` varchar(100) NOT NULL,
   `price` double(10,2) NOT NULL,
-  `quantity` int NOT NULL
+  `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_item_addons`
+--
+
+INSERT INTO `order_item_addons` (`id`, `order_item_fk_id`, `addon_name`, `price`, `quantity`) VALUES
+(1, 22, 'cheese', 20.00, 1),
+(2, 42, 'Extra beef patty \n                                                                            ( (', 160.00, 1),
+(3, 46, 'Extra beef patty \n                                                                            ( (', 160.00, 1),
+(4, 46, 'Extra cheese \n                                                                            ( (', 45.00, 1);
 
 -- --------------------------------------------------------
 
@@ -2053,10 +2037,10 @@ CREATE TABLE `order_item_addons` (
 --
 
 CREATE TABLE `order_payments` (
-  `payment_id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `payment_id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
   `payment_date` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2067,9 +2051,9 @@ CREATE TABLE `order_payments` (
 --
 
 CREATE TABLE `package_durations` (
-  `id` int NOT NULL,
-  `hours` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `hours` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2079,9 +2063,9 @@ CREATE TABLE `package_durations` (
 --
 
 CREATE TABLE `package_max_guests` (
-  `id` int NOT NULL,
-  `capacity` int NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2091,9 +2075,9 @@ CREATE TABLE `package_max_guests` (
 --
 
 CREATE TABLE `package_menu_items` (
-  `id` int NOT NULL,
-  `item_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2103,10 +2087,10 @@ CREATE TABLE `package_menu_items` (
 --
 
 CREATE TABLE `package_notes` (
-  `id` int NOT NULL,
-  `note_type` enum('30PAX','50PAX') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `note_text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `note_type` enum('30PAX','50PAX') NOT NULL,
+  `note_text` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2116,13 +2100,13 @@ CREATE TABLE `package_notes` (
 --
 
 CREATE TABLE `page_content` (
-  `id` int NOT NULL,
-  `page_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `hero_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `hero_subtitle` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `section_title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `section_intro` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `page_name` varchar(50) NOT NULL,
+  `hero_title` varchar(255) NOT NULL,
+  `hero_subtitle` text DEFAULT NULL,
+  `section_title` varchar(255) DEFAULT NULL,
+  `section_intro` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2139,14 +2123,14 @@ INSERT INTO `page_content` (`id`, `page_name`, `hero_title`, `hero_subtitle`, `s
 --
 
 CREATE TABLE `payments` (
-  `payment_id` int NOT NULL,
-  `booking_reference` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `booking_id` int NOT NULL,
+  `payment_id` int(11) NOT NULL,
+  `booking_reference` varchar(255) NOT NULL,
+  `booking_id` int(11) NOT NULL,
   `amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `reference_number` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `reference_number` varchar(100) DEFAULT NULL,
   `payment_date` datetime DEFAULT NULL,
-  `proof_file` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `proof_file` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2170,10 +2154,10 @@ INSERT INTO `payments` (`payment_id`, `booking_reference`, `booking_id`, `amount
 --
 
 CREATE TABLE `payment_methods` (
-  `id` int NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `display_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1'
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `display_name` varchar(100) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2187,17 +2171,69 @@ INSERT INTO `payment_methods` (`id`, `name`, `display_name`, `is_active`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `promo_bookings`
+--
+
+CREATE TABLE `promo_bookings` (
+  `id` int(11) NOT NULL,
+  `booking_ref` varchar(20) NOT NULL,
+  `invoice_id` varchar(100) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `guest_firstname` varchar(100) NOT NULL,
+  `guest_lastname` varchar(100) NOT NULL,
+  `guest_email` varchar(255) NOT NULL,
+  `guest_phone` varchar(20) DEFAULT NULL,
+  `check_in_date` date NOT NULL,
+  `check_out_date` date NOT NULL,
+  `number_of_guests` int(11) NOT NULL DEFAULT 1,
+  `room_type` varchar(100) NOT NULL,
+  `special_requests` text DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL DEFAULT 'xendit',
+  `payment_option` enum('full','downpayment') NOT NULL DEFAULT 'full',
+  `amount_paid` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `total_amount` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `remaining_balance` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `payment_status` enum('pending','paid','failed','refunded') NOT NULL DEFAULT 'pending',
+  `booking_status` enum('pending','confirmed','cancelled','completed') NOT NULL DEFAULT 'pending',
+  `promo_title` varchar(200) DEFAULT NULL,
+  `promo_price` decimal(10,2) DEFAULT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `promo_bookings`
+--
+
+INSERT INTO `promo_bookings` (`id`, `booking_ref`, `invoice_id`, `user_id`, `guest_firstname`, `guest_lastname`, `guest_email`, `guest_phone`, `check_in_date`, `check_out_date`, `number_of_guests`, `room_type`, `special_requests`, `payment_method`, `payment_option`, `amount_paid`, `total_amount`, `remaining_balance`, `payment_status`, `booking_status`, `promo_title`, `promo_price`, `created_at`, `updated_at`) VALUES
+(1, 'PROMO-699487CA4D5A5', 'ROOM_69948700d305d_1771341568', NULL, 'Guest', 'User', 'guest@example.com', '', '2026-02-18', '2026-02-19', 1, 'Standard Room', '', 'Xendit', '', 6000.00, 6000.00, 0.00, 'paid', 'confirmed', 'Summer Special', 6000.00, '2026-02-17 23:22:50', NULL),
+(2, 'PROMO-69948B1208797', 'ROOM_69948ae0e216a_1771342560', NULL, 'Guest', 'User', 'guest@example.com', '', '2026-02-18', '2026-02-19', 1, 'Standard Room', '', 'Xendit', '', 6000.00, 6000.00, 0.00, 'paid', 'confirmed', 'Summer Special', 6000.00, '2026-02-17 23:36:50', NULL),
+(3, 'PROMO-69948C6958516', 'ROOM_69948c57cc139_1771342935', NULL, 'dadd', 'adr54', 'S@gmail.com', '', '2026-02-17', '2026-02-20', 2, '8', '', 'Xendit', 'downpayment', 9000.00, 18000.00, 9000.00, 'paid', 'confirmed', 'Summer Special', 0.00, '2026-02-17 23:42:33', NULL),
+(4, 'PROMO-699560C79B8E2', 'ROOM_699560ab11a00_1771397291', NULL, 'dadd', 'adr54', 'S@gmail.com', '', '2026-02-18', '2026-02-21', 3, '3', 'sdad', 'Xendit', 'downpayment', 7200.00, 14400.00, 7200.00, 'paid', 'confirmed', 'Summer Special', 0.00, '2026-02-18 14:48:39', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `reschedule_bookings`
 --
 
 CREATE TABLE `reschedule_bookings` (
-  `id` int NOT NULL,
-  `booking_fk_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_fk_id` int(11) NOT NULL,
   `check_in` date NOT NULL,
   `check_out` date NOT NULL,
   `date_resched` datetime NOT NULL,
   `reason` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `reschedule_bookings`
+--
+
+INSERT INTO `reschedule_bookings` (`id`, `booking_fk_id`, `check_in`, `check_out`, `date_resched`, `reason`) VALUES
+(1, 6, '2026-02-12', '2026-02-14', '2026-02-12 12:38:23', 'Early Arrival'),
+(2, 5, '2026-02-11', '2026-02-12', '2026-02-17 15:45:41', ''),
+(3, 5, '2026-02-28', '2026-03-01', '2026-02-17 15:46:35', 'HINDI SUMIPOT');
 
 -- --------------------------------------------------------
 
@@ -2206,12 +2242,12 @@ CREATE TABLE `reschedule_bookings` (
 --
 
 CREATE TABLE `reservation_orders` (
-  `order_id` int NOT NULL,
-  `reservation_id` int NOT NULL,
-  `menu_item_id` int NOT NULL,
-  `quantity` int NOT NULL,
-  `notes` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `order_id` int(11) NOT NULL,
+  `reservation_id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `notes` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2221,12 +2257,12 @@ CREATE TABLE `reservation_orders` (
 --
 
 CREATE TABLE `resetpass` (
-  `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `reset_token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reset_token` varchar(64) NOT NULL,
   `reset_token_expires` datetime NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `used` tinyint(1) DEFAULT '0'
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `used` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2236,12 +2272,12 @@ CREATE TABLE `resetpass` (
 --
 
 CREATE TABLE `reviews` (
-  `review_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `review_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `rating` decimal(2,1) DEFAULT NULL,
-  `review` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `review` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2251,13 +2287,13 @@ CREATE TABLE `reviews` (
 --
 
 CREATE TABLE `rooms` (
-  `room_id` int NOT NULL,
-  `room_number` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `room_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `room_id` int(11) NOT NULL,
+  `room_number` varchar(10) NOT NULL,
+  `room_type` varchar(50) NOT NULL,
   `rate` decimal(10,2) NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Available',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `room_type_id` int DEFAULT NULL
+  `status` varchar(20) DEFAULT 'Available',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `room_type_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2267,9 +2303,9 @@ CREATE TABLE `rooms` (
 --
 
 CREATE TABLE `room_images` (
-  `image_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `image_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `image_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2279,15 +2315,15 @@ CREATE TABLE `room_images` (
 --
 
 CREATE TABLE `room_inquiries` (
-  `inquiry_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `inquiry_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `check_in` date DEFAULT NULL,
   `check_out` date DEFAULT NULL,
-  `guests` int DEFAULT NULL,
-  `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `guests` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `status` varchar(20) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2297,13 +2333,13 @@ CREATE TABLE `room_inquiries` (
 --
 
 CREATE TABLE `room_numbers` (
-  `room_number_id` int NOT NULL,
-  `room_type_id` int NOT NULL,
-  `room_number` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `floor_number` int DEFAULT NULL,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'active',
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `room_number_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_number` varchar(10) NOT NULL,
+  `floor_number` int(11) DEFAULT NULL,
+  `status` varchar(20) NOT NULL DEFAULT 'active',
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -2311,10 +2347,10 @@ CREATE TABLE `room_numbers` (
 --
 
 INSERT INTO `room_numbers` (`room_number_id`, `room_type_id`, `room_number`, `floor_number`, `status`, `created_at`, `updated_at`) VALUES
-(1, 1, '1', 2, 'active', '2025-11-28 05:51:28', '2025-11-28 05:51:28'),
-(2, 1, '2', 1, 'active', '2025-11-28 05:54:25', '2025-11-28 05:54:25'),
-(3, 5, '3', 2, 'active', '2025-11-28 05:54:34', '2025-11-28 05:54:34'),
-(4, 5, '4', 2, 'active', '2025-11-28 05:55:02', '2025-11-28 05:55:53'),
+(1, 3, '1', 2, 'active', '2025-11-28 05:51:28', '2026-02-04 04:27:15'),
+(2, 4, '2', 1, 'active', '2025-11-28 05:54:25', '2026-02-04 04:27:35'),
+(3, 2, '3', 2, 'inactive', '2025-11-28 05:54:34', '2026-02-04 04:27:58'),
+(4, 4, '4', 2, 'active', '2025-11-28 05:55:02', '2026-02-04 04:27:32'),
 (5, 2, '101', 1, 'active', '2025-12-01 23:15:15', '2025-12-01 23:15:15'),
 (6, 2, '103', 2, 'active', '2025-12-01 23:15:38', '2025-12-01 23:15:38'),
 (8, 3, '203', 3, 'active', '2025-12-01 23:17:51', '2025-12-01 23:17:51'),
@@ -2328,12 +2364,12 @@ INSERT INTO `room_numbers` (`room_number_id`, `room_type_id`, `room_number`, `fl
 --
 
 CREATE TABLE `room_reviews` (
-  `review_id` int NOT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `user_id` int DEFAULT NULL,
+  `review_id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `user_id` int(11) DEFAULT NULL,
   `rating` decimal(3,1) NOT NULL,
-  `review` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `review` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2365,7 +2401,8 @@ INSERT INTO `room_reviews` (`review_id`, `room_type_id`, `user_id`, `rating`, `r
 (0, 11, 38, 5.0, 'j', '2025-05-13 12:28:17'),
 (0, 8, 39, 4.0, 'a', '2025-06-02 03:03:48'),
 (0, 11, 39, 5.0, 'a', '2025-06-03 13:34:05'),
-(0, 9, 39, 4.0, 'u', '2025-06-06 00:43:23');
+(0, 9, 39, 4.0, 'u', '2025-06-06 00:43:23'),
+(0, 3, 40, 4.0, 'asass', '2026-02-09 01:37:07');
 
 -- --------------------------------------------------------
 
@@ -2374,16 +2411,27 @@ INSERT INTO `room_reviews` (`review_id`, `room_type_id`, `user_id`, `rating`, `r
 --
 
 CREATE TABLE `room_transfers` (
-  `id` int NOT NULL,
-  `booked_room_fk_id` int NOT NULL,
-  `bookings_fk_id` int NOT NULL,
-  `room_number_fk_id` int NOT NULL,
-  `room_type_id` int NOT NULL,
-  `room_type_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booked_room_fk_id` int(11) NOT NULL,
+  `bookings_fk_id` int(11) NOT NULL,
+  `room_number_fk_id` int(11) NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_type_name` varchar(255) NOT NULL,
   `price` double(10,2) NOT NULL,
   `transfer_date` datetime DEFAULT NULL,
-  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL
+  `reason` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `room_transfers`
+--
+
+INSERT INTO `room_transfers` (`id`, `booked_room_fk_id`, `bookings_fk_id`, `room_number_fk_id`, `room_type_id`, `room_type_name`, `price`, `transfer_date`, `reason`) VALUES
+(1, 9, 6, 8, 3, 'Triple Occupancy', 1700.00, '2026-02-12 12:39:39', 'aircon is not working'),
+(2, 13, 9, 9, 3, 'Triple Occupancy', 1700.00, '2026-02-19 19:43:02', 'Too Small'),
+(3, 14, 10, 4, 4, 'Family', 4500.00, '2026-02-19 20:10:43', 'gusto ko lang'),
+(4, 15, 11, 5, 2, 'Double Occupancy', 1000.00, '2026-02-19 20:26:23', 'asdfghj'),
+(5, 16, 12, 10, 4, 'Family', 4500.00, '2026-02-19 20:33:19', 'l');
 
 -- --------------------------------------------------------
 
@@ -2392,13 +2440,13 @@ CREATE TABLE `room_transfers` (
 --
 
 CREATE TABLE `room_transfer_logs` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `old_room_id` int NOT NULL,
-  `new_room_id` int NOT NULL,
-  `transfer_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `transfer_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `old_room_id` int(11) NOT NULL,
+  `new_room_id` int(11) NOT NULL,
+  `transfer_reason` text NOT NULL,
+  `transfer_date` datetime NOT NULL DEFAULT current_timestamp(),
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2415,20 +2463,20 @@ INSERT INTO `room_transfer_logs` (`id`, `booking_id`, `old_room_id`, `new_room_i
 --
 
 CREATE TABLE `room_types` (
-  `room_type_id` int NOT NULL,
-  `room_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `room_type_id` int(11) NOT NULL,
+  `room_type` varchar(100) NOT NULL,
   `price` decimal(10,2) NOT NULL,
-  `capacity` int NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `beds` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `rating` decimal(3,1) DEFAULT '0.0',
-  `image` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `discount_percent` int DEFAULT '0',
+  `capacity` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `beds` varchar(100) DEFAULT NULL,
+  `rating` decimal(3,1) DEFAULT 0.0,
+  `image` varchar(255) DEFAULT NULL,
+  `image2` varchar(255) DEFAULT NULL,
+  `image3` varchar(255) DEFAULT NULL,
+  `discount_percent` int(11) DEFAULT 0,
   `discount_valid_until` date DEFAULT NULL,
-  `rating_count` int DEFAULT '0',
-  `status` enum('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active'
+  `rating_count` int(11) DEFAULT 0,
+  `status` enum('active','inactive') NOT NULL DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2436,9 +2484,9 @@ CREATE TABLE `room_types` (
 --
 
 INSERT INTO `room_types` (`room_type_id`, `room_type`, `price`, `capacity`, `description`, `beds`, `rating`, `image`, `image2`, `image3`, `discount_percent`, `discount_valid_until`, `rating_count`, `status`) VALUES
-(2, 'Double Occupancy', 1000.00, 2, 'sadasd', '2', 0.0, 'room_692e252caacf49.41420629.jpg', '', '', 0, NULL, 0, 'active'),
-(3, 'Triple Occupancy', 1700.00, 3, '3', '3', 0.0, 'room_692e2542eb12e9.28821231.jpg', '', '', 0, NULL, 0, 'active'),
-(4, 'Family', 4500.00, 4, 'asdsad', '2', 0.0, 'room_692e25689fc313.33124698.avif', NULL, '', 0, NULL, 0, 'active');
+(2, 'Double Occupancy', 5000.00, 2, 'A room designed for two guests. It may have one double bed or two single beds. Ideal for couples or two people sharing.', '2', 0.0, 'room_698f25cdaf4077.00273944.jpg', '', '', 0, NULL, 0, 'active'),
+(3, 'Triple Occupancy', 1700.00, 3, 'A room designed for three guests. It may have one double bed and one single bed, or three single beds. Suitable for small groups or friends.', '3', 0.0, 'room_698f264c0a0bf4.82237096.jpg', '', '', 0, NULL, 0, 'active'),
+(4, 'Family', 4500.00, 4, 'A larger room designed for families. It can accommodate parents and children comfortably, with multiple beds or extra space. Perfect for a family stay.', '2', 0.0, 'room_698f263fd7bec1.81792769.jpg', NULL, '', 0, NULL, 0, 'active');
 
 -- --------------------------------------------------------
 
@@ -2447,8 +2495,8 @@ INSERT INTO `room_types` (`room_type_id`, `room_type`, `price`, `capacity`, `des
 --
 
 CREATE TABLE `room_type_amenities` (
-  `room_type_id` int NOT NULL,
-  `amenity_id` int NOT NULL
+  `room_type_id` int(11) NOT NULL,
+  `amenity_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2482,12 +2530,12 @@ INSERT INTO `room_type_amenities` (`room_type_id`, `amenity_id`) VALUES
 --
 
 CREATE TABLE `sales` (
-  `id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `payment_method` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `order_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `payment_method` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2512,15 +2560,15 @@ INSERT INTO `sales` (`id`, `order_id`, `total_amount`, `payment_method`, `create
 --
 
 CREATE TABLE `seasonal_discounts` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
   `discount_percentage` decimal(5,2) DEFAULT NULL,
   `start_date` date DEFAULT NULL,
   `end_date` date DEFAULT NULL,
-  `room_type_id` int DEFAULT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `room_type_id` int(11) DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2530,13 +2578,13 @@ CREATE TABLE `seasonal_discounts` (
 --
 
 CREATE TABLE `seasonal_effects` (
-  `id` int NOT NULL,
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
   `start_date` date NOT NULL,
   `end_date` date NOT NULL,
-  `effect_type` enum('snow','hearts','fireworks') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `effect_type` enum('snow','hearts','fireworks') NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2555,12 +2603,12 @@ INSERT INTO `seasonal_effects` (`id`, `name`, `start_date`, `end_date`, `effect_
 --
 
 CREATE TABLE `services` (
-  `service_id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
+  `service_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `description` text DEFAULT NULL,
   `price` decimal(10,2) NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Available',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` varchar(20) DEFAULT 'Available',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2570,12 +2618,12 @@ CREATE TABLE `services` (
 --
 
 CREATE TABLE `service_bookings` (
-  `service_booking_id` int NOT NULL,
-  `booking_id` int DEFAULT NULL,
-  `service_id` int DEFAULT NULL,
+  `service_booking_id` int(11) NOT NULL,
+  `booking_id` int(11) DEFAULT NULL,
+  `service_id` int(11) DEFAULT NULL,
   `booking_date` date NOT NULL,
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `status` varchar(20) DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2585,10 +2633,10 @@ CREATE TABLE `service_bookings` (
 --
 
 CREATE TABLE `settings` (
-  `id` int NOT NULL,
-  `setting_key` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `setting_value` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `setting_key` varchar(50) NOT NULL,
+  `setting_value` text DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2605,10 +2653,10 @@ INSERT INTO `settings` (`id`, `setting_key`, `setting_value`, `created_at`) VALU
 --
 
 CREATE TABLE `shift` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `shift` varchar(100) NOT NULL,
   `shift_timing` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `shift`
@@ -2627,17 +2675,17 @@ INSERT INTO `shift` (`id`, `shift`, `shift_timing`) VALUES
 --
 
 CREATE TABLE `staff` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `emp_name` varchar(100) NOT NULL,
-  `staff_type_fk_id` int NOT NULL,
-  `shift_id` int NOT NULL,
+  `staff_type_fk_id` int(11) NOT NULL,
+  `shift_id` int(11) NOT NULL,
   `id_card_no` varchar(20) NOT NULL,
   `address` varchar(100) NOT NULL,
-  `contact_no` bigint NOT NULL,
-  `salary` bigint NOT NULL,
-  `joining_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `contact_no` bigint(20) NOT NULL,
+  `salary` bigint(20) NOT NULL,
+  `joining_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `staff`
@@ -2657,9 +2705,9 @@ INSERT INTO `staff` (`id`, `emp_name`, `staff_type_fk_id`, `shift_id`, `id_card_
 --
 
 CREATE TABLE `staff_type` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `staff_type` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `staff_type`
@@ -2683,11 +2731,11 @@ INSERT INTO `staff_type` (`id`, `staff_type`) VALUES
 --
 
 CREATE TABLE `tables` (
-  `id` int NOT NULL,
-  `table_number` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `capacity` int NOT NULL,
-  `location` enum('Indoor','Outdoor','Balcony') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `status` enum('Available','Occupied') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Available'
+  `id` int(11) NOT NULL,
+  `table_number` varchar(50) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `location` enum('Indoor','Outdoor','Balcony') NOT NULL,
+  `status` enum('Available','Occupied') DEFAULT 'Available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2697,23 +2745,23 @@ CREATE TABLE `tables` (
 --
 
 CREATE TABLE `table_bookings` (
-  `id` int NOT NULL,
-  `user_id` int DEFAULT NULL,
-  `contact_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email_address` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `email_address` varchar(100) NOT NULL,
   `booking_date` date NOT NULL,
-  `num_guests` int NOT NULL,
-  `payment_method` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `num_guests` int(11) NOT NULL,
+  `payment_method` varchar(20) NOT NULL,
   `total_amount` decimal(10,2) NOT NULL,
-  `downpayment_amount` decimal(10,2) DEFAULT '0.00',
-  `amount_paid` decimal(10,2) DEFAULT '0.00',
-  `change_amount` decimal(10,2) DEFAULT '0.00',
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Pending',
-  `payment_reference` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `payment_proof` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `cancellation_reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `payment_option` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `reservation_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL
+  `downpayment_amount` decimal(10,2) DEFAULT 0.00,
+  `amount_paid` decimal(10,2) DEFAULT 0.00,
+  `change_amount` decimal(10,2) DEFAULT 0.00,
+  `status` varchar(20) DEFAULT 'Pending',
+  `payment_reference` varchar(100) DEFAULT NULL,
+  `payment_proof` varchar(255) DEFAULT NULL,
+  `cancellation_reason` text DEFAULT NULL,
+  `payment_option` varchar(50) DEFAULT NULL,
+  `reservation_type` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2723,10 +2771,10 @@ CREATE TABLE `table_bookings` (
 --
 
 CREATE TABLE `table_cancellations` (
-  `id` int NOT NULL,
-  `booking_id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reason` text NOT NULL,
   `cancelled_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2744,10 +2792,10 @@ INSERT INTO `table_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `can
 --
 
 CREATE TABLE `table_number` (
-  `id` int NOT NULL,
-  `table_type_fk_id` int NOT NULL,
-  `table_number` int NOT NULL,
-  `status` enum('available','unavailable') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'available'
+  `id` int(11) NOT NULL,
+  `table_type_fk_id` int(11) NOT NULL,
+  `table_number` int(11) NOT NULL,
+  `status` enum('available','unavailable') NOT NULL DEFAULT 'available'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2755,7 +2803,7 @@ CREATE TABLE `table_number` (
 --
 
 INSERT INTO `table_number` (`id`, `table_type_fk_id`, `table_number`, `status`) VALUES
-(1, 2, 1, 'unavailable'),
+(1, 2, 1, 'available'),
 (2, 3, 2, 'available'),
 (3, 2, 3, 'available'),
 (4, 0, 4, 'available'),
@@ -2774,21 +2822,21 @@ INSERT INTO `table_number` (`id`, `table_type_fk_id`, `table_number`, `status`) 
 --
 
 CREATE TABLE `table_packages` (
-  `id` int NOT NULL,
-  `package_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `price` int NOT NULL,
-  `capacity` int NOT NULL,
-  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `menu_items` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `available_tables` int NOT NULL,
-  `image_path` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image1` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image2` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image3` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image4` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `image5` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `status` enum('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'active',
-  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci
+  `id` int(11) NOT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `price` int(11) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `menu_items` varchar(255) NOT NULL,
+  `available_tables` int(11) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL,
+  `image1` varchar(255) DEFAULT NULL,
+  `image2` varchar(255) DEFAULT NULL,
+  `image3` varchar(255) DEFAULT NULL,
+  `image4` varchar(255) DEFAULT NULL,
+  `image5` varchar(255) DEFAULT NULL,
+  `status` enum('active','inactive') DEFAULT 'active',
+  `reason` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2809,15 +2857,15 @@ INSERT INTO `table_packages` (`id`, `package_name`, `price`, `capacity`, `descri
 --
 
 CREATE TABLE `table_reservations` (
-  `reservation_id` int NOT NULL,
-  `customer_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `guest_count` int NOT NULL,
-  `table_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `reservation_id` int(11) NOT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `guest_count` int(11) NOT NULL,
+  `table_type` varchar(50) NOT NULL,
   `reservation_datetime` datetime NOT NULL,
-  `status` enum('pending','confirmed','cancelled') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'pending',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `status` enum('pending','confirmed','cancelled') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -2827,17 +2875,17 @@ CREATE TABLE `table_reservations` (
 --
 
 CREATE TABLE `table_types` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `table_name` varchar(255) NOT NULL,
-  `capacity` int NOT NULL,
-  `img1` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `img2` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `img3` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `img4` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
-  `img5` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `capacity` int(11) NOT NULL,
+  `img1` text DEFAULT NULL,
+  `img2` text DEFAULT NULL,
+  `img3` text DEFAULT NULL,
+  `img4` text DEFAULT NULL,
+  `img5` text DEFAULT NULL,
   `description` text NOT NULL,
   `status` varchar(255) NOT NULL,
-  `reason` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci
+  `reason` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -2845,9 +2893,9 @@ CREATE TABLE `table_types` (
 --
 
 INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `img1`, `img2`, `img3`, `img4`, `img5`, `description`, `status`, `reason`) VALUES
-(2, 'dasd', 2, '45ba47ab107dd405.png', 'a48a4f4a38e7ebf0.PNG', '', '', '', 'adasd', 'active', NULL),
-(3, 'GAS', 2, 'ace5dc84b33f90b2.png', '7904ce70b71572a6.png', '', '', '', 'adsad', 'active', NULL),
-(4, 'DAD', 1, '05d03160e72e03c1.png', '', '', '', '', 'ad', 'active', NULL);
+(2, 'Friends', 5, 'acf61bb00b779e39.jpg', 'a48a4f4a38e7ebf0.PNG', '', '', '', 'Table for 3-5 person', 'active', NULL),
+(3, 'Family', 10, '0fee7c3de01b10a9.jpg', '7904ce70b71572a6.png', '', '', '', 'Up to 10 pax', 'active', NULL),
+(4, 'Couple', 2, 'c50b1b278841f889.jpg', '1572383940c02a1d.jpg', 'd4de153e1a812497.png', '', '', 'Table for 2 person', 'active', NULL);
 
 -- --------------------------------------------------------
 
@@ -2856,14 +2904,14 @@ INSERT INTO `table_types` (`id`, `table_name`, `capacity`, `img1`, `img2`, `img3
 --
 
 CREATE TABLE `terms_and_conditions` (
-  `id` int NOT NULL,
-  `hotel_name` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `title` varchar(150) COLLATE utf8mb4_general_ci NOT NULL,
-  `rule_text` text COLLATE utf8mb4_general_ci NOT NULL,
-  `display_order` int DEFAULT '1',
-  `is_active` tinyint(1) DEFAULT '1',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `hotel_name` varchar(150) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `rule_text` text NOT NULL,
+  `display_order` int(11) DEFAULT 1,
+  `is_active` tinyint(1) DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2871,7 +2919,7 @@ CREATE TABLE `terms_and_conditions` (
 --
 
 INSERT INTO `terms_and_conditions` (`id`, `hotel_name`, `title`, `rule_text`, `display_order`, `is_active`, `created_at`, `updated_at`) VALUES
-(1, 'Casa Estela Boutique Hotel & Cafe', 'Hotel Day & Check-out', 'A hotel day starts at any time after 1:00 PM during the day of arrival and ends at 11:00 AM of the following day. Late check-outs shall be charged at Php 200.00 per hour for a maximum of two hours extension only. Exceeding beyond 2:00 PM will be considered as a one-night stay and will be charged automatically.', 1, 1, '2026-01-13 11:39:25', '2026-02-03 08:32:49'),
+(1, 'Casa Estela Boutique Hotel & Cafe', 'Hotel Day & Check-out', 'A hotel day starts at any time after 1:00 PM during the day of arrival and ends at 11:00 AM of the following day. Late check-outs shall be charged at Php 200.00 per hour for a maximum of two hours extension only. Exceeding beyond 2:00 PM will be considered as a one-night stay and will be charged automatically.', 1, 1, '2026-01-13 11:39:25', '2026-02-07 04:37:50'),
 (2, 'Casa Estela Boutique Hotel & Cafe', 'Breakfast Schedule', 'Breakfast will be served between 7:00 AM and 8:00 AM only.', 2, 1, '2026-01-13 11:39:25', '2026-02-03 05:57:15'),
 (3, 'Casa Estela Boutique Hotel & Cafe', 'Security Deposit', 'A refundable deposit of Php 500.00 is required upon issuance of the room key and card.', 3, 1, '2026-01-13 11:39:25', '2026-02-03 05:53:27'),
 (4, 'Casa Estela Boutique Hotel & Cafe', 'Extra Amenities', 'Request for an extra pillow, duvet, bath towel or bath mat will incur an additional charge.', 4, 1, '2026-01-13 11:39:25', '2026-02-03 05:58:26'),
@@ -2891,21 +2939,21 @@ INSERT INTO `terms_and_conditions` (`id`, `hotel_name`, `title`, `rule_text`, `d
 --
 
 CREATE TABLE `userss` (
-  `id` int NOT NULL,
-  `first_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `last_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `contact_number` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `actual_password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `profile_photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_type` enum('customer','admin','frontdesk','cashier') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `verification_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `email` varchar(255) NOT NULL,
+  `contact_number` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `actual_password` varchar(255) DEFAULT NULL,
+  `profile_photo` varchar(255) DEFAULT NULL,
+  `user_type` enum('customer','admin','frontdesk','cashier') NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `verification_code` varchar(6) DEFAULT NULL,
   `verification_expiry` datetime DEFAULT NULL,
-  `is_verified` tinyint(1) DEFAULT '0',
-  `reset_token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `is_verified` tinyint(1) DEFAULT 0,
+  `reset_token` varchar(255) DEFAULT NULL,
   `reset_token_expires` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -2914,19 +2962,14 @@ CREATE TABLE `userss` (
 --
 
 INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`, `address`, `password`, `actual_password`, `profile_photo`, `user_type`, `name`, `verification_code`, `verification_expiry`, `is_verified`, `reset_token`, `reset_token_expires`) VALUES
-(1, 'Alfred', 'hendrik Aceveda', 'admin@example.com', '09362715617', 'Balite Calapan City Oriental Mindoro', '$2y$10$E0VVQ000TFvq6inV57SpT.FhiqJ4e5khughM2uepIKZSmjcdoOSQ2', NULL, 'user_696a3dade5b665.65485760.jpg', 'admin', NULL, NULL, NULL, 0, 'd3ab8c68d4af772a776130cb755d22611faafa41a9bc56af2b46aae42d220527', '2025-04-24 13:48:57'),
-(2, 'asd', 'asd', 'frontdesk@example.com', '9951776920', 'asdasd', '$2y$10$gKCFBo96Q51u5PeLc3ZT6OnrMg47XQpYTKECADPF6skWy5ipIgdgG', NULL, NULL, 'frontdesk', NULL, NULL, NULL, 1, NULL, NULL),
+(1, 'ADMIN', '', 'admin@example.com', '09362715617', 'Balite Calapan City Oriental Mindoro', '$2y$10$E0VVQ000TFvq6inV57SpT.FhiqJ4e5khughM2uepIKZSmjcdoOSQ2', NULL, 'user_6997b96b1ca7f5.20563243.jpg', 'admin', NULL, NULL, NULL, 0, 'd3ab8c68d4af772a776130cb755d22611faafa41a9bc56af2b46aae42d220527', '2025-04-24 13:48:57'),
+(2, 'FRONTDESK', '', 'frontdesk@example.com', '9951776920', 'asdasd', '$2y$10$gKCFBo96Q51u5PeLc3ZT6OnrMg47XQpYTKECADPF6skWy5ipIgdgG', NULL, NULL, 'frontdesk', NULL, NULL, NULL, 1, NULL, NULL),
 (3, 'Cashier', 'Realisan', 'cashier@example.com', '09123456789', 'TAwagan', '$2y$10$kwMXcUy2XFwfJ1IyAKXHCe.MLTdIGUwJrZSOSF5gw2vJ6gzE6oO86', NULL, 'uploads/profile/3.jpg', 'cashier', NULL, NULL, NULL, 1, '225874', '2025-05-31 21:24:35'),
-(5, 'Aizzy', 'Villanueva', 'aizzyvillanueva43@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$NuTp9esbPDwxbh1w1lhCO..UptxZgsn3x8/sDH7poiX4hPVFUB02q', NULL, 'profile_690c175b3465a9.35460400.png', 'admin', NULL, NULL, NULL, 0, NULL, NULL),
-(6, 'Aizzy', 'Villanueva', 'aizzyvillanueva34@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$r1X5exzjzJcmM.v3uGBNXeXiN.QkoU1QOIYDIG.7UjmZG.qmxt0hy', NULL, NULL, 'admin', NULL, NULL, NULL, 0, NULL, NULL),
+(5, 'Aizzy', 'Villanueva', 'aizzyvillanueva43@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$gKEFFH5imhdg01DgIoral.LnzHIAn5YMyhEhVonKrNcdRUGzL8efS', NULL, 'profile_690c175b3465a9.35460400.png', 'admin', NULL, NULL, NULL, 0, NULL, NULL),
 (7, 'Fammela', 'De Guzman', 'Fammela45@gmail.com', '912345678787', 'wawa calapan city', '$2y$10$Z94WFz0rzhGwbouxahK5CekTfN.237R11cWycWsRMZJMeYFK78e8i', NULL, NULL, 'admin', NULL, NULL, NULL, 0, NULL, NULL),
 (8, 'chano', 'Realisan', 'christianrealisan40@gmail.com', '912345678787', 'tawagan', '$2y$10$zWivDB8Tvv9d4o42LtPGsuRS087Ox8M2LFz6F6zfYvyxy74E0vOzu', 'chanopassword', '681607ca1054f.jpg', 'admin', NULL, NULL, NULL, 0, NULL, NULL),
-(9, 'Aizzy', 'Villanueva', 'aizzyvillanueva5@gmail.com', '09362715617', 'Lumangbayan Calapan City', '$2y$10$6FJdPRpNRHB5rzVQ6L8EO.7xNMFRTQ.qS84uCvwkqB/nmB1aAx5Fy', '020104', NULL, 'admin', NULL, NULL, NULL, 0, NULL, NULL),
 (10, 'Fammela', 'De Guzman', 'fammeladeguzman21@gmail.com', '09362715617', 'Wawa, Calapan City', '$2y$10$SJOaFMSWJd7i98eTtHeBSe1uq/CZbJARFYZ/fGblsYFOFR9j.rYm2', 'fammelapassword', '../uploads/profile/profile_10_1746278895.png', 'cashier', NULL, NULL, NULL, 0, NULL, NULL),
-(11, 'Alfred', 'Aceveda', 'alfredaceveda.3@gmail.com', '09363950698', NULL, '$2y$10$VtAD8.4Tl0ncmczJ5WgYcuB1sMQ1bU7TdjVDKTzZuC11MZRYoykny', NULL, NULL, '', NULL, '749192', '2025-04-14 09:50:14', 0, NULL, NULL),
 (12, 'Alfred', 'Aceveda', 'cyvieshi@gmail.com', '09363950698', NULL, '$2y$10$HOX.EaHIlJlphxRlYhjs0OVQpDM.QdgAt.rCH7XaDc2zvZJE28d.m', NULL, NULL, '', NULL, '891266', '2025-04-14 09:51:28', 0, NULL, NULL),
-(13, 'aizzy', 'villanueva', 'aizzy2004@gmail.com', '09127418448', NULL, '$2y$10$.VtKuRPB5t4v8XJ3pIe2Ye8Xq.JRF2nwv172DA0jz/dM7vYxU4J5u', NULL, NULL, '', NULL, '084580', '2025-04-14 10:04:38', 0, NULL, NULL),
-(14, 'aizzy', 'villanueva', 'macapagalkenjo@gmail.com', '09127418448', NULL, '$2y$10$5JiAVwo4MtryVBR3aGnBpeAlGiVErB8ay/cc7kGjSot6FB6XY/io.', NULL, NULL, '', NULL, '397271', '2025-04-14 10:05:25', 0, NULL, NULL),
 (15, 'Try ', 'Me', 'akop35310@gmail.com', '09123456789', NULL, '$2y$10$4ydNXyV33pq4RswCLlZSpO5kGwhX/FiYzG/1KlkkQb3OCJ82x3XB6', NULL, NULL, 'customer', NULL, '145658', '2025-04-14 10:05:54', 0, NULL, NULL),
 (16, 'Christian', 'Realisan', 'myraluceno@gmail.com', '09234567878', NULL, '$2y$10$8Xe899PsTnwiHbdEjVPJJuYJWP1bO8oK81pWIQcHo.xya7glCf4Z6', NULL, NULL, '', NULL, NULL, NULL, 0, NULL, NULL),
 (17, 'Christian', 'Realisan', 'enhymwaa@gmail.com', '09234567878', NULL, '$2y$10$HAPeuFiTcMK48yQ/ZHbRrORn8xBMrLUfwBd2wc8B6H.JvVAe16OKq', NULL, NULL, '', NULL, NULL, NULL, 0, NULL, NULL),
@@ -2938,10 +2981,16 @@ INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`
 (34, 'Christian', 'Realisan', 'chano@gmail.com', '09123456789', NULL, '$2y$10$ibcgOUmMfiJlMiaYfT5fP.N5WVpQozypiPi7cTtl6H5DBJuypmTSu', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
 (35, 'Myra Kristine Grace ', 'Luceño', 'myraluceno59@gmail.com', '09638322673', NULL, '$2y$10$aB1qDp6yq48CThqcCG2.S.9JtJFmkAA75eqL8/bFUXi9sMSiGJwZq', NULL, NULL, 'customer', NULL, NULL, NULL, 0, NULL, NULL),
 (36, 'Myra', 'Aceveda', 'myra2006@gmail.com', '09638322673', NULL, '$2y$10$PWhwxvCUIqKngu7Vr3unQ.lHzYNSbO9mIQ8dvF9CZ.KPalEIX9.UG', NULL, NULL, 'customer', NULL, NULL, NULL, 0, NULL, NULL),
-(40, 'christian realisan Christian Realisan', 'realisan', 'chanomabalo@gmail.com', '09124343343', NULL, '$2y$10$9NAc1tYNKs/dyzPvRqBuhu7sI51uMmW2xu0zR318t./NU2zBCDR0i', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(40, 'christian realisan Christian Realisan', 'realisan', 'chanomabalo@gmail.com', '09124343343', NULL, '$2y$10$9NAc1tYNKs/dyzPvRqBuhu7sI51uMmW2xu0zR318t./NU2zBCDR0i', NULL, 'profile_69873b4b100877.51144206.jpg', 'customer', NULL, NULL, NULL, 1, NULL, NULL),
 (41, 'Elly', 'Mildred', 'ellymildred846@gmail.com', '09951779200', NULL, '$2y$10$cJzE7CDOXKXPvaif0cvB3eotY.ZUvd.8rjGgsWE86fU0SzV2DRjgy', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
 (43, 'Chan', 'Chan', 'chan.christians123@gmail.com', '09112222222', NULL, '$2y$10$yuRf9CSeCcdoBE7DThbiJuV0yj8.c4Lcv.KjVQVCL2HfumNEMqXbm', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
-(44, 'Henz', 'Ollywod', 'ollywodhenz@gmail.com', '09267615921', NULL, '$2y$10$B/8hHJuPTqiIaRxiRHtVr.Aq81jbGza/cgr7s/6xRNrdY./KnTugu', NULL, 'profile_6922c38c6b37d9.85367249.jpg', 'customer', NULL, NULL, NULL, 1, NULL, NULL);
+(44, 'Henz', 'Ollywod', 'ollywodhenz@gmail.com', '09267615921', NULL, '$2y$10$QLMn8BsB8/4eHFPdyqXmye5IXWf1wJCXCDnRA/0CR1.DHp79Ud4ZO', NULL, 'profile_6922c38c6b37d9.85367249.jpg', 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(53, 'SAD', 'SAD', 'sarahelmenzo13@gmail.com', '09123456565', NULL, '$2y$10$Qh2vGWsid.Alb.nbWCeDQOoaw7UCKHKHDfcGUM2urCwqjFwr7IqKi', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(54, 'christian realisan Christian Realisan', 'christian realisan Christian Realisan', 'iansilang123@gmail.com', '09123454545', NULL, '$2y$10$xA9T29HVZY1M5Lh1vR5im.vcEYZzlxQzaYiGj2tz6Y6f/Puc5DC3m', NULL, 'profile_698b13b517de84.47203175.jpg', 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(55, 'Fammela ', 'De Guzman ', 'allysonmildred696@gmail.com', '09362846372', NULL, '$2y$10$zZJn0qbclQA62F8fE6YjkumBwEySVql5oQtwdsW7JkEugLCkricNS', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(56, 'Sean', 'Villanueva', 'villanuevasean083@gmail.com', '09632088569', NULL, '$2y$10$Ksm82AreUvGKhdIYCbnMLOCd7FVnyu25WbdFYwV47PeaeDnigENHe', NULL, 'profile_698b4a8ae99549.25368395.jpeg', 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(57, 'Keizy', 'Marimon', 'aizzy.olloka@gmail.com', '09127418448', NULL, '$2y$10$1jWcKUZx2311Rr9DUO8miOnpWWkPG7SsW6wody.v02666GwMqG1AG', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL),
+(58, 'robin', 'almarez', 'sir.robin.2024@gmail.com', '09219625377', NULL, '$2y$10$dDKFChiYXhZKAAnY1JCxzO4altdEhbV8yiYEXpYsYCRER4f1zYtHu', NULL, NULL, 'customer', NULL, NULL, NULL, 1, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -2950,22 +2999,22 @@ INSERT INTO `userss` (`id`, `first_name`, `last_name`, `email`, `contact_number`
 --
 
 CREATE TABLE `users_unified` (
-  `id` int NOT NULL,
-  `firstname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `lastname` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `phone` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `address` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `profile_photo` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
-  `user_type` enum('admin','frontdesk','cashier','customer') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'customer',
-  `is_verified` tinyint(1) DEFAULT '0',
-  `verification_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `id` int(11) NOT NULL,
+  `firstname` varchar(100) NOT NULL,
+  `lastname` varchar(100) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `profile_photo` varchar(255) DEFAULT NULL,
+  `user_type` enum('admin','frontdesk','cashier','customer') NOT NULL DEFAULT 'customer',
+  `is_verified` tinyint(1) DEFAULT 0,
+  `verification_code` varchar(6) DEFAULT NULL,
   `verification_expiry` datetime DEFAULT NULL,
-  `reset_token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `reset_token` varchar(64) DEFAULT NULL,
   `reset_token_expires` datetime DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -2990,12 +3039,12 @@ INSERT INTO `users_unified` (`id`, `firstname`, `lastname`, `email`, `password`,
 --
 
 CREATE TABLE `user_logs` (
-  `id` bigint UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `action` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `details` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `ip_address` varchar(45) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` int(10) UNSIGNED NOT NULL,
+  `action` varchar(255) NOT NULL,
+  `details` text DEFAULT NULL,
+  `ip_address` varchar(45) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -3005,12 +3054,12 @@ CREATE TABLE `user_logs` (
 --
 
 CREATE TABLE `verification_codes` (
-  `id` int NOT NULL,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `code` varchar(6) NOT NULL,
   `expiry` datetime NOT NULL,
-  `used` tinyint(1) DEFAULT '0',
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `used` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3029,11 +3078,11 @@ INSERT INTO `verification_codes` (`id`, `email`, `code`, `expiry`, `used`, `crea
 --
 
 CREATE TABLE `verification_methods` (
-  `id` int NOT NULL,
-  `method_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_active` tinyint(1) DEFAULT '1',
-  `maintenance_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `method_name` varchar(50) NOT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `maintenance_message` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3051,11 +3100,11 @@ INSERT INTO `verification_methods` (`id`, `method_name`, `is_active`, `maintenan
 --
 
 CREATE TABLE `verification_types` (
-  `id` int NOT NULL,
-  `type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `is_enabled` tinyint(1) DEFAULT '1',
-  `disable_message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
-  `last_updated` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  `id` int(11) NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `is_enabled` tinyint(1) DEFAULT 1,
+  `disable_message` text DEFAULT NULL,
+  `last_updated` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -3236,7 +3285,10 @@ ALTER TABLE `messages`
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_notifications_booking` (`booking_fk_id`),
+  ADD KEY `fk_notifications_event` (`event_fk_id`),
+  ADD KEY `fk_notifications_order` (`order_id`);
 
 --
 -- Indexes for table `offers`
@@ -3286,6 +3338,19 @@ ALTER TABLE `payments`
 --
 ALTER TABLE `payment_methods`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `promo_bookings`
+--
+ALTER TABLE `promo_bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `booking_ref` (`booking_ref`),
+  ADD UNIQUE KEY `invoice_id` (`invoice_id`),
+  ADD KEY `user_id` (`user_id`),
+  ADD KEY `guest_email` (`guest_email`),
+  ADD KEY `check_in_date` (`check_in_date`),
+  ADD KEY `payment_status` (`payment_status`),
+  ADD KEY `booking_status` (`booking_status`);
 
 --
 -- Indexes for table `reschedule_bookings`
@@ -3406,295 +3471,301 @@ ALTER TABLE `user_logs`
 -- AUTO_INCREMENT for table `admin_sessions`
 --
 ALTER TABLE `admin_sessions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `amenities`
 --
 ALTER TABLE `amenities`
-  MODIFY `amenity_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `amenity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `beds`
 --
 ALTER TABLE `beds`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `booked_rooms`
 --
 ALTER TABLE `booked_rooms`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `booking_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `booking_amenities`
 --
 ALTER TABLE `booking_amenities`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `booking_check_inout`
 --
 ALTER TABLE `booking_check_inout`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `booking_history`
 --
 ALTER TABLE `booking_history`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `cashier`
 --
 ALTER TABLE `cashier`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `contact_info`
 --
 ALTER TABLE `contact_info`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `discount_types`
 --
 ALTER TABLE `discount_types`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `event_bookings`
 --
 ALTER TABLE `event_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `event_packages`
 --
 ALTER TABLE `event_packages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `facilities`
 --
 ALTER TABLE `facilities`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
 
 --
 -- AUTO_INCREMENT for table `facility_categories`
 --
 ALTER TABLE `facility_categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `fix_booking_ids_log`
 --
 ALTER TABLE `fix_booking_ids_log`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `guest_names`
 --
 ALTER TABLE `guest_names`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `menu_categories`
 --
 ALTER TABLE `menu_categories`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `menu_items`
 --
 ALTER TABLE `menu_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=433;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=448;
 
 --
 -- AUTO_INCREMENT for table `menu_items_addons`
 --
 ALTER TABLE `menu_items_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `menu_item_addons`
 --
 ALTER TABLE `menu_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=109;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `notifications`
 --
 ALTER TABLE `notifications`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=405;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `offers`
 --
 ALTER TABLE `offers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders_table`
 --
 ALTER TABLE `orders_table`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `orders_table_type`
 --
 ALTER TABLE `orders_table_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `order_item_addons`
 --
 ALTER TABLE `order_item_addons`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `payment_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `payment_methods`
 --
 ALTER TABLE `payment_methods`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `promo_bookings`
+--
+ALTER TABLE `promo_bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `reschedule_bookings`
 --
 ALTER TABLE `reschedule_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `resetpass`
 --
 ALTER TABLE `resetpass`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `rooms`
 --
 ALTER TABLE `rooms`
-  MODIFY `room_id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `room_numbers`
 --
 ALTER TABLE `room_numbers`
-  MODIFY `room_number_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `room_number_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `room_transfers`
 --
 ALTER TABLE `room_transfers`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `room_types`
 --
 ALTER TABLE `room_types`
-  MODIFY `room_type_id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `room_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `shift`
 --
 ALTER TABLE `shift`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `staff`
 --
 ALTER TABLE `staff`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `staff_type`
 --
 ALTER TABLE `staff_type`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `table_bookings`
 --
 ALTER TABLE `table_bookings`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `table_number`
 --
 ALTER TABLE `table_number`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `table_packages`
 --
 ALTER TABLE `table_packages`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `table_types`
 --
 ALTER TABLE `table_types`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `terms_and_conditions`
 --
 ALTER TABLE `terms_and_conditions`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `userss`
 --
 ALTER TABLE `userss`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
 
 --
 -- AUTO_INCREMENT for table `users_unified`
 --
 ALTER TABLE `users_unified`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `user_logs`
 --
 ALTER TABLE `user_logs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

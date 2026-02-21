@@ -1,0 +1,80 @@
+[2025-12-27 15:33:31] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:48] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:49] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:50] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:50] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:50] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:51] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:51] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:51] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:51] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:52] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:52] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:53] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:53] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:54] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+
+[2025-12-27 15:35:54] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'booking_id' in 'field list' in D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php on line 83
+Stack trace:
+#0 D:\casaaa\htdocs\Admin\Customer\aa\process_reservation.php(83): PDO->prepare('INSERT INTO tab...')
+#1 {main}
+

@@ -1,4 +1,9 @@
 <?php
+if (!isset($_SESSION['user_type']) || 
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')) {
+    header("Location: /Admin/Customer/aa/login.php");
+    exit;
+}
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
@@ -49,15 +54,16 @@ if (mysqli_num_rows($result) > 0) {
 // TABLE BOOKINGS QUERY
 $tableSql = "
     SELECT
-        ot.id AS order_id,
+        ot.order_id,
         ot.date_time,
         ot.total,
-        GROUP_CONCAT(ott.table_name SEPARATOR ', ') AS table_names
+        COALESCE(GROUP_CONCAT(ott.table_name SEPARATOR ', '), '') AS table_names
     FROM orders_table ot
     LEFT JOIN orders_table_type ott
         ON ott.table_booking_fk_id = ot.id
     WHERE ot.status = 'Completed'
 ";
+
 
 if ($fromDate && $toDate) {
     $tableSql .= " AND ot.date_time BETWEEN '$fromDateTime' AND '$toDateTime'";
@@ -221,7 +227,7 @@ if (mysqli_num_rows($eventResult) > 0) {
                             <tr>
                                 <td><?= $row['order_id'] ?></td>
                                 <td><?= date('M d, Y h:i A', strtotime($row['date_time'])) ?></td>
-                                <td><?= htmlspecialchars($row['table_names']) ?></td>
+                                <td><?= htmlspecialchars($row['table_names'] ?? '') ?></td>
                                 <td>₱<?= number_format($row['total'], 2) ?></td>
                             </tr>
                         <?php endwhile; ?>

@@ -1,0 +1,883 @@
+{
+    "timestamp": "2025-12-21 04:29:18",
+    "request": {
+        "amount": 5810000,
+        "description": "Room Booking Payment - BOOK-GOTB5A0QUY8",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-GOTB5A0QUY8",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-GOTB5A0QUY8",
+        "reference_number": "BOOK-GOTB5A0QUY8",
+        "metadata": {
+            "booking_reference": "BOOK-GOTB5A0QUY8",
+            "customer_email": "",
+            "customer_name": "S DS"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_sVYCFHoiuLvWp6pZXZfdzMMY",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-GOTB5A0QUY8",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_sVYCFHoiuLvWp6pZXZfdzMMY_client_QFTqUuc7TyYa2EF7UsuZTidq#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_sVYCFHoiuLvWp6pZXZfdzMMY_client_QFTqUuc7TyYa2EF7UsuZTidq",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-GOTB5A0QUY8",
+                "line_items": [
+                    {
+                        "amount": 5810000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-GOTB5A0QUY8",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_Ar13CbQivL7JD2JS2yGogB51",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 5810000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_Ar13CbQivL7JD2JS2yGogB51_client_o5whmaGB3DuXycreWPND5YKS",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-GOTB5A0QUY8",
+                        "livemode": false,
+                        "original_amount": 5810000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "paymaya",
+                            "gcash",
+                            "card"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "customer_name": "S DS",
+                            "booking_reference": "BOOK-GOTB5A0QUY8",
+                            "customer_email": ""
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766288268,
+                        "updated_at": 1766288268
+                    }
+                },
+                "payment_method_types": [
+                    "card",
+                    "gcash",
+                    "paymaya"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-GOTB5A0QUY8&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766288268,
+                "updated_at": 1766288268,
+                "metadata": {
+                    "customer_name": "S DS",
+                    "booking_reference": "BOOK-GOTB5A0QUY8",
+                    "customer_email": ""
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 05:08:43",
+    "request": {
+        "amount": 5810000,
+        "description": "Room Booking Payment - BOOK-6K8WACTSWU",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-6K8WACTSWU",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-6K8WACTSWU",
+        "reference_number": "BOOK-6K8WACTSWU",
+        "metadata": {
+            "booking_reference": "BOOK-6K8WACTSWU",
+            "customer_email": "",
+            "customer_name": "S DS"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_G1UHYYBK6Y2wduF28kuYXHwZ",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-6K8WACTSWU",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_G1UHYYBK6Y2wduF28kuYXHwZ_client_xUoxAGcP9vSsraphCbitKka7#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_G1UHYYBK6Y2wduF28kuYXHwZ_client_xUoxAGcP9vSsraphCbitKka7",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-6K8WACTSWU",
+                "line_items": [
+                    {
+                        "amount": 5810000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-6K8WACTSWU",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_GAHcoFBzGnKkNtNEF3HP7YiD",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 5810000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_GAHcoFBzGnKkNtNEF3HP7YiD_client_Xu4FU9f8eBda8Z2T8DSQ8c4u",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-6K8WACTSWU",
+                        "livemode": false,
+                        "original_amount": 5810000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "paymaya",
+                            "card",
+                            "gcash"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "booking_reference": "BOOK-6K8WACTSWU",
+                            "customer_name": "S DS",
+                            "customer_email": ""
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766290633,
+                        "updated_at": 1766290633
+                    }
+                },
+                "payment_method_types": [
+                    "paymaya",
+                    "card",
+                    "gcash"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-6K8WACTSWU&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766290633,
+                "updated_at": 1766290633,
+                "metadata": {
+                    "customer_email": "",
+                    "booking_reference": "BOOK-6K8WACTSWU",
+                    "customer_name": "S DS"
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 05:17:40",
+    "request": {
+        "amount": 5810000,
+        "description": "Room Booking Payment - BOOK-G7VYPPXQCM8",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-G7VYPPXQCM8",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-G7VYPPXQCM8",
+        "reference_number": "BOOK-G7VYPPXQCM8",
+        "metadata": {
+            "booking_reference": "BOOK-G7VYPPXQCM8",
+            "customer_email": "",
+            "customer_name": "S DS"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_xbiravG4BeVshTfTknY8UtuS",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-G7VYPPXQCM8",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_xbiravG4BeVshTfTknY8UtuS_client_EYv6XgKFKwqwXiQgtFdSKGKH#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_xbiravG4BeVshTfTknY8UtuS_client_EYv6XgKFKwqwXiQgtFdSKGKH",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-G7VYPPXQCM8",
+                "line_items": [
+                    {
+                        "amount": 5810000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-G7VYPPXQCM8",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_Mg3fF4AqPGGWpyZcNivPsXaB",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 5810000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_Mg3fF4AqPGGWpyZcNivPsXaB_client_uBzBGGwXpQjes1rMbWCkKg9L",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-G7VYPPXQCM8",
+                        "livemode": false,
+                        "original_amount": 5810000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "card",
+                            "paymaya",
+                            "gcash"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "customer_email": "",
+                            "booking_reference": "BOOK-G7VYPPXQCM8",
+                            "customer_name": "S DS"
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766291169,
+                        "updated_at": 1766291169
+                    }
+                },
+                "payment_method_types": [
+                    "gcash",
+                    "paymaya",
+                    "card"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-G7VYPPXQCM8&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766291170,
+                "updated_at": 1766291170,
+                "metadata": {
+                    "customer_email": "",
+                    "booking_reference": "BOOK-G7VYPPXQCM8",
+                    "customer_name": "S DS"
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 05:22:44",
+    "request": {
+        "amount": 5810000,
+        "description": "Room Booking Payment - BOOK-CNZFSGI5CE",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-CNZFSGI5CE",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-CNZFSGI5CE",
+        "reference_number": "BOOK-CNZFSGI5CE",
+        "metadata": {
+            "booking_reference": "BOOK-CNZFSGI5CE",
+            "customer_email": "",
+            "customer_name": "S DS"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_K6z9Mkgr8dBfEL7eTvdUTMBV",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-CNZFSGI5CE",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_K6z9Mkgr8dBfEL7eTvdUTMBV_client_Wt1isA5vCngLdKaMBY3h5xft#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_K6z9Mkgr8dBfEL7eTvdUTMBV_client_Wt1isA5vCngLdKaMBY3h5xft",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-CNZFSGI5CE",
+                "line_items": [
+                    {
+                        "amount": 5810000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-CNZFSGI5CE",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_dZXrbqCRFsvD5PpTTGdPhADt",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 5810000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_dZXrbqCRFsvD5PpTTGdPhADt_client_hAqaA9qAdSrnaD5R5xZJakJy",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-CNZFSGI5CE",
+                        "livemode": false,
+                        "original_amount": 5810000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "card",
+                            "gcash",
+                            "paymaya"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "customer_email": "",
+                            "customer_name": "S DS",
+                            "booking_reference": "BOOK-CNZFSGI5CE"
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766291474,
+                        "updated_at": 1766291474
+                    }
+                },
+                "payment_method_types": [
+                    "gcash",
+                    "card",
+                    "paymaya"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-CNZFSGI5CE&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766291474,
+                "updated_at": 1766291474,
+                "metadata": {
+                    "customer_email": "",
+                    "customer_name": "S DS",
+                    "booking_reference": "BOOK-CNZFSGI5CE"
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 05:29:06",
+    "request": {
+        "amount": 5810000,
+        "description": "Room Booking Payment - BOOK-HRCG9HWS5QI",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-HRCG9HWS5QI",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-HRCG9HWS5QI",
+        "reference_number": "BOOK-HRCG9HWS5QI",
+        "metadata": {
+            "booking_reference": "BOOK-HRCG9HWS5QI",
+            "customer_email": "",
+            "customer_name": "S DS"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_8i2RQiU69rGntYvRsJ9exeHK",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-HRCG9HWS5QI",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_8i2RQiU69rGntYvRsJ9exeHK_client_CnkMXpo8haQgTPGfevhDqCtp#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_8i2RQiU69rGntYvRsJ9exeHK_client_CnkMXpo8haQgTPGfevhDqCtp",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-HRCG9HWS5QI",
+                "line_items": [
+                    {
+                        "amount": 5810000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-HRCG9HWS5QI",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_H1m8qfDLn7N8BqCytiEFeMdv",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 5810000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_H1m8qfDLn7N8BqCytiEFeMdv_client_jdoeTecwup94MXzAoXvMbGbp",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-HRCG9HWS5QI",
+                        "livemode": false,
+                        "original_amount": 5810000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "card",
+                            "paymaya",
+                            "gcash"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "customer_name": "S DS",
+                            "booking_reference": "BOOK-HRCG9HWS5QI",
+                            "customer_email": ""
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766291856,
+                        "updated_at": 1766291856
+                    }
+                },
+                "payment_method_types": [
+                    "gcash",
+                    "paymaya",
+                    "card"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-HRCG9HWS5QI&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766291856,
+                "updated_at": 1766291856,
+                "metadata": {
+                    "customer_name": "S DS",
+                    "customer_email": "",
+                    "booking_reference": "BOOK-HRCG9HWS5QI"
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 14:13:23",
+    "request": {
+        "amount": 3320000,
+        "description": "Room Booking Payment - BOOK-XQFGD81O54E",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-XQFGD81O54E",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-XQFGD81O54E",
+        "reference_number": "BOOK-XQFGD81O54E",
+        "metadata": {
+            "booking_reference": "BOOK-XQFGD81O54E",
+            "customer_email": "",
+            "customer_name": "gggggggggggggggggggg ggggggggggggggg"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_zWkTZyq7c54LhnS3ZVj8wJzt",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-XQFGD81O54E",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_zWkTZyq7c54LhnS3ZVj8wJzt_client_i2f5kbEyA2xZHydndd21YAtC#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_zWkTZyq7c54LhnS3ZVj8wJzt_client_i2f5kbEyA2xZHydndd21YAtC",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-XQFGD81O54E",
+                "line_items": [
+                    {
+                        "amount": 3320000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-XQFGD81O54E",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_VdffCN2D6mvSkgC6zfyt29B1",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 3320000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_VdffCN2D6mvSkgC6zfyt29B1_client_oyKdEfWq8B2KNJRHYLxU3ePx",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-XQFGD81O54E",
+                        "livemode": false,
+                        "original_amount": 3320000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "gcash",
+                            "paymaya",
+                            "card"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "customer_email": "",
+                            "booking_reference": "BOOK-XQFGD81O54E",
+                            "customer_name": "gggggggggggggggggggg ggggggggggggggg"
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766323313,
+                        "updated_at": 1766323313
+                    }
+                },
+                "payment_method_types": [
+                    "card",
+                    "gcash",
+                    "paymaya"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-XQFGD81O54E&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766323313,
+                "updated_at": 1766323313,
+                "metadata": {
+                    "customer_email": "",
+                    "booking_reference": "BOOK-XQFGD81O54E",
+                    "customer_name": "gggggggggggggggggggg ggggggggggggggg"
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 14:30:04",
+    "request": {
+        "amount": 3320000,
+        "description": "Room Booking Payment - BOOK-ONRYPOTCSSG",
+        "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-ONRYPOTCSSG",
+        "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-ONRYPOTCSSG",
+        "reference_number": "BOOK-ONRYPOTCSSG",
+        "metadata": {
+            "booking_reference": "BOOK-ONRYPOTCSSG",
+            "customer_email": "",
+            "customer_name": "gggggggggggggggggggg ggggggggggggggg"
+        }
+    },
+    "response": {
+        "data": {
+            "id": "cs_cv25mi6mQ4WumU3T9jp9kv1S",
+            "type": "checkout_session",
+            "attributes": {
+                "billing": {
+                    "address": {
+                        "city": null,
+                        "country": null,
+                        "line1": null,
+                        "line2": null,
+                        "postal_code": null,
+                        "state": null
+                    },
+                    "email": null,
+                    "name": null,
+                    "phone": null
+                },
+                "billing_information_fields_editable": "enabled",
+                "cancel_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=cancelled&ref=BOOK-ONRYPOTCSSG",
+                "checkout_url": "https:\/\/checkout.paymongo.com\/cs_cv25mi6mQ4WumU3T9jp9kv1S_client_LJPEq9vGpuBMgLe4rJgzg3zS#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=",
+                "client_key": "cs_cv25mi6mQ4WumU3T9jp9kv1S_client_LJPEq9vGpuBMgLe4rJgzg3zS",
+                "customer_email": null,
+                "description": "Room Booking Payment - BOOK-ONRYPOTCSSG",
+                "line_items": [
+                    {
+                        "amount": 3320000,
+                        "currency": "PHP",
+                        "description": null,
+                        "images": [],
+                        "name": "Room Booking Payment - BOOK-ONRYPOTCSSG",
+                        "quantity": 1
+                    }
+                ],
+                "livemode": false,
+                "merchant": "E Akomoda",
+                "payments": [],
+                "payment_intent": {
+                    "id": "pi_xqHH7Tqx3znw6sWpTgT1Diqr",
+                    "type": "payment_intent",
+                    "attributes": {
+                        "amount": 3320000,
+                        "capture_type": "automatic",
+                        "client_key": "pi_xqHH7Tqx3znw6sWpTgT1Diqr_client_7xMPU6ZWo99gfLdma9Hxbrv1",
+                        "currency": "PHP",
+                        "description": "Room Booking Payment - BOOK-ONRYPOTCSSG",
+                        "livemode": false,
+                        "original_amount": 3320000,
+                        "statement_descriptor": "E Akomoda",
+                        "status": "awaiting_payment_method",
+                        "last_payment_error": null,
+                        "payment_method_allowed": [
+                            "card",
+                            "paymaya",
+                            "gcash"
+                        ],
+                        "payments": [],
+                        "next_action": null,
+                        "payment_method_options": {
+                            "card": {
+                                "request_three_d_secure": "any"
+                            }
+                        },
+                        "metadata": {
+                            "customer_name": "gggggggggggggggggggg ggggggggggggggg",
+                            "customer_email": "",
+                            "booking_reference": "BOOK-ONRYPOTCSSG"
+                        },
+                        "setup_future_usage": null,
+                        "created_at": 1766324314,
+                        "updated_at": 1766324314
+                    }
+                },
+                "payment_method_types": [
+                    "paymaya",
+                    "card",
+                    "gcash"
+                ],
+                "reference_number": null,
+                "send_email_receipt": true,
+                "show_description": true,
+                "show_line_items": true,
+                "status": "active",
+                "success_url": "http:\/\/localhost\/Admin\/Customer\/aa\/room_booking_summary.php?payment=success&ref=BOOK-ONRYPOTCSSG&session_id={CHECKOUT_SESSION_ID}",
+                "created_at": 1766324314,
+                "updated_at": 1766324314,
+                "metadata": {
+                    "booking_reference": "BOOK-ONRYPOTCSSG",
+                    "customer_name": "gggggggggggggggggggg ggggggggggggggg",
+                    "customer_email": ""
+                }
+            }
+        }
+    },
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 14:32:28",
+    "session_id": "sess_41da40e9ac4e0ca9",
+    "booking_reference": "BOOK-XOU2TDKV6IM",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 14:36:21",
+    "session_id": "sess_54035cd165fa6931",
+    "booking_reference": "BOOK-U8FBNTTNNHM",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 14:43:57",
+    "session_id": "sess_712aec32c3c655ef",
+    "booking_reference": "BOOK-C2SYGZP7HCI",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 14:52:45",
+    "session_id": "sess_11a55ecd54296d24",
+    "booking_reference": "BOOK-5YGIMSPCCLK",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 15:01:25",
+    "session_id": "sess_42446ab0ce43693b",
+    "booking_reference": "BOOK-L4PDVFZRUOO",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 15:08:57",
+    "session_id": "sess_236ac8d069ba402d",
+    "booking_reference": "BOOK-FDTGMYPPVFA",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 15:14:29",
+    "session_id": "sess_49c02cf9b3f4558b",
+    "booking_reference": "BOOK-XJVCNOPRKRE",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 15:35:48",
+    "session_id": "sess_90e1b9cf81738e67",
+    "booking_reference": "BOOK-NQZBX1TXH0",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 15:41:36",
+    "session_id": "sess_f85c355fadf541a2",
+    "booking_reference": "BOOK-TD2QJNLT8AU",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 15:43:46",
+    "session_id": "sess_1f182686ca14460a",
+    "booking_reference": "BOOK-8MMI6EOADW",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+
+{
+    "timestamp": "2025-12-21 16:00:56",
+    "session_id": "sess_6f2533dbb32d1808",
+    "booking_reference": "BOOK-47CTVUMU5BG",
+    "amount": 33200,
+    "http_code": 200,
+    "ip": "::1"
+}
+

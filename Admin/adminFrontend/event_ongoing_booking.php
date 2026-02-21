@@ -316,7 +316,11 @@ if ($result) {
                                                 <div class="col-4 border-end">
                                                     <label class="text-muted d-block small">Max Guests</label>
                                                     <h6 class="mb-0 fw-bold">
-                                                        <?php echo htmlspecialchars($order['max_guest']); ?>
+                                                        <?php
+                                                        if (!empty($order['max_guest'])) {
+                                                            echo htmlspecialchars($order['max_guest']);
+                                                        }
+                                                        ?>
                                                     </h6>
                                                 </div>
                                                 <div class="col-4 border-end">

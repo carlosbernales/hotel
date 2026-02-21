@@ -1,0 +1,570 @@
+[2025-11-20 07:13:27] Request received: {"package_name":"Package A"}
+[2025-11-20 07:13:27] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-20 07:13:27] Package name: Package A
+[2025-11-20 07:13:27] Found 2 bookings
+[2025-11-20 07:13:27] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-11-21
+            [display_date] => November 21, 2025
+            [start_time] => 12:52:00
+            [end_time] => 18:52:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-11-22
+            [display_date] => November 22, 2025
+            [start_time] => 12:36:00
+            [end_time] => 20:36:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-11-20 07:15:05] Request received: {"package_name":"Package A"}
+[2025-11-20 07:15:05] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status = 'confirmed'
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-20 07:15:05] Package name: Package A
+[2025-11-20 07:15:05] Found 0 bookings
+[2025-11-20 07:15:05] Bookings: Array
+(
+)
+
+[2025-11-20 07:15:08] Request received: {"package_name":"Package A"}
+[2025-11-20 07:15:08] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status = 'confirmed'
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-20 07:15:08] Package name: Package A
+[2025-11-20 07:15:08] Found 0 bookings
+[2025-11-20 07:15:08] Bookings: Array
+(
+)
+
+[2025-11-20 07:15:48] Request received: {"package_name":"Package A"}
+[2025-11-20 07:15:48] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+        FROM event_bookings 
+        WHERE package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-20 07:15:48] Package name: Package A
+[2025-11-20 07:15:48] ERROR: Array
+(
+    [success] => 
+    [error] => SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near 'FROM event_bookings 
+        WHERE package_name = ?
+        AND event_date >=...' at line 6
+    [file] => C:\Users\Win11\Music\Windsurf\xamps\htdocs\Admin\Customer\aa\get_booked_dates.php
+    [line] => 45
+    [trace] => #0 C:\Users\Win11\Music\Windsurf\xamps\htdocs\Admin\Customer\aa\get_booked_dates.php(45): PDO->prepare('\n        SELECT...')
+#1 {main}
+)
+
+[2025-11-20 07:16:09] Request received: {"package_name":"Package A"}
+[2025-11-20 07:16:09] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-20 07:16:09] Package name: Package A
+[2025-11-20 07:16:09] Found 2 bookings
+[2025-11-20 07:16:09] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-11-21
+            [display_date] => November 21, 2025
+            [start_time] => 12:52:00
+            [end_time] => 18:52:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-11-22
+            [display_date] => November 22, 2025
+            [start_time] => 12:36:00
+            [end_time] => 20:36:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-11-20 07:16:18] Request received: {"package_name":"Package C"}
+[2025-11-20 07:16:18] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-20 07:16:18] Package name: Package C
+[2025-11-20 07:16:18] Found 0 bookings
+[2025-11-20 07:16:18] Bookings: Array
+(
+)
+
+[2025-11-29 16:15:22] Request received: {"package_name":"Package C"}
+[2025-11-29 16:15:33] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-11-29 16:15:33] Package name: Package C
+[2025-11-29 16:15:33] Found 0 bookings
+[2025-11-29 16:15:33] Bookings: Array
+(
+)
+
+[2025-12-28 16:05:52] Request received: {"package_name":"Package B"}
+[2025-12-28 16:05:52] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-28 16:05:52] Package name: Package B
+[2025-12-28 16:05:52] Found 1 bookings
+[2025-12-28 16:05:52] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-28
+            [display_date] => December 28, 2025
+            [start_time] => 11:04:00
+            [end_time] => 18:04:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-28 16:12:23] Request received: {"package_name":"Venue Rental Only"}
+[2025-12-28 16:12:23] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-28 16:12:23] Package name: Venue Rental Only
+[2025-12-28 16:12:23] Found 0 bookings
+[2025-12-28 16:12:23] Bookings: Array
+(
+)
+
+[2025-12-28 16:52:43] Request received: {"package_name":"Package B"}
+[2025-12-28 16:52:43] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-28 16:52:43] Package name: Package B
+[2025-12-28 16:52:43] Found 2 bookings
+[2025-12-28 16:52:43] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-28
+            [display_date] => December 28, 2025
+            [start_time] => 11:04:00
+            [end_time] => 18:04:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 11:51:00
+            [end_time] => 16:51:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-28 16:52:49] Request received: {"package_name":"Package B"}
+[2025-12-28 16:52:49] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-28 16:52:49] Package name: Package B
+[2025-12-28 16:52:49] Found 2 bookings
+[2025-12-28 16:52:49] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-28
+            [display_date] => December 28, 2025
+            [start_time] => 11:04:00
+            [end_time] => 18:04:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 11:51:00
+            [end_time] => 16:51:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-28 17:11:21] Request received: {"package_name":"Venue Rental Only"}
+[2025-12-28 17:11:21] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-28 17:11:21] Package name: Venue Rental Only
+[2025-12-28 17:11:22] Found 1 bookings
+[2025-12-28 17:11:22] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:10:00
+            [end_time] => 18:10:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-28 17:25:33] Request received: {"package_name":"Venue Rental Only"}
+[2025-12-28 17:25:33] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-28 17:25:33] Package name: Venue Rental Only
+[2025-12-28 17:25:33] Found 3 bookings
+[2025-12-28 17:25:33] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:10:00
+            [end_time] => 18:10:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:23:00
+            [end_time] => 15:23:00
+            [booking_status] => pending
+        )
+
+    [2] => Array
+        (
+            [formatted_date] => 2025-12-31
+            [display_date] => December 31, 2025
+            [start_time] => 12:24:00
+            [end_time] => 15:24:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-29 12:14:14] Request received: {"package_name":"Venue Rental Only"}
+[2025-12-29 12:14:14] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-29 12:14:14] Package name: Venue Rental Only
+[2025-12-29 12:14:14] Found 4 bookings
+[2025-12-29 12:14:14] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:10:00
+            [end_time] => 18:10:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:23:00
+            [end_time] => 15:23:00
+            [booking_status] => pending
+        )
+
+    [2] => Array
+        (
+            [formatted_date] => 2025-12-30
+            [display_date] => December 30, 2025
+            [start_time] => 12:30:00
+            [end_time] => 16:30:00
+            [booking_status] => pending
+        )
+
+    [3] => Array
+        (
+            [formatted_date] => 2025-12-31
+            [display_date] => December 31, 2025
+            [start_time] => 12:24:00
+            [end_time] => 15:24:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-29 12:50:27] Request received: {"package_name":"Venue Rental Only"}
+[2025-12-29 12:50:27] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-29 12:50:27] Package name: Venue Rental Only
+[2025-12-29 12:50:27] Found 4 bookings
+[2025-12-29 12:50:27] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:10:00
+            [end_time] => 18:10:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:23:00
+            [end_time] => 15:23:00
+            [booking_status] => pending
+        )
+
+    [2] => Array
+        (
+            [formatted_date] => 2025-12-30
+            [display_date] => December 30, 2025
+            [start_time] => 12:30:00
+            [end_time] => 16:30:00
+            [booking_status] => pending
+        )
+
+    [3] => Array
+        (
+            [formatted_date] => 2025-12-31
+            [display_date] => December 31, 2025
+            [start_time] => 12:24:00
+            [end_time] => 15:24:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-29 14:02:54] Request received: {"package_name":"Deluxe Package"}
+[2025-12-29 14:02:54] ERROR: Array
+(
+    [success] => 
+    [error] => Package not found
+    [file] => D:\casaaa\htdocs\Admin\Customer\aa\get_booked_dates.php
+    [line] => 26
+    [trace] => #0 {main}
+)
+
+[2025-12-29 14:03:01] Request received: {"package_name":"Venue Rental Only"}
+[2025-12-29 14:03:01] Executing query: 
+        SELECT 
+            event_date as formatted_date,
+            DATE_FORMAT(event_date, '%M %e, %Y') as display_date,
+            start_time,
+            end_time,
+            booking_status
+        FROM event_bookings 
+        WHERE booking_status IN ('pending', 'confirmed')
+        AND package_name = :package_name
+        AND event_date >= CURRENT_DATE
+        ORDER BY event_date ASC, start_time ASC
+    
+[2025-12-29 14:03:01] Package name: Venue Rental Only
+[2025-12-29 14:03:01] Found 4 bookings
+[2025-12-29 14:03:01] Bookings: Array
+(
+    [0] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:10:00
+            [end_time] => 18:10:00
+            [booking_status] => pending
+        )
+
+    [1] => Array
+        (
+            [formatted_date] => 2025-12-29
+            [display_date] => December 29, 2025
+            [start_time] => 12:23:00
+            [end_time] => 15:23:00
+            [booking_status] => pending
+        )
+
+    [2] => Array
+        (
+            [formatted_date] => 2025-12-30
+            [display_date] => December 30, 2025
+            [start_time] => 12:30:00
+            [end_time] => 16:30:00
+            [booking_status] => pending
+        )
+
+    [3] => Array
+        (
+            [formatted_date] => 2025-12-31
+            [display_date] => December 31, 2025
+            [start_time] => 12:24:00
+            [end_time] => 15:24:00
+            [booking_status] => pending
+        )
+
+)
+
+[2025-12-29 15:29:11] Request received: {"package_name":"Premium Package"}
+[2025-12-29 15:29:11] ERROR: Array
+(
+    [success] => 
+    [error] => Package not found
+    [file] => D:\casaaa\htdocs\Admin\Customer\aa\get_booked_dates.php
+    [line] => 26
+    [trace] => #0 {main}
+)
+

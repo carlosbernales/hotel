@@ -307,7 +307,8 @@ function getRoomInfo($conn, $room_number_fk_id)
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Discount</label>
-                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?>
+                                    <p class="mb-0 fw-semibold">
+                                        ₱<?= number_format($b['discount_amount'] ?? 0, 2) ?>
                                     </p>
                                 </div>
                             </div>

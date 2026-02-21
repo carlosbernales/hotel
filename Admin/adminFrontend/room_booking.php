@@ -1,4 +1,11 @@
 <?php
+if (
+    !isset($_SESSION['user_type']) ||
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')
+) {
+    header("Location: /Admin/Customer/aa/login.php");
+    exit;
+}
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
@@ -320,30 +327,31 @@ if (!empty($_SESSION['cea_success'])) {
                                     </h6>
                                     <p><?= $row['description'] ?></p>
                                 </div>
+                                <?php
+                                $amenitiesQuery = "SELECT name FROM amenities";
+                                $amenitiesResult = $conn->query($amenitiesQuery);
+                                ?>
+
 
                                 <div class="room-amenities-modal">
                                     <h6 class="section-title-modal">
                                         <i class="fas fa-star"></i> Amenities
                                     </h6>
+
                                     <div class="amenities-grid-modal">
-                                        <div class="amenity-item-modal">
-                                            <i class="fas fa-wifi"></i>
-                                            <span>Free WiFi</span>
-                                        </div>
-                                        <div class="amenity-item-modal">
-                                            <i class="fas fa-snowflake"></i>
-                                            <span>Air Conditioning</span>
-                                        </div>
-                                        <div class="amenity-item-modal">
-                                            <i class="fas fa-tv"></i>
-                                            <span>Flat Screen TV</span>
-                                        </div>
-                                        <div class="amenity-item-modal">
-                                            <i class="fas fa-shopping-basket"></i>
-                                            <span>Mini Fridge</span>
-                                        </div>
+                                        <?php if ($amenitiesResult && $amenitiesResult->num_rows > 0): ?>
+                                            <?php while ($amenity = $amenitiesResult->fetch_assoc()): ?>
+                                                <div class="amenity-item-modal">
+                                                    <i class="fas fa-check-circle"></i>
+                                                    <span><?= htmlspecialchars($amenity['name']); ?></span>
+                                                </div>
+                                            <?php endwhile; ?>
+                                        <?php else: ?>
+                                            <p>No amenities found.</p>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
+
                             </div>
 
 

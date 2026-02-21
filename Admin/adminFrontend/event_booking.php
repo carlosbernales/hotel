@@ -16,14 +16,7 @@
     <nav class="top-navbar">
         <div class="d-flex justify-content-between align-items-center">
             <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
-            <div class="nav-icons">
-                <a href="#"><i class="fas fa-envelope"></i></a>
-                <a href="#" class="position-relative">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </a>
-                <a href="#"><i class="fas fa-user"></i></a>
-            </div>
+            
         </div>
     </nav>
 
@@ -57,31 +50,50 @@
         <div id="availabilityMessage" class="alert d-none"></div>
         <div class="row" id="eventsContainer">
             <?php while ($row = mysqli_fetch_assoc($result)):
+
                 $status = strtolower($row['status']);
                 $badgeClass = $status === 'available' ? 'status-available' : 'status-unavailable';
                 $menuItems = array_map('trim', explode(',', $row['menu_items']));
                 ?>
+                <?php
+                $img1 = !empty($row['image_path'])
+                    ? "../Admin/adminBackend/event_packages_images/" . $row['image_path']
+                    : "";
+
+                $img2 = !empty($row['image_path2'])
+                    ? "../Admin/adminBackend/event_packages_images/" . $row['image_path2']
+                    : "";
+
+                $img3 = !empty($row['image_path3'])
+                    ? "../Admin/adminBackend/event_packages_images/" . $row['image_path3']
+                    : "";
+                ?>
+
                 <div class="col-lg-4 col-md-6 col-sm-12">
                     <div class="event-card" data-status="<?= $status ?>" data-place="<?= strtolower($row['place']) ?>">
 
 
                         <div class="event-image-gallery">
-                            <img src="<?= $row['image_path'] ?>" class="main-event-image" id="mainImg<?= $row['id'] ?>">
+                            <img src="<?= $img1 ?>" class="main-event-image" id="mainImg<?= $row['id'] ?>">
+
 
                             <span class="event-status-badge <?= $badgeClass ?>">
                                 <?= strtoupper($row['status']) ?>
                             </span>
 
                             <div class="image-thumbnails">
-                                <?php if ($row['image_path']): ?>
-                                    <img src="<?= $row['image_path'] ?>" class="thumbnail-img active">
-                                <?php endif; ?>
-                                <?php if ($row['image_path2']): ?>
-                                    <img src="<?= $row['image_path2'] ?>" class="thumbnail-img">
-                                <?php endif; ?>
-                                <?php if ($row['image_path3']): ?>
-                                    <img src="<?= $row['image_path3'] ?>" class="thumbnail-img">
-                                <?php endif; ?>
+                                <?php if ($img1): ?>
+                                    <img src="<?= $img1 ?>" class="thumbnail-img active">
+                                                                <?php endif; ?>
+
+                                                                <?php if ($img2): ?>
+                                    <img src="<?= $img2 ?>" class="thumbnail-img">
+                                                                <?php endif; ?>
+
+                                                                <?php if ($img3): ?>
+                                    <img src="<?= $img3 ?>" class="thumbnail-img">
+                                                                <?php endif; ?>
+
                             </div>
                         </div>
 

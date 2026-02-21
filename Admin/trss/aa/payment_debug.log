@@ -1,0 +1,1243 @@
+[2025-12-19 16:47:22] === New Payment Request ===
+[2025-12-19 16:47:22] POST Data:
+Data: Array
+(
+)
+
+[2025-12-19 16:47:22] Input Stream:
+Data: {"amount":830000,"description":"Room Booking Payment - #BOOK694573007A3BA","success_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573007A3BA","cancel_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573007A3BA","reference_number":"#BOOK694573007A3BA","metadata":{"booking_reference":"#BOOK694573007A3BA","customer_email":"","customer_name":"S DS"}}
+[2025-12-19 16:47:22] Decoded Input:
+Data: Array
+(
+    [amount] => 830000
+    [description] => Room Booking Payment - #BOOK694573007A3BA
+    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573007A3BA
+    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573007A3BA
+    [reference_number] => #BOOK694573007A3BA
+    [metadata] => Array
+        (
+            [booking_reference] => #BOOK694573007A3BA
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-19 16:47:22] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-19 16:47:22] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573007A3BA
+                    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573007A3BA
+                    [description] => Room Booking Payment - #BOOK694573007A3BA
+                    [reference_number] => #BOOK694573007A3BA
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 830000
+                                    [name] => Room Booking Payment - #BOOK694573007A3BA
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => #BOOK694573007A3BA
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:47:22] cURL Verbose Log:
+Data: *   Trying 3.165.63.78:443...
+* Connected to api.paymongo.com (3.165.63.78) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x1db85c14e00)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 705
+
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+* We are completely uploaded and fine
+< HTTP/2 400 
+< content-type: application/json; charset=utf-8
+< content-length: 213
+< date: Fri, 19 Dec 2025 15:55:48 GMT
+< vary: Origin
+< server: nginx/1.26.3
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< cache-control: no-cache
+< x-request-id: b2009caf-b841-4818-8735-ec184adae3d7
+< x-runtime: 0.027664
+< x-cache: Error from cloudfront
+< via: 1.1 d8d9e4211591ac8b881538c21f368bc8.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: HI_07VPZ3bsaCYVQICM5a25FzYbpxBVCg2KZbZbXDy4HNNr1Ht90BA==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-19 16:47:22] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 400
+    [Response] => {"errors":[{"code":"parameter_format_invalid","detail":"The value for reference_number accepts alphanumeric, underscores, and dashes only.","source":{"pointer":"reference_number","attribute":"reference_number"}}]}
+    [cURL Error] => None
+)
+
+[2025-12-19 16:47:22] Decoded PayMongo Response:
+Data: Array
+(
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [code] => parameter_format_invalid
+                    [detail] => The value for reference_number accepts alphanumeric, underscores, and dashes only.
+                    [source] => Array
+                        (
+                            [pointer] => reference_number
+                            [attribute] => reference_number
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:47:27] === New Payment Request ===
+[2025-12-19 16:47:27] POST Data:
+Data: Array
+(
+)
+
+[2025-12-19 16:47:27] Input Stream:
+Data: {"amount":830000,"description":"Room Booking Payment - #BOOK6945738E47767","success_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK6945738E47767","cancel_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK6945738E47767","reference_number":"#BOOK6945738E47767","metadata":{"booking_reference":"#BOOK6945738E47767","customer_email":"","customer_name":"S DS"}}
+[2025-12-19 16:47:27] Decoded Input:
+Data: Array
+(
+    [amount] => 830000
+    [description] => Room Booking Payment - #BOOK6945738E47767
+    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK6945738E47767
+    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK6945738E47767
+    [reference_number] => #BOOK6945738E47767
+    [metadata] => Array
+        (
+            [booking_reference] => #BOOK6945738E47767
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-19 16:47:27] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-19 16:47:27] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK6945738E47767
+                    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK6945738E47767
+                    [description] => Room Booking Payment - #BOOK6945738E47767
+                    [reference_number] => #BOOK6945738E47767
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 830000
+                                    [name] => Room Booking Payment - #BOOK6945738E47767
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => #BOOK6945738E47767
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:47:28] cURL Verbose Log:
+Data: *   Trying 3.165.63.78:443...
+* Connected to api.paymongo.com (3.165.63.78) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x1db85c14e00)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 705
+
+* We are completely uploaded and fine
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+< HTTP/2 400 
+< content-type: application/json; charset=utf-8
+< content-length: 213
+< date: Fri, 19 Dec 2025 15:55:53 GMT
+< vary: Origin
+< server: nginx/1.26.3
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< cache-control: no-cache
+< x-request-id: b8504be8-52a6-4bec-a5cd-a9c46032ca1e
+< x-runtime: 0.018068
+< x-cache: Error from cloudfront
+< via: 1.1 0ba3c790ae4894bb94100d8a6eb78136.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: 07-asd5PcV0Uj0JBnjWP5a4-JlNbgfhWWuKFpfP2N8cXmk_JqCvc-Q==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-19 16:47:28] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 400
+    [Response] => {"errors":[{"code":"parameter_format_invalid","detail":"The value for reference_number accepts alphanumeric, underscores, and dashes only.","source":{"pointer":"reference_number","attribute":"reference_number"}}]}
+    [cURL Error] => None
+)
+
+[2025-12-19 16:47:28] Decoded PayMongo Response:
+Data: Array
+(
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [code] => parameter_format_invalid
+                    [detail] => The value for reference_number accepts alphanumeric, underscores, and dashes only.
+                    [source] => Array
+                        (
+                            [pointer] => reference_number
+                            [attribute] => reference_number
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:48:16] === New Payment Request ===
+[2025-12-19 16:48:16] POST Data:
+Data: Array
+(
+)
+
+[2025-12-19 16:48:16] Input Stream:
+Data: {"amount":830000,"description":"Room Booking Payment - #BOOK694573BDB442F","success_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573BDB442F","cancel_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573BDB442F","reference_number":"#BOOK694573BDB442F","metadata":{"booking_reference":"#BOOK694573BDB442F","customer_email":"","customer_name":"S DS"}}
+[2025-12-19 16:48:16] Decoded Input:
+Data: Array
+(
+    [amount] => 830000
+    [description] => Room Booking Payment - #BOOK694573BDB442F
+    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573BDB442F
+    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573BDB442F
+    [reference_number] => #BOOK694573BDB442F
+    [metadata] => Array
+        (
+            [booking_reference] => #BOOK694573BDB442F
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-19 16:48:16] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-19 16:48:16] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573BDB442F
+                    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573BDB442F
+                    [description] => Room Booking Payment - #BOOK694573BDB442F
+                    [reference_number] => #BOOK694573BDB442F
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 830000
+                                    [name] => Room Booking Payment - #BOOK694573BDB442F
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => #BOOK694573BDB442F
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:48:16] cURL Verbose Log:
+Data: *   Trying 3.165.63.78:443...
+* Connected to api.paymongo.com (3.165.63.78) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x1db85c14e00)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 705
+
+* We are completely uploaded and fine
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+< HTTP/2 400 
+< content-type: application/json; charset=utf-8
+< content-length: 213
+< date: Fri, 19 Dec 2025 15:56:42 GMT
+< vary: Origin
+< server: nginx/1.26.3
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< cache-control: no-cache
+< x-request-id: 596169dd-8a81-4777-bade-5417a7df11d5
+< x-runtime: 0.043966
+< x-cache: Error from cloudfront
+< via: 1.1 5f23a5e207a125dd3cf2225e4ad1d594.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: D1_0fLbHYtNDZXPa6wqAMv9Xldu-h8qd9qu0BIznDklSpByAvt6mAw==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-19 16:48:16] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 400
+    [Response] => {"errors":[{"code":"parameter_format_invalid","detail":"The value for reference_number accepts alphanumeric, underscores, and dashes only.","source":{"pointer":"reference_number","attribute":"reference_number"}}]}
+    [cURL Error] => None
+)
+
+[2025-12-19 16:48:16] Decoded PayMongo Response:
+Data: Array
+(
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [code] => parameter_format_invalid
+                    [detail] => The value for reference_number accepts alphanumeric, underscores, and dashes only.
+                    [source] => Array
+                        (
+                            [pointer] => reference_number
+                            [attribute] => reference_number
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:48:56] === New Payment Request ===
+[2025-12-19 16:48:56] POST Data:
+Data: Array
+(
+)
+
+[2025-12-19 16:48:56] Input Stream:
+Data: {"amount":830000,"description":"Room Booking Payment - #BOOK694573DC91F59","success_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573DC91F59","cancel_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573DC91F59","reference_number":"#BOOK694573DC91F59","metadata":{"booking_reference":"#BOOK694573DC91F59","customer_email":"","customer_name":"S DS"}}
+[2025-12-19 16:48:56] Decoded Input:
+Data: Array
+(
+    [amount] => 830000
+    [description] => Room Booking Payment - #BOOK694573DC91F59
+    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573DC91F59
+    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573DC91F59
+    [reference_number] => #BOOK694573DC91F59
+    [metadata] => Array
+        (
+            [booking_reference] => #BOOK694573DC91F59
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-19 16:48:56] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-19 16:48:56] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694573DC91F59
+                    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694573DC91F59
+                    [description] => Room Booking Payment - #BOOK694573DC91F59
+                    [reference_number] => #BOOK694573DC91F59
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 830000
+                                    [name] => Room Booking Payment - #BOOK694573DC91F59
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => #BOOK694573DC91F59
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:48:56] cURL Verbose Log:
+Data: *   Trying 3.165.63.78:443...
+* Connected to api.paymongo.com (3.165.63.78) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x1db85c14e00)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 705
+
+* We are completely uploaded and fine
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+< HTTP/2 400 
+< content-type: application/json; charset=utf-8
+< content-length: 213
+< date: Fri, 19 Dec 2025 15:57:22 GMT
+< vary: Origin
+< server: nginx/1.26.3
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< cache-control: no-cache
+< x-request-id: 7e599d11-fcf7-4410-a017-c484d0072465
+< x-runtime: 0.015765
+< x-cache: Error from cloudfront
+< via: 1.1 1cc6fa56334fb3bde485f2c2e16bfc22.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: Q65IyX-Qn7QDm9lOsrNZHp99Jqgvd-aElA4TG4-_2-NTJh5kCDe9gw==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-19 16:48:56] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 400
+    [Response] => {"errors":[{"code":"parameter_format_invalid","detail":"The value for reference_number accepts alphanumeric, underscores, and dashes only.","source":{"pointer":"reference_number","attribute":"reference_number"}}]}
+    [cURL Error] => None
+)
+
+[2025-12-19 16:48:56] Decoded PayMongo Response:
+Data: Array
+(
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [code] => parameter_format_invalid
+                    [detail] => The value for reference_number accepts alphanumeric, underscores, and dashes only.
+                    [source] => Array
+                        (
+                            [pointer] => reference_number
+                            [attribute] => reference_number
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:49:58] === New Payment Request ===
+[2025-12-19 16:49:58] POST Data:
+Data: Array
+(
+)
+
+[2025-12-19 16:49:58] Input Stream:
+Data: {"amount":5810000,"description":"Room Booking Payment - #BOOK694574130FE62","success_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694574130FE62","cancel_url":"http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694574130FE62","reference_number":"#BOOK694574130FE62","metadata":{"booking_reference":"#BOOK694574130FE62","customer_email":"","customer_name":"S DS"}}
+[2025-12-19 16:49:58] Decoded Input:
+Data: Array
+(
+    [amount] => 5810000
+    [description] => Room Booking Payment - #BOOK694574130FE62
+    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694574130FE62
+    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694574130FE62
+    [reference_number] => #BOOK694574130FE62
+    [metadata] => Array
+        (
+            [booking_reference] => #BOOK694574130FE62
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-19 16:49:58] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-19 16:49:58] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694574130FE62
+                    [cancel_url] => http://localhost/Admin/customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694574130FE62
+                    [description] => Room Booking Payment - #BOOK694574130FE62
+                    [reference_number] => #BOOK694574130FE62
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 5810000
+                                    [name] => Room Booking Payment - #BOOK694574130FE62
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => #BOOK694574130FE62
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-19 16:49:58] cURL Verbose Log:
+Data: *   Trying 3.165.63.78:443...
+* Connected to api.paymongo.com (3.165.63.78) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x1db85c14e00)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 706
+
+* We are completely uploaded and fine
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+< HTTP/2 400 
+< content-type: application/json; charset=utf-8
+< content-length: 213
+< date: Fri, 19 Dec 2025 15:58:24 GMT
+< vary: Origin
+< server: nginx/1.26.3
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< cache-control: no-cache
+< x-request-id: 9ca59ca0-27c0-41f3-ac59-4a25e4036f7e
+< x-runtime: 0.048213
+< x-cache: Error from cloudfront
+< via: 1.1 53ec1192ba1430b6b5bd6ec52218d18c.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: 47hGAvUAI70cNkX7_lXGOTY9oMDAyjuw7uU2AF8Tiuf4QENS2WMwSg==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-19 16:49:58] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 400
+    [Response] => {"errors":[{"code":"parameter_format_invalid","detail":"The value for reference_number accepts alphanumeric, underscores, and dashes only.","source":{"pointer":"reference_number","attribute":"reference_number"}}]}
+    [cURL Error] => None
+)
+
+[2025-12-19 16:49:58] Decoded PayMongo Response:
+Data: Array
+(
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [code] => parameter_format_invalid
+                    [detail] => The value for reference_number accepts alphanumeric, underscores, and dashes only.
+                    [source] => Array
+                        (
+                            [pointer] => reference_number
+                            [attribute] => reference_number
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-20 05:32:42] === New Payment Request ===
+[2025-12-20 05:32:42] POST Data:
+Data: Array
+(
+)
+
+[2025-12-20 05:32:42] Input Stream:
+Data: {"amount":5810000,"description":"Room Booking Payment - #BOOK694626D54A2DE","success_url":"http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694626D54A2DE","cancel_url":"http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694626D54A2DE","reference_number":"#BOOK694626D54A2DE","metadata":{"booking_reference":"#BOOK694626D54A2DE","customer_email":"","customer_name":"S DS"}}
+[2025-12-20 05:32:42] Decoded Input:
+Data: Array
+(
+    [amount] => 5810000
+    [description] => Room Booking Payment - #BOOK694626D54A2DE
+    [success_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694626D54A2DE
+    [cancel_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694626D54A2DE
+    [reference_number] => #BOOK694626D54A2DE
+    [metadata] => Array
+        (
+            [booking_reference] => #BOOK694626D54A2DE
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-20 05:32:42] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-20 05:32:42] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=%23BOOK694626D54A2DE
+                    [cancel_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=%23BOOK694626D54A2DE
+                    [description] => Room Booking Payment - #BOOK694626D54A2DE
+                    [reference_number] => #BOOK694626D54A2DE
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 5810000
+                                    [name] => Room Booking Payment - #BOOK694626D54A2DE
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => #BOOK694626D54A2DE
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-20 05:32:43] cURL Verbose Log:
+Data: *   Trying 3.165.63.78:443...
+* Connected to api.paymongo.com (3.165.63.78) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x139b3682010)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 706
+
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+* We are completely uploaded and fine
+< HTTP/2 400 
+< content-type: application/json; charset=utf-8
+< content-length: 213
+< date: Sat, 20 Dec 2025 04:41:10 GMT
+< vary: Origin
+< server: nginx/1.26.3
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< cache-control: no-cache
+< x-request-id: 8d936e7e-071c-4876-b38c-6cc25bbe7b52
+< x-runtime: 0.020509
+< x-cache: Error from cloudfront
+< via: 1.1 f48a1fcb41078cee4a3d854ab5c6637c.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: ZCvlgqGRbjj3bSbBDk1ZT1fpbzeAxcOU7lxBzGh8NHSbDN63X8KfAA==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-20 05:32:43] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 400
+    [Response] => {"errors":[{"code":"parameter_format_invalid","detail":"The value for reference_number accepts alphanumeric, underscores, and dashes only.","source":{"pointer":"reference_number","attribute":"reference_number"}}]}
+    [cURL Error] => None
+)
+
+[2025-12-20 05:32:43] Decoded PayMongo Response:
+Data: Array
+(
+    [errors] => Array
+        (
+            [0] => Array
+                (
+                    [code] => parameter_format_invalid
+                    [detail] => The value for reference_number accepts alphanumeric, underscores, and dashes only.
+                    [source] => Array
+                        (
+                            [pointer] => reference_number
+                            [attribute] => reference_number
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-20 05:54:24] === New Payment Request ===
+[2025-12-20 05:54:24] POST Data:
+Data: Array
+(
+)
+
+[2025-12-20 05:54:24] Input Stream:
+Data: {"amount":5810000,"description":"Room Booking Payment - BOOK-Z1ID1FNRY0O","success_url":"http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=BOOK-Z1ID1FNRY0O","cancel_url":"http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=BOOK-Z1ID1FNRY0O","reference_number":"BOOK-Z1ID1FNRY0O","metadata":{"booking_reference":"BOOK-Z1ID1FNRY0O","customer_email":"","customer_name":"S DS"}}
+[2025-12-20 05:54:24] Decoded Input:
+Data: Array
+(
+    [amount] => 5810000
+    [description] => Room Booking Payment - BOOK-Z1ID1FNRY0O
+    [success_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=BOOK-Z1ID1FNRY0O
+    [cancel_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=BOOK-Z1ID1FNRY0O
+    [reference_number] => BOOK-Z1ID1FNRY0O
+    [metadata] => Array
+        (
+            [booking_reference] => BOOK-Z1ID1FNRY0O
+            [customer_email] => 
+            [customer_name] => S DS
+        )
+
+)
+
+[2025-12-20 05:54:24] Environment:
+Data: Array
+(
+    [PHP Version] => 8.0.30
+    [cURL Enabled] => Yes
+    [SSL Enabled] => Yes
+)
+
+[2025-12-20 05:54:24] PayMongo Request:
+Data: Array
+(
+    [data] => Array
+        (
+            [attributes] => Array
+                (
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [success_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=BOOK-Z1ID1FNRY0O
+                    [cancel_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=BOOK-Z1ID1FNRY0O
+                    [description] => Room Booking Payment - BOOK-Z1ID1FNRY0O
+                    [reference_number] => BOOK-Z1ID1FNRY0O
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [currency] => PHP
+                                    [amount] => 5810000
+                                    [name] => Room Booking Payment - BOOK-Z1ID1FNRY0O
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => card
+                            [2] => grab_pay
+                        )
+
+                    [metadata] => Array
+                        (
+                            [booking_reference] => BOOK-Z1ID1FNRY0O
+                            [customer_email] => 
+                            [customer_name] => S DS
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-20 05:54:24] cURL Verbose Log:
+Data: *   Trying 3.165.63.73:443...
+* Connected to api.paymongo.com (3.165.63.73) port 443 (#0)
+* ALPN, offering h2
+* ALPN, offering http/1.1
+* successfully set certificate verify locations:
+*  CAfile: D:\casaaa\apache\bin\curl-ca-bundle.crt
+*  CApath: none
+* SSL connection using TLSv1.3 / TLS_AES_128_GCM_SHA256
+* ALPN, server accepted to use h2
+* Server certificate:
+*  subject: CN=*.paymongo.com
+*  start date: Feb 21 00:00:00 2025 GMT
+*  expire date: Mar 22 23:59:59 2026 GMT
+*  subjectAltName: host "api.paymongo.com" matched cert's "*.paymongo.com"
+*  issuer: C=US; O=Amazon; CN=Amazon RSA 2048 M02
+*  SSL certificate verify ok.
+* Using HTTP2, server supports multi-use
+* Connection state changed (HTTP/2 confirmed)
+* Copying HTTP/2 data in stream buffer to connection buffer after upgrade: len=0
+* Using Stream ID: 1 (easy handle 0x139b3682010)
+> POST /v1/checkout_sessions HTTP/2
+Host: api.paymongo.com
+accept: */*
+content-type: application/json
+authorization: Basic c2tfdGVzdF9NRlJDQm9qOWh6U1piZUJXclNEU1JURUY6
+content-length: 690
+
+* We are completely uploaded and fine
+* Connection state changed (MAX_CONCURRENT_STREAMS == 128)!
+< HTTP/2 200 
+< content-type: application/json; charset=utf-8
+< content-length: 2090
+< date: Sat, 20 Dec 2025 05:02:52 GMT
+< x-runtime: 0.155937
+< server: nginx/1.26.3
+< vary: Accept-Encoding
+< vary: Origin
+< vary: Accept-Encoding
+< x-frame-options: SAMEORIGIN
+< x-xss-protection: 0
+< x-content-type-options: nosniff
+< x-download-options: noopen
+< x-permitted-cross-domain-policies: none
+< referrer-policy: strict-origin-when-cross-origin
+< etag: W/"32d4ed5624243014ac5d5e4b4b2039ce"
+< cache-control: max-age=0, private, must-revalidate
+< x-request-id: 8a7ff6c2-0d11-454e-85b2-328999abab99
+< x-cache: Miss from cloudfront
+< via: 1.1 1cc6fa56334fb3bde485f2c2e16bfc22.cloudfront.net (CloudFront)
+< x-amz-cf-pop: MNL52-P3
+< x-amz-cf-id: 4Te7RcW7Jx9y1j7K6NGGCiogSmB5D5hLT9uyftDrNrVHvdqQfTmVSQ==
+< 
+* Connection #0 to host api.paymongo.com left intact
+
+[2025-12-20 05:54:24] PayMongo Raw Response:
+Data: Array
+(
+    [HTTP Code] => 200
+    [Response] => {"data":{"id":"cs_jquYwUk28ncxFS9K9m8iVc7k","type":"checkout_session","attributes":{"billing":{"address":{"city":null,"country":null,"line1":null,"line2":null,"postal_code":null,"state":null},"email":null,"name":null,"phone":null},"billing_information_fields_editable":"enabled","cancel_url":"http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled\u0026ref=BOOK-Z1ID1FNRY0O","checkout_url":"https://checkout.paymongo.com/cs_jquYwUk28ncxFS9K9m8iVc7k_client_gownL5RXjcQQF1q4LZbwyTyG#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=","client_key":"cs_jquYwUk28ncxFS9K9m8iVc7k_client_gownL5RXjcQQF1q4LZbwyTyG","customer_email":null,"description":"Room Booking Payment - BOOK-Z1ID1FNRY0O","line_items":[{"amount":5810000,"currency":"PHP","description":null,"images":[],"name":"Room Booking Payment - BOOK-Z1ID1FNRY0O","quantity":1}],"livemode":false,"merchant":"E Akomoda","payments":[],"payment_intent":{"id":"pi_G7GyZDdDfK88GybUJhCzJ4of","type":"payment_intent","attributes":{"amount":5810000,"capture_type":"automatic","client_key":"pi_G7GyZDdDfK88GybUJhCzJ4of_client_ch4twwbhoTu4eru453TRwKXz","currency":"PHP","description":"Room Booking Payment - BOOK-Z1ID1FNRY0O","livemode":false,"original_amount":5810000,"statement_descriptor":"E Akomoda","status":"awaiting_payment_method","last_payment_error":null,"payment_method_allowed":["grab_pay","gcash","card"],"payments":[],"next_action":null,"payment_method_options":{"card":{"request_three_d_secure":"any"}},"metadata":{"customer_name":"S DS","customer_email":"","booking_reference":"BOOK-Z1ID1FNRY0O"},"setup_future_usage":null,"created_at":1766206972,"updated_at":1766206972}},"payment_method_types":["gcash","grab_pay","card"],"reference_number":"BOOK-Z1ID1FNRY0O","send_email_receipt":true,"show_description":true,"show_line_items":true,"status":"active","success_url":"http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success\u0026ref=BOOK-Z1ID1FNRY0O","created_at":1766206972,"updated_at":1766206972,"metadata":{"booking_reference":"BOOK-Z1ID1FNRY0O","customer_name":"S DS","customer_email":""}}}}
+    [cURL Error] => None
+)
+
+[2025-12-20 05:54:24] Decoded PayMongo Response:
+Data: Array
+(
+    [data] => Array
+        (
+            [id] => cs_jquYwUk28ncxFS9K9m8iVc7k
+            [type] => checkout_session
+            [attributes] => Array
+                (
+                    [billing] => Array
+                        (
+                            [address] => Array
+                                (
+                                    [city] => 
+                                    [country] => 
+                                    [line1] => 
+                                    [line2] => 
+                                    [postal_code] => 
+                                    [state] => 
+                                )
+
+                            [email] => 
+                            [name] => 
+                            [phone] => 
+                        )
+
+                    [billing_information_fields_editable] => enabled
+                    [cancel_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=cancelled&ref=BOOK-Z1ID1FNRY0O
+                    [checkout_url] => https://checkout.paymongo.com/cs_jquYwUk28ncxFS9K9m8iVc7k_client_gownL5RXjcQQF1q4LZbwyTyG#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+                    [client_key] => cs_jquYwUk28ncxFS9K9m8iVc7k_client_gownL5RXjcQQF1q4LZbwyTyG
+                    [customer_email] => 
+                    [description] => Room Booking Payment - BOOK-Z1ID1FNRY0O
+                    [line_items] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [amount] => 5810000
+                                    [currency] => PHP
+                                    [description] => 
+                                    [images] => Array
+                                        (
+                                        )
+
+                                    [name] => Room Booking Payment - BOOK-Z1ID1FNRY0O
+                                    [quantity] => 1
+                                )
+
+                        )
+
+                    [livemode] => 
+                    [merchant] => E Akomoda
+                    [payments] => Array
+                        (
+                        )
+
+                    [payment_intent] => Array
+                        (
+                            [id] => pi_G7GyZDdDfK88GybUJhCzJ4of
+                            [type] => payment_intent
+                            [attributes] => Array
+                                (
+                                    [amount] => 5810000
+                                    [capture_type] => automatic
+                                    [client_key] => pi_G7GyZDdDfK88GybUJhCzJ4of_client_ch4twwbhoTu4eru453TRwKXz
+                                    [currency] => PHP
+                                    [description] => Room Booking Payment - BOOK-Z1ID1FNRY0O
+                                    [livemode] => 
+                                    [original_amount] => 5810000
+                                    [statement_descriptor] => E Akomoda
+                                    [status] => awaiting_payment_method
+                                    [last_payment_error] => 
+                                    [payment_method_allowed] => Array
+                                        (
+                                            [0] => grab_pay
+                                            [1] => gcash
+                                            [2] => card
+                                        )
+
+                                    [payments] => Array
+                                        (
+                                        )
+
+                                    [next_action] => 
+                                    [payment_method_options] => Array
+                                        (
+                                            [card] => Array
+                                                (
+                                                    [request_three_d_secure] => any
+                                                )
+
+                                        )
+
+                                    [metadata] => Array
+                                        (
+                                            [customer_name] => S DS
+                                            [customer_email] => 
+                                            [booking_reference] => BOOK-Z1ID1FNRY0O
+                                        )
+
+                                    [setup_future_usage] => 
+                                    [created_at] => 1766206972
+                                    [updated_at] => 1766206972
+                                )
+
+                        )
+
+                    [payment_method_types] => Array
+                        (
+                            [0] => gcash
+                            [1] => grab_pay
+                            [2] => card
+                        )
+
+                    [reference_number] => BOOK-Z1ID1FNRY0O
+                    [send_email_receipt] => 1
+                    [show_description] => 1
+                    [show_line_items] => 1
+                    [status] => active
+                    [success_url] => http://localhost/Admin/Customer/aa/room_booking_summary.php?payment=success&ref=BOOK-Z1ID1FNRY0O
+                    [created_at] => 1766206972
+                    [updated_at] => 1766206972
+                    [metadata] => Array
+                        (
+                            [booking_reference] => BOOK-Z1ID1FNRY0O
+                            [customer_name] => S DS
+                            [customer_email] => 
+                        )
+
+                )
+
+        )
+
+)
+
+[2025-12-20 05:54:24] Transaction Successful:
+Data: Array
+(
+    [checkout_url] => https://checkout.paymongo.com/cs_jquYwUk28ncxFS9K9m8iVc7k_client_gownL5RXjcQQF1q4LZbwyTyG#cGtfdGVzdF94WmlqaXlDb0VuN1lpWDRqQkpuUW8yeHc=
+    [reference_number] => BOOK-Z1ID1FNRY0O
+)
+

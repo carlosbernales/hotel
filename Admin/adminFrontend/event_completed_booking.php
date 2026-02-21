@@ -1,4 +1,9 @@
 <?php
+if (!isset($_SESSION['user_type']) || 
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')) {
+    header("Location: /Admin/Customer/aa/login.php");
+    exit;
+}
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
@@ -178,6 +183,14 @@ if ($result) {
                                     data-bs-target="#viewModal_<?php echo $order['id']; ?>">
                                     <i class="fas fa-eye"></i> View
                                 </button>
+                                
+                                 <button type="button"
+                                    class="btn btn-sm btn-warning"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#receiptModal<?= $order['id'] ?>">
+                                    <i class="bi bi-receipt"></i> Receipt
+                                </button>
+
 
                                 <!-- New Add Guest Button -->
                             </td>
@@ -233,7 +246,11 @@ if ($result) {
                                                 <div class="col-4 border-end">
                                                     <label class="text-muted d-block small">Max Guests</label>
                                                     <h6 class="mb-0 fw-bold">
-                                                        <?php echo htmlspecialchars($order['max_guest']); ?>
+                                                        <?php
+                                                        if (!empty($order['max_guest'])) {
+                                                            echo htmlspecialchars($order['max_guest']);
+                                                        }
+                                                        ?>
                                                     </h6>
                                                 </div>
                                                 <div class="col-4 border-end">
@@ -307,4 +324,337 @@ if ($result) {
     </div>
 </div>
 
+<style>
+    /* ===== RECEIPT BASE STYLE ===== */
+    .receipt-modal,
+    .receipt-print {
+        font-family: 'Courier New', monospace;
+        color: #000;
+    }
+
+    .receipt-container {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 40px;
+    }
+
+    /* Header */
+    .receipt-container .header {
+        text-align: center;
+        border-bottom: 2px dashed #333;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .receipt-container .header h1 {
+        font-size: 24px;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
+
+    .receipt-container .header p {
+        font-size: 12px;
+        margin: 3px 0;
+    }
+
+    /* Sections */
+    .section-title {
+        font-size: 15px;
+        font-weight: bold;
+        margin: 25px 0 10px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 4px;
+        text-transform: uppercase;
+    }
+
+    /* Rows */
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        padding: 4px 0;
+    }
+
+    .detail-label {
+        font-weight: bold;
+    }
+
+    /* Tables */
+    .receipt-container table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+        margin-top: 10px;
+    }
+
+    .receipt-container th {
+        border-bottom: 1px solid #333;
+        text-align: left;
+        padding: 6px;
+    }
+
+    .receipt-container td {
+        border-bottom: 1px dotted #ccc;
+        padding: 6px;
+    }
+
+    /* Totals */
+    .total-section {
+        margin-top: 30px;
+        border-top: 2px dashed #333;
+        padding-top: 15px;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 15px;
+        padding: 6px 0;
+    }
+
+    .total-row.grand-total {
+        font-size: 18px;
+        font-weight: bold;
+        border-top: 2px solid #000;
+        padding-top: 10px;
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        font-size: 12px;
+        margin-top: 30px;
+        border-top: 2px dashed #333;
+        padding-top: 15px;
+    }
+
+    /* ===== PRINT FIX ===== */
+    @media print {
+        body {
+            margin: 0;
+        }
+
+        .modal,
+        .modal-header,
+        .btn,
+        .btn-close {
+            display: none !important;
+        }
+
+        .receipt-container {
+            padding: 0;
+            box-shadow: none;
+        }
+    }
+</style>
+
+
+<?php foreach ($orders as $order): ?>
+<div class="modal fade" id="receiptModal<?= $order['id'] ?>" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
+        <div class="modal-content receipt-modal">
+
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title">
+                    <i class="bi bi-receipt"></i> Event Receipt – <?= htmlspecialchars($order['booking_refId']) ?>
+                </h5>
+
+                <div class="ms-auto">
+                    <button type="button"
+                        class="btn btn-light btn-sm"
+                        onclick="printReceipt('receipt-content-<?= $order['id'] ?>')">
+                        <i class="bi bi-printer"></i> Print
+                    </button>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+            </div>
+
+            <div class="modal-body p-0">
+
+                <div class="receipt-container"
+                     id="receipt-content-<?= $order['id'] ?>">
+
+                    <!-- HEADER -->
+                    <div class="header">
+                        <h1>Casa Estela Boutique Hotel & Cafe</h1>
+                        <p>Gov B Marasigan St, Calapan City</p>
+                        <p>Phone: 0908 747 4892</p>
+
+                        <p><strong>EVENT BOOKING RECEIPT</strong></p>
+
+                        <p>Reference: <?= htmlspecialchars($order['booking_refId']) ?></p>
+
+                        <p>Date Issued:
+                            <?= date("F j, Y", strtotime($order['created_at'] ?? 'now')) ?>
+                        </p>
+                    </div>
+
+
+                    <!-- CUSTOMER INFO -->
+                    <div class="section-title">Customer Information</div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Customer Name:</span>
+                        <span><?= htmlspecialchars($order['customer_name']) ?></span>
+                    </div>
+
+
+                    <!-- EVENT INFO -->
+                    <div class="section-title">Event Information</div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Package:</span>
+                        <span><?= htmlspecialchars($order['package_name']) ?></span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Event Type:</span>
+                        <span><?= htmlspecialchars($order['event_type']) ?></span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Schedule:</span>
+                        <span>
+                            <?= date("F j, Y h:i A", strtotime($order['date_time_start'])) ?>
+                            -
+                            <?= date("h:i A", strtotime($order['date_time_end'])) ?>
+                        </span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Reserve Type:</span>
+                        <span><?= htmlspecialchars($order['reserve_type']) ?></span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Guests:</span>
+                        <span><?= htmlspecialchars($order['number_of_guests']) ?></span>
+                    </div>
+
+
+                    <!-- PAYMENT SUMMARY -->
+                    <div class="total-section">
+
+                        <div class="section-title">Payment Summary</div>
+
+                        <div class="total-row">
+                            <span>Package Price:</span>
+                            <span>₱<?= number_format($order['package_price'], 2) ?></span>
+                        </div>
+
+                        <?php if ($order['extra_guests'] > 0): ?>
+                        <div class="total-row">
+                            <span>Extra Guests Charge:</span>
+                            <span>₱<?= number_format($order['extra_guest_charge'], 2) ?></span>
+                        </div>
+                        <?php endif; ?>
+
+                        <?php if ($order['overtime_hours'] > 0): ?>
+                        <div class="total-row">
+                            <span>Overtime Charge:</span>
+                            <span>₱<?= number_format($order['overtime_charge'], 2) ?></span>
+                        </div>
+                        <?php endif; ?>
+
+                        <div class="total-row grand-total">
+                            <span>Total Amount:</span>
+                            <span>₱<?= number_format($order['total_amount'], 2) ?></span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Payment Method:</span>
+                            <span><?= htmlspecialchars($order['payment_method']) ?></span>
+                        </div>
+
+                        <div class="detail-row">
+                            <span class="detail-label">Status:</span>
+                            <span><?= htmlspecialchars($order['booking_status']) ?></span>
+                        </div>
+
+                    </div>
+
+
+                    <!-- FOOTER -->
+                    <div class="footer">
+                        <p>Thank you for booking with us!</p>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<?php endforeach; ?>
+
+
+
+<script>
+    function printReceipt(elementId)
+{
+    const content =
+        document.getElementById(elementId).innerHTML;
+
+    const printWindow =
+        window.open('', '', 'width=900,height=700');
+
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Event Receipt</title>
+
+            <style>
+
+                body{
+                    font-family:Courier New, monospace;
+                    padding:20px;
+                }
+
+                .header{text-align:center;}
+
+                .detail-row,
+                .total-row{
+                    display:flex;
+                    justify-content:space-between;
+                    padding:5px 0;
+                }
+
+                .section-title{
+                    font-weight:bold;
+                    margin-top:20px;
+                    border-bottom:1px solid black;
+                }
+
+                .grand-total{
+                    font-weight:bold;
+                    font-size:18px;
+                    border-top:2px solid black;
+                }
+
+            </style>
+
+        </head>
+
+        <body>
+
+            ${content}
+
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+
+    printWindow.focus();
+
+    printWindow.print();
+
+    printWindow.close();
+}
+
+</script>
+
 <?php include 'adminFrontend/footer.php'; ?>
+

@@ -1,139 +1,127 @@
 <?php
-require "db.php";
+require_once 'db.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $response = array('success' => false, 'message' => '');
+header('Content-Type: application/json');
+
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo json_encode(['success' => false, 'message' => 'Unauthorized access']);
+    exit();
+}
+
+$orderId = $_POST['order_id'] ?? null;
+$amountPaid = floatval($_POST['amount_paid'] ?? 0);
+$paymentMethod = $_POST['payment_method'] ?? 'Cash';
+
+if (!$orderId || $amountPaid <= 0) {
+    echo json_encode(['success' => false, 'message' => 'Invalid payment data']);
+    exit();
+}
+
+try {
+    // Start transaction
+    $pdo->beginTransaction();
+
+    // Get the actual database ID from order_id
+    $stmt = $pdo->prepare("SELECT id, total, amount_paid, balance, downpayment FROM orders_table WHERE order_id = :order_id");
+    $stmt->execute([':order_id' => $orderId]);
+    $orderRecord = $stmt->fetch(PDO::FETCH_ASSOC);
     
-    try {
-        // Get the payment details
-        $orderId = isset($_POST['order_id']) ? intval($_POST['order_id']) : 0;
-        $paymentAmount = isset($_POST['payment_amount']) ? floatval($_POST['payment_amount']) : 0;
-        $paymentMethod = isset($_POST['payment_method']) ? $_POST['payment_method'] : '';
-        
-        // Validate input
-        if (!$orderId) {
-            throw new Exception('Invalid order ID');
-        }
-        if (!$paymentAmount || $paymentAmount <= 0) {
-            throw new Exception('Invalid payment amount');
-        }
-        if (empty($paymentMethod)) {
-            throw new Exception('Please select a payment method');
-        }
-        
-        // Start transaction
-        $connection->begin_transaction();
-        
-        // Get current order details
-        $stmt = $connection->prepare("SELECT total_amount, amount_paid, remaining_balance FROM orders WHERE id = ?");
-        if (!$stmt) {
-            throw new Exception('Database error: ' . $connection->error);
-        }
-        
-        $stmt->bind_param("i", $orderId);
-        if (!$stmt->execute()) {
-            throw new Exception('Failed to fetch order details: ' . $stmt->error);
-        }
-        
-        $result = $stmt->get_result();
-        $order = $result->fetch_assoc();
-        
-        if (!$order) {
-            throw new Exception('Order not found');
-        }
-        
-        $currentAmountPaid = floatval($order['amount_paid']);
-        $remainingBalance = floatval($order['remaining_balance']);
-        
-        if ($remainingBalance <= 0) {
-            throw new Exception('This order is already fully paid');
-        }
-        
-        // Validate payment amount
-        if ($paymentAmount > $remainingBalance) {
-            throw new Exception('Payment amount (₱' . number_format($paymentAmount, 2) . ') cannot exceed remaining balance (₱' . number_format($remainingBalance, 2) . ')');
-        }
-        
-        // Calculate new values
-        $newAmountPaid = $currentAmountPaid + $paymentAmount;
-        $newRemainingBalance = $remainingBalance - $paymentAmount;
-        
-        // Determine payment status
-        $paymentStatus = ($newRemainingBalance <= 0) ? 'Paid' : 'Partial';
-        
-        // Update the order with new payment information
-        $updateStmt = $connection->prepare("
-            UPDATE orders 
-            SET amount_paid = ?,
-                remaining_balance = ?,
-                payment_status = ?,
-                payment_method = CASE 
-                    WHEN payment_method IS NULL OR payment_method = '' THEN ?
-                    ELSE CONCAT(COALESCE(payment_method, ''), ', ', ?)
-                END,
-                updated_at = NOW()
-            WHERE id = ?
-        ");
-        
-        if (!$updateStmt) {
-            throw new Exception('Database error: ' . $connection->error);
-        }
-        
-        $updateStmt->bind_param(
-            "ddsssi",
-            $newAmountPaid,
-            $newRemainingBalance,
-            $paymentStatus,
-            $paymentMethod,
-            $paymentMethod,
-            $orderId
-        );
-        
-        if (!$updateStmt->execute()) {
-            throw new Exception('Failed to update payment information: ' . $updateStmt->error);
-        }
-        
-        // Insert payment record
-        $paymentStmt = $connection->prepare("
-            INSERT INTO order_payments (order_id, amount, payment_method, payment_date)
-            VALUES (?, ?, ?, NOW())
-        ");
-        
-        if (!$paymentStmt) {
-            throw new Exception('Database error: ' . $connection->error);
-        }
-        
-        $paymentStmt->bind_param("ids", $orderId, $paymentAmount, $paymentMethod);
-        
-        if (!$paymentStmt->execute()) {
-            throw new Exception('Failed to record payment: ' . $paymentStmt->error);
-        }
-        
-        // Commit transaction
-        $connection->commit();
-        
-        $response['success'] = true;
-        $response['message'] = 'Payment of ₱' . number_format($paymentAmount, 2) . ' processed successfully';
-        $response['remaining_balance'] = $newRemainingBalance;
-        $response['amount_paid'] = $newAmountPaid;
-        $response['payment_status'] = $paymentStatus;
-        
-    } catch (Exception $e) {
-        // Rollback transaction on error
-        if (isset($connection) && $connection->ping()) {
-            $connection->rollback();
-        }
-        $response['success'] = false;
-        $response['message'] = $e->getMessage();
-    } finally {
-        // Close any open statements
-        if (isset($stmt)) $stmt->close();
-        if (isset($updateStmt)) $updateStmt->close();
-        if (isset($paymentStmt)) $paymentStmt->close();
+    if (!$orderRecord) {
+        throw new Exception('Order not found');
     }
     
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit;
+    $actualOrderId = $orderRecord['id'];
+    $total = floatval($orderRecord['total']);
+    $currentAmountPaid = floatval($orderRecord['amount_paid']);
+    $downpayment = floatval($orderRecord['downpayment']);
+    $currentBalance = floatval($orderRecord['balance']);
+    
+    // Calculate new amounts - include downpayment in total amount paid
+    $newAmountPaid = $currentAmountPaid + $amountPaid + $downpayment;
+    $newBalance = $total - $newAmountPaid;
+    
+    // Update order with payment information
+    $updateStmt = $pdo->prepare("
+        UPDATE orders_table SET 
+            amount_paid = :amount_paid,
+            balance = :balance,
+            payment_method = :payment_method,
+            change_amount = :change_amount,
+            status = :status
+        WHERE id = :id
+    ");
+    
+    $changeAmount = max(0, $amountPaid - $currentBalance);
+    $status = $newBalance <= 0 ? 'Completed' : 'processing';
+    
+    $updateStmt->execute([
+        ':amount_paid' => $newAmountPaid,
+        ':balance' => $newBalance,
+        ':payment_method' => $paymentMethod,
+        ':change_amount' => $changeAmount,
+        ':status' => $status,
+        ':id' => $actualOrderId
+    ]);
+    
+    // If order is fully paid, free up the table and update notifications
+    if ($status === 'Completed') {
+        // Update notifications table to set is_completed = 1 and is_processing = 0, and update title and message
+        $notificationStmt = $pdo->prepare("
+            UPDATE notifications 
+            SET is_completed = 1, is_processing = 0, title = 'Order Completed', message = CONCAT('Your order #', :order_id_string, ' has been completed.')
+            WHERE order_id = :order_id AND is_completed = 0
+        ");
+        $notificationStmt->execute([':order_id' => $actualOrderId, ':order_id_string' => $orderId]);
+        
+        $tableStmt = $pdo->prepare("SELECT * FROM orders_table_type WHERE table_booking_fk_id = :order_id");
+        $tableStmt->execute([':order_id' => $actualOrderId]);
+        $tableAssignments = $tableStmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if ($tableAssignments) {
+            // Free up all tables assigned to this order
+            foreach ($tableAssignments as $tableAssignment) {
+                // Check if no other active orders are using this table
+                $checkOtherOrdersStmt = $pdo->prepare("
+                    SELECT COUNT(*) as active_orders 
+                    FROM orders_table_type ott 
+                    JOIN orders_table o ON ott.table_booking_fk_id = o.id 
+                    WHERE ott.table_number = :table_id AND o.status != 'Completed'
+                ");
+                $checkOtherOrdersStmt->execute([':table_id' => $tableAssignment['table_number_fk_id']]);
+                $activeOrders = $checkOtherOrdersStmt->fetchColumn();
+                
+                if ($activeOrders == 0) {
+                    // Mark the table as available
+                    $freeTableStmt = $pdo->prepare("UPDATE table_number SET status = 'available' WHERE id = :table_id");
+                    $freeTableStmt->execute([':table_id' => $tableAssignment['table_number_fk_id']]);
+                }
+            }
+        }
+    }
+
+    // Commit transaction
+    $pdo->commit();
+
+    echo json_encode([
+        'success' => true,
+        'message' => 'Payment processed successfully',
+        'order_fully_paid' => $newBalance <= 0,
+        'new_balance' => $newBalance,
+        'change_amount' => $changeAmount
+    ]);
+
+} catch (Exception $e) {
+    // Rollback transaction on error
+    if (isset($pdo) && $pdo->inTransaction()) {
+        try {
+            $pdo->rollBack();
+        } catch (Exception $rollbackEx) {
+            error_log('Error during transaction rollback: ' . $rollbackEx->getMessage());
+        }
+    }
+    
+    error_log("Error processing payment: " . $e->getMessage());
+    echo json_encode(['success' => false, 'message' => 'Failed to process payment: ' . $e->getMessage()]);
 }
-?> 
+?>

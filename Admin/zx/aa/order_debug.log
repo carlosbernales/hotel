@@ -1,0 +1,78 @@
+[2026-01-03 14:07:22] === Starting order insertion process ===
+[2026-01-03 14:07:22] Starting transaction with order data:
+Data: Array
+(
+    [customer_id] => 41
+    [order_date] => 2026-01-03 14:07:22
+    [subtotal] => 340
+    [total] => 170
+    [payment_method] => maya
+    [payment_option] => partial
+    [item_count] => 2
+)
+
+[2026-01-03 14:07:22] Transaction started
+[2026-01-03 14:07:22] Order inserted successfully
+Data: Array
+(
+    [order_id] => 17
+    [order_unique_id] => ORD-6959148a0f728
+    [affected_rows] => 1
+)
+
+[2026-01-03 14:07:22] Transaction committed successfully
+Data: Array
+(
+    [order_id] => 17
+    [total_items] => 2
+)
+
+[2026-01-03 14:07:22] Order process completed successfully
+Data: Array
+(
+    [success] => 1
+    [message] => Order placed successfully
+    [order_id] => 17
+    [order_number] => ORD-000017
+    [redirect] => cafes.php?order_success=1&order_id=17
+)
+
+[2026-01-03 14:07:50] === Starting order insertion process ===
+[2026-01-03 14:07:50] Starting transaction with order data:
+Data: Array
+(
+    [customer_id] => 41
+    [order_date] => 2026-01-03 14:07:50
+    [subtotal] => 340
+    [total] => 170
+    [payment_method] => maya
+    [payment_option] => partial
+    [item_count] => 2
+)
+
+[2026-01-03 14:07:50] Transaction started
+[2026-01-03 14:07:50] Order inserted successfully
+Data: Array
+(
+    [order_id] => 18
+    [order_unique_id] => ORD-695914a6c24b4
+    [affected_rows] => 1
+)
+
+[2026-01-03 14:07:50] Transaction committed successfully
+Data: Array
+(
+    [order_id] => 18
+    [total_items] => 2
+)
+
+[2026-01-03 14:07:50] Order process completed successfully
+Data: Array
+(
+    [success] => 1
+    [message] => Order placed successfully
+    [order_id] => 18
+    [order_number] => ORD-000018
+    [redirect] => cafes.php?order_success=1&order_id=18
+)
+

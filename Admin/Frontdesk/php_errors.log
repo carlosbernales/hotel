@@ -84137,3 +84137,75 @@ ORDER BY b.check_in DESC
 [12-Apr-2025 23:03:55 Europe/Berlin] Database connected successfully to: hotelms
 [12-Apr-2025 23:04:30 Europe/Berlin] Database connected successfully to: hotelms
 [12-Apr-2025 23:04:48 Europe/Berlin] Database connected successfully to: hotelms
+[18-Jan-2026 18:02:38 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 08:59:50 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:00:52 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:01:13 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:02:03 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:03:30 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:06:17 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:09:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:09:26 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:11:49 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:13:05 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19
+[07-Feb-2026 09:15:21 UTC] PHP Fatal error:  Uncaught mysqli_sql_exception: Access denied for user 'root'@'localhost' (using password: NO) in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php:19
+Stack trace:
+#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php(19): mysqli_connect()
+#1 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/index.php(2): require_once('/home/u76337722...')
+#2 {main}
+  thrown in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Frontdesk/db.php on line 19

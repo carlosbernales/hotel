@@ -1,1128 +1,1548 @@
 <?php
-require_once('db.php');
+// Include database connection
+require_once 'db.php';
 
-// Enable error reporting
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-// Start session if not already started
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-// Get filter parameters
-$filter_start = isset($_GET['start_date']) && !empty($_GET['start_date']) ? $_GET['start_date'] : null;
-$filter_end = isset($_GET['end_date']) && !empty($_GET['end_date']) ? $_GET['end_date'] : null;
-$order_type = isset($_GET['order_type']) && $_GET['order_type'] !== 'all' ? $_GET['order_type'] : null;
-$payment_method = isset($_GET['payment_method']) && $_GET['payment_method'] !== 'all' ? $_GET['payment_method'] : null;
-
-// Format dates for SQL query with time
-$startDateTime = $filter_start ? $filter_start . ' 00:00:00' : null;
-$endDateTime = $filter_end ? $filter_end . ' 23:59:59' : null;
-
-// Build the order type condition
-$order_type_condition = "";
-if ($order_type !== null) {
-    $order_type_condition = "AND o.order_type = ?";
-}
-
-// First, create the sales table if it doesn't exist
-$create_table_sql = "CREATE TABLE IF NOT EXISTS sales (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    order_id INT NOT NULL,
-    total_amount DECIMAL(10,2) NOT NULL,
-    payment_method VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (order_id) REFERENCES orders(id)
-)";
-
-try {
-    $conn->query($create_table_sql);
-    
-    // Check if order_date column exists, if not add it
-    $check_column = "SHOW COLUMNS FROM sales LIKE 'order_date'";
-    $column_exists = $conn->query($check_column);
-    
-    if ($column_exists->num_rows === 0) {
-        $add_column = "ALTER TABLE sales ADD COLUMN order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP";
-        $conn->query($add_column);
+// Handle export request
+if (isset($_GET['export']) && $_GET['export'] == 'csv') {
+    try {
+        // Get date range from GET parameters
+        $fromDate = isset($_GET['from_date']) ? $_GET['from_date'] : '';
+        $toDate = isset($_GET['to_date']) ? $_GET['to_date'] : '';
         
-        // Update existing records to copy created_at to order_date
-        $update_dates = "UPDATE sales SET order_date = created_at WHERE order_date IS NULL";
-        $conn->query($update_dates);
-    }
-} catch (Exception $e) {
-    error_log("Error modifying sales table: " . $e->getMessage());
-}
-
-// Query for daily sales with filters
-$dailySalesQuery = "SELECT COALESCE(SUM(total_amount), 0) as daily_total 
-                    FROM orders 
-                    WHERE status = 'finished'";
-if ($filter_start) {
-    $dailySalesQuery .= " AND DATE(order_date) = ?";
-} else {
-    $dailySalesQuery .= " AND DATE(order_date) = CURDATE()";
-}
-
-// Add filters
-if ($order_type) {
-    if ($order_type === 'online') {
-        $dailySalesQuery .= " AND order_type = 'regular'";
-    } else if ($order_type === 'advance') {
-        $dailySalesQuery .= " AND order_type = 'advance'";
-    } else if ($order_type === 'walkin') {
-        $dailySalesQuery .= " AND order_type = 'walk-in'";
-    } else {
-        $dailySalesQuery .= " AND order_type = ?";
-    }
-}
-if ($payment_method) {
-    $dailySalesQuery .= " AND payment_method = ?";
-}
-
-// Query for weekly sales with filters
-$weeklySalesQuery = "SELECT COALESCE(SUM(total_amount), 0) as weekly_total 
-                     FROM orders 
-                     WHERE status = 'finished'";
-if ($filter_start && $filter_end) {
-    $weeklySalesQuery .= " AND DATE(order_date) BETWEEN ? AND ?";
-} else {
-    $weeklySalesQuery .= " AND YEARWEEK(order_date, 1) = YEARWEEK(CURDATE(), 1)";
-}
-
-// Add filters
-if ($order_type) {
-    if ($order_type === 'online') {
-        $weeklySalesQuery .= " AND order_type = 'regular'";
-    } else if ($order_type === 'advance') {
-        $weeklySalesQuery .= " AND order_type = 'advance'";
-    } else if ($order_type === 'walkin') {
-        $weeklySalesQuery .= " AND order_type = 'walk-in'";
-    } else {
-        $weeklySalesQuery .= " AND order_type = ?";
-    }
-}
-if ($payment_method) {
-    $weeklySalesQuery .= " AND payment_method = ?";
-}
-
-// Query for monthly sales with filters
-$monthlySalesQuery = "SELECT COALESCE(SUM(total_amount), 0) as monthly_total 
-                      FROM orders 
-                      WHERE status = 'finished'";
-if ($filter_start && $filter_end) {
-    $monthlySalesQuery .= " AND DATE(order_date) BETWEEN ? AND ?";
-} else {
-    $monthlySalesQuery .= " AND YEAR(order_date) = YEAR(CURDATE()) AND MONTH(order_date) = MONTH(CURDATE())";
-}
-
-// Add filters
-if ($order_type) {
-    if ($order_type === 'online') {
-        $monthlySalesQuery .= " AND order_type = 'regular'";
-    } else if ($order_type === 'advance') {
-        $monthlySalesQuery .= " AND order_type = 'advance'";
-    } else if ($order_type === 'walkin') {
-        $monthlySalesQuery .= " AND order_type = 'walk-in'";
-    } else {
-        $monthlySalesQuery .= " AND order_type = ?";
-    }
-}
-if ($payment_method) {
-    $monthlySalesQuery .= " AND payment_method = ?";
-}
-
-// Query for annual sales with filters
-$annualSalesQuery = "SELECT COALESCE(SUM(total_amount), 0) as annual_total 
-                     FROM orders 
-                     WHERE status = 'finished'";
-if ($filter_start) {
-    $annualSalesQuery .= " AND YEAR(order_date) = YEAR(?)";
-} else {
-    $annualSalesQuery .= " AND YEAR(order_date) = YEAR(CURDATE())";
-}
-
-// Add filters
-if ($order_type) {
-    if ($order_type === 'online') {
-        $annualSalesQuery .= " AND order_type = 'regular'";
-    } else if ($order_type === 'advance') {
-        $annualSalesQuery .= " AND order_type = 'advance'";
-    } else if ($order_type === 'walkin') {
-        $annualSalesQuery .= " AND order_type = 'walk-in'";
-    } else {
-        $annualSalesQuery .= " AND order_type = ?";
-    }
-}
-if ($payment_method) {
-    $annualSalesQuery .= " AND payment_method = ?";
-}
-
-// Query for online orders (regular orders)
-$onlineOrdersQuery = "SELECT COALESCE(SUM(total_amount), 0) as online_total 
-                     FROM orders 
-                     WHERE status = 'finished' 
-                     AND order_type = 'regular'";
-if ($filter_start && $filter_end) {
-    $onlineOrdersQuery .= " AND DATE(order_date) >= DATE(?) AND DATE(order_date) <= DATE(?)";
-}
-
-// Query for walk-in orders
-$walkinOrdersQuery = "SELECT COALESCE(SUM(total_amount), 0) as walkin_total 
-                     FROM orders 
-                     WHERE status = 'finished' 
-                     AND order_type = 'walk-in'";
-if ($filter_start && $filter_end) {
-    $walkinOrdersQuery .= " AND DATE(order_date) >= DATE(?) AND DATE(order_date) <= DATE(?)";
-}
-
-// Query for advance orders
-$advanceOrdersQuery = "SELECT COALESCE(SUM(total_amount), 0) as advance_total 
-                      FROM orders 
-                      WHERE status = 'finished' 
-                      AND order_type = 'advance'";
-if ($filter_start && $filter_end) {
-    $advanceOrdersQuery .= " AND DATE(order_date) >= DATE(?) AND DATE(order_date) <= DATE(?)";
-}
-
-// Query for gross sales
-$grossSalesQuery = "SELECT 
-    COALESCE(SUM(total_amount + discount_amount), 0) as gross_sales,
-    COALESCE(SUM(discount_amount), 0) as total_discounts,
-    COALESCE(SUM(total_amount), 0) as net_sales,
-    COUNT(*) as transaction_count
-    FROM orders 
-    WHERE status = 'finished'";
-
-if ($filter_start && $filter_end) {
-    $grossSalesQuery .= " AND DATE(order_date) BETWEEN ? AND ?";
-} else if ($filter_start) {
-    $grossSalesQuery .= " AND DATE(order_date) = ?";
-}
-
-// Add order type filter
-if ($order_type) {
-    if ($order_type === 'online') {
-        $grossSalesQuery .= " AND order_type = 'regular'";
-    } else if ($order_type === 'advance') {
-        $grossSalesQuery .= " AND order_type = 'advance'";
-    } else if ($order_type === 'walkin') {
-        $grossSalesQuery .= " AND order_type = 'walk-in'";
+        // Prepare date conditions for queries
+        $dateCondition = '';
+        if ($fromDate && $toDate) {
+            $fromDateTime = $fromDate . ' 00:00:00';
+            $toDateTime = $toDate . ' 23:59:59';
+            $dateCondition = " AND date_time BETWEEN '$fromDateTime' AND '$toDateTime'";
+        } else {
+            // Default to last 30 days if no filter
+            $dateCondition = " AND date_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)";
+        }
+        
+        // Fetch sales data for export
+        $sql = "
+            SELECT 
+                order_id,
+                firstname,
+                lastname,
+                total,
+                status,
+                date_time,
+                CASE 
+                    WHEN payment_method IS NOT NULL THEN payment_method
+                    ELSE 'N/A'
+                END as payment_method
+            FROM orders_table 
+            WHERE status = 'Completed'
+            $dateCondition
+            ORDER BY date_time DESC
+        ";
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $salesData = $stmt->fetchAll();
+        
+        // If no data found, create empty CSV with message
+        if (empty($salesData)) {
+            // Set headers for CSV download
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="sales_report_' . date('Y-m-d_H-i-s') . '.csv"');
+            header('Cache-Control: no-cache, must-revalidate');
+            header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+            
+            $output = fopen('php://output', 'w');
+            fputcsv($output, ['Sales Report']);
+            fputcsv($output, ['No sales data found for the selected period']);
+            
+            if ($fromDate && $toDate) {
+                fputcsv($output, ['Report Period', date('M j, Y', strtotime($fromDate)) . ' - ' . date('M j, Y', strtotime($toDate))]);
+            } else {
+                fputcsv($output, ['Report Period', 'Last 30 Days']);
+            }
+            
+            fclose($output);
+            exit();
+        }
+        
+        // Set headers for CSV download
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="sales_report_' . date('Y-m-d_H-i-s') . '.csv"');
+        header('Cache-Control: no-cache, must-revalidate');
+        header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
+        
+        // Open output stream
+        $output = fopen('php://output', 'w');
+        
+        // Add CSV headers
+        fputcsv($output, [
+            'Order ID',
+            'Customer Name',
+            'Total Amount',
+            'Payment Method',
+            'Status',
+            'Date & Time'
+        ]);
+        
+        // Add data rows
+        foreach ($salesData as $sale) {
+            $customerName = trim($sale['firstname'] . ' ' . $sale['lastname']);
+            if (empty($customerName)) {
+                $customerName = 'Guest';
+            }
+            
+            fputcsv($output, [
+                $sale['order_id'],
+                $customerName,
+                number_format($sale['total'], 2),
+                $sale['payment_method'],
+                $sale['status'],
+                date('Y-m-d H:i:s', strtotime($sale['date_time']))
+            ]);
+        }
+        
+        // Calculate and add summary row
+        $totalSales = array_sum(array_column($salesData, 'total'));
+        $totalOrders = count($salesData);
+        
+        fputcsv($output, []);
+        fputcsv($output, ['SUMMARY REPORT']);
+        fputcsv($output, ['Total Orders', $totalOrders]);
+        fputcsv($output, ['Total Sales', '₱' . number_format($totalSales, 2)]);
+        fputcsv($output, ['Average Order Value', '₱' . number_format($totalSales / max($totalOrders, 1), 2)]);
+        
+        if ($fromDate && $toDate) {
+            fputcsv($output, ['Report Period', date('M j, Y', strtotime($fromDate)) . ' - ' . date('M j, Y', strtotime($toDate))]);
+        } else {
+            fputcsv($output, ['Report Period', 'Last 30 Days']);
+        }
+        
+        fclose($output);
+        exit();
+        
+    } catch (Exception $e) {
+        // Error handling - create error CSV
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="export_error_' . date('Y-m-d_H-i-s') . '.csv"');
+        
+        $output = fopen('php://output', 'w');
+        fputcsv($output, ['Export Error']);
+        fputcsv($output, ['Error Message', $e->getMessage()]);
+        fputcsv($output, ['Time', date('Y-m-d H:i:s')]);
+        fclose($output);
+        exit();
     }
 }
 
-// Add payment method filter
-if ($payment_method) {
-    $grossSalesQuery .= " AND payment_method = ?";
+// Get date range from GET parameters
+$fromDate = isset($_GET['from_date']) ? $_GET['from_date'] : '';
+$toDate = isset($_GET['to_date']) ? $_GET['to_date'] : '';
+
+// Prepare date conditions for queries
+$dateCondition = '';
+if ($fromDate && $toDate) {
+    $fromDateTime = $fromDate . ' 00:00:00';
+    $toDateTime = $toDate . ' 23:59:59';
+    $dateCondition = " AND date_time BETWEEN '$fromDateTime' AND '$toDateTime'";
 }
 
-// Execute queries and store results
+// Get sales data for dashboard
+$todaySales = 0;
+$weekSales = 0;
+$monthSales = 0;
+$yearSales = 0;
+$totalOrders = 0;
+$todayOrders = 0;
+
 try {
-    // Daily sales
-    $stmt = $conn->prepare($dailySalesQuery);
-    if ($filter_start) {
-        $stmt->bind_param("s", $filter_start);
-    }
-    $stmt->execute();
-    $dailyResult = $stmt->get_result();
-    $dailySales = $dailyResult->fetch_assoc()['daily_total'];
-
-    // Add this after executing the daily sales query
-    error_log("Daily Sales Query: " . $dailySalesQuery);
-    error_log("Daily Sales Result: " . $dailySales);
-
-    // Weekly sales
-    $stmt = $conn->prepare($weeklySalesQuery);
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    }
-    $stmt->execute();
-    $weeklyResult = $stmt->get_result();
-    $weeklySales = $weeklyResult->fetch_assoc()['weekly_total'];
-
-    // Add this after executing the weekly sales query
-    error_log("Weekly Sales Query: " . $weeklySalesQuery);
-    error_log("Weekly Sales Result: " . $weeklySales);
-
-    // Monthly sales
-    $stmt = $conn->prepare($monthlySalesQuery);
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    }
-    $stmt->execute();
-    $monthlyResult = $stmt->get_result();
-    $monthlySales = $monthlyResult->fetch_assoc()['monthly_total'];
-
-    // Add this after executing the monthly sales query
-    error_log("Monthly Sales Query: " . $monthlySalesQuery);
-    error_log("Monthly Sales Result: " . $monthlySales);
-
-    // Annual sales
-    $stmt = $conn->prepare($annualSalesQuery);
-    if ($filter_start) {
-        $stmt->bind_param("s", $filter_start);
-    }
-    $stmt->execute();
-    $annualResult = $stmt->get_result();
-    $annualSales = $annualResult->fetch_assoc()['annual_total'];
-
-    // Add this after executing the annual sales query
-    error_log("Annual Sales Query: " . $annualSalesQuery);
-    error_log("Annual Sales Result: " . $annualSales);
-
-    // Online orders
-    $stmt = $conn->prepare($onlineOrdersQuery);
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    }
-    $stmt->execute();
-    $onlineResult = $stmt->get_result();
-    $onlineSales = $onlineResult->fetch_assoc()['online_total'];
-
-    // Walk-in orders
-    $stmt = $conn->prepare($walkinOrdersQuery);
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    }
-    $stmt->execute();
-    $walkinResult = $stmt->get_result();
-    $walkinSales = $walkinResult->fetch_assoc()['walkin_total'];
-
-    // Advance orders
-    $stmt = $conn->prepare($advanceOrdersQuery);
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    }
-    $stmt->execute();
-    $advanceResult = $stmt->get_result();
-    $advanceSales = $advanceResult->fetch_assoc()['advance_total'];
-
-    // Gross sales
-    $stmt = $conn->prepare($grossSalesQuery);
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    } else if ($filter_start) {
-        $stmt->bind_param("s", $filter_start);
-    }
-    
-    $stmt->execute();
-    $grossResult = $stmt->get_result();
-    $salesData = $grossResult->fetch_assoc();
-    
-    $grossSales = $salesData['gross_sales'] ?? 0;
-    $totalDiscounts = $salesData['total_discounts'] ?? 0;
-    $netSales = $salesData['net_sales'] ?? 0;
-    $transactionCount = $salesData['transaction_count'] ?? 0;
-    
-    // Add debugging
-    error_log("Filter dates: Start = $filter_start, End = $filter_end");
-    error_log("Gross Sales Query: $grossSalesQuery");
-    error_log("Sales Data: " . print_r($salesData, true));
-    
-    // Add error logging to help debug
-    if ($onlineSales === null || $walkinSales === null || $advanceSales === null) {
-        error_log("Sales query returned null: Online: $onlineSales, Walk-in: $walkinSales, Advance: $advanceSales");
-    }
-
-} catch (Exception $e) {
-    error_log("Error calculating sales totals: " . $e->getMessage());
-    $dailySales = 0;
-    $weeklySales = 0;
-    $monthlySales = 0;
-    $annualSales = 0;
-    $onlineSales = 0;
-    $walkinSales = 0;
-    $advanceSales = 0;
-    $grossSales = 0;
-    $totalDiscounts = 0;
-    $netSales = 0;
-    $transactionCount = 0;
-}
-
-// Add this debugging code temporarily after the queries
-error_log("Filter dates: Start = $filter_start, End = $filter_end");
-error_log("Sales amounts: Online = $onlineSales, Walk-in = $walkinSales, Advance = $advanceSales");
-
-// Update the detailed sales query section
-$detailedSalesQuery = "SELECT o.id,
-                              o.total_amount,
-                              o.payment_method,
-                              o.order_date,
-                              o.order_type,
-                              o.status,
-                              o.change_amount,
-                              CONCAT(u.first_name, ' ', u.last_name) as processed_by,
-                              GROUP_CONCAT(
-                                  CONCAT(
-                                      oi.quantity,
-                                      'x ',
-                                      oi.item_name
-                                  ) SEPARATOR ', '
-                              ) as items
-                       FROM orders o
-                       LEFT JOIN order_items oi ON o.id = oi.order_id
-                       LEFT JOIN userss u ON o.user_id = u.id
-                       WHERE o.status = 'finished'";
-
-// Only add date filter if both dates are set
-if ($filter_start && $filter_end) {
-    $detailedSalesQuery .= " AND DATE(o.order_date) BETWEEN ? AND ?";
-}
-
-// Add payment method filter with specific handling
-if ($payment_method) {
-    switch($payment_method) {
-        case 'gcash':
-            $detailedSalesQuery .= " AND o.payment_method = 'gcash'";
-            break;
-        case 'maya':
-            $detailedSalesQuery .= " AND o.payment_method = 'maya'";
-            break;
-        case 'bank':
-            $detailedSalesQuery .= " AND o.payment_method = 'bank'";
-            break;
-        case 'cash':
-            $detailedSalesQuery .= " AND o.payment_method = 'cash'";
-            break;
-    }
-}
-
-// Add order type filter
-if ($order_type) {
-    if ($order_type === 'online') {
-        $detailedSalesQuery .= " AND o.order_type = 'regular'";
-    } else if ($order_type === 'advance') {
-        $detailedSalesQuery .= " AND o.order_type = 'advance'";
-    } else if ($order_type === 'walkin') {
-        $detailedSalesQuery .= " AND o.order_type = 'walk-in'";
+    // If date filter is applied, calculate totals for the filtered period
+    if ($fromDate && $toDate) {
+        // Filtered period sales
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE status = 'Completed' AND date_time BETWEEN '$fromDateTime' AND '$toDateTime'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $todaySales = $result['total'];
+        $weekSales = $result['total'];
+        $monthSales = $result['total'];
+        $yearSales = $result['total'];
+        
+        // Filtered period orders
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM orders_table WHERE status = 'Completed' AND date_time BETWEEN '$fromDateTime' AND '$toDateTime'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $todayOrders = $result['count'];
+        $totalOrders = $result['count'];
+        
+        // Set comparison values to 0 for filtered data
+        $yesterdaySales = 0;
+        $lastWeekSales = 0;
+        $lastMonthSales = 0;
+        $lastYearSales = 0;
+        $yesterdayOrders = 0;
     } else {
-        $detailedSalesQuery .= " AND o.order_type = ?";
+        // Today's sales
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE DATE(date_time) = CURDATE() AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $todaySales = $result['total'];
+        
+        // Yesterday's sales for comparison
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE DATE(date_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $yesterdaySales = $result['total'];
+        
+        // Week's sales
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE YEARWEEK(date_time) = YEARWEEK(CURDATE()) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $weekSales = $result['total'];
+        
+        // Last week's sales for comparison
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE YEARWEEK(date_time) = YEARWEEK(DATE_SUB(CURDATE(), INTERVAL 1 WEEK)) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $lastWeekSales = $result['total'];
+        
+        // Month's sales
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE MONTH(date_time) = MONTH(CURDATE()) AND YEAR(date_time) = YEAR(CURDATE()) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $monthSales = $result['total'];
+        
+        // Last month's sales for comparison
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE MONTH(date_time) = MONTH(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND YEAR(date_time) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 MONTH)) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $lastMonthSales = $result['total'];
+        
+        // Year's sales
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE YEAR(date_time) = YEAR(CURDATE()) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $yearSales = $result['total'];
+        
+        // Last year's sales for comparison
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) as total FROM orders_table WHERE YEAR(date_time) = YEAR(DATE_SUB(CURDATE(), INTERVAL 1 YEAR)) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $lastYearSales = $result['total'];
+        
+        // Total orders
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM orders_table WHERE status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalOrders = $result['count'];
+        
+        // Today's orders
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM orders_table WHERE DATE(date_time) = CURDATE() AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $todayOrders = $result['count'];
+        
+        // Yesterday's orders for comparison
+        $stmt = $pdo->prepare("SELECT COUNT(*) as count FROM orders_table WHERE DATE(date_time) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND status = 'Completed'");
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $yesterdayOrders = $result['count'];
     }
-}
-
-$detailedSalesQuery .= " GROUP BY o.id, o.total_amount, o.payment_method, o.order_date, o.order_type, o.status
-                         ORDER BY o.order_date DESC";
-
-// Execute the detailed sales query
-try {
-    $stmt = $conn->prepare($detailedSalesQuery);
     
-    if ($filter_start && $filter_end) {
-        $stmt->bind_param("ss", $filter_start, $filter_end);
-    } else if ($filter_start) {
-        $stmt->bind_param("s", $filter_start);
+    // Fetch recent sales for the table
+    $recentSales = [];
+    try {
+        $sql = "
+            SELECT 
+                o.order_id,
+                o.firstname,
+                o.lastname,
+                o.total,
+                o.status,
+                o.date_time
+            FROM orders_table o
+            WHERE o.status = 'Completed'
+            $dateCondition
+            ORDER BY o.date_time DESC
+            LIMIT 10
+        ";
+        
+        // If no date filter is set, use the default 30-day filter
+        if (!$fromDate && !$toDate) {
+            $sql = "
+                SELECT 
+                    o.order_id,
+                    o.firstname,
+                    o.lastname,
+                    o.total,
+                    o.status,
+                    o.date_time
+                FROM orders_table o
+                WHERE o.status = 'Completed'
+                AND o.date_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                ORDER BY o.date_time DESC
+                LIMIT 10
+            ";
+        }
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $recentSales = $stmt->fetchAll();
+    } catch(PDOException $e) {
+        error_log("Error fetching recent sales: " . $e->getMessage());
     }
     
-    $stmt->execute();
-    $detailedResult = $stmt->get_result();
-    
-} catch (Exception $e) {
-    error_log("Error executing detailed sales query: " . $e->getMessage());
-    $detailedResult = false;
-}
-
-// Return JSON if it's an AJAX request
-if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-    $response = [
-        'daily_sales' => $dailySales,
-        'weekly_sales' => $weeklySales,
-        'monthly_sales' => $monthlySales,
-        'annual_sales' => $annualSales,
-        'online_sales' => $onlineSales,
-        'walkin_sales' => $walkinSales,
-        'advance_sales' => $advanceSales,
-        'detailed_sales' => []
-    ];
-    
-    while ($row = $detailedResult->fetch_assoc()) {
-        $response['detailed_sales'][] = $row;
+    // Fetch top selling items
+    $topItems = [];
+    try {
+        $sql = "
+            SELECT 
+                oi.item_name as name,
+                mi.image_path,
+                SUM(oi.quantity) as total_quantity,
+                SUM(oi.quantity * oi.unit_price) as total_revenue
+            FROM order_items oi
+            INNER JOIN orders_table o ON oi.order_fk_id = o.id
+            LEFT JOIN menu_items mi ON oi.item_name = mi.name
+            WHERE o.status = 'Completed'
+            $dateCondition
+            GROUP BY oi.item_name, mi.image_path
+            ORDER BY total_quantity DESC
+            LIMIT 5
+        ";
+        
+        // If no date filter is set, use the default 30-day filter
+        if (!$fromDate && !$toDate) {
+            $sql = "
+                SELECT 
+                    oi.item_name as name,
+                    mi.image_path,
+                    SUM(oi.quantity) as total_quantity,
+                    SUM(oi.quantity * oi.unit_price) as total_revenue
+                FROM order_items oi
+                INNER JOIN orders_table o ON oi.order_fk_id = o.id
+                LEFT JOIN menu_items mi ON oi.item_name = mi.name
+                WHERE o.status = 'Completed'
+                AND o.date_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+                GROUP BY oi.item_name, mi.image_path
+                ORDER BY total_quantity DESC
+                LIMIT 5
+            ";
+        }
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $topItems = $stmt->fetchAll();
+    } catch(PDOException $e) {
+        error_log("Error fetching top items: " . $e->getMessage());
     }
     
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit;
-}
-
-// Replace the PDF generation code with a download link
-if (isset($_POST['generate_report'])) {
-    $_SESSION['report_start_date'] = $filter_start;
-    $_SESSION['report_end_date'] = $filter_end;
-    $_SESSION['report_data'] = [
-        'orders' => $detailedResult,
-        'daily_total' => $dailySales,
-        'monthly_total' => $monthlySales,
-        'annual_total' => $annualSales
-    ];
+    // Calculate percentage changes
+    $todaySalesChange = $yesterdaySales > 0 ? (($todaySales - $yesterdaySales) / $yesterdaySales) * 100 : 0;
+    $weekSalesChange = $lastWeekSales > 0 ? (($weekSales - $lastWeekSales) / $lastWeekSales) * 100 : 0;
+    $monthSalesChange = $lastMonthSales > 0 ? (($monthSales - $lastMonthSales) / $lastMonthSales) * 100 : 0;
+    $yearSalesChange = $lastYearSales > 0 ? (($yearSales - $lastYearSales) / $lastYearSales) * 100 : 0;
+    $todayOrdersChange = $yesterdayOrders > 0 ? (($todayOrders - $yesterdayOrders) / $yesterdayOrders) * 100 : 0;
     
-    // Set success message with download link
-    $success_message = "Report data ready. <a href='download_report.php' class='btn btn-sm btn-primary'>Download PDF</a>";
+} catch(PDOException $e) {
+    error_log("Error fetching sales data: " . $e->getMessage());
 }
 
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sales Report - Casa Estela</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/font-awesome.min.css" rel="stylesheet">
-    <link href="css/datepicker3.css" rel="stylesheet">
-    <link href="css/styles.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales Report - Casa Estela Boutique Hotel & Cafe</title>
     
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
     <style>
-        /* Sidebar and main content layout */
-        .main-content {
-            transition: all 0.3s ease;
-            margin-left: 200px;
-            padding: 20px;
-            width: auto;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f1e5c4 0%, #e6d5b8 100%);
+        :root {
+            --primary-color: #b8860b;
+            --primary-hover: #9a7209;
+            --primary-light: rgba(184, 134, 11, 0.1);
+            --secondary-color: #2c3e50;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #1abc9c;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
         }
-
-        /* When sidebar is collapsed */
-        body.sidebar-collapsed .main-content {
-            margin-left: 50px;
-        }
-
-        /* Responsive adjustments */
-        @media screen and (max-width: 768px) {
-            .main-content {
-                margin-left: 50px;
-            }
-        }
-
-        /* Updated card styles */
-        .sales-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.3s ease;
-        }
-
-        .sales-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .sales-card .card-title {
-            color: #666;
-            margin: 0;
-            font-size: 16px;
-        }
-
-        .sales-card .card-text {
-            color: #333;
-            margin: 10px 0 0 0;
-            font-size: 24px;
-            font-weight: bold;
-        }
-
-        /* Updated table styles */
-        .table-responsive {
-            background: linear-gradient(145deg, #ffffff, #f8f3e8);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            border: 1px solid rgba(218, 165, 32, 0.1);
-        }
-
-        .table {
-            margin-bottom: 0;
-        }
-
-        .table thead th {
-            background: linear-gradient(145deg, #DAA520, #B8860B);
-            color: white;
-            border-bottom: none;
-            padding: 12px;
-        }
-
-        .table tbody td {
-            padding: 12px;
-            border-color: rgba(218, 165, 32, 0.1);
-        }
-
-        /* Filter panel styles */
-        .panel {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-        }
-
-        .panel-body {
-            padding: 20px;
-        }
-
-        /* Form control styles */
-        .form-control {
-            border: 1px solid rgba(218, 165, 32, 0.2);
-            border-radius: 6px;
-            padding: 8px 12px;
-        }
-
-        .form-control:focus {
-            border-color: #DAA520;
-            box-shadow: 0 0 0 0.2rem rgba(218, 165, 32, 0.25);
-        }
-
-        /* Button styles */
-        .btn-primary {
-            background: linear-gradient(145deg, #DAA520, #B8860B);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(145deg, #B8860B, #8B6914);
-            transform: translateY(-2px);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(145deg, #6c757d, #5a6268);
-            border: none;
-            padding: 8px 20px;
-            border-radius: 6px;
-            transition: all 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(145deg, #5a6268, #4e555b);
-            transform: translateY(-2px);
-        }
-
-        /* Page header styles */
-        .page-header {
-            border-bottom: none;
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
             margin: 0;
             padding: 0;
+            padding-left: 250px;
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 90px 25px 25px;
+            min-height: 100vh;
+        }
+        
+        /* Sales Cards */
+        .sales-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .sales-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .sales-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary-color);
+        }
+        
+        .sales-card.success::before {
+            background: var(--success-color);
+        }
+        
+        .sales-card.warning::before {
+            background: var(--warning-color);
+        }
+        
+        .sales-card.info::before {
+            background: var(--info-color);
+        }
+        
+        .sales-card.danger::before {
+            background: var(--danger-color);
+        }
+        
+        .sales-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-size: 24px;
-            font-weight: bold;
+            margin-bottom: 15px;
         }
-
-        /* DataTable custom styles */
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: linear-gradient(145deg, #DAA520, #B8860B);
-            color: white !important;
-            border: none;
+        
+        .sales-icon.primary {
+            background: var(--primary-light);
+            color: var(--primary-color);
         }
-
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background: linear-gradient(145deg, #B8860B, #8B6914);
-            color: white !important;
-            border: none;
+        
+        .sales-icon.success {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
         }
-
-        /* Add styles for notification and profile dropdowns */
-        .dropdown-menu {
-            background: #fff;
+        
+        .sales-icon.warning {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .sales-icon.info {
+            background: rgba(26, 188, 156, 0.1);
+            color: var(--info-color);
+        }
+        
+        .sales-icon.danger {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        .sales-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 5px;
+        }
+        
+        .sales-label {
+            color: #7f8c8d;
+            font-size: 14px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sales-change {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .sales-change.positive {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+        }
+        
+        .sales-change.negative {
+            background: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+        }
+        
+        /* Table Styles */
+        .sales-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .table-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .table-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .table-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .table-btn {
+            padding: 8px 15px;
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border: 1px solid rgba(0,0,0,0.1);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
         }
-
-        .dropdown-menu .dropdown-item {
-            padding: 8px 16px;
-            color: #333;
+        
+        .table-btn:hover {
+            background: rgba(255,255,255,0.3);
+            color: white;
+            text-decoration: none;
         }
-
-        .dropdown-menu .dropdown-item:hover {
+        
+        .custom-table {
+            margin: 0;
+        }
+        
+        .custom-table thead th {
+            background: #f8f9fa;
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            color: var(--secondary-color);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .custom-table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f1f2f6;
+            font-size: 14px;
+        }
+        
+        .custom-table tbody tr:hover {
             background: #f8f9fa;
         }
-
-        /* Notification badge */
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            padding: 3px 6px;
-            font-size: 10px;
+        
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
-
-        /* Profile dropdown toggle */
-        .profile-dropdown {
-            cursor: pointer;
+        
+        .status-badge.completed {
+            background: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
         }
-
-        /* Add these to your existing styles */
-        .sales-summary {
+        
+        .status-badge.pending {
+            background: rgba(243, 156, 18, 0.1);
+            color: var(--warning-color);
+        }
+        
+        .status-badge.processing {
+            background: rgba(26, 188, 156, 0.1);
+            color: var(--info-color);
+        }
+        
+        .amount {
+            font-weight: 600;
+            color: var(--success-color);
+        }
+        
+        /* Filter Section */
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+        }
+        
+        .filter-row {
             display: flex;
-            flex-direction: column;
-            gap: 20px;
-            margin-bottom: 30px;
+            gap: 15px;
+            align-items: end;
+            flex-wrap: wrap;
         }
-
-        .summary-item {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+        
+        .filter-group {
+            flex: 1;
+            min-width: 200px;
         }
-
-        .summary-item:last-child {
+        
+        .filter-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--secondary-color);
+            font-size: 14px;
+        }
+        
+        .filter-input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+        }
+        
+        /* Top Items */
+        .top-items-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .top-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #f1f2f6;
+        }
+        
+        .top-item:last-child {
             border-bottom: none;
         }
-
-        .summary-item h5 {
-            color: #666;
-            margin: 0;
+        
+        .top-item-rank {
+            width: 30px;
+            height: 30px;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+        
+        .top-item-info {
+            flex: 1;
+            margin-left: 15px;
+        }
+        
+        .top-item-name {
+            font-weight: 500;
+            color: var(--secondary-color);
+            margin-bottom: 3px;
+        }
+        
+        .top-item-quantity {
+            font-size: 13px;
+            color: #7f8c8d;
+        }
+        
+        .top-item-revenue {
+            text-align: right;
+        }
+        
+        .top-item-amount {
+            font-weight: 600;
+            color: var(--success-color);
             font-size: 16px;
         }
-
-        .summary-item h3 {
-            color: #333;
-            margin: 10px 0 0 0;
-            font-size: 24px;
-            font-weight: bold;
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            body {
+                padding-left: 0;
+            }
+            
+            .main-content {
+                padding: 90px 15px 15px;
+            }
+            
+            .sales-value {
+                font-size: 24px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+            }
+            
+            .filter-group {
+                width: 100%;
+            }
+        }
+        
+        /* Dark theme specific styles */
+        body.dark-theme {
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .sales-card {
+            background: var(--card-bg);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .filter-section {
+            background: var(--card-bg);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .sales-table {
+            background: var(--card-bg);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .top-items-card {
+            background: var(--card-bg);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .filter-input {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .filter-input:focus {
+            border-color: var(--primary-color);
+        }
+        
+        body.dark-theme .custom-table thead th {
+            background: var(--bg-secondary);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .custom-table tbody td {
+            border-color: var(--border-color);
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .custom-table tbody tr:hover {
+            background: var(--bg-secondary);
+        }
+        
+        body.dark-theme .table-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+        }
+        
+        body.dark-theme .top-item {
+            border-color: var(--border-color);
+        }
+        
+        body.dark-theme .sales-label {
+            color: #adb5bd !important;
+        }
+        
+        body.dark-theme .nav-title {
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme .nav-subtitle {
+            color: #adb5bd !important;
+        }
+        
+        body.dark-theme h2, 
+        body.dark-theme h3, 
+        body.dark-theme h4, 
+        body.dark-theme h5 {
+            color: #e9ecef !important;
+        }
+        
+        body.dark-theme p {
+            color: #adb5bd !important;
         }
     </style>
 </head>
 <body>
-    <?php include('header.php'); ?>
-    <?php include('sidebar.php'); ?>
-        
+    <!-- Include Header and Sidebar -->
+    <?php include 'header.php'; ?>
+    
+    <!-- Main Content -->
     <div class="main-content">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="page-header">Sales Report</h1>
+        <!-- Page Header -->
+        <div class="mb-4">
+            <div>
+                <h2 class="mb-1">Sales Dashboard</h2>
+                <p class="text-muted mb-0">Monitor your restaurant's performance and revenue</p>
             </div>
         </div>
-
-        <!-- Date Filter Form -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <form method="GET" action="<?php echo $_SERVER['PHP_SELF']; ?>" class="form-inline">
-                            <div class="row mb-3">
-                                <div class="col-md-3">
-                            <div class="form-group">
-                                <label>Start Date:</label>
-                                <input type="date" name="start_date" class="form-control" 
-                                       value="<?php echo $filter_start ? htmlspecialchars($filter_start) : ''; ?>">
-                            </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                <label>End Date:</label>
-                                <input type="date" name="end_date" class="form-control" 
-                                       value="<?php echo $filter_end ? htmlspecialchars($filter_end) : ''; ?>">
-                            </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                <label>Order Type:</label>
-                                <select name="order_type" class="form-control">
-                                            <option value="all">All Orders</option>
-                                            <option value="online" <?php echo ($order_type === 'online') ? 'selected' : ''; ?>>Online Orders</option>
-                                            <option value="advance" <?php echo ($order_type === 'advance') ? 'selected' : ''; ?>>Advance Orders</option>
-                                            <option value="walkin" <?php echo ($order_type === 'walkin') ? 'selected' : ''; ?>>Walk-in Orders</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label>Payment Method:</label>
-                                        <select name="payment_method" class="form-control">
-                                            <option value="all">All Methods</option>
-                                            <option value="gcash" <?php echo ($payment_method === 'gcash') ? 'selected' : ''; ?>>GCash</option>
-                                            <option value="maya" <?php echo ($payment_method === 'maya') ? 'selected' : ''; ?>>Maya</option>
-                                            <option value="bank" <?php echo ($payment_method === 'bank') ? 'selected' : ''; ?>>Bank Transfer</option>
-                                            <option value="cash" <?php echo ($payment_method === 'cash') ? 'selected' : ''; ?>>Cash</option>
-                                </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-filter"></i> Apply Filters
-                            </button>
-                                    <a href="sales.php" class="btn btn-secondary">
-                                        <i class="fa fa-refresh"></i> Reset Filters
-                                    </a>
-                                </div>
-                            </div>
-                        </form>
-                        <?php if (isset($success_message)): ?>
-                            <div class="alert alert-success" style="margin-top: 10px;">
-                                <?php echo $success_message; ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <!-- Add this after the filter form, inside the panel-body div -->
-                        <div class="row">
-                            <div class="col-md-12">
-                                <form method="POST" action="generate_report.php" id="report-form" class="mt-3">
-                                    <input type="hidden" name="start_date" value="<?php echo $filter_start; ?>">
-                                    <input type="hidden" name="end_date" value="<?php echo $filter_end; ?>">
-                                    <input type="hidden" name="order_type" value="<?php echo $order_type; ?>">
-                                    <input type="hidden" name="payment_method" value="<?php echo $payment_method; ?>">
-
-                                    <button type="submit" name="generate_report" class="btn btn-outline-primary ml-2">
-                                        <i class="fa fa-file-pdf-o"></i> Export All to PDF
-                                    </button>
-                                </form>
-                            </div>
+        
+        <!-- Date Filter Section -->
+        <div class="filter-section">
+            <form method="GET" id="dateFilterForm">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="from_date" class="filter-label">From Date</label>
+                        <input type="date" id="from_date" name="from_date" class="filter-input" value="<?= htmlspecialchars($fromDate) ?>">
+                    </div>
+                    <div class="filter-group">
+                        <label for="to_date" class="filter-label">To Date</label>
+                        <input type="date" id="to_date" name="to_date" class="filter-input" value="<?= htmlspecialchars($toDate) ?>">
+                    </div>
+                    <div class="filter-group">
+                        <button type="submit" class="filter-btn">
+                            <i class="fas fa-filter me-2"></i>Apply Filter
+                        </button>
+                        <button type="button" class="filter-btn" onclick="clearFilter()" style="background: #6c757d; margin-left: 10px;">
+                            <i class="fas fa-times me-2"></i>Clear
+                        </button>
+                        <button type="button" class="filter-btn" onclick="exportReport()" style="background: #28a745; margin-left: 10px;">
+                            <i class="fas fa-download me-2"></i>Export Report
+                        </button>
+                    </div>
+                </div>
+                <?php if ($fromDate && $toDate): ?>
+                    <div class="mt-3">
+                        <small class="text-muted">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Showing sales from <strong><?= date('M j, Y', strtotime($fromDate)) ?></strong> to <strong><?= date('M j, Y', strtotime($toDate)) ?></strong>
+                        </small>
+                    </div>
+                <?php endif; ?>
+            </form>
+        </div>
+        
+        <!-- Sales Cards -->
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="sales-card">
+                    <div class="sales-icon primary">
+                        <i class="fas fa-calendar-day"></i>
+                    </div>
+                    <div class="sales-value">₱<?php echo number_format($todaySales, 2); ?></div>
+                    <div class="sales-label">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Filtered Period Sales';
+                        } else {
+                            echo "Today's Sales";
+                        }
+                        ?>
+                    </div>
+                    <?php if (!$fromDate && !$toDate): ?>
+                    <div class="sales-change <?php echo $todaySalesChange >= 0 ? 'positive' : 'negative'; ?>">
+                        <i class="fas fa-arrow-<?php echo $todaySalesChange >= 0 ? 'up' : 'down'; ?> me-1"></i>
+                        <?php echo number_format(abs($todaySalesChange), 1); ?>% from yesterday
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="sales-card success">
+                    <div class="sales-icon success">
+                        <i class="fas fa-calendar-week"></i>
+                    </div>
+                    <div class="sales-value">₱<?php echo number_format($weekSales, 2); ?></div>
+                    <div class="sales-label">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Filtered Period Sales';
+                        } else {
+                            echo 'This Week';
+                        }
+                        ?>
+                    </div>
+                    <?php if (!$fromDate && !$toDate): ?>
+                    <div class="sales-change <?php echo $weekSalesChange >= 0 ? 'positive' : 'negative'; ?>">
+                        <i class="fas fa-arrow-<?php echo $weekSalesChange >= 0 ? 'up' : 'down'; ?> me-1"></i>
+                        <?php echo number_format(abs($weekSalesChange), 1); ?>% from last week
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="sales-card warning">
+                    <div class="sales-icon warning">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="sales-value">₱<?php echo number_format($monthSales, 2); ?></div>
+                    <div class="sales-label">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Filtered Period Sales';
+                        } else {
+                            echo 'This Month';
+                        }
+                        ?>
+                    </div>
+                    <?php if (!$fromDate && !$toDate): ?>
+                    <div class="sales-change <?php echo $monthSalesChange >= 0 ? 'positive' : 'negative'; ?>">
+                        <i class="fas fa-arrow-<?php echo $monthSalesChange >= 0 ? 'up' : 'down'; ?> me-1"></i>
+                        <?php echo number_format(abs($monthSalesChange), 1); ?>% from last month
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="sales-card info">
+                    <div class="sales-icon info">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="sales-value">₱<?php echo number_format($yearSales, 2); ?></div>
+                    <div class="sales-label">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Filtered Period Sales';
+                        } else {
+                            echo 'This Year';
+                        }
+                        ?>
+                    </div>
+                    <?php if (!$fromDate && !$toDate): ?>
+                    <div class="sales-change <?php echo $yearSalesChange >= 0 ? 'positive' : 'negative'; ?>">
+                        <i class="fas fa-arrow-<?php echo $yearSalesChange >= 0 ? 'up' : 'down'; ?> me-1"></i>
+                        <?php echo number_format(abs($yearSalesChange), 1); ?>% from last year
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Stats Row -->
+        <div class="row mb-4">
+            <div class="col-lg-6 mb-3">
+                <div class="sales-card">
+                    <div class="sales-icon primary">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="sales-value"><?php echo $todayOrders; ?></div>
+                    <div class="sales-label">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Filtered Period Orders';
+                        } else {
+                            echo "Today's Orders";
+                        }
+                        ?>
+                    </div>
+                    <?php if (!$fromDate && !$toDate): ?>
+                    <div class="sales-change <?php echo $todayOrdersChange >= 0 ? 'positive' : 'negative'; ?>">
+                        <i class="fas fa-arrow-<?php echo $todayOrdersChange >= 0 ? 'up' : 'down'; ?> me-1"></i>
+                        <?php echo number_format(abs($todayOrdersChange), 1); ?>% from yesterday
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mb-3">
+                <div class="sales-card success">
+                    <div class="sales-icon success">
+                        <i class="fas fa-receipt"></i>
+                    </div>
+                    <div class="sales-value"><?php echo $totalOrders; ?></div>
+                    <div class="sales-label">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Filtered Period Orders';
+                        } else {
+                            echo 'Total Completed Orders';
+                        }
+                        ?>
+                    </div>
+                    <?php if (!$fromDate && !$toDate): ?>
+                    <div class="sales-change positive">
+                        <i class="fas fa-arrow-up me-1"></i>All time
+                    </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sales Graph -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="sales-card">
+                    <div class="table-header">
+                        <h5 class="table-title">
+                            <?php 
+                                if ($fromDate && $toDate) {
+                                    echo 'Sales Trend (' . date('M j, Y', strtotime($fromDate)) . ' - ' . date('M j, Y', strtotime($toDate)) . ')';
+                                } else {
+                                    echo 'Sales Trend (Last 30 Days)';
+                                }
+                                ?>
+                        </h5>
+                        <div class="table-actions">
+                            <a href="#" class="table-btn" onclick="refreshChart()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </a>
+                            <a href="#" class="table-btn" onclick="changeChartType()">
+                                <i class="fas fa-chart-line me-1"></i>Change Type
+                            </a>
                         </div>
+                    </div>
+                    <div class="p-3">
+                        <canvas id="salesChart" width="400" height="200"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Sales Summary Cards -->
+        
+        <!-- Tables Row -->
         <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h2 class="page-header" style="margin-top: 0;">Sales</h2>
-                                <p style="color: #666;">
-                                    <?php 
-                                    if (!empty($filter_start)) {
-                                        echo date('F d, Y', strtotime($filter_start)); 
-                                    } else {
-                                        echo date('F d, Y');
-                                    }
-                                    ?>
-                                </p>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="sales-summary">
-                                    <div class="summary-item">
-                                        <h5>Gross Sales</h5>
-                                        <h3>₱<?php echo number_format($grossSales, 2); ?></h3>
-                                    </div>
-                                    <div class="summary-item">
-                                        <h5>Discounts</h5>
-                                        <h3>₱<?php echo number_format($totalDiscounts, 2); ?></h3>
-                                    </div>
-                                    <div class="summary-item">
-                                        <h5>Net Sales</h5>
-                                        <h3>₱<?php echo number_format($netSales, 2); ?></h3>
-                                    </div>
-                                    <div class="summary-item">
-                                        <h5>Transaction Count</h5>
-                                        <h3><?php echo $transactionCount; ?></h3>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="col-lg-8 mb-3">
+                <div class="sales-table">
+                    <div class="table-header">
+                        <h5 class="table-title">
+                            <?php 
+                            if ($fromDate && $toDate) {
+                                echo 'Filtered Sales (' . date('M j, Y', strtotime($fromDate)) . ' - ' . date('M j, Y', strtotime($toDate)) . ')';
+                            } else {
+                                echo 'Recent Sales (Last 30 Days)';
+                            }
+                            ?>
+                        </h5>
+                        <div class="table-actions">
+                            <a href="#" class="table-btn" onclick="refreshTable()">
+                                <i class="fas fa-sync-alt me-1"></i>Refresh
+                            </a>
+                            <a href="#" class="table-btn" onclick="viewAllSales()">
+                                <i class="fas fa-eye me-1"></i>View All
+                            </a>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Period Sales Cards -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="sales-card">
-                    <h5 class="card-title">Daily Sales</h5>
-                    <h3 class="card-text">₱<?php echo number_format($dailySales, 2); ?></h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="sales-card">
-                    <h5 class="card-title">Weekly Sales</h5>
-                    <h3 class="card-text">₱<?php echo number_format($weeklySales, 2); ?></h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="sales-card">
-                    <h5 class="card-title">Monthly Sales</h5>
-                    <h3 class="card-text">₱<?php echo number_format($monthlySales, 2); ?></h3>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="sales-card">
-                    <h5 class="card-title">Annual Sales</h5>
-                    <h3 class="card-text">₱<?php echo number_format($annualSales, 2); ?></h3>
-                </div>
-            </div>
-        </div>
-
-        <!-- Online, Walk-in, and Advance Sales -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="sales-card">
-                    <h5 class="card-title">Online Orders</h5>
-                    <h3 class="card-text">₱ <?php echo number_format($onlineSales, 2); ?></h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="sales-card">
-                    <h5 class="card-title">Walk-in Orders</h5>
-                    <h3 class="card-text">₱ <?php echo number_format($walkinSales, 2); ?></h3>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="sales-card">
-                    <h5 class="card-title">Advance Orders</h5>
-                    <h3 class="card-text">₱ <?php echo number_format($advanceSales, 2); ?></h3>
-                </div>
-            </div>
-        </div>
-
-        <!-- Sales Details Table -->
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="panel panel-default">
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped">
-                                <thead>
+                    <div class="table-responsive">
+                        <table class="table custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Table</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (!empty($recentSales)): ?>
+                                    <?php foreach ($recentSales as $sale): ?>
                                     <tr>
-                                        
-                                        <th>Items</th>
-                                        <th>Total Amount</th>
-                                        <th>Payment Method</th>
-                                        <th>Date</th>
-                                        <th>Order Type</th>
-                                        <th>Status</th>
-                                        <th>Change Amount</th>
-                                        <th>Cashier</th>
+                                        <td>#<?php echo $sale['order_id']; ?></td>
+                                        <td>
+                                            <?php echo htmlspecialchars(trim($sale['firstname'] . ' ' . $sale['lastname'])) ?: 'Walkin Customers'; ?>
+                                        </td>
+                                        <td>N/A</td>
+                                        <td class="amount">₱<?php echo number_format($sale['total'], 2); ?></td>
+                                        <td>
+                                            <span class="status-badge <?php echo strtolower($sale['status']); ?>">
+                                                <?php echo ucfirst($sale['status']); ?>
+                                            </span>
+                                        </td>
+                                        <td><?php echo date('M j, Y H:i', strtotime($sale['date_time'])); ?></td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                    if ($detailedResult && $detailedResult->num_rows > 0) {
-                                        while ($row = $detailedResult->fetch_assoc()) { 
-                                    ?>
-                                        <tr>
-                                            
-                                            <td><?php echo htmlspecialchars($row['items']); ?></td>
-                                            <td>₱ <?php echo number_format($row['total_amount'], 2); ?></td>
-                                            <td><?php 
-                                                $payment = htmlspecialchars($row['payment_method']);
-                                                switch(strtolower($payment)) {
-                                                    case 'gcash':
-                                                        echo 'GCash';
-                                                        break;
-                                                    case 'maya':
-                                                        echo 'Maya';
-                                                        break;
-                                                    case 'bank':
-                                                        echo 'Bank Transfer';
-                                                        break;
-                                                    case 'cash':
-                                                        echo 'Cash';
-                                                        break;
-                                                    default:
-                                                        echo $payment;
-                                                }
-                                            ?></td>
-                                            <td><?php echo date('M d, Y h:i A', strtotime($row['order_date'])); ?></td>
-                                            <td><?php echo htmlspecialchars(ucfirst($row['order_type'])); ?></td>
-                                            <td><?php echo htmlspecialchars($row['status']); ?></td>
-                                            <td>₱ <?php echo number_format($row['change_amount'], 2); ?></td>
-
-                                            <td><?php echo htmlspecialchars($row['processed_by'] ?? 'N/A'); ?></td>
-                                        </tr>
-                                    <?php 
-                                        }
-                                    } else { 
-                                    ?>
-                                        <tr>
-                                            <td colspan="9" class="text-center">No data available for the selected filters</td>
-                                        </tr>
-                                    <?php 
-                                    } 
-                                    ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            No recent sales data available. Sales will appear here once orders are completed.
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-3">
+                <div class="top-items-card">
+                    <h5 class="mb-3">
+                        <?php 
+                        if ($fromDate && $toDate) {
+                            echo 'Top Selling Items (' . date('M j, Y', strtotime($fromDate)) . ' - ' . date('M j, Y', strtotime($toDate)) . ')';
+                        } else {
+                            echo 'Top Selling Items (Last 30 Days)';
+                        }
+                        ?>
+                    </h5>
+                    <?php if (!empty($topItems)): ?>
+                        <?php foreach ($topItems as $index => $item): ?>
+                        <div class="top-item">
+                            <div class="top-item-rank"><?php echo $index + 1; ?></div>
+                            <div class="top-item-info">
+                                <div class="d-flex align-items-center mb-2">
+                                    <?php if (!empty($item['image_path']) && file_exists('../../Admin/adminBackend/menu_item_images/' . $item['image_path'])): ?>
+                                        <img src="../../Admin/adminBackend/menu_item_images/<?php echo htmlspecialchars($item['image_path']); ?>" 
+                                             alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                             style="width: 40px; height: 40px; object-fit: cover; border-radius: 8px; margin-right: 10px;">
+                                    <?php else: ?>
+                                        <div style="width: 40px; height: 40px; background: var(--primary-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                            <i class="fas fa-utensils text-muted"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="top-item-name"><?php echo htmlspecialchars($item['name']); ?></div>
+                                </div>
+                                <div class="top-item-quantity"><?php echo $item['total_quantity']; ?> items sold</div>
+                            </div>
+                            <div class="top-item-revenue">
+                                <div class="top-item-amount">₱<?php echo number_format($item['total_revenue'], 2); ?></div>
+                            </div>
+                        </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center text-muted py-4">
+                            <i class="fas fa-chart-line fa-3x mb-3"></i>
+                            <p>No top selling items data available yet.</p>
+                            <small>Items will appear here once sales are recorded.</small>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-
-    <script src="js/jquery-1.11.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/chart.min.js"></script>
-    <script src="js/chart-data.js"></script>
-    <script src="js/easypiechart.js"></script>
-    <script src="js/easypiechart-data.js"></script>
-    <script src="js/bootstrap-datepicker.js"></script>
-    <script src="js/custom.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    // Custom JavaScript
     <script>
-        $(document).ready(function() {
-            $('.table').DataTable({
-                "order": [[ 4, "desc" ]], // Updated column index due to new checkbox column
-                "pageLength": 25
-            });
-
-            // Initialize date inputs with zeros instead of current date
-            if (!$('input[name="start_date"]').val()) {
-                $('input[name="start_date"]').val('00000000');
-            }
-            if (!$('input[name="end_date"]').val()) {
-                $('input[name="end_date"]').val('00000000');
-            }
-
-            // Validate date range
-            $('form').on('submit', function(e) {
-                var startDate = new Date($('input[name="start_date"]').val());
-                var endDate = new Date($('input[name="end_date"]').val());
-                
-                if (startDate > endDate) {
-                    e.preventDefault();
-                    alert('Start date cannot be later than end date');
-                    return false;
-                }
-            });
-
-            // Updated sidebar toggle handler
-            $('.sidebar-toggle').on('click', function(e) {
-                e.preventDefault();
-                $('body').toggleClass('sidebar-collapsed');
-                
-                // Optional: Save state to localStorage
-                localStorage.setItem('sidebarState', 
-                    $('body').hasClass('sidebar-collapsed') ? 'collapsed' : 'expanded'
-                );
-            });
-
-            // Check saved state on page load
-            if (localStorage.getItem('sidebarState') === 'collapsed') {
-                $('body').addClass('sidebar-collapsed');
-            }
-
-            // Improved responsive handling
-            function handleResize() {
-                if ($(window).width() < 768) {
-                    $('body').addClass('sidebar-collapsed');
-                } else {
-                    // Only remove class if it wasn't explicitly collapsed by user
-                    if (localStorage.getItem('sidebarState') !== 'collapsed') {
-                        $('body').removeClass('sidebar-collapsed');
-                    }
-                }
-            }
-
-            // Handle window resize
-            $(window).resize(function() {
-                handleResize();
-            });
-
-            // Initial check on page load
-            handleResize();
-
-            // Enable Bootstrap dropdowns
-            $('.dropdown-toggle').dropdown();
-
-            // Handle notification clicks
-            $('.notification-toggle').click(function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $(this).parent().toggleClass('show');
-                $(this).next('.dropdown-menu').toggleClass('show');
-            });
-
-            // Handle profile dropdown
-            $('.profile-dropdown').click(function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                $(this).parent().toggleClass('show');
-                $(this).next('.dropdown-menu').toggleClass('show');
-            });
-
-            // Close dropdowns when clicking outside
-            $(document).click(function(e) {
-                if (!$(e.target).closest('.dropdown').length) {
-                    $('.dropdown-menu').removeClass('show');
-                    $('.dropdown').removeClass('show');
-                }
-            });
-
-            // Fetch notifications (if you have an endpoint for this)
-            function fetchNotifications() {
-                $.ajax({
-                    url: 'get_notifications.php',
-                    method: 'GET',
-                    success: function(response) {
-                        if(response.count > 0) {
-                            $('.notification-badge').text(response.count).show();
-                        } else {
-                            $('.notification-badge').hide();
-                        }
-                        // Update notification dropdown content if needed
-                    }
-                });
-            }
-
-            // Fetch notifications periodically
-            setInterval(fetchNotifications, 30000); // Every 30 seconds
-            fetchNotifications(); // Initial fetch
-
-            // Handle select all checkbox
-            $('#select-all').on('change', function() {
-                $('.order-select').prop('checked', $(this).prop('checked'));
-                updateSelectedCount();
-            });
-            
-            // Handle individual checkboxes
-            $(document).on('change', '.order-select', function() {
-                updateSelectedCount();
-                
-                // Update select all checkbox state
-                if ($('.order-select:checked').length === $('.order-select').length) {
-                    $('#select-all').prop('checked', true);
-                } else {
-                    $('#select-all').prop('checked', false);
-                }
-            });
-            
-            // Update the selected count and enable/disable button
-            function updateSelectedCount() {
-                const selectedCount = $('.order-select:checked').length;
-                const $btn = $('#generate-selected-report');
-                
-                if (selectedCount > 0) {
-                    $btn.prop('disabled', false);
-                    $btn.text(`Export Selected (${selectedCount}) to PDF`);
-                } else {
-                    $btn.prop('disabled', true);
-                    $btn.text('Export Selected to PDF');
-                }
-            }
-            
-            // Handle the export selected button click
-            $('#generate-selected-report').on('click', function() {
-                // Get all selected order IDs
-                const selectedIds = [];
-                $('.order-select:checked').each(function() {
-                    selectedIds.push($(this).data('id'));
-                });
-                
-                if (selectedIds.length === 0) {
-                    alert('Please select at least one order to export.');
-                    return;
-                }
-                
-                // Add the selected order IDs to the form
-                $('#report-form').append('<input type="hidden" name="selected_orders" value="' + selectedIds.join(',') + '">');
-                $('#report-form').submit();
-            });
+    function showAlert(message, type = 'info') {
+        Toast.fire({
+            icon: type,
+            title: message
         });
-    </script>
+    }
+    
+    // Initialize Charts
+    let salesChart = null;
+    let currentChartType = 'daily'; // 'daily', 'weekly', 'monthly'
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeSalesChart();
+    });
+    
+    function initializeSalesChart() {
+        fetchSalesChartData();
+    }
+    
+    function fetchSalesChartData() {
+        const from = document.getElementById('from_date').value;
+        const to = document.getElementById('to_date').value;
+        
+        console.log('Fetching chart data:', { from, to, chartType: currentChartType });
+        
+        $.ajax({
+            url: 'get_sales_chart_data.php',
+            method: 'POST',
+            data: {
+                from_date: from,
+                to_date: to,
+                chart_type: currentChartType
+            },
+            dataType: 'json',
+            success: function(response) {
+                console.log('Chart data response:', response);
+                if (response.success) {
+                    renderSalesChart(response);
+                } else {
+                    showAlert('Error loading chart data: ' + response.error, 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                showAlert('Error loading chart data. Please try again.', 'error');
+                console.error('Chart data error:', error);
+            }
+        });
+    }
+    
+    function renderSalesChart(data) {
+        console.log('Rendering sales chart with data:', data);
+        
+        const ctx = document.getElementById('salesChart');
+        if (!ctx) {
+            console.error('Chart canvas not found!');
+            return;
+        }
+        
+        const ctx2d = ctx.getContext('2d');
+        if (!ctx2d) {
+            console.error('Could not get 2D context from chart canvas!');
+            return;
+        }
+        
+        // Destroy existing chart if it exists
+        if (salesChart) {
+            salesChart.destroy();
+            salesChart = null;
+        }
+        
+        // Prepare chart data based on current type
+        let chartConfig;
+        
+        if (currentChartType === 'daily') {
+            chartConfig = {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Daily Sales',
+                        data: data.sales,
+                        borderColor: '#b8860b',
+                        backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    return '₱' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₱' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        } else if (currentChartType === 'weekly') {
+            chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Weekly Sales',
+                        data: data.sales,
+                        backgroundColor: [
+                            'rgba(184, 134, 11, 0.8)',
+                            'rgba(46, 204, 113, 0.8)',
+                            'rgba(52, 152, 219, 0.8)',
+                            'rgba(26, 188, 156, 0.8)',
+                            'rgba(231, 76, 60, 0.8)',
+                            'rgba(243, 156, 18, 0.8)'
+                        ],
+                        borderColor: [
+                            '#b8860b',
+                            '#2ecc71',
+                            '#f39c12',
+                            '#1abc9c',
+                            '#e74c3c',
+                            '#3498db',
+                            '#f1c40f'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '₱' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₱' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        } else if (currentChartType === 'monthly') {
+            chartConfig = {
+                type: 'line',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: 'Monthly Sales',
+                        data: data.sales,
+                        borderColor: '#b8860b',
+                        backgroundColor: 'rgba(184, 134, 11, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return '₱' + context.parsed.y.toLocaleString();
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₱' + value.toLocaleString();
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+        }
+        
+        console.log('Creating chart with config:', chartConfig);
+        
+        try {
+            salesChart = new Chart(ctx2d, chartConfig);
+            console.log('Chart created successfully:', salesChart);
+        } catch (error) {
+            console.error('Error creating chart:', error);
+            showAlert('Error creating chart: ' + error.message, 'error');
+        }
+    }
+    
+    function refreshChart() {
+        showAlert('Refreshing chart data...', 'info');
+        fetchSalesChartData();
+    }
+    
+    function changeChartType() {
+        // Cycle through chart types
+        if (currentChartType === 'daily') {
+            currentChartType = 'weekly';
+        } else if (currentChartType === 'weekly') {
+            currentChartType = 'monthly';
+        } else {
+            currentChartType = 'daily';
+        }
+        
+        showAlert('Changed to ' + currentChartType + ' view', 'info');
+        fetchSalesChartData();
+    }
+    
+    function updateSalesTable(salesData) {
+        const tbody = document.querySelector('.custom-table tbody');
+        tbody.innerHTML = '';
+        
+        if (salesData.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="6" class="text-center">No sales data found for the selected filters.</td>
+                </tr>
+            `;
+            return;
+        }
+        
+        salesData.forEach(function(sale) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>#${sale.id}</td>
+                <td>${sale.customer}</td>
+                <td>${sale.table}</td>
+                <td class="amount">${sale.amount}</td>
+                <td>
+                    <span class="status-badge ${sale.status_class}">
+                        ${sale.status}
+                    </span>
+                </td>
+                <td>${sale.date}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+    
+    function refreshTable() {
+        showAlert('Refreshing sales data...', 'info');
+        
+        // Make AJAX call to get recent data
+        $.ajax({
+            url: 'get_recent_sales.php',
+            method: 'POST',
+            data: {
+                dateRange: 'recent',
+                status: 'completed',
+                limit: 10
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    updateSalesTable(response.data);
+                    showAlert('Sales data refreshed!', 'success');
+                } else {
+                    showAlert('Error refreshing data: ' + response.error, 'error');
+                }
+            },
+            error: function(xhr, status, error) {
+                showAlert('Error refreshing data. Please try again.', 'error');
+                console.error('AJAX error:', error);
+            }
+        });
+    }
+    
+    function viewAllSales() {
+        showAlert('Redirecting to detailed sales view...', 'info');
+        // Here you would redirect to a detailed sales page
+    }
+    
+    function clearFilter() {
+        window.location.href = 'sales.php';
+    }
+    
+    function exportReport() {
+        console.log('Export PDF function called');
+        
+        const from = document.getElementById('from_date').value;
+        const to = document.getElementById('to_date').value;
+        
+        console.log('From date:', from);
+        console.log('To date:', to);
+        
+        // Build URL for PDF generation
+        let url = 'sales_export.php?export=pdf';
+        if (from) url += '&from_date=' + encodeURIComponent(from);
+        if (to) url += '&to_date=' + encodeURIComponent(to);
+        
+        console.log('Export PDF URL:', url);
+        
+        // Show loading message
+        showAlert('Generating PDF report...', 'info');
+        
+        // Open in new window for PDF generation
+        const pdfWindow = window.open(url, '_blank');
+        
+        // Check if popup was blocked
+        if (!pdfWindow || pdfWindow.closed || typeof pdfWindow.closed === 'undefined') {
+            showAlert('Please allow popups for this site to generate PDF reports', 'warning');
+            // Fallback: try direct download
+            const link = document.createElement('a');
+            link.href = url;
+            link.target = '_blank';
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } else {
+            // Show success message after a short delay
+            setTimeout(() => {
+                showAlert('PDF report generated successfully!', 'success');
+            }, 2000);
+        }
+    }
+    
+        </script>
 </body>
 </html>

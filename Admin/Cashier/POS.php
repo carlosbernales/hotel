@@ -1,2634 +1,2007 @@
 <?php
-// Session is already started in index.php
-// Check if user is logged in and is a cashier
-if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'cashier') {
-    // Redirect to login page if not logged in or not a cashier
-    header('Location: ../../login.php');
-    exit();
-}
-
-// Get user details
-$user_id = $_SESSION['user_id'];
-
-// Include database connection
 require_once 'db.php';
 
-// Verify user exists and has appropriate role
-$userQuery = "SELECT * FROM userss WHERE id = ? AND user_type = 'cashier'";
-$stmt = $con->prepare($userQuery);
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
+// Function to fetch all active discount types
+function getDiscountTypes($pdo) {
+    try {
+        $stmt = $pdo->query("SELECT * FROM discount_types WHERE is_active = 1 ORDER BY name ASC");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Error fetching discount types: " . $e->getMessage());
+        return [];
+    }
+}
 
-if (!$result->num_rows) {
-    // Handle invalid user
-    header('Location: ../../login.php');
+// Check if user is logged in and has cashier role
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'cashier') {
+    header('Location: ../login.php');
     exit();
 }
 
+$pageTitle = 'Point of Sale';
+$currentPage = 'pos.php';
+
+// Include header
+include 'header.php';
+
 // Fetch menu categories
-$categoryQuery = "SELECT * FROM menu_categories ORDER BY id";
-$categoryResult = $con->query($categoryQuery);
-$categories = [];
-while($row = $categoryResult->fetch_assoc()) {
-    $categories[] = $row;
+$menuCategories = [];
+try {
+    $stmt = $pdo->query("SELECT * FROM menu_categories ORDER BY  name");
+    $menuCategories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    $error = "Failed to load menu categories: " . $e->getMessage();
 }
 
-// Fetch menu items with their categories and descriptions
-$menuQuery = "SELECT mi.*, mc.name as category_name 
-             FROM menu_items mi 
-             JOIN menu_categories mc ON mi.category_id = mc.id";
-$menuResult = $con->query($menuQuery);
-$menuItems = [];
-while($row = $menuResult->fetch_assoc()) {
-    $menuItems[] = $row;
+// Fetch menu items
+try {
+    $stmt = $pdo->query("SELECT * FROM menu_items WHERE availability = '1' ORDER BY category_id, name");
+    $menuItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Group items by category for easier display
+    $groupedItems = [];
+    foreach ($menuItems as $item) {
+        $categoryId = $item['category_id'];
+        if (!isset($groupedItems[$categoryId])) {
+            $groupedItems[$categoryId] = [];
+        }
+        $groupedItems[$categoryId][] = $item;
+    }
+    $menuItems = $groupedItems;
+} catch (PDOException $e) {
+    $error = "Failed to load menu items: " . $e->getMessage();
 }
 
 // Fetch menu item addons
-$addonsQuery = "SELECT * FROM menu_items_addons";
-$addonsResult = $con->query($addonsQuery);
-$addons = [];
-while($row = $addonsResult->fetch_assoc()) {
-    $addons[$row['menu_item_id']][] = $row;
-}
-
-// Fetch tables from the database
-$tables = [];
-$tablesQuery = "SELECT * FROM table_number ORDER BY table_number ASC";
-$tablesResult = $con->query($tablesQuery);
-
-if ($tablesResult) {
-    while($row = $tablesResult->fetch_assoc()) {
-        $tables[] = [
-            'id' => $row['id'],
-            'table_number' => $row['table_number'],
-            'is_occupied' => ($row['status'] === 'occupied')
-        ];
+try {
+    $stmt = $pdo->query("SELECT menu_item_id, id, name, price FROM menu_items_addons ORDER BY name");
+    $addons = $stmt->fetchAll(PDO::FETCH_GROUP | PDO::FETCH_ASSOC);
+    $menuItemAddons = [];
+    
+    // Reorganize add-ons by menu item ID
+    foreach ($addons as $menuItemId => $addonList) {
+        $menuItemAddons[$menuItemId] = $addonList;
     }
-} else {
-    // Fallback if table doesn't exist yet
-    for ($i = 1; $i <= 10; $i++) {
-        $tables[] = [
-            'id' => $i,
-            'table_number' => $i,
-            'is_occupied' => false
-        ];
-    }
+} catch (PDOException $e) {
+    $error = "Failed to load menu item addons: " . $e->getMessage();
 }
-
-// Convert tables to JSON for JavaScript use
-$tablesJson = json_encode($tables);
-
-// Convert the PHP arrays to JSON for JavaScript use
-$menuData = json_encode([
-    'categories' => $categories,
-    'items' => $menuItems,
-    'addons' => $addons
-]);
-
-// Make the user ID available to JavaScript
 ?>
-<script>
-    const currentUserId = <?php echo $_SESSION['user_id'] ?? 'null'; ?>;
-    // Check if user is logged in
-    if (!currentUserId) {
-        // Redirect to login or show error
-        window.location.href = 'login.php';
+<style>
+    /* Primary color variables */
+    :root {
+        --primary-color: #b8860b;
+        --primary-hover: #9a7209;
+        --primary-light: rgba(184, 134, 11, 0.1);
+        --primary-light-hover: rgba(184, 134, 11, 0.2);
     }
     
-    // Make tables data available to JavaScript
-    const tablesData = <?php echo $tablesJson; ?>;
-    
-    // Function to mark a table as occupied
-    function markTableAsOccupied(tableId) {
-        // Make AJAX request to update table status in database
-        fetch('update_table_status.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'table_id=' + tableId + '&status=occupied'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                console.error('Error updating table status:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    /* Style for category tabs */
+    .nav-tabs {
+        border-bottom: 2px solid var(--primary-color);
+        margin-bottom: 20px;
     }
     
-    // Function to mark a table as available
-    function markTableAsAvailable(tableId) {
-        // Make AJAX request to update table status in database
-        fetch('update_table_status.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'table_id=' + tableId + '&status=available'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                console.error('Error updating table status:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .nav-tabs .nav-link {
+        color: #555;
+        border: none;
+        border-bottom: 3px solid transparent;
+        font-weight: 500;
+        padding: 10px 20px;
+        margin-right: 5px;
+        transition: all 0.3s ease;
     }
     
-    // Simplified table data refresh function to only get available tables for the dropdown
-    function refreshTablesData() {
-        return fetch('get_tables.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    return data.tables;
-                } else {
-                    console.error('Error fetching tables:', data.message);
-                    return tablesData; // Fall back to current data
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                return tablesData; // Fall back to current data
-            });
+    .nav-tabs .nav-link:hover {
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+        background-color: var(--primary-light);
     }
-</script>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Estela POS</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-        }
-
-        /* Main Layout */
-        .main-container {
-            padding: 2rem;
-            max-width: 100%;
-            margin: 0 auto;
-            margin-left: 60px;
-            margin-right: 370px;
-            position: relative;
-        }
-
-        /* Menu Categories */
-        .menu-categories {
-            margin-bottom: 2rem;
-            width: 100%;
-            z-index: 1;
-        }
-
-        .menu-categories h3 {
-            color: #333;
-            margin-bottom: 1.5rem;
-            text-align: center;
-            padding-left: 0;
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-
-        .category-list {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin-left: -170px;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .category-list li {
-            padding: 1rem 2rem;
-            cursor: pointer;
-            border-radius: 4px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-        }
-
-        .category-list li:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .category-list li.active {
-            background: #007bff;
-            color: white;
-        }
-
-        /* Menu Content */
-        .section-title {
-            color: #333;
-            margin-bottom: 2rem;
-            text-align: center;
-            padding-left: 0;
-            font-size: 2rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .menu-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
-            padding: 1.5rem;
-            padding-left: 0;
-        }
-
-        .menu-item {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            margin-bottom: 1.5rem;
-        }
-
-        .menu-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .menu-item img {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-        }
-
-        .menu-item-details {
-            padding: 1.2rem;
-            background: white;
-        }
-
-        .menu-item-details h3 {
-            color: #333;
-            font-size: 1.4rem;
-            margin-bottom: 0.8rem;
-        }
-
-        .menu-item-details p {
-            color: #28a745;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .add-to-cart {
-            background: #ffc107;
-            color: #000;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .add-to-cart:hover {
-            background: #ffb300;
-            transform: scale(1.05);
-        }
-
-        .add-to-cart i {
-            font-size: 0.9rem;
-        }
-
-        /* Current Order Panel */
-        .current-order {
-            position: fixed;
-            top: 65px;
-            right: 0;
-            width: 300px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 80px);
-            overflow: hidden;
-            z-index: 2;
-        }
-
-        .current-order h2 {
-            padding: 1.2rem;
-            margin: 0;
-            border-bottom: 1px solid #eee;
-            font-size: 1.6rem;
-            font-weight: 600;
-        }
-
-        .order-items {
-            flex: 1;
-            overflow-y: auto;
-            padding: 1rem;
-        }
-
-        .order-item {
-            background: #fff;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .order-item-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 0.5rem;
-        }
-
-        .order-item-name {
-            font-weight: 600;
-            color: #333;
-            font-size: 1.2rem;
-        }
-
-        .order-item-price {
-            color: #28a745;
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        .order-item-category {
-            color: #666;
-            font-size: 1.1rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .quantity-btn {
-            width: 28px;
-            height: 28px;
-            border: none;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .quantity-btn.minus {
-            background: #dc3545;
-            color: white;
-        }
-
-        .quantity-btn.plus {
-            background: #28a745;
-            color: white;
-        }
-
-        .quantity-display {
-            padding: 0 0.5rem;
-            font-weight: 600;
-        }
-
-        .addons-section {
-            margin-top: 0.5rem;
-            padding-top: 0.5rem;
-            border-top: 1px solid #eee;
-        }
-
-        .addons-section h4 {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 0.5rem;
-        }
-
-        .addon-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.3rem;
-        }
-
-        .addon-item input[type="checkbox"] {
-            margin-right: 0.5rem;
-        }
-
-        .order-summary {
-            background: white;
-            padding: 1rem;
-            border-top: 1px solid #eee;
-            margin-top: auto;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 0.8rem;
-            color: #333;
-            font-size: 1.2rem;
-            font-weight: 500;
-        }
-
-        .place-order-btn {
-            width: 100%;
-            padding: 1rem;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 1.3rem;
-            cursor: pointer;
-            margin-top: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .place-order-btn:hover {
-            background: #218838;
-        }
-
-        /* Customer Details Modal */
-        .modal.fade .modal-dialog {
-            transform: scale(0.7);
-            transition: all 0.3s ease;
-        }
-
-        .modal.show .modal-dialog {
-            transform: scale(1);
-        }
-
-        /* Add this to your existing styles */
-        .loading-animation {
-            width: 50px;
-            height: 50px;
-            border: 5px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 5px solid #3498db;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Add these modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 9999;
-        }
-
-        .modal.show {
-            display: block;
-        }
-
-        .modal-dialog {
-            position: relative;
-            width: 500px;
-            margin: 30px auto;
-            background: #fff;
-            border-radius: 5px;
-        }
-
-        .modal-content {
-            position: relative;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .modal-header {
-            padding: 15px;
-            border-bottom: 1px solid #e5e5e5;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-body {
-            padding: 20px;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
-
-        .modal-footer {
-            padding: 15px;
-            border-top: 1px solid #e5e5e5;
-            text-align: right;
-        }
-
-        .order-items-summary {
-            margin-bottom: 15px;
-        }
-
-        .order-summary-item {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-        }
-
-        .order-summary-item:last-child {
-            border-bottom: none;
-        }
-
-        .close {
-            font-size: 24px;
-            font-weight: bold;
-            line-height: 1;
-            color: #000;
-            opacity: 0.5;
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-        }
-
-        .close:hover {
-            opacity: 0.75;
-        }
-
-        /* Add to your existing styles */
-        .discount-options {
-            margin-top: 10px;
-        }
-
-        .form-check {
-            margin-bottom: 8px;
-        }
-
-        .form-check-input {
-            margin-right: 8px;
-        }
-
-        .form-control {
-            display: block;
-            width: 100%;
-            padding: 8px 12px;
-            font-size: 14px;
-            line-height: 1.5;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-top: 5px;
-        }
-
-        /* Add this CSS for the loading animation */
-        .loading-spinner {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .required-field {
-            border-color: red !important;
-        }
-
-        .error-message {
-            color: red;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .confirm-order-popup {
-            padding: 2rem;
-            max-height: 90vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        .confirmation-details {
-            text-align: left;
-            padding-bottom: 2rem;
-            margin-bottom: 1rem;
-        }
-        .section-title {
-            font-size: 1.2rem;
-            color: #333;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            margin-left: 0px;
-            border-bottom: 2px solid #eee;
-        }
-        .payment-details {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid #eee;
-            margin-bottom: 2rem;
-        }
-        .total-section {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px solid #eee;
-            margin-bottom: 1rem;
-        }
-        .swal2-actions {
-            margin-top: 0;
-            padding: 1rem;
-            border-top: 1px solid #eee;
-            width: 100%;
-            justify-content: flex-end;
-            gap: 1rem;
-        }
-        .swal2-confirm, .swal2-cancel {
-            margin: 0 !important;
-        }
-        .swal2-popup {
-            padding-bottom: 0;
-        }
-        .swal2-html-container {
-            margin: 0;
-            overflow-y: auto;
-            max-height: calc(90vh - 150px);
-        }
-
-        /* Image Container */
-        .menu-item-image {
-            position: relative;
-            width: 100%;
-            height: 250px;
-            overflow: hidden;
-        }
-
-        .menu-item-image img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .menu-item:hover .menu-item-image img {
-            transform: scale(1.05);
-        }
-
-        /* Overlay */
-        .menu-item-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .menu-item:hover .menu-item-overlay {
-            opacity: 1;
-        }
-
-        /* Item Details */
-        .menu-item-details {
-            padding: 1.2rem;
-            background: white;
-        }
-
-        .item-name {
-            color: #333;
-            font-size: 1.4rem;
-            font-weight: 600;
-            margin-bottom: 0.8rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .item-price-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 0.2rem;
-        }
-
-        .peso-sign {
-            color: #28a745;
-            font-weight: 600;
-            font-size: 1.3rem;
-        }
-
-        .item-price {
-            color: #28a745;
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        /* Add to Cart Button */
-        .add-to-cart {
-            background: #ffc107;
-            color: #000;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
-        .add-to-cart:hover {
-            background: #ffb300;
-            transform: scale(1.05);
-        }
-
-        .add-to-cart i {
-            font-size: 0.9rem;
-        }
-
-        /* Category List Styling */
-        .category-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            padding: 1rem 1rem 1rem 250px;
-            margin-bottom: 1.5rem;
-            justify-content: center;
-        }
-
-        .category-list li {
-            padding: 1rem 2rem;
-            background: white;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            font-weight: 500;
-        }
-
-        .category-list li:hover {
-            background: #f8f9fa;
-            transform: translateY(-2px);
-        }
-
-        .category-list li.active {
-            background: #007bff;
-            color: white;
-        }
-
-        /* Section Title */
-        .section-title {
-            color: #333;
-            font-size: 2rem;
-            font-weight: 700;
-            text-align: center;
-            margin: 2.5rem 0;
-            padding-left: 0px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 1200px) {
-            .menu-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                padding-left: 0;
-            }
-            
-            .category-list {
-                padding-left: 0;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .main-container {
-                margin-left: 60px;
-                margin-right: 0;
-                padding: 1rem;
-            }
-            
-            .menu-grid {
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                padding-left: 0;
-            }
-            
-            .category-list {
-                padding-left: 0;
-            }
-            
-            .section-title {
-                padding-left: 0;
-            }
-        }
-
-        /* Button Group in Overlay */
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.8rem;
-            width: 80%;
-        }
-
-        /* Description Button */
-        .view-description {
-            background: #17a2b8;
-                color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            gap: 0.8rem;
-            width: 100%;
-        }
-
-        .view-description:hover {
-            background: #138496;
-            transform: scale(1.05);
-        }
-
-        /* Description Modal Styles */
-        .description-modal {
-            font-family: Arial, sans-serif;
-        }
-
-        .description-popup {
-            padding: 2rem;
-            border-radius: 15px;
-        }
-
-        .description-title {
-            color: #333;
-            font-size: 1.8rem;
-            font-weight: 700;
-                margin-bottom: 1rem;
-            }
-            
-        .description-content {
-            color: #666;
-            font-size: 1.2rem;
-            line-height: 1.6;
-        }
-
-        /* Adjust overlay to accommodate both buttons */
-        .menu-item-overlay {
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        /* Description Preview */
-        .item-description-preview {
-            color: #666;
-            font-size: 0.9rem;
-            margin: 0.5rem 0;
-            line-height: 1.4;
-            height: 2.8em;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-        }
-
-        /* Description Modal Styles */
-        .menu-description {
-            color: #333;
-            font-size: 1.1rem;
-            line-height: 1.6;
-            text-align: left;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-
-        .description-popup {
-            max-width: 500px;
-            padding: 2rem;
-        }
-
-        .description-title {
-            color: #333;
-            font-size: 1.8rem;
-            font-weight: 700;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .description-content {
-            margin: 0 !important;
-            padding: 0 1rem;
-        }
-
-        /* View Description Button */
-        /* Add-ons Modal Styles */
-        .addons-modal {
-            max-height: 60vh;
-            overflow-y: auto;
-            padding: 10px 5px;
-        }
-        
-        .addons-list {
-            margin-bottom: 20px;
-        }
-        
-        .addon-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        
-        .addon-item:hover {
-            background: #e9ecef;
-        }
-        
-        .addon-info {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-        }
-        
-        .addon-item input[type="checkbox"] {
-            margin-right: 10px;
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-        }
-        
-        .addon-quantity {
-            display: flex;
-            align-items: center;
-            margin-left: 15px;
-        }
-        
-        .addon-quantity .quantity-btn {
-            width: 28px;
-            height: 28px;
-            border: 1px solid #ddd;
-            background: #f8f9fa;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            padding: 0;
-        }
-        
-        .addon-quantity .quantity-btn:hover {
-            background: #e9ecef;
-        }
-        
-        .addon-quantity .quantity-display {
-            min-width: 30px;
-            text-align: center;
-            margin: 0 5px;
-        }
-        
-        .addons-summary {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            border: 1px solid #dee2e6;
-        }
-        
-        .addons-summary h4 {
-            margin-top: 0;
-            color: #495057;
-            border-bottom: 1px solid #dee2e6;
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .selected-addon {
-            display: flex;
-            justify-content: space-between;
-            padding: 6px 0;
-            border-bottom: 1px dashed #dee2e6;
-        }
-        
-        .addons-total {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 2px solid #dee2e6;
-            font-size: 1.1em;
-        }
-        
-        .no-addons {
-            color: #6c757d;
-            font-style: italic;
-            text-align: center;
-            padding: 10px 0;
-        }
-        
-        /* Edit button styles */
-        .edit-item-btn {
-            background-color: #ffc107;
-            color: #212529;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            margin: 0 5px;
-            transition: background-color 0.2s;
-        }
-        
-        .edit-item-btn:hover {
-            background-color: #e0a800;
-        }
-        
-        .edit-item-btn i {
-            font-size: 12px;
-        }
-        
-        /* Selected add-ons in order item */
-        .selected-addons-list {
-            margin-top: 8px;
-            padding-left: 15px;
-        }
-        
-        .selected-addon-item {
-            display: flex;
-            justify-content: space-between;
-            margin: 5px 0;
-            font-size: 13px;
-            color: #495057;
-        }
-        
-        .addon-price {
-            color: #28a745;
-            font-weight: 500;
-        }
-        
-        .view-description {
-            background: #17a2b8;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-
-        .view-description:hover {
-            background: #138496;
-            transform: scale(1.05);
-        }
-
-        /* Add this to the didOpen callback in submitOrder function */
-        .format-hint {
-            background: #f8f9fa;
-            padding: 0.5rem;
-            border-radius: 4px;
-            border-left: 3px solid #17a2b8;
-            margin-top: 0.5rem;
-        }
-
-        .format-hint span {
-            display: block;
-            line-height: 1.4;
-        }
-
-        .format-hint {
-            background: #f8f9fa;
-            padding: 1rem;
-            border-radius: 4px;
-            border-left: 3px solid #17a2b8;
-            margin-top: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .format-hint strong {
-            color: #333;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-
-        .format-hint small {
-            color: #666;
-            display: block;
-            line-height: 1.4;
-        }
-
-        #id-format-hint {
-            margin-top: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Add these styles to the existing <style> section */
-        .order-item-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.5rem;
-        }
-
-        .remove-item-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 0.5rem 1rem;
-            font-size: 0.9rem;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .remove-item-btn:hover {
-            background: #c82333;
-        }
-
-        .quantity-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Add these styles to your existing CSS */
-        .package-description {
-            display: none;
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            border-left: 3px solid #17a2b8;
-        }
-
-        #table-selection select {
-            margin-bottom: 0.5rem !important;
-        }
-
-        /* Add these styles to your existing CSS */
-        #table-selection {
-            transition: all 0.3s ease;
-        }
-
-        #table-selection.show {
-            display: block !important;
-        }
-
-        .package-description {
-            margin-top: 0.5rem;
-            padding: 0.5rem;
-            background-color: #f8f9fa;
-            border-radius: 4px;
-            border-left: 3px solid #17a2b8;
-            font-size: 0.875rem;
-        }
-
-        #swal-table {
-            width: 100%;
-            padding: 0.5rem;
-            border-radius: 4px;
-            border: 1px solid #ced4da;
-            margin-bottom: 0.5rem;
-        }
-    </style>
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.32/dist/sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
     
-    <div class="main-container">
-        <!-- Menu Categories as horizontal list -->
-        <div class="menu-categories">
-            <h3>Menu Categories</h3>
-            <ul class="category-list">
-                <?php foreach($categories as $category): ?>
-                    <li data-category="<?php echo $category['id']; ?>" 
-                        class="<?php echo $category['id'] == 1 ? 'active' : ''; ?>">
-                        <?php echo $category['display_name']; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
+    .nav-tabs .nav-link.active {
+        color: var(--primary-color);
+        background-color: transparent;
+        border-color: var(--primary-color);
+        border-bottom: 3px solid var(--primary-color);
+        font-weight: 600;
+    }
+    
+    /* Primary buttons */
+    .btn-primary, .btn-success {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover, .btn-success:hover,
+    .btn-primary:focus, .btn-success:focus,
+    .btn-primary:active, .btn-success:active {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+    
+    /* Outline buttons */
+    .btn-outline-primary {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-outline-primary:hover {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    /* Active states */
+    .btn-check:checked + .btn-primary,
+    .btn-check:active + .btn-primary,
+    .btn-primary:active,
+    .btn-primary.active,
+    .show > .btn-primary.dropdown-toggle {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+    }
+    
+    /* Focus states */
+    .btn-primary:focus,
+    .btn-check:focus + .btn-primary,
+    .btn-primary:focus-visible {
+        background-color: var(--primary-hover);
+        border-color: var(--primary-hover);
+        box-shadow: 0 0 0 0.25rem rgba(184, 134, 11, 0.25);
+    }
+    
+    /* Make sure the tab content is properly spaced */
+    .tab-content {
+        padding: 15px 0;
+    }
+    /* Modal Styling */
+.modal {
+    --modal-border-radius: 0.75rem;
+    --modal-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    --modal-transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
 
-        <!-- Menu Content -->
-        <h2 class="section-title">SMALL PLATES</h2>
-        <div class="menu-grid" id="menu-items">
-            <!-- Items will be loaded dynamically -->
-        </div>
+.modal-content {
+    border: none;
+    border-radius: var(--modal-border-radius);
+    box-shadow: var(--modal-box-shadow);
+    overflow: hidden;
+    transition: var(--modal-transition);
+}
 
-        <!-- Current Order Panel -->
-        <div class="current-order">
-            <h2>Current Order</h2>
-            <div class="order-items">
-                <!-- Order items will be dynamically added here -->
+.modal-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    padding: 1.25rem 1.5rem;
+    border-bottom: none;
+    position: relative;
+}
+
+.modal-header .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.75;
+    transition: opacity 0.2s ease;
+    padding: 0.5rem;
+    margin: -0.5rem -0.5rem -0.5rem auto;
+}
+
+.modal-header .btn-close:hover {
+    opacity: 1;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+    letter-spacing: 0.3px;
+}
+
+.modal-body {
+    padding: 1.75rem;
+}
+
+.modal-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+    padding: 1.25rem 1.5rem;
+    border-bottom-left-radius: var(--modal-border-radius);
+    border-bottom-right-radius: var(--modal-border-radius);
+}
+
+/* Order Summary Styling */
+.order-summary {
+    color: #333;
+}
+
+.order-summary h6 {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 1.25rem;
+    font-size: 1.1rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.order-summary h6:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--primary-color);
+    border-radius: 2px;
+}
+
+/* Table Styling */
+.table {
+    margin-bottom: 0;
+}
+
+.table th {
+    font-weight: 500;
+    color: #555;
+    white-space: nowrap;
+    padding-right: 1rem;
+    border: none;
+}
+
+.table td {
+    border: none;
+    padding: 0.5rem 0;
+}
+
+/* Enhanced Button Styling */
+.btn {
+    padding: 0.6rem 1.5rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Primary Buttons */
+.btn-primary,
+.btn-success {
+    background: linear-gradient(135deg, var(--primary-color), #d4a017);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 6px rgba(184, 134, 11, 0.2);
+}
+
+.btn-primary:hover,
+.btn-success:hover,
+.btn-primary:focus,
+.btn-success:focus {
+    background: linear-gradient(135deg, var(--primary-hover), #e6b422);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(184, 134, 11, 0.3);
+}
+
+.btn-primary:active,
+.btn-success:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(184, 134, 11, 0.2);
+}
+
+/* Secondary Buttons */
+.btn-secondary {
+    background: #f8f9fa;
+    color: #495057;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus {
+    background: #e9ecef;
+    border-color: #ced4da;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #212529;
+}
+
+.btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Danger Buttons */
+.btn-outline-danger,
+.btn-danger {
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    background: transparent;
+}
+
+.btn-outline-danger:hover,
+.btn-danger:hover {
+    background: #dc3545;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem;
+}
+
+.btn-lg {
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+}
+
+/* Button Icons */
+.btn i {
+    margin-right: 6px;
+    font-size: 0.9em;
+}
+
+/* Button Groups */
+.btn-group .btn {
+    margin: 0;
+    border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.btn-group .btn:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Quantity Buttons */
+.btn-quantity {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px !important;
+}
+
+/* Remove Item Button */
+.remove-item {
+    transition: all 0.2s ease;
+}
+
+.remove-item:hover {
+    transform: scale(1.2);
+    color: #dc3545 !important;
+}
+
+/* Add to Cart Button */
+#modal-add-to-cart {
+    min-width: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Checkout Button */
+#checkout-btn {
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+}
+
+/* Clear Cart Button */
+#clear-cart {
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    transition: all 0.3s ease;
+}
+
+#clear-cart:hover {
+    background-color: #dc3545;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+/* Modal Footer Buttons */
+.modal-footer .btn {
+    min-width: 120px;
+}
+
+/* Ripple Effect */
+.btn-ripple {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-ripple:after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.5);
+    opacity: 0;
+    border-radius: 100%;
+    transform: scale(1, 1) translate(-50%, -50%);
+    transform-origin: 50% 50%;
+}
+
+@keyframes ripple {
+    0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(20, 20);
+        opacity: 0;
+    }
+}
+
+.btn-ripple:focus:not(:active)::after {
+    animation: ripple 0.6s ease-out;
+}
+
+/* Form Elements */
+.form-control,
+.form-select {
+    border: 1px solid #ddd;
+    padding: 0.6rem 0.75rem;
+    border-radius: 0.4rem;
+    transition: all 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(184, 134, 11, 0.25);
+}
+
+/* Responsive Adjustments */
+@media (min-width: 576px) {
+    .modal-dialog {
+        max-width: 500px;
+        margin: 1.75rem auto;
+    }
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal.fade .modal-dialog {
+    animation: fadeIn 0.3s ease-out;
+}
+</style>
+
+<div class="container-fluid py-4">
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger"><?php echo htmlspecialchars($error); ?></div>
+    <?php endif; ?>
+
+    <div class="row">
+        <!-- Menu Items -->
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white py-3">
+                    <h5 class="mb-0">Menu Items</h5>
+                </div>
+                <div class="card-body">
+                    <?php if (!empty($menuCategories)): ?>
+                        <!-- Category Tabs -->
+                        <ul class="nav nav-tabs mb-3" id="menuTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab" aria-controls="all" aria-selected="true">
+                                    All Items
+                                </button>
+                            </li>
+                            <?php foreach ($menuCategories as $category): ?>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" 
+                                            id="cat-<?php echo $category['id']; ?>-tab" 
+                                            data-bs-toggle="tab" 
+                                            data-bs-target="#cat-<?php echo $category['id']; ?>" 
+                                            type="button" 
+                                            role="tab" 
+                                            aria-controls="cat-<?php echo $category['id']; ?>" 
+                                            aria-selected="false">
+                                        <?php echo htmlspecialchars($category['name']); ?>
+                                    </button>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                        
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="menuTabsContent">
+                            <!-- All Items Tab -->
+                            <div class="tab-pane fade show active" id="all" role="tabpanel" aria-labelledby="all-tab">
+                                <div class="row">
+                                    <?php foreach ($menuItems as $categoryId => $items): ?>
+                                        <?php foreach ($items as $item): ?>
+                                            <div class="col-md-4 col-sm-6 mb-3">
+                                                <div class="card h-100 menu-item" 
+                                                     data-id="<?php echo $item['id']; ?>" 
+                                                     data-name="<?php echo htmlspecialchars($item['name']); ?>" 
+                                                     data-price="<?php echo $item['price']; ?>">
+                                                    <div class="card-body">
+                                                        <div class="text-center mb-2">
+                                                            <?php if (!empty($item['image_path'])): ?>
+                                                                <img src="../../Admin/adminBackend/menu_item_images/<?php echo htmlspecialchars($item['image_path']); ?>" 
+                                                                     alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                                                     class="img-fluid rounded" 
+                                                                     style="max-height: 150px; width: 100%; object-fit: cover;">
+                                                            <?php else: ?>
+                                                                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                                    <i class="fas fa-utensils fa-3x text-muted"></i>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <h6 class="card-title mb-1"><?php echo htmlspecialchars($item['name']); ?></h6>
+                                                        <p class="text-muted small mb-2">
+                                                            <?php echo !empty($item['description']) ? htmlspecialchars($item['description']) : '&nbsp;'; ?>
+                                                        </p>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="fw-bold text-primary">₱<?php echo number_format($item['price'], 2); ?></span>
+                                                            <button class="btn btn-sm btn-outline-primary add-to-cart">
+                                                                <i class="fas fa-plus"></i> Add
+                                                            </button>
+                                                        </div>
+                                                        
+                                                        <?php if (isset($menuItemAddons[$item['id']])): ?>
+                                                            <div class="addons-container mt-2" style="display: none;">
+                                                                <p class="small mb-1"><strong>Add-ons:</strong></p>
+                                                                <?php foreach ($menuItemAddons[$item['id']] as $addon): ?>
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input addon-checkbox" 
+                                                                               type="checkbox" 
+                                                                               value="<?php echo $addon['id']; ?>" 
+                                                                               id="addon-<?php echo $addon['id']; ?>" 
+                                                                               data-price="<?php echo $addon['price']; ?>">
+                                                                        <label class="form-check-label small" for="addon-<?php echo $addon['id']; ?>">
+                                                                            <?php echo htmlspecialchars($addon['name']); ?> 
+                                                                            (+₱<?php echo number_format($addon['price'], 2); ?>)
+                                                                        </label>
+                                                                    </div>
+                                                                <?php endforeach; ?>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            
+                            <!-- Category Tabs -->
+                            <?php foreach ($menuCategories as $category): ?>
+                                <?php if (isset($menuItems[$category['id']])): ?>
+                                    <div class="tab-pane fade" id="cat-<?php echo $category['id']; ?>" role="tabpanel" aria-labelledby="cat-<?php echo $category['id']; ?>-tab">
+                                        <div class="row">
+                                            <?php foreach ($menuItems[$category['id']] as $item): ?>
+                                                <div class="col-md-4 col-sm-6 mb-3">
+                                                    <div class="card h-100 menu-item" 
+                                                         data-id="<?php echo $item['id']; ?>" 
+                                                         data-name="<?php echo htmlspecialchars($item['name']); ?>" 
+                                                         data-price="<?php echo $item['price']; ?>">
+                                                        <div class="card-body">
+                                                            <div class="text-center mb-2">
+                                                                <?php if (!empty($item['image_path'])): ?>
+                                                                    <img src="../../Admin/adminBackend/menu_item_images/<?php echo htmlspecialchars($item['image_path']); ?>" 
+                                                                         alt="<?php echo htmlspecialchars($item['name']); ?>" 
+                                                                         class="img-fluid rounded" 
+                                                                         style="max-height: 150px; width: 100%; object-fit: cover;">
+                                                                <?php else: ?>
+                                                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+                                                                        <i class="fas fa-utensils fa-3x text-muted"></i>
+                                                                    </div>
+                                                                <?php endif; ?>
+                                                            </div>
+                                                            <h6 class="card-title mb-1"><?php echo htmlspecialchars($item['name']); ?></h6>
+                                                            <p class="text-muted small mb-2">
+                                                                <?php echo !empty($item['description']) ? htmlspecialchars($item['description']) : '&nbsp;'; ?>
+                                                            </p>
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <span class="fw-bold text-primary">₱<?php echo number_format($item['price'], 2); ?></span>
+                                                                <button class="btn btn-sm btn-outline-primary add-to-cart">
+                                                                    <i class="fas fa-plus"></i> Add
+                                                                </button>
+                                                            </div>
+                                                            
+                                                            <?php if (isset($menuItemAddons[$item['id']])): ?>
+                                                                <div class="addons-container mt-2" style="display: none;">
+                                                                    <p class="small mb-1"><strong>Add-ons:</strong></p>
+                                                                    <?php foreach ($menuItemAddons[$item['id']] as $addon): ?>
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input addon-checkbox" 
+                                                                                   type="checkbox" 
+                                                                                   value="<?php echo $addon['id']; ?>" 
+                                                                                   id="addon-<?php echo $addon['id']; ?>" 
+                                                                                   data-price="<?php echo $addon['price']; ?>">
+                                                                            <label class="form-check-label small" for="addon-<?php echo $addon['id']; ?>">
+                                                                                <?php echo htmlspecialchars($addon['name']); ?> 
+                                                                                (+₱<?php echo number_format($addon['price'], 2); ?>)
+                                                                            </label>
+                                                                        </div>
+                                                                    <?php endforeach; ?>
+                                                                </div>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="alert alert-warning">No menu categories found.</div>
+                    <?php endif; ?>
+                </div>
             </div>
-            <div class="order-summary">
-                <div class="total-row">
-                    <span>Total Items:</span>
-                    <span id="total-items">0</span>
+        </div>
+
+        
+<!-- Add-ons Modal -->
+<div class="modal fade" id="addonsModal" tabindex="-1" aria-labelledby="addonsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addonsModalLabel">Select Add-ons</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-item-info" class="mb-3">
+                    <h6 id="modal-item-name"></h6>
+                    <p class="text-muted" id="modal-item-price"></p>
                 </div>
-                <div class="total-row">
-                    <span>Total Amount:</span>
-                    <span id="total-amount">₱0.00</span>
+                <div id="modal-addons-list">
+                    <!-- Add-ons will be populated here -->
                 </div>
-                <button class="place-order-btn" onclick="submitOrder()">PLACE ORDER</button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="modal-add-to-cart">Add to Cart</button>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    // Replace the static menu data with the PHP data
-    const menuData = <?php echo $menuData; ?>;
-
-    // Handle Add to Cart
-    let order = [];
-
-    // Add these variables at the top of your script
-    let discountType = null;
-    let discountAmount = 0;
-
-    function displayMenuItems(categoryId) {
-        const menuGrid = document.getElementById('menu-items');
-        const items = menuData.items.filter(item => item.category_id == categoryId);
-        
-        // Find the selected category name
-        const selectedCategory = menuData.categories.find(cat => cat.id == categoryId);
-        
-        // Update the section title
-        document.querySelector('.section-title').textContent = selectedCategory.display_name.toUpperCase();
-        
-        menuGrid.innerHTML = items.map(item => `
-            <div class="menu-item">
-                <div class="menu-item-image">
-                    <img src="/Admin/${item.image_path}" alt="${item.name}" onerror="this.src='/Admin/uploads/menus/default-menu-item.jpg'">
-                    <div class="menu-item-overlay">
-                        <div class="button-group">
-                            <button class="view-description" 
-                                    onclick="showDescription('${item.name}', '${item.description ? item.description.replace(/'/g, "\\'"): 'No description available.'}')">
-                                <i class="fa-solid fa-circle-info"></i> Details
-                            </button>
-                            <button class="add-to-cart" 
-                                    data-item-id="${item.id}"
-                                    data-item="${item.name}" 
-                                    data-price="${item.price}" 
-                                    data-category="${item.category_name}">
-                                <i class="fa-solid fa-cart-plus"></i> Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="menu-item-details">
-                    <h3 class="item-name">${item.name}</h3>
-                    <p class="item-description-preview">${item.description ? (item.description.length > 50 ? item.description.substring(0, 50) + '...' : item.description) : ''}</p>
-                    <div class="item-price-wrapper">
-                        <span class="peso-sign">₱</span>
-                        <span class="item-price">${parseFloat(item.price).toFixed(2)}</span>
-                    </div>
+        <!-- Add this right before the closing </div> of the main container -->
+<div class="col-md-4">
+    <div class="card shadow-sm h-100">
+        <div class="card-header bg-white py-3">
+            <h5 class="mb-0">Order Summary</h5>
+        </div>
+        <div class="card-body p-0">
+            <div id="cart-items" class="p-3" style="max-height: 400px; overflow-y: auto;">
+                <div class="text-center text-muted py-5">
+                    <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                    <p>Your cart is empty</p>
                 </div>
             </div>
-        `).join('');
-    }
-
-    let currentItemIndex = -1;
-    
-    function showAddonsModal(itemId, name, price, category, isExisting = false, index = -1) {
-        const itemAddons = menuData.addons[itemId] || [];
-        
-        if (itemAddons.length === 0) {
-            addToOrder(itemId, name, price, category, isExisting, index);
-            return;
-        }
-        
-        currentItemIndex = index !== -1 ? index : order.length;
-        
-        Swal.fire({
-            title: `Customize ${name}`,
-            html: `
-                <div class="addons-modal">
-                    <div class="addons-list">
-                        ${itemAddons.map(addon => `
-                            <div class="addon-item">
-                                <div class="addon-info">
-                                    <input type="checkbox" 
-                                           id="modal-addon-${addon.id}"
-                                           class="addon-checkbox"
-                                           data-id="${addon.id}"
-                                           data-name="${addon.name}"
-                                           data-price="${addon.price}">
-                                    <label for="modal-addon-${addon.id}">
-                                        ${addon.name} (+₱${parseFloat(addon.price).toFixed(2)})
-                                    </label>
-                                </div>
-                                <div class="addon-quantity">
-                                    <button type="button" class="quantity-btn minus" onclick="updateAddonQty('${addon.id}', -1)">-</button>
-                                    <span id="addon-qty-${addon.id}" class="quantity-display">0</span>
-                                    <button type="button" class="quantity-btn plus" onclick="updateAddonQty('${addon.id}', 1)">+</button>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="addons-summary">
-                        <h4>Selected Add-ons:</h4>
-                        <div id="selected-addons">No add-ons selected</div>
-                    </div>
+            <div class="border-top p-3">
+                <div class="d-flex justify-content-between mb-2">
+                    <span>Subtotal:</span>
+                    <span id="cart-subtotal">₱0.00</span>
                 </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: isExisting ? 'Update Item' : 'Add to Cart',
-            cancelButtonText: 'Cancel',
-            showLoaderOnConfirm: true,
-            didOpen: () => {
-                // Initialize checkboxes and quantities
-                if (isExisting && index !== -1) {
-                    const item = order[index];
-                    item.addons.forEach(addon => {
-                        const checkbox = document.getElementById(`modal-addon-${addon.id}`);
-                        if (checkbox) {
-                            checkbox.checked = true;
-                            const qtyDisplay = document.getElementById(`addon-qty-${addon.id}`);
-                            if (qtyDisplay) qtyDisplay.textContent = addon.qty || 1;
-                        }
-                    });
-                    updateSelectedAddons();
-                }
-                
-                // Add event listeners for checkboxes
-                document.querySelectorAll('.addon-checkbox').forEach(checkbox => {
-                    checkbox.addEventListener('change', updateSelectedAddons);
-                });
-            },
-            preConfirm: () => {
-                const selectedAddons = [];
-                document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
-                    const qty = parseInt(document.getElementById(`addon-qty-${checkbox.dataset.id}`).textContent) || 1;
-                    selectedAddons.push({
-                        id: checkbox.dataset.id,
-                        name: checkbox.dataset.name,
-                        price: parseFloat(checkbox.dataset.price),
-                        qty: qty
-                    });
-                });
-                
-                if (isExisting && index !== -1) {
-                    // Update existing item
-                    order[index].addons = selectedAddons;
-                    updateOrder();
-                    saveFormData();
-                    return false;
-                } else {
-                    // Add new item
-                    return { selectedAddons };
-                }
-            }
-        }).then((result) => {
-            if (result.isConfirmed && result.value) {
-                addToOrder(itemId, name, price, category, false, -1, result.value.selectedAddons);
-            }
-        });
-    }
-    
-    function updateAddonQty(addonId, change) {
-        const qtyDisplay = document.getElementById(`addon-qty-${addonId}`);
-        if (!qtyDisplay) return;
-        
-        let qty = parseInt(qtyDisplay.textContent) || 0;
-        qty += change;
-        if (qty < 0) qty = 0;
-        
-        qtyDisplay.textContent = qty;
-        updateSelectedAddons();
-    }
-    
-    function updateSelectedAddons() {
-        const selectedContainer = document.getElementById('selected-addons');
-        if (!selectedContainer) return;
-        
-        const selectedAddons = [];
-        let totalAddonPrice = 0;
-        
-        document.querySelectorAll('.addon-checkbox:checked').forEach(checkbox => {
-            const qty = parseInt(document.getElementById(`addon-qty-${checkbox.dataset.id}`).textContent) || 1;
-            const price = parseFloat(checkbox.dataset.price) * qty;
-            totalAddonPrice += price;
-            selectedAddons.push(`
-                <div class="selected-addon">
-                    <span>${checkbox.dataset.name} x${qty}</span>
-                    <span>₱${price.toFixed(2)}</span>
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="fw-bold">Total:</span>
+                    <span class="fw-bold" id="cart-total">₱0.00</span>
                 </div>
-            `);
-        });
-        
-        if (selectedAddons.length === 0) {
-            selectedContainer.innerHTML = '<div class="no-addons">No add-ons selected</div>';
-        } else {
-            selectedContainer.innerHTML = `
-                ${selectedAddons.join('')}
-                <div class="addons-total">
-                    <strong>Total Add-ons:</strong>
-                    <strong>₱${totalAddonPrice.toFixed(2)}</strong>
-                </div>
-            `;
-        }
-    }
-    
-    function addToOrder(itemId, name, price, category, isExisting = false, index = -1, selectedAddons = []) {
-        if (isExisting && index !== -1) {
-            // Update existing item
-            order[index].qty++;
-        } else {
-            // Add new item
-            order.push({
-                id: itemId,
-                name: name,
-                price: parseFloat(price),
-                category: category,
-                qty: 1,
-                addons: selectedAddons,
-                availableAddons: menuData.addons[itemId] || []
-            });
-        }
-        
-        updateOrder();
-        saveFormData();
-        
-        // Show success message
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: `${name} ${isExisting ? 'updated in' : 'added to'} cart`,
-            showConfirmButton: false,
-            timer: 1500,
-            timerProgressBar: true
-        });
-    }
-
-    function updateOrder() {
-        const orderList = document.querySelector('.order-items');
-        
-        orderList.innerHTML = order.map((item, index) => `
-            <div class="order-item">
-                <div class="order-item-header">
-                    <span class="order-item-name">${item.name}</span>
-                    <span class="order-item-price">₱${(item.price * item.qty).toFixed(2)}</span>
-                </div>
-                <div class="order-item-category">
-                    <i class="fa-solid fa-tag"></i> ${item.category}
-                </div>
-                <div class="order-item-controls">
-                    <div class="quantity-controls">
-                        <button class="quantity-btn minus" onclick="decrementQty(${index})">
-                            <i class="fa-solid fa-minus"></i>
-                        </button>
-                        <span class="quantity-display">${item.qty}</span>
-                        <button class="quantity-btn plus" onclick="incrementQty(${index})">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
-                    </div>
-                    <button class="edit-item-btn" onclick="editItem(${index})">
-                        <i class="fa-solid fa-pencil"></i> Edit
-                    </button>
-                    <button class="remove-item-btn" onclick="removeItem(${index})">
-                        <i class="fa-solid fa-trash"></i> Remove
-                    </button>
-                </div>
-                ${item.availableAddons.length > 0 ? `
-                    <div class="addons-section">
-                        <h4><i class="fa-solid fa-utensils"></i> Add-ons:</h4>
-                        ${item.addons.length > 0 ? `
-                            <div class="selected-addons-list">
-                                ${item.addons.map(addon => `
-                                    <div class="selected-addon-item">
-                                        <span>${addon.name} x${addon.qty || 1}</span>
-                                        <span class="addon-price">+₱${(addon.price * (addon.qty || 1)).toFixed(2)}</span>
-                                    </div>
-                                `).join('')}
-                            </div>
-                        ` : 'No add-ons selected'}
-                    </div>
-                ` : ''}
+                <button class="btn btn-primary w-100 mb-2" id="checkout-btn" disabled>
+                    <i class="fas fa-credit-card me-2"></i>Proceed
+                </button>
+                <button class="btn btn-outline-danger w-100" id="clear-cart" disabled>
+                    <i class="fas fa-trash-alt me-2"></i>Clear Cart
+                </button>
             </div>
-        `).join('');
+        </div>
+    </div>
+</div>
 
-        updateTotals();
-    }
-
-    function toggleAddon(itemIndex, addonId, addonName, addonPrice) {
-        const item = order[itemIndex];
-        const addonIndex = item.addons.findIndex(a => a.id === addonId);
-        
-        if (addonIndex === -1) {
-            item.addons.push({ 
-                id: addonId, 
-                name: addonName, 
-                price: addonPrice,
-                qty: 1
-            });
-        } else {
-            item.addons.splice(addonIndex, 1);
-        }
-        
-        updateOrder();
-        saveFormData();
-    }
-
-    function updateTotals() {
-        const totalItems = document.getElementById('total-items');
-        const totalAmount = document.getElementById('total-amount');
-        
-        const totalQty = order.reduce((total, item) => total + item.qty, 0);
-        const subtotal = calculateSubtotal();
-        const discount = discountAmount > 0 ? subtotal * discountAmount : 0;
-        const finalTotal = subtotal - discount;
-
-        totalItems.textContent = totalQty;
-        totalAmount.textContent = `₱${finalTotal.toFixed(2)}`;
-    }
-
-    function incrementQty(index) {
-        order[index].qty++;
-        updateOrder();
-        saveFormData();
-    }
-
-    function decrementQty(index) {
-        if (order[index].qty > 1) {
-            order[index].qty--;
-            updateOrder();
-            saveFormData();
-        }
-    }
-    
-    function editItem(index) {
-        const item = order[index];
-        showAddonsModal(item.id, item.name, item.price, item.category, true, index);
-    }
-
-    // Document Ready function
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initial load of available tables
-        refreshTablesData();
-        // Display initial category
-        displayMenuItems(menuData.categories[0].id);
-        
-        // Category selection
-        const categoryButtons = document.querySelectorAll('.category-list li');
-        
-        categoryButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                // Remove active class from all buttons
-                categoryButtons.forEach(btn => btn.classList.remove('active'));
-                
-                // Add active class to clicked button
-                this.classList.add('active');
-                
-                // Display items for selected category
-                displayMenuItems(this.dataset.category);
-            });
-        });
-        
-        // Add to cart
-        document.getElementById('menu-items').addEventListener('click', function(e) {
-            if (e.target.classList.contains('add-to-cart')) {
-                const button = e.target;
-                addToOrder(
-                    button.dataset.itemId,
-                    button.dataset.item,
-                    button.dataset.price,
-                    button.dataset.category
-                );
-            }
-        });
-
-        // Handle discount radio button changes
-        document.querySelectorAll('input[name="discount"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const idNumberGroup = document.getElementById('id-number-group');
-                if (this.value === 'senior' || this.value === 'pwd') {
-                    idNumberGroup.style.display = 'block';
-                } else {
-                    idNumberGroup.style.display = 'none';
-                }
-            });
-        });
-    });
-
-    // Update the submitOrder function to use SweetAlert2 directly
-    function submitOrder() {
-        if (order.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Empty Cart',
-                text: 'Please add items to your cart before placing an order.'
-            });
-            return;
-        }
-
-        const savedData = loadFormData();
-
-        // Show order summary and collect information using SweetAlert2
-        Swal.fire({
-            title: 'Order Summary',
-            html: `
-                <div class="order-summary-content">
-                    ${generateOrderSummaryHTML()}
-                    <div class="form-group mt-3">
-                        <label for="swal-contact">Contact Number (Optional)</label>
-                        <input type="tel" id="swal-contact" class="swal2-input" placeholder="Enter contact number (optional)">
+<!-- Checkout Modal -->
+<div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="checkoutModalLabel">Order Summary</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="order-summary">
+                    <h6>Order Items</h6>
+                    <div id="modal-order-items" class="mb-3">
+                        <!-- Order items will be populated here -->
                     </div>
-                    <div class="form-group mt-3">
-                        <label for="swal-nickname">Nickname (Optional)</label>
-                        <input type="text" id="swal-nickname" class="swal2-input" placeholder="Enter customer nickname">
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong>Subtotal:</strong>
+                        <span id="modal-subtotal">₱0.00</span>
                     </div>
-                    <div class="form-group mt-3">
-                        <label for="swal-discount">Discount Type</label>
-                        <select id="swal-discount" class="swal2-input">
-                            <option value="none">No Discount</option>
-                            <option value="senior">Senior Citizen</option>
-                            <option value="pwd">PWD</option>
-                        </select>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total:</strong>
+                        <span id="modal-total" class="fw-bold">₱0.00</span>
                     </div>
-                    <div class="form-group mt-3" id="swal-id-group" style="display: none;">
-                        <label for="swal-id">ID Number</label>
-                        <input type="text" 
-                               id="swal-id" 
-                               class="swal2-input" 
-                               placeholder="Enter ID Number">
-                        <div id="id-format-hint" class="format-hint mt-2">
-                            <div id="senior-format">
-                                <strong>Senior Citizen ID Format:</strong> SCDFI-XXXXXXXX<br>
-                                <small class="text-muted">Example: SCDFI-12345ABC</small>
-                            </div>
-                            <div id="pwd-format">
-                                <strong>PWD ID Format:</strong> RR-PPMM-BBB-NNNNNNN<br>
-                                <small class="text-muted">
-                                    RR = Region Code (e.g., NC)<br>
-                                    PPMM = Province/Municipality Code (e.g., 1234)<br>
-                                    BBB = Barangay Code (e.g., ABC)<br>
-                                    NNNNNNN = PWD Number (e.g., 1234567)
-                                </small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group mt-3">
-                        <label for="swal-payment">Payment Method</label>
-                        <select id="swal-payment" class="swal2-input">
-                            <option value="">Select Payment Method</option>
-                            <option value="cash">Cash</option>
-                            <option value="gcash">GCash</option>
-                            <option value="maya">Maya</option>
-                            <option value="bank">Bank</option>
-                        </select>
-                    </div>
-                    <div class="form-group mt-3">
-                        <label for="swal-order-type">Order Type</label>
-                        <select id="swal-order-type" class="swal2-input" required>
-                            <option value="">Select Order Type</option>
+                    <div class="mb-3">
+                        <label for="order-type" class="form-label">Type of Order</label>
+                        <select class="form-select mb-3" id="order-type" required>
+                            <option value="">Select type of order </option>
                             <option value="dine-in">Dine-in</option>
                             <option value="takeout">Takeout</option>
                         </select>
                     </div>
-                    <div class="form-group mt-3" id="table-selection" style="display: none;">
-                        <label for="swal-table">Select Table</label>
-                        <select id="swal-table" class="swal2-input">
-                            <option value="">Select Table Number</option>
-                            <?php foreach($tables as $table): ?>
-                                <option value="<?php echo $table['id']; ?>">
-                                    Table <?php echo $table['table_number']; ?>
-                                </option>
-                            <?php endforeach; ?>
+                    <div class="mb-3">
+                        <label for="table-type" class="form-label">Table Type</label>
+                        <select class="form-select mb-2" id="table-type" required>
+                            <option value="">Select Table Type</option>
+                            <?php
+                            try {
+                                // Debug: Check if $pdo is set
+                                if (!isset($pdo)) {
+                                    throw new Exception('Database connection not established');
+                                }
+                                
+                                // Debug: Check if table exists
+                                $tableExists = $pdo->query("SHOW TABLES LIKE 'table_types'")->rowCount() > 0;
+                                if (!$tableExists) {
+                                    throw new Exception('table_types table does not exist');
+                                }
+                                
+                                // Get all table types
+                                $stmt = $pdo->query("SELECT * FROM table_types ORDER BY table_name");
+                                $tableTypes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                
+                                if (empty($tableTypes)) {
+                                    echo "<option value=''>No table types found</option>";
+                                } else {
+                                    foreach ($tableTypes as $type) {
+                                        $capacity = isset($type['capacity']) ? $type['capacity'] : 0;
+                                        echo "<option value='" . $type['id'] . "'>" . 
+                                             htmlspecialchars($type['table_name']) . " (Max " . $capacity . " persons)</option>";
+                                    }
+                                }
+                            } catch (Exception $e) {
+                                error_log("Error in table type dropdown: " . $e->getMessage());
+                                echo "<option value=''>Error: " . htmlspecialchars($e->getMessage()) . "</option>";
+                            }
+                            ?>
                         </select>
-                        <div id="table-loading" style="display: none; text-align: center; margin-top: 10px;">
-                            <i class="fas fa-spinner fa-spin"></i> Loading available tables...
+                    </div>
+                    <div class="mb-3">
+                        <label for="table-number" class="form-label">Table Number</label>
+                        <select class="form-select mb-3" id="table-number" required disabled>
+                            <option value="">Select Table Type First</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="guest-type" class="form-label">Guest Type</label>
+                        <select class="form-select mb-2" id="guest-type" required>
+                            <option value="regular">Regular (No Discount)</option>
+                            <?php
+                            try {
+                                $discountTypes = getDiscountTypes($pdo);
+                                error_log("Loaded discount types: " . print_r($discountTypes, true));
+                                foreach ($discountTypes as $type) {
+                                    $discountPercent = number_format($type['percentage'], 0);
+                                    echo sprintf(
+                                        '<option value="%s" data-requires-id="1">%s (%s%% off)</option>',
+                                        htmlspecialchars(strtolower(str_replace(' ', '_', $type['name']))),
+                                        htmlspecialchars($type['name']),
+                                        $discountPercent
+                                    );
+                                }
+                            } catch (Exception $e) {
+                                error_log("Error loading discount types: " . $e->getMessage());
+                                // Fallback to default options if there's an error
+                                echo '<option value="senior">Senior Citizen (20% off)</option>';
+                                echo '<option value="pwd">PWD (20% off)</option>';
+                                echo '<option value="student">Student (10% off)</option>';
+                            }
+                            ?>
+                        </select>
+                        <div id="id-number-container" class="mt-2" style="display: none;">
+                            <label for="guest-id-number" class="form-label">ID Number</label>
+                            <input type="text" class="form-control" id="guest-id-number" placeholder="Enter ID number" required>
+                            <div class="form-text">Please provide a valid ID number for verification.</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="payment-method" class="form-label">Payment Method</label>
+                        <select class="form-select mb-3" id="payment-method" required>
+                            <option value="cash">Cash</option>
+                            <option value="card">Card</option>
+                            <option value="gcash">GCash</option>
+                            <option value="maya">Maya</option>
+                        </select>
+                        
+                        <!-- Amount Received and Change Fields -->
+                        <div id="payment-amount-fields">
+                            <div class="mb-2">
+                                <label for="amount-received" class="form-label">Amount Received</label>
+                                <input type="number" class="form-control" id="amount-received" step="0.01" min="0" value="0.00" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="change" class="form-label">Change</label>
+                                <input type="text" class="form-control" id="change" value="₱0.00" readonly>
+                            </div>
                         </div>
                     </div>
                 </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Place Order',
-            cancelButtonText: 'Cancel',
-            customClass: {
-                container: 'custom-swal-container',
-                popup: 'custom-swal-popup',
-                header: 'custom-swal-header',
-                title: 'custom-swal-title',
-                closeButton: 'custom-swal-close',
-                content: 'custom-swal-content',
-                input: 'custom-swal-input',
-                actions: 'custom-swal-actions',
-                confirmButton: 'custom-swal-confirm',
-                cancelButton: 'custom-swal-cancel'
-            },
-            width: '500px',
-            didOpen: () => {
-                // Restore saved form data if available
-                if (savedData) {
-                    document.getElementById('swal-contact').value = savedData.contactNumber || '';
-                    document.getElementById('swal-nickname').value = savedData.nickname || '';
-                    document.getElementById('swal-discount').value = savedData.discountType || 'none';
-                    document.getElementById('swal-id').value = savedData.idNumber || '';
-                    document.getElementById('swal-payment').value = savedData.paymentMethod || '';
-                    document.getElementById('swal-order-type').value = savedData.orderType || '';
-                    document.getElementById('swal-table').value = savedData.tableNumber || '';
-                    
-                    // Trigger both discount type and order type change events
-                    const event = new Event('change');
-                    document.getElementById('swal-discount').dispatchEvent(event);
-                    document.getElementById('swal-order-type').dispatchEvent(event);
-                }
-
-                // Add event listeners for form fields
-                const formFields = ['swal-contact', 'swal-nickname', 'swal-discount', 'swal-id', 'swal-payment', 'swal-order-type', 'swal-table'];
-                formFields.forEach(fieldId => {
-                    document.getElementById(fieldId)?.addEventListener('change', saveFormData);
-                    document.getElementById(fieldId)?.addEventListener('input', saveFormData);
-                });
-
-                // Add event listener for order type selection
-                document.getElementById('swal-order-type').addEventListener('change', function() {
-                    const tableSelection = document.getElementById('table-selection');
-                    if (this.value === 'dine-in') {
-                        tableSelection.style.display = 'block';
-                        // Populate table dropdown with available tables
-                        populateTableDropdown();
-                    } else {
-                        tableSelection.style.display = 'none';
-                        document.getElementById('swal-table').value = '';
-                    }
-                    saveFormData();
-                });
-                
-                // Function to populate table dropdown with available tables
-                function populateTableDropdown() {
-                    const tableSelect = document.getElementById('swal-table');
-                    const tableLoading = document.getElementById('table-loading');
-                    
-                    // Show loading indicator
-                    tableLoading.style.display = 'block';
-                    
-                    // Clear existing options except the first one
-                    while (tableSelect.options.length > 1) {
-                        tableSelect.remove(1);
-                    }
-                    
-                    // Fetch fresh table data from server
-                    refreshTablesData().then(updatedTables => {
-                        console.log('Populating dropdown with tables:', updatedTables);
-                        
-                        // Add available tables to dropdown
-                        let availableTablesCount = 0;
-                        
-                        updatedTables.forEach(table => {
-                            const tableId = table.id.toString();
-                            // Only show tables that are not currently occupied
-                            if (!table.is_occupied) {
-                                const option = document.createElement('option');
-                                option.value = tableId;
-                                option.textContent = 'Table ' + table.table_number;
-                                tableSelect.appendChild(option);
-                                availableTablesCount++;
-                            }
-                        });
-                        
-                        // If no available tables, add a message
-                        if (availableTablesCount === 0) {
-                            const option = document.createElement('option');
-                            option.value = '';
-                            option.textContent = 'No tables available';
-                            option.disabled = true;
-                            tableSelect.appendChild(option);
-                        }
-                        
-                        // Hide loading indicator
-                        tableLoading.style.display = 'none';
-                    }).catch(error => {
-                        console.error('Error populating table dropdown:', error);
-                        
-                        // Add a message about the error
-                        const option = document.createElement('option');
-                        option.value = '';
-                        option.textContent = 'Error loading tables';
-                        option.disabled = true;
-                        tableSelect.appendChild(option);
-                        
-                        // Hide loading indicator
-                        tableLoading.style.display = 'none';
-                    });
-                }
-
-                // Trigger order type change event if dine-in is selected
-                const orderType = document.getElementById('swal-order-type').value;
-                if (orderType === 'dine-in') {
-                    const tableSelection = document.getElementById('table-selection');
-                    tableSelection.style.display = 'block';
-                }
-
-                // Add custom styles to the modal
-                const style = document.createElement('style');
-                style.textContent = `
-                    .custom-swal-popup {
-                        padding: 1.5rem;
-                        max-height: 90vh;
-                        overflow-y: auto;
-                    }
-                    .custom-swal-title {
-                        font-size: 1.5rem;
-                        color: #333;
-                        margin-bottom: 1rem;
-                        padding-bottom: 0.5rem;
-                        border-bottom: 2px solid #eee;
-                    }
-                    .custom-swal-content {
-                        margin: 1rem 0;
-                    }
-                    .order-summary-content {
-                        max-height: 60vh;
-                        overflow-y: auto;
-                        padding-right: 10px;
-                    }
-                    .order-items-summary {
-                        background: #f8f9fa;
-                        padding: 1rem;
-                        border-radius: 8px;
-                        margin-bottom: 1.5rem;
-                    }
-                    .swal2-input, .swal2-select {
-                        width: 100% !important;
-                        margin: 0.5rem 0 !important;
-                    }
-                    .btn-group {
-                        display: flex;
-                        gap: 0.5rem;
-                        margin: 0.5rem 0;
-                        flex-wrap: wrap;
-                    }
-                    .btn-outline-primary {
-                        flex: 1;
-                        min-width: 120px;
-                    }
-                    .form-group {
-                        margin-bottom: 1.5rem;
-                    }
-                    .form-group label {
-                        display: block;
-                        margin-bottom: 0.5rem;
-                        color: #555;
-                        font-weight: 500;
-                    }
-                    .custom-swal-confirm {
-                        background-color: #28a745 !important;
-                        padding: 10px 24px !important;
-                    }
-                    .custom-swal-cancel {
-                        background-color: #dc3545 !important;
-                        padding: 10px 24px !important;
-                    }
-                    .order-summary-item {
-                        padding: 0.75rem;
-                        border-bottom: 1px solid #dee2e6;
-                    }
-                    .order-summary-item:last-child {
-                        border-bottom: none;
-                    }
-                    .addons-summary {
-                        margin-top: 0.5rem;
-                        padding-left: 1rem;
-                    }
-                    .small.text-muted {
-                        color: #6c757d;
-                        font-size: 0.875rem;
-                    }
-                `;
-                document.head.appendChild(style);
-
-                // Add event listener for discount type changes
-                document.getElementById('swal-discount').addEventListener('change', function() {
-                    const idGroup = document.getElementById('swal-id-group');
-                    const idFormatHint = document.getElementById('id-format-hint');
-                    const seniorFormat = document.getElementById('senior-format');
-                    const pwdFormat = document.getElementById('pwd-format');
-                    
-                    if (this.value === 'senior' || this.value === 'pwd') {
-                        idGroup.style.display = 'block';
-                        idFormatHint.style.display = 'block';
-                        
-                        // Show relevant format hint
-                        if (this.value === 'senior') {
-                            seniorFormat.style.display = 'block';
-                            pwdFormat.style.display = 'none';
-                        } else {
-                            seniorFormat.style.display = 'none';
-                            pwdFormat.style.display = 'block';
-                        }
-                    } else {
-                        idGroup.style.display = 'none';
-                        idFormatHint.style.display = 'none';
-                    }
-                    saveFormData();
-                });
-
-                // Trigger the change event if a discount type is already selected
-                const discountSelect = document.getElementById('swal-discount');
-                if (discountSelect.value === 'senior' || discountSelect.value === 'pwd') {
-                    discountSelect.dispatchEvent(new Event('change'));
-                }
-            },
-            preConfirm: () => {
-                const contactNumber = document.getElementById('swal-contact').value;
-                const nickname = document.getElementById('swal-nickname').value;
-                const paymentMethod = document.getElementById('swal-payment').value;
-                const discountType = document.getElementById('swal-discount').value;
-                const idNumber = document.getElementById('swal-id').value;
-                const orderType = document.getElementById('swal-order-type').value;
-                const tableNumber = document.getElementById('swal-table').value;
-
-                // Validate form
-                const errors = validateOrderInputs(contactNumber, paymentMethod, discountType, idNumber, orderType);
-                if (errors.length > 0) {
-                    Swal.showValidationMessage(errors.join('<br>'));
-                    return false;
-                }
-
-                return {
-                    customerName: nickname || 'N/A',
-                    contactNumber,
-                    nickname,
-                    paymentMethod,
-                    discountType,
-                    idNumber,
-                    orderType,
-                    tableNumber
-                };
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                processOrderSubmission(result.value);
-                // Clear saved data after successful submission
-                clearFormData();
-            }
-        });
-    }
-
-    // Helper function to generate order summary HTML
-    function generateOrderSummaryHTML() {
-        const summaryItems = order.map(item => `
-            <div class="order-summary-item">
-                <div class="d-flex justify-content-between">
-                    <span><strong>${item.name}</strong> x ${item.qty}</span>
-                    <span>₱${(item.price * item.qty).toFixed(2)}</span>
-                </div>
-                ${item.addons.length > 0 ? `
-                    <div class="addons-summary">
-                        ${item.addons.map(addon => `
-                            <div class="small text-muted">+ ${addon.name} (₱${addon.price.toFixed(2)})</div>
-                        `).join('')}
-                    </div>
-                ` : ''}
             </div>
-        `).join('');
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirm-order">Proceed to summary</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        const totalQty = order.reduce((total, item) => total + item.qty, 0);
-        const subtotal = calculateSubtotal();
-
-        return `
-            <div class="order-items-summary">
-                ${summaryItems}
-                <hr>
-                <div class="d-flex justify-content-between">
-                    <strong>Total Items:</strong>
-                    <span>${totalQty}</span>
+<!-- Final Order Summary Modal -->
+<div class="modal fade" id="finalSummaryModal" tabindex="-1" aria-labelledby="finalSummaryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="finalSummaryModalLabel">Order Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="order-summary">
+                    <h6>Order Summary</h6>
+                    <div id="final-modal-order-items" class="mb-3">
+                        <!-- Order items will be populated here -->
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-2">
+                        <strong>Subtotal:</strong>
+                        <span id="final-modal-subtotal">₱0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <strong>Total:</strong>
+                        <span id="final-modal-total" class="fw-bold">₱0.00</span>
+                    </div>
+                    
+                    <div class="order-details">
+                        <h6>Order Details</h6>
+                        <table class="table table-sm">
+                            <tr id="final-order-type-row">
+                                <th>Order Type:</th>
+                                <td id="final-order-type"></td>
+                            </tr>
+                            <tr id="final-table-type-row" style="display: none;">
+                                <th>Table Type:</th>
+                                <td id="final-table-type"></td>
+                            </tr>
+                            <tr id="final-table-number-row" style="display: none;">
+                                <th>Table Number:</th>
+                                <td id="final-table-number"></td>
+                            </tr>
+                            <tr>
+                                <th>Guest Type:</th>
+                                <td id="final-guest-type"></td>
+                            </tr>
+                            <tr id="final-id-number-row" style="display: none;">
+                                <th>ID Number:</th>
+                                <td id="final-id-number"></td>
+                            </tr>
+                            <tr>
+                                <th>Payment Method:</th>
+                                <td id="final-payment-method"></td>
+                            </tr>
+                            <tr>
+                                <th>Amount Received:</th>
+                                <td id="final-amount-received">₱0.00</td>
+                            </tr>
+                            <tr class="table-active">
+                                <th>Change:</th>
+                                <td id="final-change" class="fw-bold">₱0.00</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
-                <div class="d-flex justify-content-between">
-                    <strong>Total Amount:</strong>
-                    <span>₱${subtotal.toFixed(2)}</span>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Back to Order</button>
+                <button type="button" class="btn btn-success" id="confirm-print-btn">Confirm & Print Receipt</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Add this inside your existing script tag
+document.addEventListener('DOMContentLoaded', function() {
+    // Get DOM elements
+    const guestTypeSelect = document.getElementById('guest-type');
+    const idNumberContainer = document.getElementById('id-number-container');
+    const idNumberInput = document.getElementById('guest-id-number');
+    
+    // Handle guest type change
+    guestTypeSelect.addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const requiresId = selectedOption.dataset.requiresId === '1';
+        
+        // Show/hide ID number field based on selection
+        if (this.value !== 'regular' && requiresId) {
+            idNumberContainer.style.display = 'block';
+            idNumberInput.required = true;
+        } else {
+            idNumberContainer.style.display = 'none';
+            idNumberInput.required = false;
+            idNumberInput.value = ''; // Clear the ID number when hiding the field
+        }
+        
+        // Update the order total when guest type changes
+        updateCheckoutModal();
+    });
+    
+    // Update when ID number changes
+    idNumberInput.addEventListener('input', function() {
+        updateCheckoutModal();
+    });
+
+    // Show checkout modal when Proceed button is clicked
+    document.getElementById('checkout-btn').addEventListener('click', function() {
+        if (cart.length === 0) return;
+        
+        const modal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+        updateCheckoutModal();
+        // Reset table type and number when opening modal
+        document.getElementById('table-type').value = '';
+        document.getElementById('table-number').innerHTML = '<option value="">Select Table Type First</option>';
+        document.getElementById('table-number').disabled = true;
+        modal.show();
+    });
+    
+    // Handle order type change to show/hide table selection
+    document.getElementById('order-type').addEventListener('change', function() {
+        const orderType = this.value;
+        const tableTypeGroup = document.querySelector('label[for="table-type"]').closest('.mb-3');
+        const tableNumberGroup = document.querySelector('label[for="table-number"]').closest('.mb-3');
+        const isDineIn = orderType === 'dine-in';
+        
+        // Show/hide table selection based on order type
+        tableTypeGroup.style.display = isDineIn ? 'block' : 'none';
+        tableNumberGroup.style.display = isDineIn ? 'block' : 'none';
+        
+        // Update required attribute
+        document.getElementById('table-type').required = isDineIn;
+        document.getElementById('table-number').required = isDineIn;
+        
+        // Reset table selection if not dine-in
+        if (!isDineIn) {
+            document.getElementById('table-type').value = '';
+            document.getElementById('table-number').innerHTML = '<option value="">Select Table Type First</option>';
+            document.getElementById('table-number').disabled = true;
+        }
+    });
+    
+    // Trigger the change event once on modal open to set initial state
+    document.getElementById('checkoutModal').addEventListener('shown.bs.modal', function() {
+        document.getElementById('order-type').dispatchEvent(new Event('change'));
+    });
+
+    // Handle table type change to load available table numbers
+    document.getElementById('table-type').addEventListener('change', function() {
+        const tableTypeId = this.value;
+        const tableNumberSelect = document.getElementById('table-number');
+        
+        if (!tableTypeId) {
+            tableNumberSelect.innerHTML = '<option value="">Select Table Type First</option>';
+            tableNumberSelect.disabled = true;
+            return;
+        }
+        
+        // Show loading state
+        tableNumberSelect.innerHTML = '<option value="">Loading table numbers...</option>';
+        tableNumberSelect.disabled = false;
+        
+        // Fetch available table numbers for the selected table type
+        fetch(`get_available_tables.php?table_type_id=${tableTypeId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.tables.length > 0) {
+                    let options = '<option value="">Select Table Number</option>';
+                    data.tables.forEach(table => {
+                        options += `<option value="${table.id}">Table ${table.table_number} (${table.status})</option>`;
+                    });
+                    tableNumberSelect.innerHTML = options;
+                } else {
+                    tableNumberSelect.innerHTML = '<option value="">No available tables found</option>';
+                }
+                tableNumberSelect.disabled = false;
+            })
+            .catch(error => {
+                console.error('Error fetching table numbers:', error);
+                tableNumberSelect.innerHTML = '<option value="">Error loading table numbers</option>';
+                tableNumberSelect.disabled = false;
+            });
+    });
+
+    // Handle amount received input
+    document.getElementById('amount-received').addEventListener('input', function() {
+        updateChangeAmount();
+    });
+
+    // Handle payment method change
+    document.getElementById('payment-method').addEventListener('change', function() {
+        const amountReceived = document.getElementById('amount-received');
+        const changeField = document.getElementById('change');
+        const paymentMethod = this.value;
+        
+        // Reset amount received and change when payment method changes
+        amountReceived.value = '0.00';
+        changeField.value = '₱0.00';
+        
+        // Update placeholders based on payment method
+        if (paymentMethod === 'cash') {
+            amountReceived.placeholder = 'Enter cash amount';
+            document.querySelector('label[for="amount-received"]').textContent = 'Amount Received';
+            document.querySelector('label[for="change"]').style.display = 'block';
+            changeField.style.display = 'block';
+        } else {
+            amountReceived.placeholder = `Enter ${paymentMethod} amount`;
+            document.querySelector('label[for="amount-received"]').textContent = 'Amount Paid';
+            document.querySelector('label[for="change"]').style.display = 'none';
+            changeField.style.display = 'none';
+        }
+        
+        // Update the order total
+        updateCheckoutModal();
+    });
+
+    // Confirm order button
+    document.getElementById('confirm-order').addEventListener('click', function() {
+        // Get all order details
+        const orderType = document.getElementById('order-type').value;
+        const tableType = document.getElementById('table-type');
+        const tableNumber = document.getElementById('table-number');
+        const guestType = document.getElementById('guest-type');
+        const idNumber = document.getElementById('guest-id-number');
+        const paymentMethod = document.getElementById('payment-method');
+        const amountReceived = document.getElementById('amount-received');
+        const change = document.getElementById('change');
+        
+        // Get order items and totals
+        const orderItems = document.getElementById('modal-order-items').innerHTML;
+        const subtotal = document.getElementById('modal-subtotal').textContent;
+        const total = document.getElementById('modal-total').textContent;
+        
+        // Populate the final summary modal
+        document.getElementById('final-modal-order-items').innerHTML = orderItems;
+        document.getElementById('final-modal-subtotal').textContent = subtotal;
+        document.getElementById('final-modal-total').textContent = total;
+        document.getElementById('final-order-type').textContent = orderType === 'dine-in' ? 'Dine-in' : 'Takeout';
+        
+        // Show/hide table info based on order type
+        if (orderType === 'dine-in') {
+            document.getElementById('final-table-type').textContent = tableType.options[tableType.selectedIndex].text;
+            document.getElementById('final-table-number').textContent = tableNumber.options[tableNumber.selectedIndex].text;
+            document.getElementById('final-table-type-row').style.display = 'block';
+            document.getElementById('final-table-number-row').style.display = 'block';
+        } else {
+            document.getElementById('final-table-type-row').style.display = 'none';
+            document.getElementById('final-table-number-row').style.display = 'none';
+        }
+        
+        // Set guest type and ID number if applicable
+        document.getElementById('final-guest-type').textContent = guestType.options[guestType.selectedIndex].text;
+        
+        if (idNumber && idNumber.value) {
+            document.getElementById('final-id-number').textContent = idNumber.value;
+            document.getElementById('final-id-number-row').style.display = 'block';
+        } else {
+            document.getElementById('final-id-number-row').style.display = 'none';
+        }
+        
+        // Set payment info
+        document.getElementById('final-payment-method').textContent = paymentMethod.options[paymentMethod.selectedIndex].text;
+        document.getElementById('final-amount-received').textContent = amountReceived.value ? '₱' + parseFloat(amountReceived.value).toFixed(2) : '₱0.00';
+        document.getElementById('final-change').textContent = change.value;
+        
+        // Hide current modal and show summary modal
+        const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+        checkoutModal.hide();
+        
+        const summaryModal = new bootstrap.Modal(document.getElementById('finalSummaryModal'));
+        summaryModal.show();
+    });
+    
+    // Handle back to order button in summary modal
+    document.querySelector('#finalSummaryModal .btn-secondary').addEventListener('click', function() {
+        const summaryModal = bootstrap.Modal.getInstance(document.getElementById('finalSummaryModal'));
+        summaryModal.hide();
+        
+        const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+        checkoutModal.show();
+    });
+    
+    // Handle process order button in summary modal
+    document.getElementById('process-final-order').addEventListener('click', function() {
+        // Process the order (you'll need to implement this)
+        processOrder();
+    });
+});
+
+function updateCheckoutModal() {
+    const orderItemsContainer = document.getElementById('modal-order-items');
+    const subtotalElement = document.getElementById('modal-subtotal');
+    const totalElement = document.getElementById('modal-total');
+    const guestTypeSelect = document.getElementById('guest-type');
+    
+    // Clear previous items
+    orderItemsContainer.innerHTML = '';
+    
+    // Calculate subtotal
+    let subtotal = 0;
+    
+    cart.forEach((item, index) => {
+        const itemTotal = item.price * item.quantity;
+        // Add addons price if any
+        const addonsTotal = item.addons ? item.addons.reduce((sum, addon) => sum + (addon.price * item.quantity), 0) : 0;
+        subtotal += itemTotal + addonsTotal;
+        
+        // Create order item element
+        const itemElement = document.createElement('div');
+        itemElement.className = 'd-flex justify-content-between mb-2';
+        itemElement.innerHTML = `
+            <div>
+                <span class="fw-medium">${item.name} x${item.quantity}</span>
+                ${item.addons && item.addons.length > 0 ? 
+                    `<div class="text-muted small">${item.addons.map(a => `${a.name} (₱${a.price.toFixed(2)})`).join(', ')}</div>` : 
+                    ''
+                }
+            </div>
+            <div>₱${(itemTotal + addonsTotal).toFixed(2)}</div>
+        `;
+        orderItemsContainer.appendChild(itemElement);
+    });
+    
+    // Calculate discount based on guest type
+    const guestType = guestTypeSelect.value;
+    const idNumber = document.getElementById('guest-id-number').value;
+    const selectedOption = guestTypeSelect.options[guestTypeSelect.selectedIndex];
+    let discount = 0;
+    let discountText = '';
+    
+    // Check if this is a discount type that requires ID
+    const requiresId = selectedOption.dataset.requiresId === '1';
+    
+    // Validate ID number for discount-eligible guest types
+    if (guestType !== 'regular' && requiresId && !idNumber) {
+        const guestTypeName = selectedOption.text.split(' (')[0]; // Get just the name part
+        showAlert(`Please provide an ID number for ${guestTypeName}`, 'warning');
+        return 0; // Return 0 to prevent order submission
+    }
+    
+    // If it's not the regular option, calculate discount based on the selected discount type
+    if (guestType !== 'regular') {
+        // Extract the discount percentage from the option text (e.g., "20%" from "Senior Citizen (20% off)")
+        const match = selectedOption.text.match(/\((\d+)%/);
+        if (match && match[1]) {
+            const discountPercent = parseFloat(match[1]) / 100;
+            discount = subtotal * discountPercent;
+            discountText = ` (${match[1]}% off)`;
+        }
+    }
+    
+    const total = subtotal - discount;
+    
+    // Create discount row if there's a discount
+    if (discount > 0) {
+        const discountRow = document.createElement('div');
+        discountRow.className = 'd-flex justify-content-between mb-2';
+        discountRow.innerHTML = `
+            <div class="text-success">Discount${discountText}:</div>
+            <div class="text-success">-₱${discount.toFixed(2)}</div>
+        `;
+        orderItemsContainer.appendChild(discountRow);
+    }
+    
+    // Update subtotal and total
+    subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+    totalElement.textContent = `₱${total.toFixed(2)}`;
+    
+    // Update change amount when total changes
+    updateChangeAmount();
+    
+    // Return the total for other functions to use
+    return total;
+}
+
+function updateChangeAmount() {
+    const amountReceived = parseFloat(document.getElementById('amount-received').value) || 0;
+    const total = parseFloat(document.getElementById('modal-total').textContent.replace('₱', '').replace(',', ''));
+    const change = amountReceived - total;
+    
+    const changeField = document.getElementById('change');
+    
+    // Update change field
+    changeField.value = `₱${change >= 0 ? change.toFixed(2) : '0.00'}`;
+    
+    // Highlight change field if amount received is less than total
+    if (amountReceived > 0 && amountReceived < total) {
+        changeField.classList.add('text-danger');
+    } else {
+        changeField.classList.remove('text-danger');
+    }
+    
+    // Update confirm button state
+    const confirmBtn = document.getElementById('confirm-order');
+    const paymentMethod = document.getElementById('payment-method').value;
+    
+    if (paymentMethod === 'cash') {
+        // For cash payments, require amount received to be at least the total
+        confirmBtn.disabled = amountReceived < total;
+    } else {
+        // For other payment methods, just require some amount to be entered
+        confirmBtn.disabled = amountReceived <= 0;
+    }
+}
+
+function processOrder() {
+    // Get guest type and ID number if applicable
+    const guestType = document.getElementById('guest-type').value;
+    let idNumber = '';
+    
+    if (['senior', 'pwd', 'student'].includes(guestType)) {
+        idNumber = document.getElementById('guest-id-number').value.trim();
+        if (!idNumber) {
+            showAlert('Please provide an ID number for ' + 
+                     document.getElementById('guest-type').options[document.getElementById('guest-type').selectedIndex].text.split(' ')[0], 
+                     'warning');
+            return;
+        }
+    }
+    
+    // Here you would typically send the order to your server
+    // Include idNumber in the data sent to the server
+    const orderData = {
+        guestType: guestType,
+        idNumber: idNumber,
+        items: cart,
+        // Add other order details here
+    };
+    
+    console.log('Order data:', orderData); // For debugging
+
+    // Hide the modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+    modal.hide();
+}
+</script>
+
+<!-- Add this JavaScript before the closing </body> tag -->
+<script>
+let cart = [];
+
+// Function to update cart display
+function updateCartDisplay() {
+    const cartItems = document.getElementById('cart-items');
+    const subtotalElement = document.getElementById('cart-subtotal');
+    const totalElement = document.getElementById('cart-total');
+    const checkoutBtn = document.getElementById('checkout-btn');
+    const clearCartBtn = document.getElementById('clear-cart');
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="text-center text-muted py-5">
+                <i class="fas fa-shopping-cart fa-3x mb-3"></i>
+                <p>Your cart is empty</p>
+            </div>
+        `;
+        subtotalElement.textContent = '₱0.00';
+        totalElement.textContent = '₱0.00';
+        checkoutBtn.disabled = true;
+        clearCartBtn.disabled = true;
+        return;
+    }
+    
+    // Calculate totals
+    const subtotal = cart.reduce((sum, item) => {
+        const itemTotal = item.price + (item.addons ? item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0) : 0);
+        return sum + (itemTotal * item.quantity);
+    }, 0);
+    const total = subtotal; // Add tax, discount, etc. if needed
+    
+    // Update cart items
+    cartItems.innerHTML = cart.map((item, index) => {
+        let addonsHTML = '';
+        if (item.addons && item.addons.length > 0) {
+            addonsHTML = '<div class="small text-muted mt-1">';
+            item.addons.forEach(addon => {
+                addonsHTML += `+ ${addon.name} (₱${addon.price.toFixed(2)})<br>`;
+            });
+            addonsHTML += '</div>';
+        }
+        
+        const itemTotal = item.price + (item.addons ? item.addons.reduce((sum, addon) => sum + addon.price, 0) : 0);
+        
+        return `
+            <div class="cart-item mb-3 pb-3 border-bottom">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <h6 class="mb-1">${item.name}</h6>
+                        ${addonsHTML}
+                        <div class="d-flex align-items-center mt-2">
+                            <button class="btn btn-sm btn-outline-secondary btn-quantity" data-index="${index}" data-action="decrease">-</button>
+                            <span class="mx-2">${item.quantity}</span>
+                            <button class="btn btn-sm btn-outline-primary btn-quantity" data-index="${index}" data-action="increase">+</button>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="fw-bold">₱${(itemTotal * item.quantity).toFixed(2)}</div>
+                        <button class="btn btn-sm btn-link text-danger p-0 remove-item" data-index="${index}">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
+    }).join('');
+    
+    // Update totals
+    subtotalElement.textContent = `₱${subtotal.toFixed(2)}`;
+    totalElement.textContent = `₱${total.toFixed(2)}`;
+    
+    // Enable buttons
+    checkoutBtn.disabled = false;
+    clearCartBtn.disabled = false;
+    
+    // Add event listeners for quantity buttons and remove buttons
+    document.querySelectorAll('.btn-quantity').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            const action = this.dataset.action;
+            updateCartItemQuantity(index, action);
+        });
+    });
+    
+    document.querySelectorAll('.remove-item').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const index = parseInt(this.dataset.index);
+            removeFromCart(index);
+        });
+    });
+}
+
+// Function to add item to cart
+function addToCart(item) {
+    const existingItemIndex = cart.findIndex(cartItem => 
+        cartItem.id === item.id && 
+        JSON.stringify(cartItem.addons || []) === JSON.stringify(item.addons || [])
+    );
+    
+    if (existingItemIndex > -1) {
+        // Item already in cart, increase quantity
+        cart[existingItemIndex].quantity++;
+    } else {
+        // Add new item to cart
+        cart.push({
+            id: item.id,
+            name: item.name,
+            price: parseFloat(item.price),
+            quantity: 1,
+            addons: item.addons || []
+        });
     }
+    
+    updateCartDisplay();
+    showAlert('Item added to cart', 'success');
+}
 
-    // Helper function to validate order inputs
-    function validateOrderInputs(contactNumber, paymentMethod, discountType, idNumber, orderType) {
-        const errors = [];
-
-        if (contactNumber && !/^09\d{9}$/.test(contactNumber)) {
-            errors.push('If provided, contact number must be a valid 11-digit number starting with 09');
-        }
-
-        if (!paymentMethod) {
-            errors.push('Payment method is required');
-        }
-
-        if (discountType !== 'none' && !idNumber) {
-            errors.push('ID number is required when applying a discount');
-        }
-
-        if (discountType !== 'none' && idNumber) {
-            if (discountType === 'senior' && !/^SCDFI-[A-Z0-9]{8}$/i.test(idNumber)) {
-                errors.push('Invalid Senior Citizen ID format (SCDFI-XXXXXXXX)');
-            } else if (discountType === 'pwd' && !/^[A-Z]{2}-\d{4}-[A-Z]{3}-\d{7}$/i.test(idNumber)) {
-                errors.push('Invalid PWD ID format (RR-PPMM-BBB-NNNNNNN)');
-            }
-        }
-
-        if (!orderType) {
-            errors.push('Please select an order type (Dine-in or Takeout)');
-        }
-
-        if (orderType === 'dine-in') {
-            const tableNumber = document.getElementById('swal-table').value;
-            if (!tableNumber) {
-                errors.push('Please select a table number for dine-in orders');
-            }
-        }
-
-        return errors;
-    }
-
-    // Function to process the order submission
-    function processOrderSubmission(formData) {
-        // If table was selected, mark it as occupied
-        if (formData.orderType === 'dine-in' && formData.tableNumber) {
-            markTableAsOccupied(formData.tableNumber);
-        }
-        
-        // Calculate totals
-        const subtotal = calculateSubtotal();
-        let discount = 0;
-        
-        // Calculate discount based on type (20% for both PWD and Senior)
-        if (formData.discountType === 'pwd' || formData.discountType === 'senior') {
-            discount = subtotal * 0.20; // 20% discount
-        }
-        
-        // Calculate VAT (12% of subtotal after discount)
-        const vatRate = 0.12; // 12% VAT
-        const vatAmount = (subtotal - discount) * vatRate;
-        
-        // Calculate final total (subtotal - discount + VAT)
-        const finalTotal = subtotal - discount + vatAmount;
-
-        // Show confirmation modal
+// Function to update item quantity
+function updateCartItemQuantity(index, action) {
+    if (action === 'increase') {
+        cart[index].quantity++;
+    } else if (action === 'decrease' && cart[index].quantity > 1) {
+        cart[index].quantity--;
+    } else {
         Swal.fire({
-            title: 'Confirm Order Details',
-            html: `
-                <div class="confirmation-details">
-                    <div class="order-section">
-                        <h3 class="section-title">Order Items</h3>
-                        <div class="items-list">
-                            ${order.map(item => `
-                                <div class="item-detail">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="item-name">${item.name} × ${item.qty}</span>
-                                        <span class="item-price">₱${(item.price * item.qty).toFixed(2)}</span>
-                                    </div>
-                                    ${item.addons.length > 0 ? `
-                                        <div class="addons-list">
-                                            ${item.addons.map(addon => `
-                                                <div class="addon-detail">
-                                                    <small>+ ${addon.name}</small>
-                                                    <small>₱${addon.price.toFixed(2)}</small>
-                                                </div>
-                                            `).join('')}
-                                        </div>
-                                    ` : ''}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                    <div class="customer-section">
-                        <h3 class="section-title">Order Details</h3>
-                        ${formData.nickname ? `
-                            <div class="detail-row">
-                                <span class="detail-label">Nickname:</span>
-                                <span class="detail-value">${formData.nickname}</span>
-                            </div>
-                        ` : ''}
-                        <div class="detail-row">
-                            <span class="detail-label">Contact Number:</span>
-                            <span class="detail-value">${formData.contactNumber || 'N/A'}</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Payment Method:</span>
-                            <span class="detail-value">${formData.paymentMethod}</span>
-                        </div>
-                        ${formData.discountType !== 'none' ? `
-                            <div class="detail-row">
-                                <span class="detail-label">Discount Type:</span>
-                                <span class="detail-value">${formData.discountType.toUpperCase()}</span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">ID Number:</span>
-                                <span class="detail-value">${formData.idNumber || 'N/A'}</span>
-                            </div>
-                        ` : ''}
-                        ${formData.orderType === 'dine-in' ? `
-                            <div class="detail-row">
-                                <span class="detail-label">Table Number:</span>
-                                <span class="detail-value">Table ${formData.tableNumber}</span>
-                            </div>
-                        ` : ''}
-                    </div>
-                    <div class="total-section">
-                        <div class="detail-row">
-                            <span class="detail-label">Subtotal:</span>
-                            <span class="detail-value">₱${subtotal.toFixed(2)}</span>
-                        </div>
-                        ${discount > 0 ? `
-                            <div class="detail-row discount">
-                                <span class="detail-label">Discount (20%):</span>
-                                <span class="detail-value">-₱${discount.toFixed(2)}</span>
-                            </div>
-                        ` : ''}
-                        <div class="detail-row">
-                            <span class="detail-label">VAT (12%):</span>
-                            <span class="detail-value">₱${vatAmount.toFixed(2)}</span>
-                        </div>
-                        <div class="detail-row total">
-                            <span class="detail-label">Final Total (VAT Included):</span>
-                            <span class="detail-value">₱${finalTotal.toFixed(2)}</span>
-                        </div>
-                        <div class="payment-details">
-                            <div class="detail-row">
-                                <span class="detail-label">Amount Paid:</span>
-                                <div class="amount-input">
-                                    <span class="peso-sign">₱</span>
-                                    <input type="number" id="amount-paid" class="form-control" placeholder="Enter amount" step="0.01" min="${finalTotal}">
-                                </div>
-                            </div>
-                            <div class="detail-row change-amount" style="display: none;">
-                                <span class="detail-label">Change:</span>
-                                <span class="detail-value" id="change-amount">₱0.00</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `,
-            customClass: {
-                container: 'confirm-order-modal',
-                popup: 'confirm-order-popup',
-                content: 'confirm-order-content'
-            },
+            title: 'Remove Item',
+            text: 'Are you sure you want to remove this item?',
+            icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Confirm Order',
-            cancelButtonText: 'Edit Order',
-            confirmButtonColor: '#28a745',
-            cancelButtonColor: '#dc3545',
-            width: '600px',
-            didOpen: () => {
-                // Add custom styles for the confirmation modal
-                const style = document.createElement('style');
-                style.textContent = `
-                    .confirm-order-popup {
-                        padding: 2rem;
-                        max-height: 90vh;
-                        overflow-y: auto;
-                        display: flex;
-                        flex-direction: column;
-                    }
-                    .confirmation-details {
-                        text-align: left;
-                        padding-bottom: 2rem;
-                        margin-bottom: 1rem;
-                    }
-                    .section-title {
-                        font-size: 1.2rem;
-                        color: #333;
-                        margin-bottom: 1rem;
-                        padding-bottom: 0.5rem;
-                        border-bottom: 2px solid #eee;
-                    }
-                    .payment-details {
-                        margin-top: 1rem;
-                        padding-top: 1rem;
-                        border-top: 2px solid #eee;
-                        margin-bottom: 2rem;
-                    }
-                    .total-section {
-                        margin-top: 1rem;
-                        padding-top: 1rem;
-                        border-top: 2px solid #eee;
-                        margin-bottom: 1rem;
-                    }
-                    .swal2-actions {
-                        margin-top: 0;
-                        padding: 1rem;
-                        border-top: 1px solid #eee;
-                        width: 100%;
-                        justify-content: flex-end;
-                        gap: 1rem;
-                    }
-                    .swal2-confirm, .swal2-cancel {
-                        margin: 0 !important;
-                    }
-                    .swal2-popup {
-                        padding-bottom: 0;
-                    }
-                    .swal2-html-container {
-                        margin: 0;
-                        overflow-y: auto;
-                        max-height: calc(90vh - 150px);
-                    }
-                    .amount-input {
-                        display: flex;
-                        align-items: center;
-                        position: relative;
-                        flex: 1;
-                        margin-left: 10px;
-                    }
-                    .peso-sign {
-                        position: absolute;
-                        left: 10px;
-                        z-index: 1;
-                        color: #495057;
-                    }
-                    #amount-paid {
-                        padding-left: 25px;
-                        width: 150px;
-                        margin-left: auto;
-                    }
-                    .change-amount {
-                        font-weight: bold;
-                        color: #28a745;
-                    }
-                    .change-amount .detail-value {
-                        font-size: 1.1em;
-                    }
-                    .items-list {
-                        margin-bottom: 2rem;
-                    }
-                    .item-detail {
-                        padding: 0.5rem 0;
-                        border-bottom: 1px solid #eee;
-                    }
-                    .item-name {
-                        font-weight: 500;
-                    }
-                    .addons-list {
-                        padding-left: 1.5rem;
-                        margin-top: 0.25rem;
-                    }
-                    .addon-detail {
-                        display: flex;
-                        justify-content: space-between;
-                        color: #666;
-                    }
-                    .customer-section {
-                        margin: 2rem 0;
-                        padding: 1rem;
-                        background: #f8f9fa;
-                        border-radius: 8px;
-                    }
-                    .detail-row {
-                        display: flex;
-                        justify-content: space-between;
-                        margin: 0.5rem 0;
-                        padding: 0.5rem 0;
-                    }
-                    .detail-label {
-                        font-weight: 500;
-                        color: #555;
-                    }
-                    .total-section .detail-row.total {
-                        font-size: 1.2rem;
-                        font-weight: bold;
-                        color: #28a745;
-                        border-top: 1px solid #eee;
-                        margin-top: 0.5rem;
-                        padding-top: 0.5rem;
-                    }
-                    .discount {
-                        color: #dc3545;
-                    }
-                `;
-                document.head.appendChild(style);
-
-                // Add event listener for amount paid input
-                const amountPaidInput = document.getElementById('amount-paid');
-                const changeDisplay = document.getElementById('change-amount');
-                const changeRow = document.querySelector('.change-amount');
-
-                amountPaidInput.addEventListener('input', function() {
-                    const amountPaid = parseFloat(this.value) || 0;
-                    const change = amountPaid - finalTotal;
-                    
-                    if (amountPaid >= finalTotal) {
-                        changeRow.style.display = 'flex';
-                        changeDisplay.textContent = `₱${change.toFixed(2)}`;
-                        this.classList.remove('is-invalid');
-                    } else {
-                        changeRow.style.display = 'none';
-                        this.classList.add('is-invalid');
-                    }
-                });
-            },
-            preConfirm: () => {
-                const amountPaid = parseFloat(document.getElementById('amount-paid').value) || 0;
-                if (amountPaid < finalTotal) {
-                    Swal.showValidationMessage('Please enter an amount equal to or greater than the total amount');
-                    return false;
-                }
-                return {
-                    ...formData,
-                    amountPaid: amountPaid,
-                    change: amountPaid - finalTotal
-                };
-            }
+            confirmButtonText: 'Yes, remove it!',
+            cancelButtonText: 'No, cancel!',
+            reverseButtons: true
         }).then((result) => {
             if (result.isConfirmed) {
-                // Show loading animation
-        Swal.fire({
-                    title: 'Processing Order',
-            html: `
-                <div class="processing-order">
-                    <div class="loading-spinner"></div>
-                    <p class="mt-3">Please wait while we process your order...</p>
-                </div>
-            `,
-            showConfirmButton: false,
-            allowOutsideClick: false
-        });
-
-                // Get current time
-        const now = new Date();
-        const pickup_time = now.toTimeString().split(' ')[0];
-
-        // Prepare order data
-        const orderData = {
-            subtotal_amount: parseFloat(subtotal),
-            vat_amount: parseFloat(vatAmount),
-            discount_amount: parseFloat(discount || 0),
-            total_amount: parseFloat(finalTotal),
-            contact_number: result.value.contactNumber || '',
-            nickname: result.value.nickname || '',
-            payment_method: result.value.paymentMethod,
-            discount_type: result.value.discountType || 'none',
-            id_number: result.value.idNumber || '',
-            discount_amount: parseFloat(discount || 0),
-            amount_paid: parseFloat(result.value.amountPaid),
-            change_amount: parseFloat(result.value.change),
-            status: 'processing',
-            booking_type: 'walk-in',
-            order_type: result.value.orderType,
-            table_package_id: result.value.tableNumber,
-            table_name: result.value.orderType === 'dine-in' ? `Table ${result.value.tableNumber}` : null,
-            type_of_order: result.value.orderType,
-            items: order.map(item => ({
-                item_name: item.name,
-                quantity: parseInt(item.qty),
-                unit_price: parseFloat(item.price),
-                addons: item.addons.map(addon => ({
-                    addon_name: addon.name,
-                    addon_price: parseFloat(addon.price)
-                }))
-            })),
-            user_id: currentUserId
-        };
-
-        // Send order to server with error handling
-        fetch('process_order.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData)
-        })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-        .then(data => {
-            if (data.status === 'success') {
-                        // Show success message
-                Swal.fire({
-                    icon: 'success',
-                            title: 'Order Placed Successfully!',
-                    html: `
-                        <div class="order-success">
-                            <p>Order ID: #${data.orderId}</p>
-                            <p>Order Type: ${result.value.orderType === 'dine-in' ? 'Dine-in' : 'Takeout'}</p>
-                            ${result.value.orderType === 'dine-in' ? `<p>Table Number: Table ${result.value.tableNumber}</p>` : ''}
-                                    <p>Payment Method: ${result.value.paymentMethod}</p>
-                                    <p>Subtotal: ₱${subtotal.toFixed(2)}</p>
-                                    ${discount > 0 ? `<p>Discount (20%): -₱${discount.toFixed(2)}</p>` : ''}
-                                    <p>VAT (12%): ₱${vatAmount.toFixed(2)}</p>
-                                    <p>Amount Paid: ₱${result.value.amountPaid.toFixed(2)}</p>
-                                    <p>Change: ₱${result.value.change.toFixed(2)}</p>
-                                    <p>Total Amount (VAT Included): ₱${finalTotal.toFixed(2)}</p>
-                            <small class="text-muted">Please wait for your order to be prepared.</small>
-                        </div>
-                    `,
-                    confirmButtonText: 'Print Receipt',
-                    showCancelButton: true,
-                    cancelButtonText: 'Close'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Open receipt in new window for printing
-                        const receiptWindow = window.open(`generate_receipt.php?order_id=${data.orderId}`, '_blank', 'width=400,height=600');
-                    }
-                    // Reset order and refresh page
-                    order = [];
-                    updateOrder();
-                    location.reload();
-                });
-            } else {
-                throw new Error(data.message || 'Failed to place order');
+                removeFromCart(index);
             }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Order Processing Error',
-                text: 'There was a problem processing your order. Please try again.',
-                        footer: `<small>Error details: ${error.message}</small>`,
-                        showConfirmButton: true,
-                        confirmButtonText: 'OK',
-                        allowOutsideClick: false
+        });
+        return;
+    }
+    
+    updateCartDisplay();
+}
+
+// Function to remove item from cart
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCartDisplay();
+    Swal.fire({
+        icon: 'warning',
+        title: 'Item removed from cart',
+        showConfirmButton: false,
+        timer: 1500
+    });
+}
+
+// Event delegation for add to cart buttons
+document.addEventListener('click', function(e) {
+    if (e.target.closest('.add-to-cart')) {
+        e.preventDefault();
+        const card = e.target.closest('.card');
+        const addonsContainer = card.querySelector('.addons-container');
+        
+        // Get item information
+        const item = {
+            id: card.dataset.id,
+            name: card.dataset.name,
+            price: parseFloat(card.dataset.price),
+            addons: []
+        };
+        
+        // Check if this menu item has add-ons
+        if (addonsContainer && addonsContainer.querySelector('.addon-checkbox')) {
+            // Show modal with add-ons
+            showAddonsModal(item, card);
+        } else {
+            // No add-ons, add directly to cart
+            addToCart(item);
+        }
+    }
+});
+
+// Function to show add-ons modal
+function showAddonsModal(item, card) {
+    const modal = new bootstrap.Modal(document.getElementById('addonsModal'));
+    const modalItemName = document.getElementById('modal-item-name');
+    const modalItemPrice = document.getElementById('modal-item-price');
+    const modalAddonsList = document.getElementById('modal-addons-list');
+    const modalAddToCartBtn = document.getElementById('modal-add-to-cart');
+    
+    // Set item information
+    modalItemName.textContent = item.name;
+    modalItemPrice.textContent = `₱${item.price.toFixed(2)}`;
+    
+    // Clear and populate add-ons list
+    modalAddonsList.innerHTML = '';
+    const addonCheckboxes = card.querySelectorAll('.addon-checkbox');
+    
+    if (addonCheckboxes.length > 0) {
+        const addonsHTML = '<p class="small mb-2"><strong>Available Add-ons:</strong></p>';
+        let checkboxesHTML = '';
+        
+        addonCheckboxes.forEach(checkbox => {
+            const label = checkbox.nextElementSibling;
+            const addonName = label.textContent.split('+')[0].trim();
+            const addonPrice = parseFloat(checkbox.dataset.price);
+            
+            checkboxesHTML += `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="form-check-label" for="modal-addon-${checkbox.value}">
+                        ${addonName} (+₱${addonPrice.toFixed(2)})
+                    </label>
+                    <div class="input-group input-group-sm w-auto">
+                        <button class="btn btn-outline-secondary btn-addon-quantity" type="button" data-action="decrease" data-id="${checkbox.value}">-</button>
+                        <input type="text" class="form-control text-center modal-addon-quantity" id="modal-addon-${checkbox.value}" value="0" data-price="${addonPrice}" data-id="${checkbox.value}" readonly style="width: 50px;">
+                        <button class="btn btn-outline-secondary btn-addon-quantity" type="button" data-action="increase" data-id="${checkbox.value}">+</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        modalAddonsList.innerHTML = addonsHTML + checkboxesHTML;
+
+        // Add event listeners for new quantity buttons
+        document.querySelectorAll('.btn-addon-quantity').forEach(button => {
+            button.addEventListener('click', function() {
+                const input = document.querySelector(`.modal-addon-quantity[data-id="${this.dataset.id}"]`);
+                let quantity = parseInt(input.value);
+                if (this.dataset.action === 'increase') {
+                    quantity++;
+                } else if (this.dataset.action === 'decrease' && quantity > 0) {
+                    quantity--;
+                }
+                input.value = quantity;
             });
         });
-    }
-        });
-    }
 
-    // Add this function to calculate subtotal
-    function calculateSubtotal() {
-        return order.reduce((total, item) => {
-            const itemTotal = item.price * item.qty;
-            const addonsTotal = item.addons.reduce((sum, addon) => sum + (addon.price * (addon.qty || 1) * item.qty), 0);
-            return total + itemTotal + addonsTotal;
-        }, 0);
+    } else {
+        modalAddonsList.innerHTML = '<p class="text-muted">No add-ons available for this item.</p>';
     }
-
-    // Helper function to mark fields as required
-    function markFieldAsRequired(fieldId, errorMessage) {
-        const field = document.getElementById(fieldId);
-        field.classList.add('required-field');
-        
-        // Add error message below the field
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'error-message';
-        errorDiv.textContent = errorMessage;
-        field.parentNode.appendChild(errorDiv);
-    }
-
-    // Add this function to show description
-    function showDescription(name, description) {
-        Swal.fire({
-            title: name,
-            html: `<div class="menu-description">${description}</div>`,
-            icon: null,
-            confirmButtonText: 'Close',
-            customClass: {
-                container: 'description-modal',
-                popup: 'description-popup',
-                title: 'description-title',
-                htmlContainer: 'description-content'
+    
+    // Handle modal add to cart button
+    modalAddToCartBtn.onclick = function() {
+        const selectedAddons = [];
+        document.querySelectorAll('.modal-addon-quantity').forEach(input => {
+            const quantity = parseInt(input.value);
+            if (quantity > 0) {
+                const addonId = input.dataset.id;
+                const addonName = document.querySelector(`label[for="modal-addon-${addonId}"]`).textContent.split('+')[0].trim();
+                const addonPrice = parseFloat(input.dataset.price);
+                for (let i = 0; i < quantity; i++) {
+                    selectedAddons.push({
+                        id: addonId,
+                        name: addonName,
+                        price: addonPrice
+                    });
+                }
             }
         });
-    }
-
-    // Function to save form data to localStorage
-    function saveFormData() {
-        const formData = {
-            contactNumber: document.getElementById('swal-contact')?.value,
-            nickname: document.getElementById('swal-nickname')?.value,
-            discountType: document.getElementById('swal-discount')?.value,
-            idNumber: document.getElementById('swal-id')?.value,
-            paymentMethod: document.getElementById('swal-payment')?.value,
-            orderType: document.getElementById('swal-order-type')?.value,
-            tableNumber: document.getElementById('swal-table')?.value,
-            order: order
+        
+        // Add item with selected add-ons to cart
+        const itemWithAddons = {
+            ...item,
+            addons: selectedAddons
         };
-        localStorage.setItem('posFormData', JSON.stringify(formData));
-    }
-
-    // Function to load saved form data
-    function loadFormData() {
-        const savedData = localStorage.getItem('posFormData');
-        if (savedData) {
-            const formData = JSON.parse(savedData);
-            
-            // Restore order items
-            if (formData.order && formData.order.length > 0) {
-                order = formData.order;
-                updateOrder();
-            }
-            
-            // Return the form data to be used when opening the modal
-            return formData;
-        }
-        return null;
-    }
-
-    // Function to clear saved form data
-    function clearFormData() {
-        localStorage.removeItem('posFormData');
-    }
-
-    // Add event listener for page load
-    document.addEventListener('DOMContentLoaded', function() {
-        // Load saved order data
-        const savedData = loadFormData();
-        if (savedData && savedData.order) {
-            order = savedData.order;
-            updateOrder();
-        }
         
-        // ... rest of the existing DOMContentLoaded code ...
-    });
+        addToCart(itemWithAddons);
+        
+        // Close modal and reset quantities
+        modal.hide();
+        document.querySelectorAll('.modal-addon-quantity').forEach(input => {
+            input.value = 0;
+        });
+    };
+    
+    // Show modal
+    modal.show();
+}
 
-    // Add event listener for beforeunload to save current state
-    window.addEventListener('beforeunload', function() {
-        if (order.length > 0) {
-            saveFormData();
+// Clear cart button
+document.getElementById('clear-cart').addEventListener('click', function() {
+    showConfirm('Are you sure you want to clear the cart?', 'Clear Cart').then((result) => {
+        if (result) {
+            cart = [];
+            updateCartDisplay();
+            showAlert('Cart cleared', 'info');
         }
     });
+});
 
-    // Add the removeItem function
-    function removeItem(index) {
-        Swal.fire({
-            title: 'Remove Item?',
-            text: `Do you want to remove ${order[index].name} from your order?`,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Yes, remove it!',
-            cancelButtonText: 'No, keep it'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                order.splice(index, 1);
-                updateOrder();
-                saveFormData();
-                Swal.fire({
-                    toast: true,
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Item removed from cart',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            }
-        });
+
+// Initialize cart display
+updateCartDisplay();
+// Update the processOrder function to handle order submission and receipt printing
+function processOrder() {
+    // Get all order details
+    const orderType = document.getElementById('order-type').value;
+    const tableType = document.getElementById('table-type');
+    const tableNumber = document.getElementById('table-number');
+    const guestType = document.getElementById('guest-type');
+    const idNumber = document.getElementById('guest-id-number');
+    const paymentMethod = document.getElementById('payment-method');
+    const amountReceived = document.getElementById('amount-received');
+    const change = document.getElementById('change');
+    
+    // Validate required fields
+    if (orderType === 'dine-in' && (!tableType.value || !tableNumber.value)) {
+        showAlert('Please select both table type and table number for dine-in orders.', 'warning');
+        return;
     }
-    </script>
-</body>
-</html>
+    
+    if (guestType.value !== 'regular' && !idNumber.value) {
+        const guestTypeName = guestType.options[guestType.selectedIndex].text.split(' (')[0];
+        showAlert(`Please provide an ID number for ${guestTypeName}`, 'warning');
+        return;
+    }
+    
+    const totalAmount = parseFloat(document.getElementById('modal-total').textContent.replace('₱', ''));
+    if (parseFloat(amountReceived.value) < totalAmount) {
+        showAlert('Amount received is less than the total amount.', 'warning');
+        return;
+    }
+    
+    // Prepare order data
+    const orderData = {
+        order_type: orderType,
+        table_type_id: tableType.value,
+        table_number: tableNumber.value,
+        guest_type: guestType.value,
+        id_number: idNumber.value,
+        payment_method: paymentMethod.value,
+        amount_received: parseFloat(amountReceived.value) || 0,
+        change: parseFloat(change.value.replace('₱', '').replace(',', '')) || 0,
+        items: cart,
+        subtotal: parseFloat(document.getElementById('modal-subtotal').textContent.replace('₱', '')),
+        total: totalAmount,
+        discount: parseFloat(document.getElementById('modal-discount')?.textContent.replace('₱', '')) || 0
+    };
+    
+    // Show loading state
+    const confirmBtn = document.getElementById('confirm-print-btn');
+    const originalBtnText = confirmBtn.innerHTML;
+    confirmBtn.disabled = true;
+    confirmBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+    
+    // Send order to server
+    fetch('pos_insert_order.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest' // Add this header to identify AJAX requests
+        },
+        body: JSON.stringify(orderData)
+    })
+    .then(response => {
+        // First, check if the response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            // If not JSON, get the response as text to see what's wrong
+            return response.text().then(text => {
+                console.error('Non-JSON response:', text);
+                throw new Error('Server returned an invalid response. Please check the console for details.');
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'success') {
+            // Show success message
+            showAlert('Order placed successfully!', 'success');
+            
+            // Print receipt
+            printReceipt(data.order_number || data.order_id);
+            
+            // Close the modal
+            const modal = bootstrap.Modal.getInstance(document.getElementById('finalSummaryModal'));
+            if (modal) modal.hide();
+            
+            // Reset the form and cart
+            resetOrderForm();
+        } else {
+            throw new Error(data.message || 'Failed to place order');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showAlert('Error processing order: ' + (error.message || 'Unknown error occurred. Please try again.'), 'danger');
+    })
+    .finally(() => {
+        // Reset button state
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = originalBtnText;
+    });
+}
+
+// Function to print receipt
+function printReceipt(orderId) {
+    // Open a new window for printing
+    const printWindow = window.open('', '_blank');
+    
+    // Get current date and time
+    const now = new Date();
+    const dateTimeString = now.toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+    });
+    
+    // Create receipt HTML with thermal receipt styling
+    const receiptHtml = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>Receipt #${orderId}</title>
+            <style>
+                @media print {
+                    @page {
+                        size: 80mm 297mm;
+                        margin: 2mm;
+                    }
+                    body {
+                        width: 76mm;
+                        font-family: 'Courier New', monospace;
+                        font-size: 9px;
+                        line-height: 1.1;
+                        margin: 0;
+                        padding: 2mm;
+                        background: white;
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                    * {
+                        -webkit-print-color-adjust: exact;
+                        print-color-adjust: exact;
+                    }
+                }
+                
+                body {
+                    font-family: 'Courier New', monospace;
+                    font-size: 9px;
+                    line-height: 1.1;
+                    width: 76mm;
+                    margin: 0 auto;
+                    padding: 2mm;
+                    background: white;
+                    border: 1px solid #ddd;
+                }
+                
+                .text-center { text-align: center; }
+                .text-right { text-align: right; }
+                .text-bold { font-weight: bold; }
+                .text-large { font-size: 12px; font-weight: bold; }
+                .text-medium { font-size: 10px; font-weight: bold; }
+                
+                .receipt-header { text-align: center; margin-bottom: 10px; }
+                .receipt-title { font-size: 14px; font-weight: bold; margin-bottom: 2px; }
+                .receipt-subtitle { font-size: 8px; margin-bottom: 1px; }
+                
+                .receipt-divider { 
+                    border-top: 1px dashed #000; 
+                    margin: 8px 0; 
+                    height: 1px;
+                }
+                
+                .receipt-item { 
+                    display: flex; 
+                    justify-content: space-between; 
+                    margin-bottom: 2px;
+                    font-size: 8px;
+                }
+                
+                .receipt-item-name { 
+                    flex: 2; 
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                }
+                
+                .receipt-item-qty { 
+                    flex: 0.5; 
+                    text-align: center; 
+                }
+                
+                .receipt-item-price { 
+                    flex: 1; 
+                    text-align: right; 
+                }
+                
+                .receipt-total { 
+                    font-weight: bold; 
+                    margin-top: 3px;
+                    font-size: 9px;
+                }
+                
+                .receipt-summary {
+                    margin-top: 8px;
+                    font-size: 8px;
+                }
+                
+                .receipt-footer { 
+                    margin-top: 10px; 
+                    text-align: center; 
+                    font-size: 7px;
+                    font-style: italic;
+                }
+                
+                .addon-item {
+                    font-size: 7px;
+                    margin-left: 8px;
+                    margin-bottom: 1px;
+                    color: #666;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="receipt-header">
+                <div class="receipt-title">Casa Estela Boutique Hotel & Cafe</div>
+                <div class="receipt-subtitle">Gov B Marasigan St, Calapan City, Oriental Mindoro</div>
+                <div class="receipt-subtitle">Phone: 0908 747 4892 | Email: casaestelaboutiquehotelandcafe@gmail.com</div>
+                <div class="receipt-divider"></div>
+                <div class="text-medium">ORDER #: ${orderId}</div>
+                <div>${dateTimeString}</div>
+                <div class="text-medium">CASHIER: ${document.getElementById('cashier-name')?.textContent || 'Guest'}</div>
+                <div class="text-medium">GUEST TYPE: ${document.getElementById('guest-type')?.value || 'Regular'}</div>
+                <div class="text-medium">DISCOUNT: ${(() => {
+                    const guestTypeSelect = document.getElementById('guest-type');
+                    const guestType = guestTypeSelect ? guestTypeSelect.value : 'regular';
+                    const selectedOption = guestTypeSelect ? guestTypeSelect.options[guestTypeSelect.selectedIndex] : null;
+                    
+                    if (guestType !== 'regular' && selectedOption) {
+                        const match = selectedOption.text.match(/\((\d+)%/);
+                        return match ? `${match[1]}%` : '0%';
+                    }
+                    return '0%';
+                })()}</div>
+            </div>
+            
+            <div class="receipt-divider"></div>
+            
+            <div id="receipt-items">
+                ${generateReceiptItemsHtml()}
+            </div>
+            
+            <div class="receipt-divider"></div>
+            
+            <div class="receipt-footer">
+                <div>Thank you for dining with us!</div>
+                <div>Please come again!</div>
+                <div class="receipt-divider"></div>
+                <div>** SOFTWARE POWERED BY **</div>
+                <div>E Akomoda</div>
+            </div>
+        </body>
+        </html>
+    `;
+    
+    // Write the receipt content and print
+    printWindow.document.open();
+    printWindow.document.write(receiptHtml);
+    printWindow.document.close();
+    
+    // Add event listener to ensure the print dialog shows after the content is loaded
+    printWindow.onload = function() {
+        setTimeout(function() {
+            printWindow.print();
+            printWindow.close();
+        }, 500);
+    };
+}
+
+// Helper function to generate receipt items HTML
+function generateReceiptItemsHtml() {
+    let html = '';
+    let subtotal = 0;
+    
+    // Add items
+    cart.forEach(item => {
+        const itemPrice = parseFloat(item.price);
+        const addonsTotal = item.addons ? item.addons.reduce((sum, addon) => sum + parseFloat(addon.price), 0) : 0;
+        const totalPrice = (itemPrice + addonsTotal) * item.quantity;
+        subtotal += totalPrice;
+        
+        // Add main item
+        html += `
+            <div class="receipt-item">
+                <div class="receipt-item-name">${item.name.toUpperCase()}</div>
+                <div class="receipt-item-qty">${item.quantity}x</div>
+                <div class="receipt-item-price">${totalPrice.toFixed(2)}</div>
+            </div>
+        `;
+        
+        // Add add-ons if any
+        if (item.addons && item.addons.length > 0) {
+            item.addons.forEach(addon => {
+                html += `
+                    <div class="receipt-item addon-item">
+                        <div class="receipt-item-name">+ ${addon.name}</div>
+                        <div class="receipt-item-price">${(addon.price * item.quantity).toFixed(2)}</div>
+                    </div>
+                `;
+            });
+        }
+    });
+    
+    // Add subtotal
+    html += `
+        <div class="receipt-divider"></div>
+        <div class="receipt-summary">
+            <div class="receipt-item">
+                <div>SUBTOTAL:</div>
+                <div class="text-right">${subtotal.toFixed(2)}</div>
+            </div>
+    `;
+    
+    // Add discount - calculate based on guest type selection
+    const guestTypeSelect = document.getElementById('guest-type');
+    const guestType = guestTypeSelect ? guestTypeSelect.value : 'regular';
+    const selectedOption = guestTypeSelect ? guestTypeSelect.options[guestTypeSelect.selectedIndex] : null;
+    let discountAmount = 0;
+    let discountTypeText = '0%';
+    
+    // Calculate discount based on guest type (same logic as updateOrderSummary)
+    if (guestType !== 'regular' && selectedOption) {
+        const match = selectedOption.text.match(/\((\d+)%/);
+        if (match && match[1]) {
+            const discountPercent = parseFloat(match[1]) / 100;
+            discountAmount = subtotal * discountPercent;
+            discountTypeText = `${match[1]}%`;
+        }
+    }
+    
+    if (discountAmount > 0) {
+        html += `
+            <div class="receipt-item">
+                <div>DISCOUNT (${discountTypeText}):</div>
+                <div class="text-right">-${discountAmount.toFixed(2)}</div>
+            </div>
+        `;
+    }
+    
+    // Add tax (you can customize this)
+    const tax = subtotal * 0.12; // 12% tax
+    html += `
+        <div class="receipt-item">
+            <div>TAX (12%):</div>
+            <div class="text-right">${tax.toFixed(2)}</div>
+        </div>
+    `;
+    
+    // Add total
+    const total = subtotal - discountAmount;
+    html += `
+        <div class="receipt-divider"></div>
+        <div class="receipt-item receipt-total">
+            <div>TOTAL:</div>
+            <div class="text-right">${total.toFixed(2)}</div>
+        </div>
+    `;
+    
+    // Add payment info
+    const paymentMethod = document.getElementById('payment-method').value;
+    const amountReceived = parseFloat(document.getElementById('amount-received').value) || 0;
+    const change = amountReceived - total;
+    
+    html += `
+        <div class="receipt-divider"></div>
+        <div class="receipt-summary">
+            <div class="receipt-item">
+                <div>PAYMENT:</div>
+                <div class="text-right">${paymentMethod.toUpperCase()}</div>
+            </div>
+            <div class="receipt-item">
+                <div>AMOUNT RECEIVED:</div>
+                <div class="text-right">${amountReceived.toFixed(2)}</div>
+            </div>
+            <div class="receipt-item">
+                <div>CHANGE:</div>
+                <div class="text-right">${change.toFixed(2)}</div>
+            </div>
+        </div>
+    `;
+    
+    return html;
+}
+
+// Function to reset the order form
+function resetOrderForm() {
+    // Clear the cart
+    cart = [];
+    updateCartDisplay();
+    
+    // Reset form fields
+    document.getElementById('order-type').value = 'dine-in';
+    document.getElementById('table-type').value = '';
+    document.getElementById('table-number').innerHTML = '<option value="">Select Table Type First</option>';
+    document.getElementById('table-number').disabled = true;
+    document.getElementById('guest-type').value = 'regular';
+    document.getElementById('guest-id-number').value = '';
+    document.getElementById('id-number-container').style.display = 'none';
+    document.getElementById('payment-method').value = 'cash';
+    document.getElementById('amount-received').value = '';
+    document.getElementById('change').value = '₱0.00';
+    
+    // Trigger change events to update UI
+    document.getElementById('order-type').dispatchEvent(new Event('change'));
+    document.getElementById('payment-method').dispatchEvent(new Event('change'));
+}
+
+// Add event listener for the confirm and print button
+document.addEventListener('DOMContentLoaded', function() {
+    // ... existing code ...
+    
+    // Add this inside the DOMContentLoaded event listener
+    document.getElementById('confirm-print-btn').addEventListener('click', function() {
+        processOrder();
+    });
+});
+</script>

@@ -86,12 +86,7 @@ unset($_SESSION['booking_error']);
                     <i class="fas fa-shopping-cart"></i>
                     <span class="cart-count" id="cartCount">0</span>
                 </a>
-                <a href="#"><i class="fas fa-envelope"></i></a>
-                <a href="#" class="position-relative">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </a>
-                <a href="#"><i class="fas fa-user"></i></a>
+                
             </div>
         </div>
     </nav>

@@ -175,7 +175,8 @@ if ($result) {
                         <tr>
                             <td><?= htmlspecialchars($order['order_id']) ?></td>
                             <td><?= htmlspecialchars($order['firstname'] . ' ' . $order['lastname']) ?></td>
-                            <td><?= htmlspecialchars($order['contact']) ?></td>
+                            <td><?= htmlspecialchars($order['contact'] ?? '') ?></td>
+
                             <td><?= date("F j, Y g:i A", strtotime($order['date_time'])) ?></td>
                             <td>
                                 <?php if ($order['status'] === 'Completed'): ?>
@@ -256,15 +257,21 @@ if ($result) {
                                                                 <i class="bi bi-person-fill fs-5"></i>
                                                             </div>
                                                             <div>
-                                                                <div class="fw-bold fs-5 text-dark">
-                                                                    <?= htmlspecialchars($order['firstname'] . ' ' . $order['lastname']) ?>
-                                                                </div>
-                                                                <div class="text-muted small">
-                                                                    <?= htmlspecialchars($order['contact']) ?>
-                                                                </div>
+                                                                <?php if (!empty($order['firstname']) || !empty($order['lastname'])): ?>
+                                                                    <div class="fw-bold fs-5 text-dark">
+                                                                        <?= htmlspecialchars(trim(($order['firstname'] ?? '') . ' ' . ($order['lastname'] ?? ''))) ?>
+                                                                    </div>
+                                                                <?php endif; ?>
+
+                                                                <?php if (!empty($order['contact'])): ?>
+                                                                    <div class="text-muted small">
+                                                                        <?= htmlspecialchars($order['contact']) ?>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                             </div>
                                                         </div>
                                                     </div>
+
                                                 </div>
 
                                                 <div class="card border-0 shadow-sm">
@@ -557,37 +564,88 @@ if ($result) {
             document.getElementById('r-items').innerHTML = itemHTML;
 
             let paymentHTML = '';
-            if (order.total) {
-                paymentHTML += `
-                <div class="section-title">Payment Summary</div>
-                <div class="total-row"><span>Total:</span><span>₱${Number(order.total).toFixed(2)}</span></div>
-            `;
 
-                if (order.downpayment) {
-                    paymentHTML += `
-                    <div class="total-row"><span>Downpayment:</span><span>₱${Number(order.downpayment).toFixed(2)}</span></div>
+            if (order.total && Number(order.total) > 0) {
+
+                const total = Number(order.total) || 0;
+                const downpayment = Number(order.downpayment) || 0;
+                const remaining = Number(order.remaining_balance) || 0;
+                const amountPaid = Number(order.amount_paid) || 0;
+                const change = Number(order.change_amount) || 0;
+
+                paymentHTML += `
+                    <div class="section-title">Payment Summary</div>
+
+                    <div class="total-row">
+                        <span>Total:</span>
+                        <span>₱${total.toFixed(2)}</span>
+                    </div>
                 `;
+
+                if (downpayment > 0) {
+                    paymentHTML += `
+                    <div class="total-row">
+                        <span>Downpayment:</span>
+                        <span>₱${downpayment.toFixed(2)}</span>
+                    </div>
+                `;
+
                     if (order.dp_payment_method) {
                         paymentHTML += `
-                        <div class="detail-row"><span>DP Payment Method:</span><span>${order.dp_payment_method}</span></div>
+                        <div class="detail-row">
+                            <span>DP Payment Method:</span>
+                            <span>${order.dp_payment_method}</span>
+                        </div>
                     `;
                     }
                 }
 
-                paymentHTML += `
-                <div class="total-row grand-total">
-                    <span>Remaining Balance:</span>
-                    <span>₱${Number(order.remaining_balance).toFixed(2)}</span>
-                </div>
-            `;
+                if (amountPaid > 0) {
+                    paymentHTML += `
+                        <div class="total-row">
+                            <span>Amount Paid:</span>
+                            <span>₱${amountPaid.toFixed(2)}</span>
+                        </div>
+                    `;
+                }
+
+                if (change > 0) {
+                    paymentHTML += `
+                        <div class="total-row">
+                            <span>Change:</span>
+                            <span style="color:green;">₱${change.toFixed(2)}</span>
+                        </div>
+                    `;
+                }
+
+                if (remaining > 0) {
+                    paymentHTML += `
+                    <div class="total-row grand-total">
+                        <span>Remaining Balance:</span>
+                        <span style="color:red;">₱${remaining.toFixed(2)}</span>
+                    </div>
+                `;
+                } else {
+                    paymentHTML += `
+                    <div class="total-row grand-total">
+                        <span>Status:</span>
+                        <span style="color:green; font-weight:bold;">FULLY PAID</span>
+                    </div>
+                `;
+                }
 
                 if (order.payment_method) {
                     paymentHTML += `
-                    <div class="detail-row"><span>Payment Method:</span><span>${order.payment_method}</span></div>
+                    <div class="detail-row">
+                        <span>Payment Method:</span>
+                        <span>${order.payment_method}</span>
+                    </div>
                 `;
                 }
             }
+
             document.getElementById('r-payment').innerHTML = paymentHTML;
+
         });
     });
 

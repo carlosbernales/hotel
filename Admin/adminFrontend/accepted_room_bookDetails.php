@@ -1,4 +1,9 @@
 <?php
+if (!isset($_SESSION['user_type']) || 
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')) {
+    header("Location: /Admin/Customer/aa/login.php");
+    exit;
+}
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header_nosidebar.php';
 
@@ -104,9 +109,8 @@ while ($b = $bed_res->fetch_assoc()) {
 
                 <div class="info-item">
                     <label><i class="fas fa-moon"></i> Number of Nights</label>
-                    <input class="form-control" value="<?= $booking['nights'] ?>" readonly>
+                    <input class="form-control" id="numberOfNights" readonly>
                 </div>
-
 
                 <div class="info-item">
                     <label><i class="fas fa-door-open"></i> Room Quantity</label>
@@ -788,38 +792,44 @@ while ($b = $bed_res->fetch_assoc()) {
     function calculateTotalAmount() {
         const checkIn = new Date(document.getElementById('check_in').value);
         const checkOut = new Date(document.getElementById('check_out').value);
-
-        if (isNaN(checkIn) || isNaN(checkOut) || checkOut <= checkIn) return;
-
+    
+        if (isNaN(checkIn) || isNaN(checkOut)) return;
+    
         const timeDiff = checkOut - checkIn;
-        const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
+        const nights = Math.max(0, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
+    
+        // ✅ ALWAYS update nights field
+        document.getElementById('numberOfNights').value = nights;
+    
+        if (checkOut <= checkIn) return;
+    
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
             roomsTotal += parseFloat(selectedOption.dataset.price) * nights;
         });
-
-        // Extra bed price
+    
         let extraBedPrice = extraBedTotal * nights;
-
         const totalBeforeDiscount = roomsTotal + extraBedPrice;
-
-        const discountPercentage = parseFloat(document.getElementById('discountPercentage').value.replace('%', '')) || 0;
+    
+        const discountPercentage = parseFloat(
+            document.getElementById('discountPercentage').value.replace('%', '')
+        ) || 0;
+    
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
-
         const totalAmountNew = totalBeforeDiscount - discountAmount;
-
-        const downPayment = parseFloat(document.getElementById('downPayment').value.replace(/,/g, '')) || 0;
+    
+        const downPayment = parseFloat(
+            document.getElementById('downPayment').value.replace(/,/g, '')
+        ) || 0;
+    
         let remainingBalance = totalAmountNew - downPayment;
         if (remainingBalance < 0) remainingBalance = 0;
-
+    
         document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
         document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
         document.getElementById('discountAmount').value = discountAmount.toFixed(2);
     }
-
-
 
     document.addEventListener('DOMContentLoaded', () => {
         calculateTotalAmount();
@@ -922,6 +932,7 @@ while ($b = $bed_res->fetch_assoc()) {
             discount_type: document.getElementById('discountType').value,
             discount_percentage: document.getElementById('discountPercentage').value,
             discount_amount: document.getElementById('discountAmount').value,
+            number_nights: document.getElementById('numberOfNights').value,
 
             total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
             payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
@@ -1110,6 +1121,7 @@ while ($b = $bed_res->fetch_assoc()) {
             discount_percentage: document.getElementById('discountPercentage').value,
             discount_amount: document.getElementById('discountAmount').value,
             total_amount: parseFloat(document.getElementById('totalAmountNew').value.replace(/,/g, '')),
+            number_nights: document.getElementById('numberOfNights').value,
 
             payment_input: parseFloat(document.getElementById('paymentInput').value) || 0,
             payment_method: document.querySelector('select[name="payment_method"]').value,

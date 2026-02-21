@@ -1,0 +1,3 @@
+[2025-11-20 19:01:36] Processing status toggle for package ID: 2
+[2025-11-20 19:01:36] Package found - ID: 2, Name: Package A, Current Status: Available, Active Bookings: 2
+[2025-11-20 19:01:36] Success: Status set to Occupied due to active bookings

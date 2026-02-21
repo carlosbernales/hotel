@@ -21,23 +21,45 @@ $stmt->execute();
 $user = $stmt->get_result()->fetch_assoc();
 
 // Fetch Notifications
+// Fetch Notifications (only active status)
 $notifStmt = $conn->prepare("
-    SELECT id, title, message, type, is_read, created_at 
+    SELECT id, title, message, type, is_read, created_at, 
+           IFNULL(is_processing,0) AS is_processing, 
+           IFNULL(is_completed,0) AS is_completed, 
+           IFNULL(is_rejected,0) AS is_rejected
     FROM notifications 
-    WHERE user_id = ? 
+    WHERE (
+        IFNULL(is_processing,0) = 1 
+        OR IFNULL(is_completed,0) = 1 
+        OR IFNULL(is_rejected,0) = 1
+    )
     ORDER BY is_read ASC, created_at DESC
     LIMIT 10
 ");
 
-$notifStmt->bind_param("i", $userId);
+
 $notifStmt->execute();
 $notifications = $notifStmt->get_result();
 
+
+
 // Count unread for the badge
-$unreadCountStmt = $conn->prepare("SELECT COUNT(*) as unread FROM notifications WHERE user_id = ? AND is_read = 0");
-$unreadCountStmt->bind_param("i", $userId);
+// Count unread notifications (only active status)
+$unreadCountStmt = $conn->prepare("
+    SELECT COUNT(*) as unread 
+    FROM notifications 
+    WHERE is_read = 0
+    AND (
+        IFNULL(is_processing,0) = 1 
+        OR IFNULL(is_completed,0) = 1 
+        OR IFNULL(is_rejected,0) = 1
+    )
+");
+
 $unreadCountStmt->execute();
 $unreadCount = $unreadCountStmt->get_result()->fetch_assoc()['unread'];
+
+
 ?>
 <?php
 $uploadDir = "../Admin/adminBackend/user_photo/";
@@ -104,7 +126,20 @@ $profileImg = !empty($user['profile_photo'])
                                         <?php endif; ?>
                                         <div class="notification-content">
                                             <div class="notif-title"><?= htmlspecialchars($notif['title']) ?></div>
-                                            <div class="notif-message"><?= htmlspecialchars($notif['message']) ?></div>
+                                            <div class="notif-message">
+                                                <?php
+                                                if ($notif['is_processing'] == 1) {
+                                                    echo "A " . htmlspecialchars($notif['type']) . " is currently processing.";
+                                                } elseif ($notif['is_completed'] == 1) {
+                                                    echo "Congratulations! A " . htmlspecialchars($notif['type']) . " has been completed.";
+                                                } elseif ($notif['is_rejected'] == 1) {
+                                                    echo "A " . htmlspecialchars($notif['type']) . " has been rejected.";
+                                                } else {
+                                                    echo "Status unknown.";
+                                                }
+                                                ?>
+                                            </div>
+
                                             <div class="notif-footer">
                                                 <small class="notif-type"><i class="fas fa-tag"></i>
                                                     <?= htmlspecialchars($notif['type']) ?></small>
@@ -661,6 +696,7 @@ $profileImg = !empty($user['profile_photo'])
                 'cafe_management.php',
                 'event_management.php',
                 'amenity_list.php',
+                'inclusion.php',
                 'facilities_management.php'
             ];
             ?>
@@ -671,18 +707,25 @@ $profileImg = !empty($user['profile_photo'])
                         <span><i class="fas fa-cogs"></i> Settings</span>
                         <i class="fas fa-chevron-down dropdown-icon"></i>
                     </a>
+                    
+                    <div class="sidebar-submenu">
+                        <a href="index.php?amenity_list"
+                            class="<?php echo ($currentPage == 'amenity_list.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-concierge-bell"></i> Amenities
+                        </a>
+                    </div>
+                    
+                     <div class="sidebar-submenu">
+                        <a href="index.php?inclusion"
+                            class="<?php echo ($currentPage == 'inclusion.php') ? 'active' : ''; ?>">
+                            <i class="fas fa-list-check"></i> Inclusions
+                        </a>
+                    </div>
 
                     <div class="sidebar-submenu">
                         <a href="index.php?room_management"
                             class="<?php echo ($currentPage == 'room_management.php') ? 'active' : ''; ?>">
                             <i class="fas fa-bed"></i> Room Management
-                        </a>
-                    </div>
-
-                    <div class="sidebar-submenu">
-                        <a href="index.php?amenity_list"
-                            class="<?php echo ($currentPage == 'amenity_list.php') ? 'active' : ''; ?>">
-                            <i class="fas fa-concierge-bell"></i> Amenities
                         </a>
                     </div>
 

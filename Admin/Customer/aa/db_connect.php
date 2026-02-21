@@ -2,7 +2,7 @@
 $host = 'localhost';
 $username = "root";
 $password = "";
-$database = "hotelms";
+$database = "hotelms"; // Make sure this matches your database name
 
 
 try {

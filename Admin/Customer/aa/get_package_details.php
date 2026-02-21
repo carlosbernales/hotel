@@ -3,12 +3,20 @@ require_once 'db_con.php';
 
 // Get POST data
 $data = json_decode(file_get_contents('php://input'), true);
+$packageId = $data['packageId'] ?? '';
 $packageName = $data['packageName'] ?? '';
 
 try {
-    // Prepare and execute query
-    $stmt = $pdo->prepare("SELECT * FROM event_packages WHERE name = ?");
-    $stmt->execute([$packageName]);
+    // Prepare and execute query - try ID first, then name as fallback
+    if (!empty($packageId)) {
+        $stmt = $pdo->prepare("SELECT * FROM event_packages WHERE id = ?");
+        $stmt->execute([$packageId]);
+    } elseif (!empty($packageName)) {
+        $stmt = $pdo->prepare("SELECT * FROM event_packages WHERE name = ?");
+        $stmt->execute([$packageName]);
+    } else {
+        throw new Exception('No package identifier provided');
+    }
     $package = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($package) {
@@ -66,6 +74,8 @@ try {
                 'price' => floatval($package['price']),
                 'description' => $package['description'],
                 'image_path' => $package['image_path'] ?? 'images/hall.jpg',
+                'image_path2' => $package['image_path2'] ?? null,
+                'image_path3' => $package['image_path3'] ?? null,
                 'menu_items' => $menuItems,
                 'details' => $details,
                 'notes' => $notes,

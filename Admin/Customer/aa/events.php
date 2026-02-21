@@ -1,112 +1,22 @@
+
 <?php 
 require_once 'db_con.php';
 session_start();
 
-// Initialize arrays
-$packages = [];
-$gallery_images = [];
+// For backward compatibility, set $conn to the PDO instance if not already set
+if (!isset($conn) && isset($pdo)) {
+    $conn = $pdo;
+}
 
-try {
-    // Fetch event packages from database with their current status
-    $sql = "SELECT ep.*, 
-            CASE 
-                WHEN EXISTS (
-                    SELECT 1 
-                    FROM event_bookings eb 
-                    WHERE eb.package_name = ep.name 
-                    AND eb.booking_status IN ('pending', 'confirmed')
-                    AND eb.event_date = CURRENT_DATE
-                    AND TIME(NOW()) BETWEEN eb.start_time AND eb.end_time
-                    AND eb.booking_status != 'finished'
-                ) THEN 'Currently Not Available'
-                ELSE 'Available'
-            END as status,
-            CASE 
-                WHEN EXISTS (
-                    SELECT 1 
-                    FROM event_bookings eb 
-                    WHERE eb.package_name = ep.name 
-                    AND eb.booking_status IN ('pending', 'confirmed')
-                    AND eb.event_date = CURRENT_DATE
-                    AND TIME(NOW()) BETWEEN eb.start_time AND eb.end_time
-                    AND eb.booking_status != 'finished'
-                ) THEN false
-                ELSE true
-            END as is_available
-            FROM event_packages ep 
-            ORDER BY ep.price ASC";
-    
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $packages = $stmt->fetchAll();
+// Debug: Check database connection
+if (!isset($conn)) {
+    die('Database connection not established');
+}
 
-    // Add debug logging
-    foreach ($packages as $package) {
-        error_log("Package: " . $package['name'] . " - Status: " . $package['status'] . " - Is Available: " . ($package['is_available'] ? 'true' : 'false'));
-    }
-
-    // Update status in database for each package
-    foreach ($packages as $package) {
-        $updateSQL = "UPDATE event_packages 
-                     SET status = :status 
-                     WHERE name = :name";
-        $updateStmt = $pdo->prepare($updateSQL);
-        $updateStmt->execute([
-            'status' => $package['status'],
-            'name' => $package['name']
-        ]);
-    }
-
-    // Fetch gallery images
-    $sql = "SELECT * FROM event_images ORDER BY created_at DESC";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $gallery_images = $stmt->fetchAll();
-
-    // Fetch payment methods
-    $stmt = $pdo->prepare("SELECT * FROM payment_methods WHERE is_active = 1");
-    $stmt->execute();
-    $payment_methods = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    // Log the error
-    error_log("Database error: " . $e->getMessage());
-    
-    // If database query fails, use default packages
-    $packages = [
-        [
-            'name' => 'Package A',
-            'price' => 47500,
-            'description' => "Up to 50 Pax\n5-hour venue rental\nBasic sound system\nStandard decoration\nBasic catering service"
-        ],
-        [
-            'name' => 'Premium Package',
-            'price' => 55000,
-            'description' => "Up to 50 Pax\n5-hour venue rental\nPremium sound system\nEnhanced decoration\nPremium catering service\nEvent coordinator"
-        ],
-        [
-            'name' => 'Deluxe Package',
-            'price' => 76800,
-            'description' => "Up to 50 Pax\n5-hour venue rental\nProfessional DJ\nLuxury decoration\nPremium catering service\nEvent coordinator\nPhoto/Video coverage"
-        ],
-        [
-            'name' => 'Venue Rental Only',
-            'price' => 20000,
-            'description' => "Up to 50 Pax\n5-hour venue rental\nTables and Tiffany chairs"
-        ]
-    ];
-    
-    // Use default gallery images
-    $gallery_images = [
-        ['image_path' => 'images/hall.jpg', 'caption' => 'Elegant Wedding Reception'],
-        ['image_path' => 'images/hall2.jpg', 'caption' => 'Garden Wedding Ceremony'],
-        ['image_path' => 'images/hall3.jpg', 'caption' => 'Birthday Celebration Setup'],
-        ['image_path' => 'images/gard.jpg', 'caption' => 'Corporate Event Space'],
-        ['image_path' => 'images/garden1.jpg', 'caption' => 'Outdoor Reception Area'],
-        ['image_path' => 'images/garden.jpg', 'caption' => 'Garden Party Setup']
-    ];
-
-    error_log("Error fetching payment methods: " . $e->getMessage());
-    $payment_methods = [];
+// Debug: Check if table exists
+$tableCheck = $conn->query("SHOW TABLES LIKE 'event_packages'");
+if ($tableCheck->rowCount() == 0) {
+    die('event_packages table does not exist');
 }
 ?>
 <!DOCTYPE html>
@@ -116,14 +26,264 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Events & Celebrations - Casa Estela</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <link rel="stylesheet" href="assets/css/events-tables.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* Loading spinner styles */
+        .spinner-border {
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.5rem;
+            vertical-align: text-top;
+            border: 0.2em solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spinner-border .75s linear infinite;
+            display: none;
+        }
+        
+        @keyframes spinner-border {
+            to { transform: rotate(360deg); }
+        }
+        
+        .btn-loading .spinner-border {
+            display: inline-block;
+        }
+        
+        .btn-loading:disabled {
+            cursor: wait;
+        }
+        
+        :root {
+            --primary-color: #d4af37;
+            --primary-hover: #c19b2e;
+            --primary-light: rgba(212, 175, 55, 0.1);
+            --bs-body-font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        body {
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        
+        /* Modal Styling */
+        .modal {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-bottom: none;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+        
+        .modal-content {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .modal-body {
+            padding: 1.8rem;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #eee;
+            padding: 1.2rem 1.8rem;
+            background-color: #f9f9f9;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+        
+        .btn-close {
+            opacity: 0.8;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-close:hover {
+            opacity: 1;
+            transform: rotate(90deg);
+        }
+        
+        .btn-close-white {
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+        
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+        }
+        
+        /* Custom scrollbar for modals */
+        .modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 10px;
+        }
+        
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-hover);
+        }
+        
+        /* Check Availability Section */
+        .availability-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2.5rem 0;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin: 2rem 0 3rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .availability-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .availability-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .availability-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .availability-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .availability-title i {
+            color: var(--primary-color);
+        }
+        
+        .datetime-input {
+            position: relative;
+        }
+        
+        .datetime-input i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            z-index: 10;
+        }
+        
+        .form-control.datetime {
+            padding-left: 45px;
+            height: 50px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control.datetime:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+        }
+        
+        .btn-check-availability {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+            height: 50px;
+        }
+        
+        .btn-check-availability:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+        
+        .availability-status {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .availability-status.available {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+        
+        .availability-status.unavailable {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+        
         .gallery-section {
-            padding: 6rem 0;
+            padding: 4rem 0;
             background-color: #f8f9fa;
         }
         
@@ -132,23 +292,25 @@ try {
         }
         
         .gallery-item {
-            margin-bottom: 30px;
             position: relative;
             overflow: hidden;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            border-radius: 15px 15px 0 0;
+            transition: all 0.4s ease;
+            height: 220px;
+            background: #f8f9fa;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
         }
         
         .gallery-item img {
             width: 100%;
-            height: 300px;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform 0.7s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
         
         .gallery-item:hover img {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
         
         .gallery-caption {
@@ -158,14 +320,96 @@ try {
             right: 0;
             background: linear-gradient(transparent, rgba(0,0,0,0.8));
             color: white;
-            padding: 20px;
+            padding: 15px 20px 20px;
             text-align: center;
             opacity: 0;
-            transition: opacity 0.3s ease;
+            transform: translateY(10px);
+            transition: all 0.4s ease;
         }
         
         .gallery-item:hover .gallery-caption {
             opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            background: white;
+            height: 100%;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-title {
+            color: #2c3e50;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+        
+        .price {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .features-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+        
+        .features-list li {
+            padding: 0.5rem 0;
+            color: #555;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .features-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .features-list i {
+            color: var(--primary-color);
+            width: 20px;
+            text-align: center;
+            margin-right: 0.5rem;
+        }
+        
+        .btn-book {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            width: 100%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-book:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            color: white;
         }
         
         .section-title {
@@ -173,17 +417,19 @@ try {
             font-weight: 700;
             text-align: center;
             margin-bottom: 3rem;
-            color: #333;
+            color: #2c3e50;
             position: relative;
+            padding-bottom: 1rem;
         }
         
         .section-title:after {
             content: '';
             display: block;
             width: 80px;
-            height: 3px;
-            background: #d4af37;
-            margin: 15px auto;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 1rem auto 0;
+            border-radius: 2px;
         }
         
         .main-content {
@@ -306,23 +552,26 @@ try {
         .custom-card {
             background: white;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            border: none;
-            padding: 2rem;
-            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             overflow: hidden;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(0,0,0,0.05);
+            margin-bottom: 1.5rem;
         }
-
+        
         .custom-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
         }
 
-        .custom-card .card-title {
-            color: #333;
-            font-size: 1.8rem;
-            font-weight: 700;
+        .card-body {
+            padding: 1.75rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             margin-bottom: 1rem;
         }
 
@@ -355,1630 +604,338 @@ try {
             font-weight: bold;
         }
 
-        .btn-primary-custom {
-            background: #d4af37;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            color: white;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-primary-custom:hover {
-            background: #c19b2e;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
-        }
-
-        /* SweetAlert2 Custom Styles */
-        .custom-swal-popup {
-            padding: 2em;
-            border-radius: 15px;
-        }
-        
-        .custom-swal-title {
-            color: #333;
-            font-size: 1.8em;
-            margin-bottom: 1em;
-        }
-        
-        .custom-swal-html {
-            text-align: left;
-            margin: 1em 0;
-        }
-        
-        .custom-swal-html p {
-            margin: 0.5em 0;
-            color: #666;
-        }
-        
-        .custom-swal-html strong {
-            color: #333;
-            font-weight: 600;
-        }
-        
-        .custom-swal-confirm-button {
-            background-color: #d4af37 !important;
-            border-radius: 50px !important;
-            padding: 1em 2em !important;
-        }
-
-        .booking-summary {
-            padding: 1.5rem;
-        }
-
-        .summary-header {
-            text-align: center;
+        /* Check Availability Section */
+        .availability-section {
+            padding: 5rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f5 100%);
             position: relative;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid #eee;
+            overflow: hidden;
         }
 
-        .package-icon {
-            width: 60px;
-            height: 60px;
-            background: #d4af37;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
+        .availability-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background: linear-gradient(90deg, #d4af37, #f8f9fa);
         }
 
-        .package-icon i {
-            font-size: 24px;
-            color: white;
+        .availability-container {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
-        .summary-details {
-            padding: 1.5rem 0;
-        }
-
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .summary-label {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            color: #666;
-        }
-
-        .summary-label i {
-            color: #d4af37;
-            width: 20px;
-        }
-
-        .summary-value {
-            font-weight: 500;
-            color: #333;
-        }
-
-        .summary-total {
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-top: 1rem;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 0;
-        }
-
-        .total-row.font-weight-bold {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-
-        .amount {
-            font-family: monospace;
-        }
-
-        .border-top {
-            border-top: 1px solid #dee2e6;
-        }
-
-        .pt-2 {
-            padding-top: 0.5rem;
-        }
-
-        .mt-2 {
-            margin-top: 0.5rem;
-        }
-
-        .modal-content {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        .modal-header {
-            padding: 1.5rem;
-        }
-
-        .modal-footer {
-            padding: 1.5rem;
-        }
-
-        .btn-primary-custom {
-            padding: 0.75rem 2rem;
-        }
-
-        .swal2-popup {
+        .availability-card {
+            background-color: #fff;
             padding: 2.5rem;
             border-radius: 15px;
-        }
-
-        .swal2-title {
-            color: #333;
-            font-size: 1.75rem !important;
-            font-weight: 600 !important;
-        }
-
-        .swal2-html-container {
-            color: #666;
-            font-size: 1.1rem !important;
-            margin-top: 0.5rem !important;
-        }
-
-        .swal2-icon {
-            border: none !important;
-            margin: 1.5rem auto !important;
-        }
-
-        .swal2-icon.swal2-success {
-            border: none !important;
-        }
-
-        .swal2-success-circular-line-left,
-        .swal2-success-circular-line-right,
-        .swal2-success-fix {
-            background-color: transparent !important;
-        }
-
-        .swal2-success-ring {
-            border: 0.25em solid rgba(212, 175, 55, 0.3) !important;
-        }
-
-        .swal2-icon.swal2-success [class^=swal2-success-line] {
-            background-color: #d4af37 !important;
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translate3d(0, -20%, 0);
-            }
-            to {
-                opacity: 1;
-                transform: translate3d(0, 0, 0);
-            }
-        }
-
-        .animated {
-            animation-duration: 0.3s;
-            animation-fill-mode: both;
-        }
-
-        .fadeInDown {
-            animation-name: fadeInDown;
-        }
-
-        .faster {
-            animation-duration: 0.3s;
-        }
-
-        .text-left {
-            text-align: left;
-            margin: 1.5rem 0;
-        }
-
-        .text-left p {
-            margin: 0.5rem 0;
-            color: #666;
-        }
-
-        .text-left strong {
-            color: #333;
-            margin-right: 0.5rem;
-        }
-
-        .swal2-popup {
-            padding: 2rem;
-        }
-
-        .swal2-title {
-            color: #333;
-            font-size: 1.8rem !important;
-            margin: 1rem 0 !important;
-        }
-
-        .swal2-html-container.text-left {
-            margin: 1rem 0 !important;
-        }
-
-        /* Add these new styles */
-        .package-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-        }
-
-        .custom-card {
-            overflow: hidden;
-            transition: transform 0.3s ease;
-        }
-
-        .custom-card:hover {
-            transform: translateY(-10px);
-        }
-
-        .custom-card .card-body {
-            padding: 1.5rem;
-        }
-
-        /* Add these new styles */
-        .btn-outline-primary-custom {
-            color: #d4af37;
-            border: 2px solid #d4af37;
-            background: transparent;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.1);
             transition: all 0.3s ease;
-        }
-
-        .btn-outline-primary-custom:hover {
-            color: white;
-            background: #d4af37;
-            transform: translateY(-2px);
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        /* Add these styles for the details modal */
-        .package-details {
-            text-align: left;
-            padding: 1rem;
-        }
-
-        .package-details-title {
-            color: #333;
-            font-size: 2rem !important;
-            margin-bottom: 1.5rem !important;
-        }
-
-        .package-features {
-            margin-top: 1.5rem;
-        }
-
-        .package-features h5 {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .package-features li {
-            padding: 0.5rem 0;
-            color: #666;
-        }
-
-        .package-features i {
-            color: #d4af37;
-        }
-
-        .swal2-popup.package-details-modal {
-            padding: 2rem;
-        }
-
-        /* Add to existing <style> section */
-        .package-details-modal {
-            padding: 0 !important;
-            border-radius: 15px;
+            position: relative;
             overflow: hidden;
         }
 
-        .package-details-container {
-            text-align: left;
+        .availability-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
 
-        .package-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            margin-bottom: 0;
-        }
-
-        .price-tag {
-            background: #d4af37;
-            color: white;
-            padding: 15px 20px;
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .package-section {
-            padding: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .package-section:last-child {
-            border-bottom: none;
-        }
-
-        .section-title {
-            color: #333;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-            font-weight: 600;
-        }
-
-        .menu-categories {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .menu-category {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .menu-category h6 {
-            color: #d4af37;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .details-list, .notes-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .details-list li, .notes-list li {
-            padding: 8px 0;
-            color: #666;
-        }
-
-        .details-list i {
-            color: #d4af37;
-            width: 20px;
-        }
-
-        .notes-list li {
-            position: relative;
-            padding-left: 20px;
-        }
-
-        .notes-list li:before {
-            content: "•";
-            color: #d4af37;
+        .availability-card::after {
+            content: '';
             position: absolute;
+            top: 0;
             left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #d4af37, #f8d56b);
         }
 
-        .package-status {
-            text-align: center;
+        .availability-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            position: relative;
+            display: inline-block;
         }
 
-        .package-status .badge {
-            font-size: 1rem;
-            padding: 8px 15px;
-        }
-
-        @media (max-width: 768px) {
-            .menu-categories {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .btn-warning-custom {
-            background: #ffc107;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            color: #000;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-warning-custom:hover {
-            background: #ffb300;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .available-dates {
-            padding: 20px;
-            text-align: center;
-        }
-
-        .date-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .date-option button {
-            padding: 15px;
-            border: 1px solid #d4af37;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        .date-option button:hover {
-            background: #d4af37;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
-        }
-
-        .date-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .day-name {
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #333;
-        }
-
-        .date-full {
-            font-size: 0.9rem;
-            color: #666;
-        }
-
-        .time-slot {
-            font-size: 0.85rem;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .date-option button:hover .day-name,
-        .date-option button:hover .date-full,
-        .date-option button:hover .time-slot {
-            color: white;
-        }
-
-        .available-dates-popup {
-            border-radius: 15px;
-        }
-
-        .swal2-close {
-            color: #d4af37 !important;
-        }
-
-        .swal2-close:hover {
-            color: #333 !important;
-        }
-
-        .current-booking-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .countdown-timer {
-            font-size: 1.5rem;
-            font-weight: 600;
+        .availability-title i {
+            margin-right: 12px;
             color: #d4af37;
         }
 
-        .time-remaining {
-            display: inline-block;
-            padding: 10px 20px;
-            background: #fff;
-            border-radius: 50px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .countdown-value {
-            font-family: 'Courier New', monospace;
-        }
-
-        .available-dates-modal {
-            
-            align-items: center;
-            justify-content: center;
-        }
-
-        .available-dates-popup {
-            margin: 0 !important;
-            border-radius: 15px;
-            position: relative !important;
-        }
-
-        .date-options {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 10px;
-            margin-right: -10px;
-        }
-
-        .date-options::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .date-options::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .date-options::-webkit-scrollbar-thumb {
-            background: #d4af37;
-            border-radius: 10px;
-        }
-
-        .date-options::-webkit-scrollbar-thumb:hover {
-            background: #b39030;
-        }
-
-        .swal2-close {
-            position: absolute !important;
-            right: 10px !important;
-            top: 10px !important;
-        }
-
-        /* Ensure modals don't stack */
-        .modal {
-            z-index: 1050 !important;
-        }
-
-        .swal2-container {
-            z-index: 1060 !important;
-        }
-
-        /* Update existing modal styles */
-        .modal-backdrop {
-            opacity: 0.5;
-            z-index: 1040 !important;
-        }
-
-        .modal {
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1050 !important;
-        }
-
-        .swal2-container {
-            z-index: 1060 !important;
-        }
-
-        /* Add these new styles */
-        .modal-open .modal {
-            overflow-x: hidden;
-            overflow-y: auto;
-        }
-
-        .modal-dialog {
-            margin: 1.75rem auto;
-            max-width: 500px;
-        }
-
-        .package-modal .modal-content {
-            border-radius: 15px;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        /* Update modal styles */
-        .modal-dialog-centered {
-            display: flex;
-            align-items: center;
-            min-height: calc(100% - 1rem);
-        }
-
-        .available-date {
-            text-align: center;
-            padding: 20px;
-        }
-
-        .date-info {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .day-name {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .date-full {
-            font-size: 1rem;
-            color: #666;
-        }
-
-        #loadingMessage {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            z-index: 9999;
-        }
-
-        .time-slot {
-            font-size: 0.9rem;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .current-booking-info p {
-            margin-bottom: 0;
-        }
-
-        .overtime-info {
-            font-size: 0.85rem;
-            color: #666;
-            background: #fff3cd;
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
-        /* Add to your existing styles */
-        #reservationTypeIndicator {
-            background-color: #e3f2fd;
-            border-color: #90caf9;
-            color: #1976d2;
-            padding: 10px 15px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        #reservationTypeIndicator i {
+        .availability-subtitle {
+            color: #6c757d;
+            margin-bottom: 2rem;
             font-size: 1.1rem;
         }
 
-        .reserve-next-btn.btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: white;
-            cursor: not-allowed;
-        }
-
-        .reserve-next-btn.btn-secondary:hover {
-            background-color: #5a6268;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .alert-info {
-            background-color: #e3f2fd;
-            border-color: #90caf9;
-            color: #1976d2;
-        }
-
-        .alert-info i {
-            margin-right: 8px;
-        }
-
-        .btn-secondary {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            color: white;
-            cursor: not-allowed;
-            opacity: 0.8;
-        }
-
-        .btn-secondary:hover {
-            background-color: #6c757d;
-            border-color: #6c757d;
-            transform: none !important;
-        }
-
-        .package-unavailable-message {
-            font-size: 0.8rem;
-            color: #856404;
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            padding: 0.5rem;
-            border-radius: 4px;
-            margin-top: 0.5rem;
-            text-align: center;
-        }
-
-        .package-unavailable {
-            opacity: 0.7;
+        .datetime-input-group {
             position: relative;
+            margin-bottom: 1.5rem;
         }
 
-        .package-unavailable::after {
-            content: "Reserved";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        /* Add these new styles */
-        .countdown-display {
-            background-color: #f8f9fa;
-            padding: 8px;
-            border-radius: 4px;
-            margin: 8px 0;
-            font-family: 'Courier New', monospace;
-            animation: pulse 2s infinite;
+        .datetime-input {
+            position: relative;
             width: 100%;
         }
 
-        .countdown-timer {
-            display: flex;
+        .datetime-input i {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 1.25rem;
+            color: #6c757d;
+            font-size: 1.1rem;
+            z-index: 2;
+        }
+
+        .form-control.datetime {
+            padding: 0.85rem 1.5rem 0.85rem 3.5rem;
+            height: auto;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background-color: #f8f9fa;
+        }
+
+        .form-control.datetime:focus {
+            border-color: #d4af37;
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+            background-color: #fff;
+        }
+
+        .btn-check-availability {
+            background: linear-gradient(135deg, #d4af37 0%, #e6c66b 100%);
+            color: #fff;
+            border: none;
+            padding: 0.9rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            color: #666;
-            font-size: 0.9rem;
+            width: 100%;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
         }
 
-        .countdown-timer i {
-            color: #d4af37;
+        .btn-check-availability:hover {
+            background: linear-gradient(135deg, #c19b2e 0%, #d4af37 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
         }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            position: relative;
-        }
-
-        /* Add this CSS for the status badge */
-        .status-badge {
+        
+        /* Booked Badge Styles */
+        .booked-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 8px 15px;
+            top: 15px;
+            right: 15px;
+            background-color: #dc3545;
+            color: white;
+            padding: 5px 10px;
             border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            z-index: 2;
-            background-color: #28a745;
-            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1;
+            animation: pulse 2s infinite;
         }
-
-        .status-badge i {
-            color: white;
-        }
-
-        /* Add animation for status changes */
-        @keyframes statusChange {
+        
+        @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
-
-        .status-badge.changing {
-            animation: statusChange 0.3s ease;
+        
+        .package-card {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .package-card.booked {
+            opacity: 0.8;
+            filter: grayscale(20%);
+        }
+        
+        /* Disabled button styles */
+        .btn-book:disabled,
+        .btn-book.disabled,
+        .package-card.booked .btn-book {
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+            cursor: not-allowed !important;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+        
+        .btn-book:disabled:hover,
+        .btn-book.disabled:hover,
+        .package-card.booked .btn-book:hover {
+            background-color: #6c757d !important;
+            border-color: #6c757d !important;
+            transform: none !important;
+            box-shadow: none !important;
         }
 
-        .package-image {
+        .btn-check-availability:active {
+            transform: translateY(0);
+        }
+        
+        /* Availability Badge Styles */
+        .availability-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .badge-available {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .badge-available:hover {
+            background-color: #c3e6cb;
+            transform: translateY(-1px);
+        }
+        
+        .badge-unavailable {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .badge-unavailable:hover {
+            background-color: #f5c6cb;
+        }
+        
+        .badge-booked {
+            background-color: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+            animation: pulse 2s infinite;
+        }
+        
+        .badge-booked:hover {
+            background-color: #b8daff;
+        }
+        
+        .badge-unknown {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+            70% { box-shadow: 0 0 0 8px rgba(0, 123, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+        }
+        
+        /* Style for booked package cards */
+        .booked-package {
+            opacity: 0.9;
             position: relative;
         }
-
-        /* Add a semi-transparent overlay when package is occupied */
-        .status-occupied + .package-image::after {
+        
+        .booked-package::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0,0,0,0.1);
+            background: rgba(0, 0, 0, 0.03);
             pointer-events: none;
+            border-radius: 10px;
         }
-
-        /* Add to your existing styles */
-        .package-unavailable {
-            position: relative;
-            opacity: 0.7;
-            pointer-events: none;
-        }
-
-        .package-unavailable::after {
-            content: "This package is currently booked";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            z-index: 2;
-            text-align: center;
-            width: 80%;
-        }
-
-        .package-unavailable.currently-booked::after {
-            content: "Currently Booked";
-        }
-
-        /* Exception for the Reserve Next button */
-        .package-unavailable .reserve-next-btn {
-            pointer-events: auto;
-        }
-
-        /* Add this CSS for error styling */
-        .is-invalid {
-            border-color: #dc3545 !important;
-        }
-
-        .invalid-feedback {
-            display: block;
-            width: 100%;
-            margin-top: 0.25rem;
-            font-size: 0.875em;
-            color: #dc3545;
-        }
-
-        /* Form validation styles */
-        .is-invalid {
-            border-color: #dc3545 !important;
-            padding-right: calc(1.5em + 0.75rem) !important;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e") !important;
-            background-repeat: no-repeat !important;
-            background-position: right calc(0.375em + 0.1875rem) center !important;
-            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem) !important;
-        }
-
-        .invalid-feedback {
-            display: block;
-            width: 100%;
-            margin-top: 0.25rem;
-            font-size: 0.875em;
-            color: #dc3545;
-        }
-
-        /* Time input specific styles */
-        input[type="time"].is-invalid::-webkit-calendar-picker-indicator {
-            filter: invert(0.7) sepia(1) saturate(10000%) hue-rotate(320deg);
-        }
-
-        .btn-warning-custom {
-            background-color: #ffc107;
-            border: none;
-            color: #000;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .btn-warning-custom:hover {
-            background-color: #ffb300;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
-        }
-
-        .package-unavailable .btn-warning-custom {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-
-        .alert-info {
-            background-color: #e3f2fd;
-            border-color: #90caf9;
-            color: #0d47a1;
-            border-radius: 8px;
-        }
-
-        .alert-info i {
-            color: #1976d2;
-        }
-
-        /* Add this section after the package details and before the button group */
-        .booking-status-container {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 15px;
-        }
-
-        .booking-dates, .vacant-dates-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .booking-date-item, .vacant-date-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .date-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }
-
-        .date-badge.booked {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .date-badge.available {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
-
-        .no-bookings {
-            padding: 8px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        h6.text-muted {
-            font-size: 0.9rem;
-            font-weight: 600;
-        }
-
-        .booking-status-container i {
-            color: #6c757d;
-        }
-
-        /* Add to your existing styles */
-        .existing-bookings {
-            max-height: 200px;
-            overflow-y: auto;
-        }
-
-        .booking-slot {
-            margin-bottom: 8px;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-        }
-
-        .booking-slot:last-child {
-            margin-bottom: 0;
-        }
-
-        .alert-warning {
-            background-color: #fff3cd;
-            border-color: #ffeeba;
-            color: #856404;
-        }
-
-        .text-left {
-            text-align: left;
-        }
-
-        .alert-info {
-            background-color: #e3f2fd;
-            border-color: #90caf9;
-            color: #0d47a1;
-        }
-
-        .alert-danger {
-            background-color: #ffebee;
-            border-color: #ffcdd2;
-            color: #c62828;
-        }
-
-        .text-warning {
-            color: #f57c00 !important;
-        }
-
-        .booking-slot.alert-info {
-            border-left: 4px solid #1976d2;
-        }
-
-        .booking-slot.alert-danger {
-            border-left: 4px solid #d32f2f;
-        }
-
-        .text-danger {
-            color: #dc3545 !important;
-        }
-
-        .booking-slot.alert-info {
-            border-left: 4px solid #1976d2;
-            background-color: #e3f2fd;
-            color: #0d47a1;
-        }
-
-        .fas.fa-exclamation-circle {
-            color: #dc3545;
-        }
-
-        /* Add to your existing styles */
-        .booking-date-item {
-            background: #fff;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-
-        .booking-date-item:hover {
-            transform: translateY(-2px);
-        }
-
-        .date-badge {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-
-        .date-badge.current-package {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-        }
-
-        .date-badge.other-package {
-            background-color: #e3f2fd;
-            color: #0d47a1;
-            border: 1px solid #90caf9;
-        }
-
-        .booking-details {
-            margin-left: 10px;
-        }
-
-        .booking-details strong {
-            font-size: 0.9rem;
-            color: #495057;
-        }
-
-        .booking-details small {
+        
+        .availability-badge i {
+            margin-right: 5px;
             font-size: 0.8rem;
         }
+        
+        /* Ensure card has relative positioning for absolute badge */
+        .package-card {
+            position: relative;
+        }
 
-        .no-bookings {
-            text-align: center;
-            padding: 15px;
-            background: #f8f9fa;
+        .btn-check-availability i {
+            margin-right: 8px;
+            font-size: 1.1rem;
+        }
+
+        .availability-status {
+            margin-top: 1.5rem;
+            padding: 1rem;
             border-radius: 8px;
-            color: #6c757d;
-        }
-
-        .booking-status-container {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .booking-dates {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .booking-dates::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .booking-dates::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .booking-dates::-webkit-scrollbar-thumb {
-            background: #d4af37;
-            border-radius: 10px;
-        }
-
-        /* Update the booking date styles */
-        .booking-date-item {
-            background: #fff;
-            border-radius: 8px;
-            padding: 8px;
-            margin-bottom: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .date-badge.booked {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: block;
-            text-align: center;
-        }
-
-        .booking-status-container {
             background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-        }
-
-        .booking-dates {
-            max-height: 200px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .no-bookings {
-            text-align: center;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-            color: #6c757d;
-        }
-
-        /* Add these styles to your existing style section */
-        #paymentMethodDetails {
-            transition: all 0.3s ease;
-        }
-
-        #paymentMethodDetails .card {
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        #paymentMethodDetails .card-title {
-            color: #333;
-            font-weight: 600;
-        }
-
-        #qrCode {
-            border-radius: 10px;
-            padding: 10px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-        }
-
-        #qrCode:hover {
-            transform: scale(1.05);
-        }
-
-        .payment-info strong {
-            color: #555;
-            font-weight: 600;
-        }
-
-        /* Add or update these styles in your style section */
-        #paymentMethodDetails {
-            transition: all 0.3s ease;
-            opacity: 0;
-        }
-
-        #paymentMethodDetails .card {
-            border: 1px solid rgba(0,0,0,0.1);
-            border-radius: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        #paymentMethodDetails .card-title {
-            color: #333;
-            font-weight: 600;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 10px;
-        }
-
-        #qrCode {
-            border-radius: 10px;
-            padding: 10px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease;
-            cursor: pointer;
-        }
-
-        #qrCode:hover {
-            transform: scale(1.05);
-        }
-
-        .payment-info {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 8px;
-        }
-
-        .payment-info p {
-            margin-bottom: 10px;
-        }
-
-        .payment-info strong {
-            color: #555;
-            font-weight: 600;
-        }
-
-        .payment-info i {
-            color: #d4af37;
-            width: 20px;
-            text-align: center;
-        }
-
-        .alert-info {
-            background-color: #e3f2fd;
-            border-color: #90caf9;
-            color: #0d47a1;
-        }
-
-        .alert-info i {
-            color: #1976d2;
-        }
-
-        /* Add these styles to your existing style section */
-        #overtimeInfo .card {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        #overtimeInfo .card-header {
-            background-color: #17a2b8;
-            color: white;
-            font-weight: 500;
-            padding: 12px 20px;
-        }
-
-        #overtimeInfo .card-body {
-            padding: 20px;
-        }
-
-        #overtimeInfo .text-info {
-            color: #17a2b8 !important;
-        }
-
-        #overtimeInfo .text-success {
-            color: #28a745 !important;
-        }
-
-        #overtimeInfo strong {
-            color: #495057;
-        }
-
-        #overtimeInfo .alert-light {
-            background-color: #f8f9fa;
-            border: 1px solid #eee;
-        }
-
-        #overtimeInfo small {
-            color: #6c757d;
-        }
-
-        #overtimeInfo .fas {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* Add these styles to your existing style section */
-        .alert-info {
-            background-color: #f8f9fa;
-            border-left: 4px solid #17a2b8;
-            border-top: 1px solid #dee2e6;
-            border-right: 1px solid #dee2e6;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .alert-info i {
-            color: #17a2b8;
-            width: 20px;
-            text-align: center;
-        }
-
-        .alert-info strong {
-            color: #333;
-        }
-
-        .alert-info ul li {
-            color: #666;
-            font-size: 0.95rem;
-            padding: 4px 0;
-        }
-
-        /* Add these styles to your existing style section */
-        .booking-info-item {
-            font-size: 0.9rem;
-            color: #666;
+            border-left: 4px solid #d4af37;
             display: flex;
             align-items: center;
-            padding: 4px 8px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
-        .booking-info-item i {
-            font-size: 1rem;
+        .availability-status i {
+            font-size: 1.25rem;
+            margin-right: 0.75rem;
+            color: #d4af37;
         }
 
-        .text-info {
-            color: #17a2b8 !important;
-        }
-
-        .text-success {
-            color: #28a745 !important;
-        }
-
-        .text-warning {
-            color: #ffc107 !important;
-        }
-
-        .alert-info {
-            background-color: #f8f9fa;
-            border-left: 4px solid #17a2b8;
-            border-top: 1px solid #dee2e6;
-            border-right: 1px solid #dee2e6;
-            border-bottom: 1px solid #dee2e6;
-            padding: 12px 15px;
-        }
-
-        .alert-info strong {
-            color: #333;
+        #statusMessage {
             font-size: 0.95rem;
-        }
-
-        /* Add these styles to your existing style section */
-        .alert-info {
-            transition: opacity 0.5s ease-out;
-        }
-
-        .alert-info:hover {
-            opacity: 1 !important;
-        }
-
-        /* Add to your existing styles */
-        .payment-proof-section {
-            border-top: 1px solid #dee2e6;
-            padding-top: 1rem;
-        }
-
-        .payment-proof-section .form-label {
-            font-weight: 500;
             color: #495057;
         }
-
-        .payment-proof-section .form-control {
-            border-color: #ced4da;
+        
+        /* Hide package sections by default */
+        .package-section {
+            display: none;
         }
 
-        .payment-proof-section .form-control:focus {
-            border-color: #d4af37;
-            box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.25);
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .availability-card {
+                padding: 1.75rem;
+            }
+            
+            .availability-title {
+                font-size: 1.5rem;
+            }
+            
+            .btn-check-availability {
+                padding: 0.75rem 1.5rem;
+            }
         }
-
-        #paymentProof {
-            padding: 0.375rem;
-            font-size: 0.9rem;
-        }
-
-        #referenceNumber {
-            font-family: monospace;
-            letter-spacing: 1px;
-        }
-
-        /* Add to your existing styles */
-        .input-group .btn-outline-secondary {
-            border-color: #ced4da;
-            color: #6c757d;
-        }
-
-        .input-group .btn-outline-secondary:hover:not(:disabled) {
-            background-color: #d4af37;
-            border-color: #d4af37;
-            color: white;
-        }
-
-        .input-group .btn-outline-secondary:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .input-group .btn-outline-secondary i {
-            font-size: 0.9rem;
-        }
-
-        /* Add to your existing styles */
-        .btn-link {
-            color: #d4af37;
-            text-decoration: none;
-        }
-
-        .btn-link:hover {
-            color: #b39030;
-            text-decoration: underline;
-        }
-
-        .btn-link i {
-            transition: transform 0.2s ease;
-        }
-
-        .btn-link:hover i {
-            transform: scale(1.1);
-        }
-
-        #viewProofSummaryBtn {
-            font-size: 0.9rem;
-        }
-
-        /* Add these CSS styles */
-        .booking-date-item {
-            background: #fff;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .booking-details {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .time-slot {
-            padding-left: 5px;
-        }
-
-        .status-badge {
-            padding-left: 5px;
-        }
-
-        .status-badge i {
-            font-size: 8px;
-        }
-
-        .date-badge.booked {
-            width: 100%;
-            text-align: left;
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-            padding: 8px 12px;
-        }
-
-        .booking-dates {
-            max-height: 250px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .booking-dates::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .booking-dates::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .booking-dates::-webkit-scrollbar-thumb {
-            background: #d4af37;
-            border-radius: 10px;
-        }
-
-        /* Add these styles to your existing CSS */
-        .booking-slot {
-            margin-bottom: 10px;
-            border-radius: 8px;
-            border: none;
-        }
-
-        .booking-slot strong {
-            color: #856404;
-        }
-
-        .existing-bookings {
-            max-height: 200px;
-            overflow-y: auto;
-            margin: 15px 0;
-        }
-
-        .text-left {
-            text-align: left;
-        }
-
-        .alert-warning {
-            background-color: #fff3cd;
-            border-color: #ffeeba;
-            color: #856404;
-        }
-
-        .booking-status-container h6 {
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #eee;
-        }
-
-        .btn-outline-warning {
-            color: #d4af37;
-            border-color: #d4af37;
-        }
-
-        .btn-outline-warning:hover {
-            background-color: #d4af37;
-            color: white;
-        }
-
-        .booking-date-item {
-            background: #fff;
-            border-radius: 8px;
-            padding: 10px;
-            margin-bottom: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
-        }
-
-        .booking-date-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-
-        .date-badge.booked {
-            display: block;
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-            padding: 6px 10px;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            margin-bottom: 5px;
-        }
-
-        .time-slot {
-            padding-left: 5px;
-            color: #6c757d;
-        }
-
-        .no-bookings {
-            text-align: center;
-            padding: 1rem;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-    </style>
+      
+</style>
 </head>
 <body>
 <?php include 'message_box.php'; ?>
+
+    
     <?php 
     if (isset($_SESSION['message'])) {
         $alertType = isset($_SESSION['success']) && $_SESSION['success'] ? 'success' : 'danger';
@@ -2015,6 +972,7 @@ try {
 
     <!-- Main Content -->
     <div class="main-content">
+
         <!-- Event Types Section -->
         <section class="mb-5">
             <h2 class="text-center mb-4">Perfect for Every Occasion</h2>
@@ -2048,2155 +1006,1110 @@ try {
                 </div>
             </div>
         </section>
-
-        <!-- Gallery Section -->
-        <section class="gallery-section">
-            <div class="container">
-                <h2 class="section-title">Event Gallery</h2>
-                <div class="row gallery-container">
-                    <?php foreach($gallery_images as $image): ?>
-                    <div class="col-md-4">
-                        <a href="<?php echo htmlspecialchars($image['image_path']); ?>" 
-                           data-lightbox="event-gallery" 
-                           data-title="<?php echo htmlspecialchars($image['caption']); ?>">
-                            <div class="gallery-item">
-                                <img src="<?php echo htmlspecialchars($image['image_path']); ?>" 
-                                     alt="<?php echo htmlspecialchars($image['caption']); ?>">
-                                <div class="gallery-caption"><?php echo htmlspecialchars($image['caption']); ?></div>
+    
+    <!-- Check Availability Section -->
+    <section class="availability-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="availability-card">
+                        <div class="text-center mb-4">
+                            <h2 class="availability-title">
+                                <i class="far fa-calendar-check"></i>
+                                Check Event Availability
+                            </h2>
+                            <p class="availability-subtitle">Plan your special event with us - Check available dates and times</p>
+                        </div>
+                        
+                        <div class="row g-3 align-items-end">
+                            <div class="col-md-8">
+                                <div class="datetime-input-group">
+                                    <div class="datetime-input">
+                                        <i class="far fa-calendar-alt"></i>
+                                        <input type="datetime-local" 
+                                               class="form-control datetime" 
+                                               id="eventDateTime" 
+                                               min="<?php echo date('Y-m-d\TH:i'); ?>" 
+                                               value=""
+                                               aria-label="Select date and time for your event"
+                                               placeholder="Select date and time">
+                                    </div>
+                                </div>
                             </div>
-                        </a>
+                            <div class="col-md-4">
+                                <button type="button" 
+                                        class="btn btn-check-availability" 
+                                        id="checkAvailabilityBtn"
+                                        aria-label="Check availability for selected date and time"
+                                        onclick="checkAvailability()">
+                                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" id="availabilitySpinner"></span>
+                                    <i class="fas fa-search"></i> Check Availability
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="availability-status mt-4" id="availabilityStatus" role="alert" aria-live="polite">
+                            <i class="fas fa-info-circle"></i>
+                            <span id="statusMessage">Please select a date and time to check availability for your event.</span>
+                        </div>
+                        
+                        <!-- Booked Packages Container -->
+                        <div id="bookedPackagesContainer" class="mt-4" style="display: none;">
+                            <h5 class="mb-3">Booked Packages for Selected Time:</h5>
+                            <div id="bookedPackagesList" class="list-group">
+                                <!-- Booked packages will be listed here -->
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 text-center text-muted small">
+                            <i class="fas fa-clock me-1"></i> Events can be scheduled between 8:00 AM to 10:00 PM
+                        </div>
                     </div>
-                    <?php endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </section>
+        <!-- Event Packages Section -->
+        <section class="gallery-section package-section" id="packages">
+            <div class="container">
+
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Our Garden Event Packages</h2>
+                    <div class="divider mx-auto my-3" style="width: 100px; height: 3px; background-color: var(--primary-color);"></div>
+                    <p class="lead">Choose the perfect package for your special occasion</p>
+
+                    <p class="text-muted small">Showing packages specifically for our garden venue</p>
+                </div>
+                <div class="row g-4">
+                <?php
+                // Fetch garden event packages
+                $query = "SELECT * FROM event_packages WHERE status = 'Available' AND LOWER(place) = 'garden' ORDER BY price ASC";
+                $result = $conn->query($query);
+                
+                if ($result && $result->rowCount() > 0) {
+                    while ($package = $result->fetch(PDO::FETCH_ASSOC)) {
+                        // Get the first image if available
+                        $image = !empty($package['image_path']) ? $package['image_path'] : 'images/default-event.jpg';
+                        ?>
+                        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                            <div class="custom-card package-card h-100 d-flex flex-column" data-package-id="<?php echo $package['id']; ?>">
+                                <div class="gallery-item flex-shrink-0">
+                                    <img src="<?php echo htmlspecialchars($image); ?>" alt="<?php echo htmlspecialchars($package['name']); ?>" class="img-fluid w-100">
+                                    <div class="gallery-caption">
+                                        <h5 class="text-white mb-0"><?php echo htmlspecialchars($package['name']); ?></h5>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h3 class="card-title h4"><?php echo htmlspecialchars($package['name']); ?></h3>
+                                    <div class="price mb-3">₱<?php echo number_format($package['price'], 2); ?></div>
+                                    
+                                    <?php if (!empty($package['description'])): ?>
+                                        <p class="text-muted mb-4"><?php echo nl2br(htmlspecialchars($package['description'])); ?></p>
+                                    <?php endif; ?>
+                                    
+                                    <div class="features mb-4">
+                                        <ul class="features-list">
+                                            <?php if (!empty($package['max_pax'])): ?>
+                                                <li><i class="fas fa-users me-2"></i> Up to <?php echo $package['max_pax']; ?> guests</li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($package['time_limit'])): ?>
+                                                <li><i class="far fa-clock me-2"></i> <?php echo htmlspecialchars($package['time_limit']); ?> duration</li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($package['place'])): ?>
+                                                <li><i class="fas fa-map-marker-alt me-2"></i> <?php echo htmlspecialchars($package['place']); ?></li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($package['menu_items'])): ?>
+                                                <li class="d-flex align-items-start">
+                                                    <i class="fas fa-utensils me-2 mt-1"></i>
+                                                    <span>Includes: <?php echo htmlspecialchars($package['menu_items']); ?></span>
+                                                </li>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="mt-auto pt-3">
+                                        <div class="d-grid gap-2">
+                                            <button type="button" class="btn btn-primary btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal" 
+                                                data-package-id="<?php echo $package['id']; ?>" 
+                                                data-package-name="<?php echo htmlspecialchars($package['name']); ?>"
+                                                data-package-price="<?php echo number_format($package['price'], 2); ?>"
+                                                data-package-place="<?php echo strtolower($package['place']); ?>"
+                                                data-max-guests="<?php echo $package['max_pax'] ?? 0; ?>">
+                                                Book Now <i class="fas fa-arrow-right ms-2"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary btn-details w-100" data-bs-toggle="modal" data-bs-target="#packageDetailsModal" data-package-id="<?php echo $package['id']; ?>" data-package-name="<?php echo htmlspecialchars($package['name']); ?>">
+                                                <i class="fas fa-info-circle me-2"></i>View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php
+                    }
+                } else {
+                    echo '<div class="col-12 text-center"><p class="lead">No event packages available at the moment. Please check back later.</p></div>';
+                }
+                ?>
                 </div>
             </div>
         </section>
 
-        <!-- Packages Section -->
-        <section class="mb-5" id="packages">
+        <!-- Cafe Event Packages Section -->
+        <section class="gallery-section package-section" id="cafe-packages">
             <div class="container">
-            <h2 class="text-center mb-4">Our Event Packages</h2>
-            <div class="row g-4">
-                <?php foreach($packages as $package): ?>
-                <div class="col-md-4">
-                    <div class="custom-card h-100 fade-in <?php echo (isset($package['status']) && strtolower($package['status']) !== 'available') ? 'package-unavailable' : ''; ?>">
-                        <!-- Status Badge -->
-                        <div class="status-badge status-available">
-                            <?php if ($package['status'] === 'Occupied'): ?>
-                                <i class="fas fa-times-circle me-1"></i>Currently Not Available
-                            <?php else: ?>
-                                <i class="fas fa-check-circle me-1"></i>Available
-                            <?php endif; ?>
-                        </div>
-                        
-                        <!-- Update the image path handling -->
-                        <?php
-                        $imagePath = '';
-                        if (!empty($package['image_path'])) {
-                            // Check if the path starts with http(s)
-                            if (preg_match('/^https?:\/\//', $package['image_path'])) {
-                                $imagePath = $package['image_path'];
-                            } else {
-                                // Construct the correct absolute path from the root
-                                $imagePath = '../../uploads/event_packages/' . basename($package['image_path']);
-                            }
-                        } else {
-                            // Default image path
-                            $imagePath = '../../uploads/event_packages/default.jpg';
-                        }
+                <div class="text-center mb-5">
+                    <h2 class="section-title">Our Cafe Event Packages</h2>
+                    <div class="divider mx-auto my-3" style="width: 100px; height: 3px; background-color: var(--primary-color);"></div>
+                    <p class="lead">Perfect for intimate gatherings and coffee lovers</p>
+                    <p class="text-muted small">Showing packages specifically for our cafe venue</p>
+                </div>
+                <div class="row g-4">
+                <?php
+                // Fetch cafe event packages
+                $query = "SELECT * FROM event_packages WHERE status = 'Available' AND LOWER(place) = 'cafe' ORDER BY price ASC";
+                $result = $conn->query($query);
+                
+                if ($result && $result->rowCount() > 0) {
+                    while ($package = $result->fetch(PDO::FETCH_ASSOC)) {
+                        // Get the first image if available
+                        $image = !empty($package['image_path']) ? '../../../Admin/adminBackend/event_packages_images/' . basename($package['image_path']) : 'images/default-event.jpg';
                         ?>
-                        <img src="<?php echo htmlspecialchars($imagePath); ?>" 
-                             class="card-img-top package-image" 
-                             alt="<?php echo htmlspecialchars($package['name']); ?>"
-                             onerror="this.src='/casaaa/htdocs/Admin/uploads/event_packages/default.jpg'">
-                        
-                        <div class="card-body">
-                            <!-- Package Title -->
-                            <h4 class="card-title"><?php echo htmlspecialchars($package['name']); ?></h4>
-                            
-                            <!-- Package Price -->
-                            <p class="price mb-3">₱<?php echo number_format($package['price'], 2); ?></p>
-                            
-                            <!-- Package Features -->
-                            <ul class="features-list mb-4">
-                                <?php 
-                                        // Split description into features
-                                $description = explode("\n", $package['description']);
-                                foreach($description as $feature): 
-                                            if(trim($feature)): // Only show non-empty features
-                                ?>
-                                <li><?php echo htmlspecialchars($feature); ?></li>
-                                        <?php 
-                                            endif;
-                                        endforeach; 
-                                        ?>
-                            </ul>
-
-                            <!-- Replace the Current Bookings section in each package card -->
-                            <div class="booking-status-container mb-3">
-                                <h6 class="text-muted mb-2 d-flex justify-content-between align-items-center">
-                                    <span><i class="fas fa-calendar-check me-2"></i>Booked Dates</span>
-                                    <button type="button" 
-                                            class="btn btn-sm btn-outline-warning" 
-                                            onclick="viewBookedDates('<?php echo htmlspecialchars($package['name']); ?>')">
-                                        <i class="fas fa-eye me-1"></i>View All
-                                    </button>
-                                </h6>
-                                <?php
-                                // Fetch booked dates count for this specific package
-                                $sql = "SELECT COUNT(*) as booking_count
-                                        FROM event_bookings eb
-                                        WHERE eb.booking_status IN ('pending', 'confirmed')
-                                        AND eb.package_name = :package_name
-                                        AND eb.event_date >= CURRENT_DATE";
-                                
-                                $stmt = $pdo->prepare($sql);
-                                $stmt->execute([':package_name' => $package['name']]);
-                                $bookingCount = $stmt->fetch(PDO::FETCH_ASSOC)['booking_count'];
-                                ?>
-                                
-                                <div class="text-center text-muted">
-                                    <?php if ($bookingCount > 0): ?>
-                                        <small>
-                                            <i class="fas fa-info-circle me-1"></i>
-                                            Click "View All" to see <?php echo $bookingCount; ?> upcoming booking<?php echo $bookingCount > 1 ? 's' : ''; ?>
-                                        </small>
-                                    <?php else: ?>
-                                        <small>No upcoming bookings for this package</small>
+                        <div class="col-12 col-sm-6 col-lg-4 mb-4">
+                            <div class="custom-card package-card h-100 d-flex flex-column" data-package-id="<?php echo $package['id']; ?>">
+                                <div class="gallery-item flex-shrink-0">
+                                    <img src="<?php echo htmlspecialchars($image); ?>" alt="<?php echo htmlspecialchars($package['name']); ?>" class="img-fluid w-100">
+                                    <div class="gallery-caption">
+                                        <h5 class="text-white mb-0"><?php echo htmlspecialchars($package['name']); ?></h5>
+                                    </div>
+                                </div>
+                                <div class="card-body d-flex flex-column">
+                                    <h3 class="card-title h4"><?php echo htmlspecialchars($package['name']); ?></h3>
+                                    <div class="price mb-3">₱<?php echo number_format($package['price'], 2); ?></div>
+                                    
+                                    <?php if (!empty($package['description'])): ?>
+                                        <p class="text-muted mb-4"><?php echo nl2br(htmlspecialchars($package['description'])); ?></p>
                                     <?php endif; ?>
+                                    
+                                    <div class="features mb-4">
+                                        <ul class="features-list">
+                                            <?php if (!empty($package['max_pax'])): ?>
+                                                <li><i class="fas fa-users me-2"></i> Up to <?php echo $package['max_pax']; ?> guests</li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($package['time_limit'])): ?>
+                                                <li><i class="far fa-clock me-2"></i> <?php echo htmlspecialchars($package['time_limit']); ?> duration</li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($package['place'])): ?>
+                                                <li><i class="fas fa-map-marker-alt me-2"></i> <?php echo htmlspecialchars($package['place']); ?></li>
+                                            <?php endif; ?>
+                                            <?php if (!empty($package['menu_items'])): ?>
+                                                <li class="d-flex align-items-start">
+                                                    <i class="fas fa-utensils me-2 mt-1"></i>
+                                                    <span>Includes: <?php echo htmlspecialchars($package['menu_items']); ?></span>
+                                                </li>
+                                            <?php endif; ?>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="mt-auto pt-3">
+                                        <div class="d-grid gap-2">
+                                            <button type="button" class="btn btn-primary btn-book" data-bs-toggle="modal" data-bs-target="#bookingModal" 
+                                                data-package-id="<?php echo $package['id']; ?>" 
+                                                data-package-name="<?php echo htmlspecialchars($package['name']); ?>"
+                                                data-package-price="<?php echo number_format($package['price'], 2); ?>"
+                                                data-package-place="<?php echo strtolower($package['place']); ?>"
+                                                data-max-guests="<?php echo $package['max_pax'] ?? 0; ?>">
+                                                Book Now <i class="fas fa-arrow-right ms-2"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary btn-details w-100" data-bs-toggle="modal" data-bs-target="#packageDetailsModal" data-package-id="<?php echo $package['id']; ?>" data-package-name="<?php echo htmlspecialchars($package['name']); ?>">
+                                                <i class="fas fa-info-circle me-2"></i>View Details
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Action Buttons -->
-                            <div class="button-group">
-                                <!-- View Package Button -->
-                                <button type="button" 
-                                        class="btn btn-outline-primary-custom w-100 mb-2" 
-                                        onclick="viewPackageDetails('<?php echo htmlspecialchars($package['name']); ?>')">
-                                    <i class="fas fa-eye me-2"></i>View Package
-                                </button>
-
-                                <?php if ($package['status'] === 'Occupied'): ?>
-                                    <!-- Not Available Button -->
-                                    <button type="button" class="btn btn-secondary w-100 mb-2" disabled>
-                                        Currently Not Available
-                                    </button>
-                                <?php else: ?>
-                                    <!-- Book Now Button -->
-                                    <button type="button" 
-                                            class="btn btn-primary-custom w-100 mb-2" 
-                                            onclick="openPackageModal('<?php echo htmlspecialchars($package['name']); ?>', <?php echo $package['price']; ?>)">
-                                        <i class="fas fa-calendar-check me-2"></i>Book Now
-                                    </button>
-                                <?php endif; ?>
-                            </div>
                         </div>
-                    </div>
-                </div>
-                <?php endforeach; ?>
+                        <?php
+                    }
+                } else {
+                    echo '<div class="col-12 text-center"><p class="lead">No cafe event packages available at the moment. Please check back later.</p></div>';
+                }
+                ?>
                 </div>
             </div>
         </section>
     </div>
-    <?php include('footer.php'); ?>
+
     <!-- Booking Modal -->
-    <div class="modal fade" id="packageModal" tabindex="-1">
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Book Your Event</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="bookingModalLabel">Book Event Package</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form id="bookingForm" action="event_functions.php" method="POST" class="needs-validation" novalidate>
+                <form id="bookingForm" action="event_payment_process.php" method="GET" onsubmit="return validateGuestCount()">
                     <div class="modal-body">
-                        <!-- Add the feedback alerts container -->
-                        <div class="alert alert-info mb-3">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-info-circle me-2"></i>
-                                <strong>Important Information</strong>
+                        <input type="hidden" name="package_id" id="bookingPackageId">
+                        <input type="hidden" id="maxGuests" value="0">
+                        <input type="hidden" id="packageNameInput" name="package_name">
+                        <input type="hidden" id="packagePriceInput" name="package_price">
+                        <input type="hidden" id="eventPlaceInput" name="event_place">
+                        <input type="hidden" id="eventTypeInput" name="event_type">
+                        <input type="hidden" id="paymentOptionInput" name="payment_option">
+                        <input type="hidden" id="paymentMethodInput" name="payment_method">
+                        <div class="mb-3">
+                            <label class="form-label">Package</label>
+                            <div class="form-control bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span id="packageName" class="fw-bold"></span>
+                                    <span id="packagePrice" class="text-primary fw-bold"></span>
+                                </div>
                             </div>
-                            <ul class="list-unstyled mb-0">
-                                <li class="mb-2">
-                                    <i class="fas fa-clock me-2"></i>
-                                    Operating hours: 6:30 AM - 11:00 PM
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-money-bill-wave me-2"></i>
-                                    Additional hours are charged at ₱2,000 per hour
-                                </li>
-                                <li class="mb-2">
-                                    <i class="fas fa-users me-2"></i>
-                                    Additional guests exceeding 50 are charged at ₱1,000 per person
-                                </li>
-                                <li>
-                                    <i class="fas fa-exclamation-circle me-2"></i>
-                                    Save a screenshot of your payment for proof of transaction
-                                </li>
-                            </ul>
                         </div>
-
-                        <div id="advanceBookingNote" class="alert alert-info mb-3" style="display: none;">
-                            <i class="fas fa-info-circle me-2"></i>
-                            <strong>Advance Booking:</strong> You are making a reservation for a future date.
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="eventDate" class="form-label">Event Date</label>
+                                <input type="date" class="form-control" id="eventDate" name="event_date" required disabled>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="eventTime" class="form-label">Event Time</label>
+                                <input type="time" class="form-control" id="eventTime" name="event_time" required disabled>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="eventType" class="form-label">Event Type</label>
+                                <select class="form-select" id="eventType" name="event_type" required>
+                                    <option value="">Select Event Type</option>
+                                    <option value="wedding">Wedding</option>
+                                    <option value="birthday">Birthday</option>
+                                    <option value="corporate">Corporate Event</option>
+                                    <option value="family">Family Gathering</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="eventPlace" class="form-label">Event Place</label>
+                                <select class="form-select" id="eventPlace" name="event_place" required>
+                                    <option value="">Select Event Place</option>
+                                    <option value="garden">Garden</option>
+                                    <option value="cafe">Cafe</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="guestCount" class="form-label">Number of Guests</label>
+                                <input type="number" class="form-control" id="guestCount" name="guest_count" min="1" required>
+                                <input type="hidden" id="maxGuests" value="0">
+                                <div class="invalid-feedback" id="guestCountFeedback">
+                                    Number of guests exceeds the maximum allowed for this package.
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="paymentMethod" class="form-label">Payment Method</label>
+                                <select class="form-select" id="paymentMethod" name="payment_method" required>
+                                    <option value="">Select Payment Method</option>
+                                    <option value="cash" selected>Cash</option>
+                                    <option value="card">Credit/Debit Card</option>
+                                    <option value="bank_transfer">Bank Transfer</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentOption" class="form-label">Payment Option</label>
+                            <select class="form-select" id="paymentOption" name="payment_option" required>
+                                <option value="">Select Payment Option</option>
+                                <option value="full_payment">Full Payment</option>
+                                <option value="down_payment">Down Payment (50%)</option>
+                            </select>
                         </div>
                         
-                        <input type="hidden" id="packageName" name="packageName">
-                        <input type="hidden" id="packagePrice" name="packagePrice">
-                        <input type="hidden" id="basePrice" name="basePrice">
-                        <input type="hidden" id="overtimeHours" name="overtimeHours">
-                        <input type="hidden" id="overtimeCharge" name="overtimeCharge">
-                        <!-- Add this line with your other hidden inputs -->
-                        <input type="hidden" id="bookingSource" name="bookingSource" value="Regular">
-                        
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Event Date</label>
-                                <input type="date" class="form-control" id="eventDate" name="eventDate" required>
-                                <div class="invalid-feedback">Please select a date.</div>
+                        <!-- Payment Breakdown Section -->
+                        <div id="paymentBreakdown" class="border rounded p-3 mb-3" style="display: none;">
+                            <h6 class="mb-3">Payment Breakdown</h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Package Price:</span>
+                                <span id="breakdownPackagePrice">₱0.00</span>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Number of Guests</label>
-                                <input type="number" class="form-control" id="numberOfGuests" name="numberOfGuests" 
-                                       min="1" max="50" required>
-                                <div class="invalid-feedback">Please enter number of guests (1-50).</div>
+                            <div id="downPaymentRow" class="d-flex justify-content-between mb-2">
+                                <span>Down Payment (50%):</span>
+                                <span id="breakdownDownPayment">₱0.00</span>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Start Time</label>
-                                <input type="time" class="form-control" id="startTime" name="startTime" required>
-                                <small class="text-muted">Operating hours: 6:30 AM - 11:00 PM</small>
-                                <div class="invalid-feedback">Please select a start time.</div>
+                            <div id="balanceRow" class="d-flex justify-content-between mb-2">
+                                <span>Remaining Balance :</span>
+                                <span id="breakdownBalance">₱0.00</span>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">End Time</label>
-                                <input type="time" class="form-control" id="endTime" name="endTime" required>
-                                <small class="text-muted">Operating hours: 6:30 AM - 11:00 PM</small>
-                                <div class="invalid-feedback">Please select an end time.</div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold">
+                                <span>Total Amount to Pay Now:</span>
+                                <span id="breakdownTotal">₱0.00</span>
                             </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Payment Method</label>
-                                <select class="form-select" id="paymentMethod" name="paymentMethod" required>
-                                    <option value="">Choose...</option>
-                                    <?php 
-                                    // Make sure $payment_methods is defined and is an array
-                                    if (isset($payment_methods) && is_array($payment_methods)): 
-                                        foreach ($payment_methods as $method): 
-                                            if (isset($method['name']) && isset($method['display_name'])): ?>
-                                                <option value="<?= htmlspecialchars($method['name']) ?>">
-                                                    <?= htmlspecialchars($method['display_name']) ?>
-                                                </option>
-                                    <?php   endif;
-                                        endforeach;
-                                    endif; ?>
-                                </select>
-                                <div class="invalid-feedback">Please select a payment method.</div>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Payment Type</label>
-                                <select class="form-select" id="paymentType" name="paymentType" required>
-                                    <option value="">Choose...</option>
-                                    <option value="full">Full Payment</option>
-                                    <option value="downpayment">Downpayment (50%)</option>
-                                </select>
-                                <div class="invalid-feedback">Please select a payment type.</div>
-                            </div>
-                            <!-- Add this after the number of guests field in the modal form -->
-                            <div class="col-md-6">
-                                <label class="form-label">Event Type</label>
-                                <select class="form-select" id="eventType" name="eventType" required>
-                                    <option value="">Choose...</option>
-                                    <option value="Birthday">Birthday</option>
-                                    <option value="Wedding">Wedding</option>
-                                    <option value="Corporate">Corporate Event</option>
-                                    <option value="Other">Other</option>
-                                </select>
-                                <div class="invalid-feedback">Please select an event type.</div>
-                            </div>
-                            <!-- Add this div for "Other" event type specification -->
-                            <div class="col-md-6" id="otherEventTypeContainer" style="display: none;">
-                                <label class="form-label">Specify Event Type</label>
-                                <input type="text" class="form-control" id="otherEventType" name="otherEventType">
-                                <div class="invalid-feedback">Please specify the event type.</div>
-                            </div>
-                        </div>
-                            <div class="col-12" id="paymentMethodDetails" style="display: none;">
-                                <div class="card mt-3">
-                                    <div class="card-body">
-                                        <h6 class="card-title mb-3">
-                                            <i class="fas fa-money-bill-wave me-2"></i>
-                                        </h6>
-
-                                        <!-- Update the payment proof section with preview functionality -->
-                                        <div class="payment-proof-section mt-3">
-                                            <div class="row g-3">
-                                                <div class="col-md-6">
-                                                    <label class="form-label">Reference Number</label>
-                                                    <input type="text" class="form-control" id="referenceNumber" name="referenceNumber">
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label class="form-label">Payment Screenshot</label>
-                                                    <div class="input-group">
-                                                        <input type="file" class="form-control" id="paymentProof" name="paymentProof" accept="image/*">
-                                                        <button class="btn btn-outline-secondary" type="button" id="viewProofBtn" disabled>
-                                                            <i class="fas fa-eye"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row mt-3">
-                                                <div class="col-12 text-end">
-                                                    <button type="button" class="btn btn-primary-custom" id="proceedToPaymentBtn" onclick="proceedToPayment()">
-                                                        <i class="fas fa-credit-card me-2"></i>Proceed to Payment
-                                                    </button>
-                                                </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                            </div>
-   
-
-                        <!-- Add this div for overtime information -->
-                        <div id="overtimeInfo" style="display: none;" class="mt-3"></div>
-
-                        <div class="mt-4">
-                            <h5>Total Amount: <span id="totalAmount">₱0.00</span></h5>
-                            <!-- Update the downpayment info div -->
-                            <div id="downpaymentInfo" class="mt-3" style="display: none;"></div>
-                        </div>
-
-                        <!-- Add this reservation type indicator -->
-                        <div id="reservationTypeIndicator" class="alert alert-info mb-3" style="display: none;">
-                            <i class="fas fa-calendar-alt"></i> Advance Reservation
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary-custom" onclick="showSummaryModal()">Continue</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="proceedToPaymentBtn">
+                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            Proceed to Payment
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Replace the existing summaryModal -->
-    <div class="modal fade" id="summaryModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- Package Details Modal -->
+    <div class="modal fade" id="packageDetailsModal" tabindex="-1" aria-labelledby="packageDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">Booking Summary</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="packageDetailsModalLabel">Package Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <div class="booking-summary">
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-box"></i>
-                                <span>Package</span>
-                            </div>
-                            <div class="summary-value" id="summary-package"></div>
+                <div class="modal-body" id="packageDetailsContent">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-calendar"></i>
-                                <span>Date</span>
-                            </div>
-                            <div class="summary-value" id="summary-date"></div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-clock"></i>
-                                <span>Time</span>
-                            </div>
-                            <div class="summary-value" id="summary-time"></div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-users"></i>
-                                <span>Number of Guests</span>
-                            </div>
-                            <div class="summary-value" id="summary-guests"></div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-credit-card"></i>
-                                <span>Payment Details</span>
-                            </div>
-                            <div class="summary-value" id="summary-payment-method"></div>
-                        </div>
-                        <div class="summary-total">
-                            <div id="summary-total-container">
-                                <div class="total-row">
-                                    <span>Total Amount</span>
-                                    <span id="summary-total" class="amount"></span>
-                                </div>
-                            </div>
-                            <div id="summary-downpayment-container" style="display: none;">
-                                <div class="total-row">
-                                    <span>Downpayment (50%)</span>
-                                    <span id="summary-downpayment" class="amount"></span>
-                                </div>
-                                <div class="total-row">
-                                    <span>Remaining Balance</span>
-                                    <span id="summary-remaining" class="amount"></span>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Add this to the summary modal content -->
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-receipt"></i>
-                                <span>Reference Number</span>
-                            </div>
-                            <div class="summary-value" id="summary-reference"></div>
-                        </div>
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-image"></i>
-                                <span>Payment Proof</span>
-                            </div>
-                            <div class="summary-value">
-                                <button type="button" class="btn btn-link p-0" id="viewProofSummaryBtn">
-                                    <i class="fas fa-eye me-1"></i>View Proof
-                                </button>
-                            </div>
-                        </div>
-                        <!-- Add this to the summary modal content -->
-                        <div class="summary-row">
-                            <div class="summary-label">
-                                <i class="fas fa-calendar-day"></i>
-                                <span>Event Type</span>
-                            </div>
-                            <div class="summary-value" id="summary-event-type"></div>
-                        </div>
+                        <p class="mt-2">Loading package details...</p>
                     </div>
                 </div>
-                <div class="modal-footer border-0">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Back</button>
-                    <button type="button" class="btn btn-primary-custom" id="confirmBookingBtn" onclick="redirectToPayment()">
-                        Proceed to Payment
-                    </button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <a href="#" id="bookNowBtn" class="btn btn-primary">
+                        Book Now <i class="fas fa-arrow-right ms-2"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    
-    <!-- Add this before the closing body tag -->
-    <div class="modal fade" id="availabilityModal" tabindex="-1" aria-labelledby="availabilityModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="availabilityModalLabel"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="availabilityModalBody">
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="loadingMessage" style="display: none;">
-        Checking availability...
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<?php require_once 'footer.php'?>
+    <!-- Bootstrap JS Bundle with Popper -->
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
     <script>
-        // Initialize modals globally
-        let packageModal;
-        let summaryModal;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize modals
-            packageModal = new bootstrap.Modal(document.getElementById('packageModal'));
-            summaryModal = new bootstrap.Modal(document.getElementById('summaryModal'));
-
-            // Set minimum date as today
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('eventDate').min = today;
-
-            // Handle payment type changes
-            document.getElementById('paymentType').addEventListener('change', updatePaymentInfo);
-
-            // Handle confirm booking
-            document.getElementById('confirmBookingBtn').addEventListener('click', function() {
-                const summaryModal = bootstrap.Modal.getInstance(document.getElementById('summaryModal'));
-                summaryModal.hide();
-                handleBookingSubmission();
-            });
-
-            // Add event listeners for real-time updates
-            document.getElementById('startTime').addEventListener('change', updateModalDisplay);
-            document.getElementById('endTime').addEventListener('change', updateModalDisplay);
-            document.getElementById('paymentType').addEventListener('change', updateModalDisplay);
-
-            // Initialize time restrictions
-            validateOperatingHours();
-            
-            // Add event listeners for time inputs
-            document.getElementById('startTime').addEventListener('change', function() {
-                const endTimeInput = document.getElementById('endTime');
-                if (this.value) {
-                    // Set minimum end time to start time
-                    endTimeInput.min = this.value;
-                }
-            });
-
-            // Check availability for all packages on page load
-            const packages = document.querySelectorAll('[data-package]');
-            const checkedPackages = new Set();
-            
-            packages.forEach(element => {
-                const packageName = element.getAttribute('data-package');
-                if (!checkedPackages.has(packageName)) {
-                    checkAndUpdatePackageAvailability(packageName);
-                    checkedPackages.add(packageName);
-                }
-            });
+async function checkAvailability() {
+    const btn = document.getElementById('checkAvailabilityBtn');
+    const spinner = document.getElementById('availabilitySpinner');
+    const icon = btn.querySelector('.fa-search');
+    const statusMessage = document.getElementById('statusMessage');
+    const eventDateTime = document.getElementById('eventDateTime').value;
+    
+    // Validate date and time
+    if (!eventDateTime) {
+        statusMessage.textContent = 'Please select a date and time to check availability.';
+        statusMessage.parentElement.className = 'availability-status mt-4 alert alert-warning';
+        document.getElementById('bookedPackagesContainer').style.display = 'none';
+        return;
+    }
+    
+    // Show spinner and update UI
+    spinner.style.display = 'inline-block';
+    icon.style.display = 'none';
+    btn.disabled = true;
+    statusMessage.textContent = 'Checking availability...';
+    statusMessage.parentElement.className = 'availability-status mt-4 alert alert-info';
+    
+    try {
+        // Make AJAX call to check availability
+        const response = await fetch('events_check_availability.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `event_datetime=${encodeURIComponent(eventDateTime)}`
         });
 
-        // Update the openPackageModal function to check login first
-        function openPackageModal(packageName, price, bookingType = 'Regular', preselectedDate = null) {
-            // Check login status first
-            fetch('check_login.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.loggedIn) {
-                    // User is logged in, proceed with booking
-                    proceedWithBooking(packageName, price, bookingType, preselectedDate);
-                } else {
-                    // User is not logged in, show login prompt
-                    Swal.fire({
-                        title: 'Login Required',
-                        text: 'Please login to book an event package',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Login Now',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Store current page URL in session storage
-                            sessionStorage.setItem('redirectAfterLogin', window.location.href);
-                            // Store package details to restore after login
-                            sessionStorage.setItem('pendingPackageName', packageName);
-                            sessionStorage.setItem('pendingPackagePrice', price);
-                            sessionStorage.setItem('pendingBookingType', bookingType);
-                            if (preselectedDate) {
-                                sessionStorage.setItem('pendingPreselectedDate', preselectedDate);
-                            }
-                            // Redirect to login page with return URL
-                            window.location.href = data.redirect;
-                        }
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error checking login status:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred. Please try again.'
-                });
-            });
-        }
-
-        // Add this function to handle the actual booking process
-        function proceedWithBooking(packageName, price, bookingType = 'Regular', preselectedDate = null) {
-            // First check if there's an advance booking
-            fetch('check_events_availability.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    packageName: packageName
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.has_advance_booking) {
-                    alert(data.message);
-                    return;
-                }
-                
-                // Continue with modal opening if no advance booking
-                const modalElement = document.getElementById('packageModal');
-                
-                // Add hidden field for booking type
-                let bookingTypeInput = document.getElementById('bookingType');
-                if (!bookingTypeInput) {
-                    bookingTypeInput = document.createElement('input');
-                    bookingTypeInput.type = 'hidden';
-                    bookingTypeInput.id = 'bookingType';
-                    bookingTypeInput.name = 'bookingType';
-                    document.getElementById('bookingForm').appendChild(bookingTypeInput);
-                }
-                bookingTypeInput.value = bookingType;
-                
-                // Show/hide advance booking note
-                const advanceBookingNote = document.getElementById('advanceBookingNote');
-                if (advanceBookingNote) {
-                    advanceBookingNote.style.display = bookingType === 'Advance' ? 'block' : 'none';
-                }
-                
-                // Set form values
-                document.getElementById('packageName').value = packageName;
-                document.getElementById('packagePrice').value = price;
-                document.getElementById('basePrice').value = price; // Store original base price
-                
-                // Set date if provided (for advance booking)
-                if (preselectedDate) {
-                    const eventDateInput = document.getElementById('eventDate');
-                    eventDateInput.value = preselectedDate;
-                    eventDateInput.min = preselectedDate;
-                } else {
-                    // For regular booking, set minimum date as today
-                    document.getElementById('eventDate').min = new Date().toISOString().split('T')[0];
-                }
-                
-                // Show modal
-                const modal = new bootstrap.Modal(modalElement);
-                modal.show();
-
-                // Set the booking source
-                document.getElementById('bookingSource').value = bookingType;
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Something went wrong! Please try again.');
-            });
-        }
-
-        // Add this to check for pending booking after login
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check for stored package details after login
-            const pendingPackageName = sessionStorage.getItem('pendingPackageName');
-            const pendingPackagePrice = sessionStorage.getItem('pendingPackagePrice');
-            const pendingBookingType = sessionStorage.getItem('pendingBookingType');
-            const pendingPreselectedDate = sessionStorage.getItem('pendingPreselectedDate');
-            
-            if (pendingPackageName && pendingPackagePrice) {
-                // Clear stored data
-                sessionStorage.removeItem('pendingPackageName');
-                sessionStorage.removeItem('pendingPackagePrice');
-                sessionStorage.removeItem('pendingBookingType');
-                sessionStorage.removeItem('pendingPreselectedDate');
-                
-                // Proceed with booking
-                proceedWithBooking(
-                    pendingPackageName, 
-                    parseFloat(pendingPackagePrice), 
-                    pendingBookingType || 'Regular',
-                    pendingPreselectedDate || null
-                );
-            }
-        });
-
-        // Update the MAX_GUESTS constant in the JavaScript section
-        const MAX_GUESTS = 50;
-        const MAX_HOURS = 5;
-        const BASE_OVERTIME_RATE = 2000;
-        const PREMIUM_OVERTIME_RATE = 3000;
-        const PREMIUM_TIME_THRESHOLD = '14:00';
-
-        // Add this right after your existing constants at the top of your JavaScript
-        const OPENING_TIME = "06:30"; // 6:30 AM
-        const CLOSING_TIME = "23:00"; // 11:00 PM
-
-        // Add this constant to your existing constants at the top of your JavaScript
-        const MAX_GUESTS_WITHOUT_CHARGE = 50;
-        const EXTRA_GUEST_CHARGE = 1000;
-
-        function validateBooking() {
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-
-            // Calculate duration in hours
-            const start = new Date(`2000-01-01T${startTime}`);
-            const end = new Date(`2000-01-01T${endTime}`);
-            const durationHours = (end - start) / (1000 * 60 * 60);
-
-            if (durationHours <= 0) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Invalid Time',
-                    text: 'End time must be after start time.'
-                });
-                return false;
-            }
-
-            return true;
-        }
-
-        // Update the calculateTotalAmount function to include extra guest charges
-        function calculateTotalAmount() {
-            // Read from basePrice if it exists, otherwise fall back to packagePrice
-            const basePriceInput = document.getElementById('basePrice');
-            const packagePriceInput = document.getElementById('packagePrice');
-            const basePrice = parseFloat(basePriceInput && basePriceInput.value ? basePriceInput.value : packagePriceInput.value);
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-            const guests = parseInt(document.getElementById('numberOfGuests').value) || 0;
-
-            // Calculate duration in hours
-            const start = new Date(`2000-01-01T${startTime}`);
-            const end = new Date(`2000-01-01T${endTime}`);
-            const durationHours = (end - start) / (1000 * 60 * 60);
-
-            // Calculate overtime charges
-            const overtimeHours = Math.max(0, durationHours - MAX_HOURS);
-            const overtimeCharge = Math.ceil(overtimeHours) * BASE_OVERTIME_RATE;
-            
-            // Calculate extra guest charges
-            const extraGuests = Math.max(0, guests - MAX_GUESTS_WITHOUT_CHARGE);
-            const extraGuestCharge = extraGuests * EXTRA_GUEST_CHARGE;
-            
-            const totalAmount = basePrice + overtimeCharge + extraGuestCharge;
-
-            return {
-                basePrice,
-                overtimeHours,
-                overtimeCharge,
-                extraGuests,
-                extraGuestCharge,
-                totalAmount
-            };
-        }
-
-        // Update the showSummaryModal function to include extra guest charges in the summary
-        function showSummaryModal() {
-            if (!validateBookingForm()) {
-                return;
-            }
-
-            try {
-                // Get form values
-                const packageName = document.getElementById('packageName').value;
-                const eventDate = new Date(document.getElementById('eventDate').value)
-                    .toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
-                const startTime = document.getElementById('startTime').value;
-                const endTime = document.getElementById('endTime').value;
-                const guests = document.getElementById('numberOfGuests').value;
-                const paymentMethod = document.getElementById('paymentMethod').value;
-                const paymentType = document.getElementById('paymentType').value;
-
-                // Calculate amounts
-                const { basePrice, overtimeHours, overtimeCharge, extraGuests, extraGuestCharge, totalAmount } = calculateTotalAmount();
-
-                // Update summary modal content
-                document.getElementById('summary-package').textContent = packageName;
-                document.getElementById('summary-date').textContent = eventDate;
-                document.getElementById('summary-time').textContent = `${formatTime(startTime)} - ${formatTime(endTime)}`;
-                document.getElementById('summary-guests').textContent = guests;
-                document.getElementById('summary-payment-method').textContent = `${paymentMethod} - ${paymentType}`;
-
-                // Clear previous content
-                const totalContainer = document.getElementById('summary-total-container');
-                const downpaymentContainer = document.getElementById('summary-downpayment-container');
-                totalContainer.innerHTML = '';
-
-                // Add base price row
-                const basePriceRow = document.createElement('div');
-                basePriceRow.className = 'total-row';
-                basePriceRow.innerHTML = `
-                    <span>Base Price</span>
-                    <span class="amount">₱${basePrice.toLocaleString()}</span>
-                `;
-                totalContainer.appendChild(basePriceRow);
-
-                // Add overtime charges if applicable
-                if (overtimeHours > 0) {
-                    const overtimeRow = document.createElement('div');
-                    overtimeRow.className = 'total-row';
-                    overtimeRow.innerHTML = `
-                        <span>Overtime Charge (${Math.ceil(overtimeHours)} hours)</span>
-                        <span class="amount">₱${overtimeCharge.toLocaleString()}</span>
-                    `;
-                    totalContainer.appendChild(overtimeRow);
-                }
-
-                // Add extra guest charges if applicable
-                if (extraGuests > 0) {
-                    const extraGuestRow = document.createElement('div');
-                    extraGuestRow.className = 'total-row';
-                    extraGuestRow.innerHTML = `
-                        <span>Extra Guest Charge (${extraGuests} guests × ₱${EXTRA_GUEST_CHARGE.toLocaleString()})</span>
-                        <span class="amount">₱${extraGuestCharge.toLocaleString()}</span>
-                    `;
-                    totalContainer.appendChild(extraGuestRow);
-                }
-
-                // Add total amount row
-                const totalRow = document.createElement('div');
-                totalRow.className = 'total-row font-weight-bold mt-2 border-top pt-2';
-                totalRow.innerHTML = `
-                    <span>Total Amount</span>
-                    <span class="amount">₱${totalAmount.toLocaleString()}</span>
-                `;
-                totalContainer.appendChild(totalRow);
-
-                // Handle payment type display
-                if (paymentType === 'downpayment') {
-                    const downpayment = totalAmount * 0.5;
-                    
-                    // Clear and rebuild the downpayment container with breakdown
-                    downpaymentContainer.innerHTML = '';
-                    
-                    // Add breakdown rows
-                    const breakdownTitle = document.createElement('div');
-                    breakdownTitle.className = 'total-row font-weight-bold';
-                    breakdownTitle.innerHTML = `<span colspan="2" style="text-align: center; display: block; margin-bottom: 10px;">Payment Breakdown</span>`;
-                    downpaymentContainer.appendChild(breakdownTitle);
-                    
-                    // Base price row
-                    const basePriceRow = document.createElement('div');
-                    basePriceRow.className = 'total-row';
-                    basePriceRow.innerHTML = `
-                        <span>Base Price</span>
-                        <span class="amount">₱${basePrice.toLocaleString()}</span>
-                    `;
-                    downpaymentContainer.appendChild(basePriceRow);
-                    
-                    // Overtime charge row (if applicable)
-                    if (overtimeHours > 0) {
-                        const overtimeRow = document.createElement('div');
-                        overtimeRow.className = 'total-row';
-                        overtimeRow.innerHTML = `
-                            <span>Overtime Charge (${Math.ceil(overtimeHours)} hours)</span>
-                            <span class="amount">₱${overtimeCharge.toLocaleString()}</span>
-                        `;
-                        downpaymentContainer.appendChild(overtimeRow);
-                    }
-                    
-                    // Extra guest charge row (if applicable)
-                    if (extraGuests > 0) {
-                        const extraGuestRow = document.createElement('div');
-                        extraGuestRow.className = 'total-row';
-                        extraGuestRow.innerHTML = `
-                            <span>Extra Guest Charge (${extraGuests} guests × ₱${EXTRA_GUEST_CHARGE.toLocaleString()})</span>
-                            <span class="amount">₱${extraGuestCharge.toLocaleString()}</span>
-                        `;
-                        downpaymentContainer.appendChild(extraGuestRow);
-                    }
-                    
-                    // Total amount row
-                    const totalAmountRow = document.createElement('div');
-                    totalAmountRow.className = 'total-row font-weight-bold border-top pt-2 mt-2';
-                    totalAmountRow.innerHTML = `
-                        <span>Total Amount</span>
-                        <span class="amount">₱${totalAmount.toLocaleString()}</span>
-                    `;
-                    downpaymentContainer.appendChild(totalAmountRow);
-                    
-                    // Downpayment row
-                    const downpaymentRow = document.createElement('div');
-                    downpaymentRow.className = 'total-row';
-                    downpaymentRow.innerHTML = `
-                        <span>Downpayment (50%)</span>
-                        <span class="amount">₱${downpayment.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                    `;
-                    downpaymentContainer.appendChild(downpaymentRow);
-                    
-                    // Remaining balance row
-                    const remainingRow = document.createElement('div');
-                    remainingRow.className = 'total-row';
-                    remainingRow.innerHTML = `
-                        <span>Remaining Balance</span>
-                        <span class="amount">₱${downpayment.toLocaleString(undefined, {minimumFractionDigits: 2})}</span>
-                    `;
-                    downpaymentContainer.appendChild(remainingRow);
-                    
-                    totalContainer.style.display = 'none';
-                    downpaymentContainer.style.display = 'block';
-                } else {
-                    totalContainer.style.display = 'block';
-                    downpaymentContainer.style.display = 'none';
-                }
-
-                // Update hidden form fields
-                document.getElementById('packagePrice').value = totalAmount;
-                document.getElementById('basePrice').value = basePrice;
-                document.getElementById('overtimeHours').value = Math.ceil(overtimeHours);
-                document.getElementById('overtimeCharge').value = overtimeCharge;
-                
-                // Add hidden field for extra guest charge if it doesn't exist
-                let extraGuestChargeInput = document.getElementById('extraGuestCharge');
-                if (!extraGuestChargeInput) {
-                    extraGuestChargeInput = document.createElement('input');
-                    extraGuestChargeInput.type = 'hidden';
-                    extraGuestChargeInput.id = 'extraGuestCharge';
-                    extraGuestChargeInput.name = 'extraGuestCharge';
-                    document.getElementById('bookingForm').appendChild(extraGuestChargeInput);
-                }
-                extraGuestChargeInput.value = extraGuestCharge;
-
-                // Close package modal and show summary modal
-                packageModal.hide();
-                summaryModal.show();
-
-                // Add reference number to summary
-                document.getElementById('summary-reference').textContent = 
-                    document.getElementById('referenceNumber').value;
-
-                // Store the payment proof file for preview
-                const paymentProofFile = document.getElementById('paymentProof').files[0];
-                
-                // Handle View Proof button visibility based on payment type
-                const viewProofRow = document.querySelector('.summary-row:has(#viewProofSummaryBtn)');
-                if (viewProofRow) {
-                    if (paymentType === 'downpayment') {
-                        viewProofRow.style.display = 'none';
-                    } else {
-                        viewProofRow.style.display = 'flex';
-                        // Add click handler for viewing proof in summary
-                        document.getElementById('viewProofSummaryBtn').onclick = function() {
-                            if (paymentProofFile) {
-                                const reader = new FileReader();
-                                reader.onload = function(e) {
-                                    Swal.fire({
-                                        title: 'Payment Proof',
-                                        imageUrl: e.target.result,
-                                        imageAlt: 'Payment Proof',
-                                        width: 600,
-                                        confirmButtonColor: '#d4af37',
-                                        confirmButtonText: 'Close'
-                                    });
-                                };
-                                reader.readAsDataURL(paymentProofFile);
-                            }
-                        };
-                    }
-                }
-
-                // Add this to your showSummaryModal function
-                document.getElementById('summary-event-type').textContent = 
-                    document.getElementById('eventType').value === 'Other' 
-                        ? document.getElementById('otherEventType').value 
-                        : document.getElementById('eventType').value;
-
-            } catch (error) {
-                console.error('Error showing summary:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'There was an error showing the booking summary. Please try again.'
-                });
-            }
-        }
-
-        function formatTime(time) {
-            return new Date(`2000-01-01T${time}`).toLocaleTimeString('en-US', {
-                hour: 'numeric',
-                minute: 'numeric',
-                hour12: true
-            });
-        }
-
-        function updatePaymentInfo() {
-            const price = parseFloat(document.getElementById('packagePrice').value);
-            const paymentType = document.getElementById('paymentType').value;
-            const downpaymentInfo = document.getElementById('downpaymentInfo');
-            
-            document.getElementById('totalAmount').textContent = `₱${price.toLocaleString()}`;
-            
-            if (paymentType === 'downpayment') {
-                const downpayment = price * 0.5;
-                document.getElementById('downpaymentAmount').textContent = 
-                    `₱${downpayment.toLocaleString()}`;
-                downpaymentInfo.classList.remove('d-none');
-            } else {
-                downpaymentInfo.classList.add('d-none');
-            }
-        }
-
-
-        // Add this function to update the modal display in real-time
-        function updateModalDisplay() {
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-            const guests = parseInt(document.getElementById('numberOfGuests').value) || 0;
-            const paymentType = document.getElementById('paymentType').value;
-            // Read from basePrice if it exists, otherwise fall back to packagePrice
-            const basePriceInput = document.getElementById('basePrice');
-            const packagePriceInput = document.getElementById('packagePrice');
-            const basePrice = parseFloat(basePriceInput && basePriceInput.value ? basePriceInput.value : packagePriceInput.value);
-            const totalAmountDisplay = document.getElementById('totalAmount');
-            const downpaymentInfo = document.getElementById('downpaymentInfo');
-            const overtimeInfo = document.getElementById('overtimeInfo');
-
-            if (startTime && endTime) {
-                // Convert times to Date objects for comparison
-                const start = new Date(`2000-01-01T${startTime}`);
-                const end = new Date(`2000-01-01T${endTime}`);
-                const openingTime = new Date(`2000-01-01T${OPENING_TIME}`);
-                const closingTime = new Date(`2000-01-01T${CLOSING_TIME}`);
-
-                // Check if times are within operating hours
-                if (start < openingTime || end > closingTime) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid Time Selection',
-                        text: 'Our operating hours are from 6:30 AM to 11:00 PM.',
-                        confirmButtonColor: '#d4af37'
-                    });
-                    // Reset time inputs
-                    document.getElementById('startTime').value = '';
-                    document.getElementById('endTime').value = '';
-                    return;
-                }
-
-                // Calculate duration and charges
-                const durationHours = Math.ceil((end - start) / (1000 * 60 * 60));
-                const overtimeHours = Math.max(0, durationHours - MAX_HOURS);
-                const overtimeCharge = overtimeHours * BASE_OVERTIME_RATE;
-                
-                // Calculate extra guest charges
-                const extraGuests = Math.max(0, guests - MAX_GUESTS_WITHOUT_CHARGE);
-                const extraGuestCharge = extraGuests * EXTRA_GUEST_CHARGE;
-                
-                const totalAmount = basePrice + overtimeCharge + extraGuestCharge;
-
-                // Store overtime values in hidden fields
-                document.getElementById('overtimeHours').value = overtimeHours;
-                document.getElementById('overtimeCharge').value = overtimeCharge;
-
-                // Update overtime information display
-                if (overtimeHours > 0) {
-                    overtimeInfo.innerHTML = `
-                        <div class="alert alert-info">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-clock me-2"></i>
-                                <strong>Extended Hours Booking</strong>
-                            </div>
-                            <div class="row g-2">
-                                <div class="col-md-6">
-                                    <span class="d-block">Additional Hours: ${overtimeHours}</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span class="d-block">Overtime Fee: ₱${overtimeCharge.toLocaleString()}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    overtimeInfo.style.display = 'block';
-                } else {
-                    overtimeInfo.style.display = 'none';
-                }
-
-                // Add extra guest information display
-                let extraGuestInfo = document.getElementById('extraGuestInfo');
-                if (!extraGuestInfo) {
-                    extraGuestInfo = document.createElement('div');
-                    extraGuestInfo.id = 'extraGuestInfo';
-                    overtimeInfo.parentNode.insertBefore(extraGuestInfo, overtimeInfo.nextSibling);
-                }
-
-                if (extraGuests > 0) {
-                    extraGuestInfo.innerHTML = `
-                        <div class="alert alert-info">
-                            <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-users me-2"></i>
-                                <strong>Extra Guest Charges</strong>
-                            </div>
-                            <div class="row g-2">
-                                <div class="col-md-6">
-                                    <span class="d-block">Extra Guests: ${extraGuests}</span>
-                                </div>
-                                <div class="col-md-6">
-                                    <span class="d-block">Additional Fee: ₱${extraGuestCharge.toLocaleString()}</span>
-                                </div>
-                            </div>
-                            <small class="text-muted mt-2 d-block">
-                                <i class="fas fa-info-circle me-1"></i>
-                                Additional charge of ₱1,000 per guest exceeding 50 guests
-                            </small>
-                        </div>
-                    `;
-                    extraGuestInfo.style.display = 'block';
-                } else {
-                    extraGuestInfo.style.display = 'none';
-                }
-
-                // Update total amount display
-                totalAmountDisplay.textContent = `₱${totalAmount.toLocaleString()}`;
-            }
-        }
-
-        // Add this function to validate operating hours
-        function validateOperatingHours() {
-            const startTime = document.getElementById('startTime');
-            const endTime = document.getElementById('endTime');
-            
-            // Set operating hours
-            startTime.min = "06:29";
-            startTime.max = "23:00";
-            endTime.min = "06:29";
-            endTime.max = "23:00";
-        }
-
-        // Update the enablePackageButtons function
-        function enablePackageButtons(packageName) {
-            const packageCards = document.querySelectorAll('.custom-card');
-            packageCards.forEach(card => {
-                const packageBtn = card.querySelector(`[data-package="${packageName}"]`);
-                if (packageBtn) {
-                    const buttonGroup = packageBtn.closest('.button-group');
-                    if (buttonGroup) {
-                        // Show Book Now button
-                        const bookNowBtn = buttonGroup.querySelector('.btn-primary-custom');
-                        if (bookNowBtn) {
-                            bookNowBtn.style.display = 'block';
-                        }
-                        
-                        // Hide Not Available button
-                        const notAvailableBtn = buttonGroup.querySelector('.btn-secondary');
-                        if (notAvailableBtn) {
-                            notAvailableBtn.style.display = 'none';
-                        }
-                        
-                        // Hide Advance Booking button
-                        const advanceBookingBtn = buttonGroup.querySelector('.btn-warning-custom');
-                        if (advanceBookingBtn) {
-                            advanceBookingBtn.style.display = 'none';
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update the disablePackageButtons function
-        function disablePackageButtons(packageName, message = 'Not Available') {
-            const packageCards = document.querySelectorAll('.custom-card');
-            packageCards.forEach(card => {
-                const packageBtn = card.querySelector(`[data-package="${packageName}"]`);
-                if (packageBtn) {
-                    const buttonGroup = packageBtn.closest('.button-group');
-                    if (buttonGroup) {
-                        // Hide Book Now button
-                        const bookNowBtn = buttonGroup.querySelector('.btn-primary-custom');
-                        if (bookNowBtn) {
-                            bookNowBtn.style.display = 'none';
-                        }
-                        
-                        // Show Not Available button
-                        const notAvailableBtn = buttonGroup.querySelector('.btn-secondary');
-                        if (notAvailableBtn) {
-                            notAvailableBtn.style.display = 'block';
-                        }
-                        
-                        // Show Advance Booking button
-                        const advanceBookingBtn = buttonGroup.querySelector('.btn-warning-custom');
-                        if (advanceBookingBtn) {
-                            advanceBookingBtn.style.display = 'block';
-                        }
-                    }
-                }
-            });
-        }
-
-        // Update the updateButtonCountdown function
-        function updateButtonCountdown(countdownDiv, endDate) {
-            function update() {
-                const now = new Date();
-                const timeDiff = endDate - now;
-                
-                if (timeDiff <= 0) {
-                    countdownDiv.remove();
-                    // Trigger immediate availability check when countdown ends
-                    checkAndUpdatePackageAvailability();
-                    return;
-                }
-                
-                const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-                const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-                
-                countdownDiv.innerHTML = `
-                    <div class="countdown-timer">
-                        <i class="fas fa-clock"></i>
-                        Available in: ${hours}h ${minutes}m ${seconds}s
-                    </div>
-                `;
-                setTimeout(update, 1000);
-            }
-            
-            update();
-        }
-
-        // Update the checkAndUpdatePackageAvailability function
-        function checkAndUpdatePackageAvailability() {
-            fetch('check_events_availability.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    checkAll: true
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    const packages = document.querySelectorAll('[data-package]');
-                    packages.forEach(element => {
-                        const packageCard = element.closest('.custom-card');
-                        const statusBadge = packageCard.querySelector('.status-badge');
-                        const packageName = element.getAttribute('data-package');
-                        
-                        // Always show as Available
-                            statusBadge.className = 'status-badge status-available';
-                            statusBadge.innerHTML = '<i class="fas fa-check-circle me-1"></i>Available';
-                            enablePackageButtons(packageName);
-                    });
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        }
-
-        // Check availability more frequently
-        setInterval(checkAndUpdatePackageAvailability, 5000); // Check every 5 seconds
-
-        // Call this when the page loads
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAndUpdatePackageAvailability();
-            // Check every 30 seconds
-            setInterval(checkAndUpdatePackageAvailability, 30000);
-        });
-
-        // Add this function for form validation
-        function validateBookingForm() {
-            // Get form elements
+        const result = await response.json();
+        
+        // Log the full response for debugging
+        console.log('Server response:', result);
+        
+        // Get the container elements
+        const bookedContainer = document.getElementById('bookedPackagesContainer');
+        const bookedList = document.getElementById('bookedPackagesList');
+        
+        // Clear previous results
+        bookedList.innerHTML = '';
+        
+        // Update UI based on response
+        if (result.status === 'success') {
+            // Auto-populate event date and time fields in booking modal
             const eventDate = document.getElementById('eventDate');
-            const numberOfGuests = document.getElementById('numberOfGuests');
-            const startTime = document.getElementById('startTime');
-            const endTime = document.getElementById('endTime');
-            const paymentMethod = document.getElementById('paymentMethod');
-            const paymentType = document.getElementById('paymentType');
-
-            // Clear previous error messages
-            clearErrorMessages();
-
-            let isValid = true;
-            const errors = [];
-
-            // Validate Event Date
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            const selectedDate = new Date(eventDate.value);
-            selectedDate.setHours(0, 0, 0, 0);
-
-            if (!eventDate.value) {
-                errors.push("Please select an event date");
-                showError(eventDate, "Please select an event date");
-                isValid = false;
-            } else if (selectedDate < today) {
-                errors.push("Event date cannot be in the past");
-                showError(eventDate, "Event date cannot be in the past");
-                isValid = false;
+            const eventTime = document.getElementById('eventTime');
+            
+            if (eventDateTime && eventDate && eventTime) {
+                // Parse the selected datetime
+                const selectedDate = new Date(eventDateTime);
+                const dateStr = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD format
+                const timeStr = selectedDate.toTimeString().slice(0, 5); // HH:MM format
+                
+                // Set the values
+                eventDate.value = dateStr;
+                eventTime.value = timeStr;
+                
+                // Enable the fields so they can be submitted
+                eventDate.disabled = false;
+                eventTime.disabled = false;
+                
+                console.log('Auto-populated event date:', dateStr, 'and time:', timeStr);
             }
-
-            // Validate Number of Guests
-            if (!numberOfGuests.value) {
-                errors.push("Please enter number of guests");
-                showError(numberOfGuests, "Please enter number of guests");
-                isValid = false;
-            } else if (numberOfGuests.value < 1) {
-                errors.push("Number of guests must be at least 1");
-                showError(numberOfGuests, "Number of guests must be at least 1");
-                isValid = false;
-            }
-
-            // Validate Time
-            if (!startTime.value) {
-                errors.push("Please select a start time");
-                showError(startTime, "Please select a start time");
-                isValid = false;
-            }
-
-            if (!endTime.value) {
-                errors.push("Please select an end time");
-                showError(endTime, "Please select an end time");
-                isValid = false;
-            }
-
-            if (startTime.value && endTime.value) {
-                const start = new Date(`2000-01-01T${startTime.value}`);
-                const end = new Date(`2000-01-01T${endTime.value}`);
-                const openingTime = new Date(`2000-01-01T${OPENING_TIME}`);
-                const closingTime = new Date(`2000-01-01T${CLOSING_TIME}`);
-
-                // Check operating hours
-                if (start < openingTime || end > closingTime) {
-                    errors.push("Operating hours are from 6:30 AM to 11:00 PM");
-                    showError(document.getElementById('startTime'), "Invalid time selection");
-                    showError(document.getElementById('endTime'), "Invalid time selection");
-                    isValid = false;
-                }
-
-                // Check if end time is after start time
-                if (end <= start) {
-                    errors.push("End time must be after start time");
-                    showError(endTime, "End time must be after start time");
-                    isValid = false;
-                }
-            }
-
-            // Validate Payment Method
-            if (!paymentMethod.value) {
-                errors.push("Please select a payment method");
-                showError(paymentMethod, "Please select a payment method");
-                isValid = false;
-            }
-
-            // Validate Payment Type
-            if (!paymentType.value) {
-                errors.push("Please select a payment type");
-                showError(paymentType, "Please select a payment type");
-                isValid = false;
-            }
-
-            // Validate Event Type
-            const eventType = document.getElementById('eventType');
-            if (!eventType.value) {
-                errors.push("Please select an event type");
-                showError(eventType, "Please select an event type");
-                isValid = false;
-            }
-
-            // Validate Other Event Type if "Other" is selected
-            if (eventType.value === 'Other') {
-                const otherEventType = document.getElementById('otherEventType');
-                if (!otherEventType.value.trim()) {
-                    errors.push("Please specify the event type");
-                    showError(otherEventType, "Please specify the event type");
-                    isValid = false;
-                }
-            }
-
-            if (!isValid) {
-                // Show error summary using SweetAlert2
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Form Validation Error',
-                    html: errors.map(error => `<p>${error}</p>`).join(''),
-                    confirmButtonColor: '#d4af37'
+            
+            // Show package sections and scroll to them (user clicked the button)
+            showPackageSections(true);
+            
+            if (result.data && result.data.status === 'available') {
+                // All packages are available
+                statusMessage.textContent = 'All packages are available for the selected time!';
+                statusMessage.parentElement.className = 'availability-status mt-4 alert alert-success';
+                bookedContainer.style.display = 'none';
+            } 
+            else if (result.data && result.data.status === 'partial' && result.data.booked_packages) {
+                // Some packages are booked
+                statusMessage.textContent = 'Some packages are already booked for the selected time.';
+                statusMessage.parentElement.className = 'availability-status mt-4 alert alert-warning';
+                
+                // Show booked packages
+                result.data.booked_packages.forEach(packageName => {
+                    // Find package card by matching the package name in the card title
+                    const packageCards = document.querySelectorAll('.package-card');
+                    let packageCard = null;
+                    
+                    packageCards.forEach(card => {
+                        const cardTitle = card.querySelector('.card-title')?.textContent?.trim();
+                        if (cardTitle === packageName) {
+                            packageCard = card;
+                        }
+                    });
+                    
+                    if (packageCard) {
+                        const listItem = document.createElement('div');
+                        listItem.className = 'list-group-item list-group-item-danger d-flex justify-content-between align-items-center';
+                        listItem.innerHTML = `
+                            <span><i class="fas fa-calendar-times me-2"></i>${packageName}</span>
+                            <span class="badge bg-danger rounded-pill">Booked</span>
+                        `;
+                        bookedList.appendChild(listItem);
+                        
+                        // Mark the package card as booked
+                        packageCard.classList.add('booked-package');
+                    } else {
+                        // If package card not found, still show it in the list
+                        const listItem = document.createElement('div');
+                        listItem.className = 'list-group-item list-group-item-danger d-flex justify-content-between align-items-center';
+                        listItem.innerHTML = `
+                            <span><i class="fas fa-calendar-times me-2"></i>${packageName}</span>
+                            <span class="badge bg-danger rounded-pill">Booked</span>
+                        `;
+                        bookedList.appendChild(listItem);
+                    }
                 });
+                
+                // Show the container
+                bookedContainer.style.display = 'block';
+            } 
+            else if (result.data && result.data.status === 'Booked') {
+                // All packages are booked
+                statusMessage.textContent = 'All packages are booked for the selected time. Please choose a different time.';
+                statusMessage.parentElement.className = 'availability-status mt-4 alert alert-danger';
+                bookedContainer.style.display = 'none';
             }
-
-            return isValid;
+        } else {
+            throw new Error(result.message || 'Failed to check availability');
         }
-
-        // Helper function to show error message
-        function showError(element, message) {
-            // Add error class to form element
-            element.classList.add('is-invalid');
-            
-            // Create error message element
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'invalid-feedback';
-            errorDiv.textContent = message;
-            
-            // Add error message after the element
-            element.parentNode.appendChild(errorDiv);
-        }
-
-        // Helper function to clear error messages
-        function clearErrorMessages() {
-            // Remove all error classes
-            document.querySelectorAll('.is-invalid').forEach(element => {
-                element.classList.remove('is-invalid');
-            });
-            
-            // Remove all error messages
-            document.querySelectorAll('.invalid-feedback').forEach(element => {
-                element.remove();
-            });
-        }
+        
+    } catch (error) {
+        console.error('Error checking availability:', error);
+        statusMessage.textContent = 'An error occurred while checking availability. Please try again.';
+        statusMessage.parentElement.className = 'availability-status mt-4 alert alert-danger';
+        document.getElementById('bookedPackagesContainer').style.display = 'none';
+    } finally {
+        // Always hide spinner and re-enable button
+        spinner.style.display = 'none';
+        icon.style.display = 'inline-block';
+        btn.disabled = false;
+    }
+}
     </script>
     <script>
-        // Auto-hide alert after 5 seconds
-        document.addEventListener('DOMContentLoaded', function() {
-            const alert = document.querySelector('.alert');
-            if (alert) {
-                setTimeout(function() {
-                    alert.classList.remove('show');
-                    setTimeout(function() {
-                        alert.remove();
-                    }, 150);
+    // Function to check package availability for a specific datetime
+    async function checkPackageAvailability(packageId, dateTime = null) {
+        try {
+            const card = document.querySelector(`[data-package-id="${packageId}"]`);
+            if (!card) return false;
+            
+            // Get or create the badge
+            let badge = document.getElementById(`availability-badge-${packageId}`);
+            if (!badge) {
+                badge = document.createElement('div');
+                badge.id = `availability-badge-${packageId}`;
+                card.style.position = 'relative';
+                card.insertBefore(badge, card.firstChild);
+            }
+            
+            // If no specific datetime provided, use the one from the input
+            let checkDateTime = dateTime;
+            if (!checkDateTime) {
+                const dateTimeInput = document.getElementById('eventDateTime');
+                checkDateTime = dateTimeInput ? dateTimeInput.value : '';
+            }
+            
+            // If still no datetime, use default (tomorrow at 10:00)
+            if (!checkDateTime) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const dateStr = tomorrow.toISOString().split('T')[0];
+                checkDateTime = `${dateStr}T10:00`;
+            }
+            
+            // Set initial loading state
+            badge.className = 'availability-badge badge-unknown';
+            badge.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
+            // Send request to check availability
+            const response = await fetch('events_check_availability.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `event_datetime=${encodeURIComponent(checkDateTime)}`
+            });
+            
+            const result = await response.json();
+            let isAvailable = false;
+            let nextAvailable = '';
+            let isBooked = false;
+            
+            if (result.status === 'success' && result.data) {
+                isAvailable = result.data.status === 'available';
+                nextAvailable = result.data.next_available || '';
+                // Check if this package is in the booked_packages array
+                if (result.data.booked_packages && Array.isArray(result.data.booked_packages)) {
+                    isBooked = result.data.booked_packages.includes(parseInt(packageId));
+                }
+            }
+            
+            // Update badge based on availability and booking status
+            if (isBooked) {
+                // Package is booked for the selected time
+                badge.className = 'availability-badge badge-booked';
+                badge.innerHTML = '<i class="fas fa-calendar-check"></i> Booked';
+                card.style.display = 'block';
+                // Add a class to the card to indicate it's booked
+                card.classList.add('booked-package');
+                // Disable the book button if it exists
+                const bookBtn = card.querySelector('.btn-book');
+                if (bookBtn) {
+                    bookBtn.disabled = true;
+                    bookBtn.classList.add('disabled');
+                    bookBtn.setAttribute('aria-disabled', 'true');
+                    bookBtn.setAttribute('title', 'This package is already booked for the selected time');
+                }
+            } else if (isAvailable) {
+                // Package is available
+                badge.className = 'availability-badge badge-available';
+                badge.innerHTML = '<i class="fas fa-check-circle"></i> Available';
+                card.style.display = 'block';
+                // Remove booked class if it exists
+                card.classList.remove('booked-package');
+                // Enable the book button if it exists
+                const bookBtn = card.querySelector('.btn-book');
+                if (bookBtn) {
+                    bookBtn.disabled = false;
+                    bookBtn.classList.remove('disabled');
+                    bookBtn.removeAttribute('aria-disabled');
+                    bookBtn.removeAttribute('title');
+                }
+            } else {
+                // Package is unavailable but has next available time
+                badge.className = 'availability-badge badge-unavailable';
+                if (nextAvailable) {
+                    const nextTime = new Date(nextAvailable);
+                    const timeStr = nextTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
+                    badge.innerHTML = `<i class="fas fa-clock"></i> Next: ${timeStr}`;
+                    
+                    // Enable book button for next available time
+                    const bookBtn = card.querySelector('.btn-book');
+                    if (bookBtn) {
+                        bookBtn.disabled = false;
+                        bookBtn.classList.remove('disabled');
+                        bookBtn.removeAttribute('aria-disabled');
+                        bookBtn.removeAttribute('title');
+                        // Update button to book for next available time
+                        bookBtn.setAttribute('title', `Book for ${timeStr}`);
+                    }
+                } else {
+                    badge.innerHTML = '<i class="fas fa-times-circle"></i> Closed';
+                }
+                // Disable book button when status is Closed (no next available)
+                if (!nextAvailable) {
+                    const bookBtn = card.querySelector('.btn-book');
+                    if (bookBtn) {
+                        bookBtn.disabled = true;
+                        bookBtn.classList.add('disabled');
+                        bookBtn.setAttribute('aria-disabled', 'true');
+                        bookBtn.setAttribute('title', 'This package is closed for the selected time');
+                    }
+                }
+                // Hide the card if we're filtering by time
+                if (dateTime) {
+                    card.style.display = 'none';
+                }
+                // Remove booked class if it exists
+                card.classList.remove('booked-package');
+            }
+            
+            return isAvailable;
+            
+        } catch (error) {
+            console.error('Error checking package availability:', error);
+            const badge = document.getElementById(`availability-badge-${packageId}`);
+            if (badge) {
+                badge.className = 'availability-badge badge-unknown';
+                badge.innerHTML = '<i class="fas fa-question-circle"></i>';
+            }
+            return false;
+        }
+    }
+    
+    // Function to show all package sections
+    function showPackageSections(scrollToPackages = false) {
+        document.querySelectorAll('.package-section').forEach(section => {
+            section.style.display = 'block';
+        });
+        
+        // Only scroll if explicitly requested (when user clicks Check Availability button)
+        if (scrollToPackages) {
+            const firstSection = document.querySelector('.package-section');
+            if (firstSection) {
+                firstSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    }
+    
+    // Function to check all packages for a specific datetime
+    async function checkAllPackagesAvailability(dateTime = null) {
+        // Show package sections when checking availability
+        showPackageSections();
+        
+        const packageCards = document.querySelectorAll('[data-package-id]');
+        const checkPromises = [];
+        
+        // Show loading state for all cards
+        packageCards.forEach(card => {
+            const packageId = card.getAttribute('data-package-id');
+            const badge = document.getElementById(`availability-badge-${packageId}`) || 
+                         (() => {
+                             const b = document.createElement('div');
+                             b.id = `availability-badge-${packageId}`;
+                             card.style.position = 'relative';
+                             card.insertBefore(b, card.firstChild);
+                             return b;
+                         })();
+            badge.className = 'availability-badge badge-unknown';
+            badge.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        });
+        
+        // Check availability for all packages
+        packageCards.forEach(card => {
+            const packageId = card.getAttribute('data-package-id');
+            checkPromises.push(checkPackageAvailability(packageId, dateTime));
+        });
+        
+        return Promise.all(checkPromises);
+    }
+    
+    // Function to refresh availability after booking
+    async function refreshAvailabilityAfterBooking() {
+        const dateTimeInput = document.getElementById('eventDateTime');
+        if (dateTimeInput && dateTimeInput.value) {
+            await checkAllPackagesAvailability(dateTimeInput.value);
+            
+            // Show a success message
+            const statusMessage = document.getElementById('statusMessage');
+            if (statusMessage) {
+                statusMessage.innerHTML = '<div class="alert alert-success">Booking successful! Availability has been updated.</div>';
+                // Hide the message after 5 seconds
+                setTimeout(() => {
+                    statusMessage.innerHTML = '';
                 }, 5000);
             }
-        });
-    </script>
-    <script>
-        // Add this function to handle viewing package details
-        function viewPackageDetails(packageName) {
-            // Show loading state
-            Swal.fire({
-                title: 'Loading package details...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
+        }
+    }
+    
+    // Call refreshAvailabilityAfterBooking if we detect a successful booking from URL parameters
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('booking') === 'success') {
+            refreshAvailabilityAfterBooking();
+            // Clean up the URL
+            const newUrl = window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+        }
+    });
+    
+    // Check availability for all packages when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        // Don't initialize packages on page load anymore
+        // They will be shown after availability check
+        
+        // Add event listener to datetime input
+        const dateTimeInput = document.getElementById('eventDateTime');
+        if (dateTimeInput) {
+            dateTimeInput.addEventListener('change', function() {
+                if (this.value) {
+                    checkAllPackagesAvailability(this.value);
+                } else {
+                    // If input is cleared, show all packages and check default availability
+                    document.querySelectorAll('[data-package-id]').forEach(card => {
+                        card.style.display = 'block';
+                    });
+                    checkAllPackagesAvailability();
                 }
             });
-
+        }
+        
+        // Handle Book Now button click
+        const bookButtons = document.querySelectorAll('.btn-book');
+        
+        // Add click event to each button
+        bookButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Get package details from data attributes
+                const packageId = this.getAttribute('data-package-id');
+                const packageName = this.getAttribute('data-package-name');
+                // Remove commas and convert to number
+                const packagePrice = parseFloat(this.getAttribute('data-package-price').replace(/,/g, ''));
+                const packagePlace = this.getAttribute('data-package-place');
+                const maxGuests = this.getAttribute('data-max-guests');
+                
+                // Set the values in the modal
+                document.getElementById('packageName').textContent = packageName;
+                document.getElementById('packagePrice').textContent = '₱' + packagePrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Set the hidden input fields
+                document.getElementById('bookingPackageId').value = packageId;
+                document.getElementById('packageNameInput').value = packageName;
+                document.getElementById('packagePriceInput').value = packagePrice;
+                document.getElementById('eventPlaceInput').value = packagePlace;
+                document.getElementById('maxGuests').value = maxGuests;
+                
+                // Set the event place dropdown
+                const eventPlaceSelect = document.getElementById('eventPlace');
+                for (let i = 0; i < eventPlaceSelect.options.length; i++) {
+                    if (eventPlaceSelect.options[i].value === packagePlace) {
+                        eventPlaceSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+                
+                // Set minimum date to today
+                const today = new Date().toISOString().split('T')[0];
+                document.getElementById('eventDate').min = today;
+                
+                // Reset and show payment breakdown
+                updatePaymentBreakdown(packagePrice, 'full_payment');
+            });
+        });
+        
+        // Handle payment option change
+        const paymentOption = document.getElementById('paymentOption');
+        if (paymentOption) {
+            paymentOption.addEventListener('change', function() {
+                const packagePrice = document.getElementById('packagePriceInput').value;
+                updatePaymentBreakdown(packagePrice, this.value);
+            });
+        }
+        
+        // Function to update payment breakdown
+        function updatePaymentBreakdown(price, paymentOption) {
+            // Ensure price is a number
+            const packagePrice = typeof price === 'string' ? parseFloat(price.replace(/,/g, '')) : parseFloat(price);
+            
+            // Get DOM elements
+            const paymentBreakdown = document.getElementById('paymentBreakdown');
+            const downPaymentRow = document.getElementById('downPaymentRow');
+            const balanceRow = document.getElementById('balanceRow');
+            
+            // Show payment breakdown section
+            paymentBreakdown.style.display = 'block';
+            
+            // Update package price in breakdown
+            document.getElementById('breakdownPackagePrice').textContent = '₱' + packagePrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            if (paymentOption === 'down_payment') {
+                const downPayment = packagePrice * 0.5;
+                const balance = packagePrice - downPayment;
+                
+                // Update down payment and balance values
+                document.getElementById('breakdownDownPayment').textContent = '₱' + downPayment.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('breakdownBalance').textContent = '₱' + balance.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                document.getElementById('breakdownTotal').textContent = '₱' + downPayment.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Show down payment and balance rows
+                downPaymentRow.style.display = 'flex';
+                balanceRow.style.display = 'flex';
+            } else {
+                // For full payment, only show the total
+                document.getElementById('breakdownTotal').textContent = '₱' + packagePrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                // Hide down payment and balance rows
+                downPaymentRow.style.display = 'none';
+                balanceRow.style.display = 'none';
+                
+                // Clear the values to be safe
+                document.getElementById('breakdownDownPayment').textContent = '₱0.00';
+                document.getElementById('breakdownBalance').textContent = '₱0.00';
+            }
+        }
+        
+        // Add form submission handler for spinner
+        const bookingForm = document.getElementById('bookingForm');
+        const proceedBtn = document.getElementById('proceedToPaymentBtn');
+        
+        if (bookingForm && proceedBtn) {
+            bookingForm.addEventListener('submit', function(e) {
+                // Prevent default form submission
+                e.preventDefault();
+                
+                // Show spinner and disable button
+                const spinner = proceedBtn.querySelector('.spinner-border');
+                proceedBtn.disabled = true;
+                spinner.style.display = 'inline-block';
+                
+                // Add 3 seconds delay before form submission
+                setTimeout(() => {
+                    // Re-enable the form and submit it
+                    bookingForm.submit();
+                }, 3000);
+                
+                // Prevent default form submission
+                return false;
+            });
+        }
+        
+        // Handle guest count validation
+        const guestCountInput = document.getElementById('guestCount');
+        if (guestCountInput) {
+            guestCountInput.addEventListener('input', function() {
+                validateGuestCount();
+            });
+        }
+        
+        // Function to validate guest count
+        window.validateGuestCount = function() {
+            const guestCount = parseInt(guestCountInput.value) || 0;
+            const maxGuests = parseInt(document.getElementById('maxGuests').value) || 0;
+            const feedback = document.getElementById('guestCountFeedback');
+            
+            if (maxGuests > 0 && guestCount > maxGuests) {
+                guestCountInput.classList.add('is-invalid');
+                feedback.style.display = 'block';
+                return false;
+            } else {
+                guestCountInput.classList.remove('is-invalid');
+                feedback.style.display = 'none';
+                return true;
+            }
+        };
+        
+        // Handle package details modal
+        const packageDetailsModal = document.getElementById('packageDetailsModal');
+        if (packageDetailsModal) {
+            packageDetailsModal.addEventListener('show.bs.modal', function(event) {
+                const button = event.relatedTarget;
+                const packageId = button.getAttribute('data-package-id');
+                const packageName = button.getAttribute('data-package-name');
+                
+                if (packageId || packageName) {
+                    loadPackageDetails(packageId, packageName);
+                }
+            });
+        }
+        
+        // Function to load package details
+        function loadPackageDetails(packageId, packageName) {
+            const modalContent = document.getElementById('packageDetailsContent');
+            
+            // Show loading state
+            modalContent.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading package details...</p>
+                </div>
+            `;
+            
             // Fetch package details
             fetch('get_package_details.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    packageName: packageName
+                body: JSON.stringify({ 
+                    packageId: packageId,
+                    packageName: packageName 
                 })
             })
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success') {
-                    const package = data.package;
-                    
-                    // Create menu items HTML if available
-                    let menuItemsHtml = '';
-                    if (Object.keys(package.menu_items).length > 0 && !package.is_venue_only) {
-                        menuItemsHtml = `
-                            <div class="package-section">
-                                <h5 class="section-title">
-                                    <i class="fas fa-utensils me-2"></i>Menu Inclusions
-                                </h5>
-                                <div class="menu-categories">
-                                    ${Object.entries(package.menu_items).map(([category, items]) => `
-                                        <div class="menu-category">
-                                            <h6><i class="fas fa-${getCategoryIcon(category)} me-2"></i>${category}</h6>
-                                            <ul>
-                                                    ${items.map(item => `<li>${item}</li>`).join('')}
-                                                </ul>
-                                            </div>
-                                        `).join('')}
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    // Show the modal with package details
-                    Swal.fire({
-                        title: package.name,
-                        html: `
-                            <div class="package-details-container">
-                                
-                                <div class="price-tag">
-                                    <i class="fas fa-tag me-2"></i>₱${package.price.toLocaleString()}
-                                </div>
-                                
-                    <div class="package-section">
-                        <h5 class="section-title">
-                                        <i class="fas fa-info-circle me-2"></i>Package Details
-                        </h5>
-                        <ul class="details-list">
-                                        ${package.details.map(detail => 
-                                `<li><i class="fas fa-${detail.icon} me-2"></i>${detail.text}</li>`
-                            ).join('')}
-                        </ul>
-                    </div>
-
-                                ${menuItemsHtml}
-                                
-                    <div class="package-section">
-                        <h5 class="section-title">
-                                        <i class="fas fa-exclamation-circle me-2"></i>Important Notes
-                        </h5>
-                        <ul class="notes-list">
-                                        ${package.notes.map(note => `<li>${note}</li>`).join('')}
-                        </ul>
-                    </div>
-                                
-                                <div class="package-status mt-3">
-                                    <span class="badge ${package.status.toLowerCase() === 'available' ? 'bg-success' : 'bg-danger'}">
-                                        <i class="fas fa-${package.status.toLowerCase() === 'available' ? 'check-circle' : 'times-circle'} me-1"></i>
-                                        ${package.status}
-                                    </span>
-                                </div>
-                    </div>
-                `,
-                        width: '700px',
-                showCloseButton: true,
-                showConfirmButton: false,
-                customClass: {
-                            popup: 'package-details-modal'
-                }
-            });
+                    displayPackageDetails(data.package);
                 } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.message || 'Failed to load package details'
-                    });
+                    modalContent.innerHTML = `
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            ${data.message || 'Failed to load package details'}
+                        </div>
+                    `;
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to load package details'
-                });
-            });
-        }
-
-        // Helper function to get icons for menu categories
-        function getCategoryIcon(category) {
-            const icons = {
-                'Appetizers': 'leaf',
-                'Pasta': 'wheat-awn',
-                'Mains': 'drumstick-bite',
-                'Sides': 'bowl-food',
-                'Desserts': 'ice-cream',
-                'Drinks': 'glass-water'
-            };
-            return icons[category] || 'utensils';
-        }
-
-        function formatCategoryName(category) {
-            return category.charAt(0).toUpperCase() + category.slice(1);
-        }
-
-        function calculateOvertimeCharge() {
-            const endTime = document.getElementById('endTime').value;
-            const baseEndTime = document.getElementById('baseEndTime').value;
-            
-            if (!endTime || !baseEndTime) return 0;
-            
-            const endDateTime = new Date(`2000-01-01 ${endTime}`);
-            const baseEndDateTime = new Date(`2000-01-01 ${baseEndTime}`);
-            const timeDiff = (endDateTime - baseEndDateTime) / (1000 * 60 * 60); // Convert to hours
-            
-            if (timeDiff <= 0) return 0;
-            
-            // Check if end time is after 2 PM
-            const isPremiumTime = endTime >= PREMIUM_TIME_THRESHOLD;
-            const overtimeRate = isPremiumTime ? PREMIUM_OVERTIME_RATE : BASE_OVERTIME_RATE;
-            
-            return Math.ceil(timeDiff) * overtimeRate;
-        }
-    </script>
-    <script>
-    function openAdvanceBookingModal(packageName, price) {
-            // First check if user is logged in
-            <?php if (!isset($_SESSION['user_id'])): ?>
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Login Required',
-                text: 'Please login to make an advance booking',
-                    confirmButtonColor: '#d4af37'
-                });
-                return;
-            <?php endif; ?>
-
-        // Show calendar for advance booking
-            Swal.fire({
-            title: 'Select Booking Date',
-            html: `
-                <div class="mb-3">
-                    <label class="form-label">Select your preferred date:</label>
-                    <input type="date" id="advanceBookingDate" class="form-control" min="${getTomorrowDate()}">
-                </div>
-            `,
-            showCancelButton: true,
-            confirmButtonText: 'Continue',
-            confirmButtonColor: '#d4af37',
-            cancelButtonColor: '#6c757d',
-                didOpen: () => {
-                // Set minimum date as tomorrow
-                const tomorrow = getTomorrowDate();
-                document.getElementById('advanceBookingDate').min = tomorrow;
-            }
-        }).then((result) => {
-            if (result.isConfirmed) {
-                const selectedDate = document.getElementById('advanceBookingDate').value;
-                if (!selectedDate) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Date Required',
-                        text: 'Please select a date for your booking',
-                        confirmButtonColor: '#d4af37'
-                    });
-                    return;
-                }
-
-                // Check if date is already booked
-                fetch('check_date_availability.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    packageName: packageName,
-                        date: selectedDate
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                    if (data.isBooked) {
-                        // Check if bookings are in other packages
-                        const otherPackageBookings = data.bookings.filter(booking => booking.package_name !== packageName);
-                        const samePackageBookings = data.bookings.filter(booking => booking.package_name === packageName);
-
-                        if (otherPackageBookings.length > 0) {
-                            // Show warning for bookings in other packages without continue option
-                        Swal.fire({
-                                icon: 'warning',
-                                title: 'Notice: Other Events Scheduled',
-                            html: `
-                                    <div class="text-left">
-                                        <p>There are events scheduled in other packages on ${new Date(selectedDate).toLocaleDateString('en-US', { 
-                                            weekday: 'long',
-                                            year: 'numeric',
-                                            month: 'long',
-                                            day: 'numeric'
-                                        })}:</p>
-                                        <div class="existing-bookings mt-3">
-                                            ${otherPackageBookings.map(booking => `
-                                                <div class="booking-slot alert alert-info">
-                                                    <i class="fas fa-calendar-alt me-2"></i>
-                                                    <strong>${booking.package_name}</strong><br>
-                                                    Time: ${booking.start_time} - ${booking.end_time}
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                        <p class="mt-3 text-danger">
-                                            <i class="fas fa-exclamation-circle me-2"></i>
-                                            For safety and quality of service, we cannot accommodate multiple events on the same date.
-                                        </p>
-                                </div>
-                            `,
-                                confirmButtonText: 'Choose Different Date',
-                                confirmButtonColor: '#6c757d'
-                            });
-                        } else if (samePackageBookings.length > 0) {
-                            // Show warning for same package conflicts
-                            showSamePackageConflict(packageName, selectedDate, samePackageBookings, price);
-                    }
-                } else {
-                        // Date is completely available
-                        openPackageModal(packageName, price, selectedDate, 'Advance Booking');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                        text: 'Failed to check date availability. Please try again.',
-                    confirmButtonColor: '#d4af37'
-                });
-            });
-        }
-        });
-    }
-
-    // Helper function to show same package conflict warning
-    function showSamePackageConflict(packageName, selectedDate, bookings, price) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Time Slot Not Available',
-            html: `
-                <div class="text-left">
-                    <p>This package is already booked for the following times on ${new Date(selectedDate).toLocaleDateString('en-US', { 
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    })}:</p>
-                    <div class="existing-bookings mt-3">
-                        ${bookings.map(booking => `
-                            <div class="booking-slot alert alert-danger">
-                                <i class="fas fa-clock me-2"></i>
-                                Time: ${booking.start_time} - ${booking.end_time}
-                            </div>
-                        `).join('')}
+                modalContent.innerHTML = `
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Failed to load package details. Please try again.
                     </div>
-                    <p class="mt-3">Please select a different date.</p>
-                </div>
-            `,
-            confirmButtonText: 'Choose Different Date',
-            confirmButtonColor: '#d4af37'
-        });
-    }
-
-    function getTomorrowDate() {
-        const tomorrow = new Date();
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        return tomorrow.toISOString().split('T')[0];
-        }
-    </script>
-
-    <script>
-        // Function to handle the info notice timer
-        function handleInfoNotice() {
-            const infoNotices = document.querySelectorAll('.alert-info');
-            infoNotices.forEach(infoNotice => {
-                if (infoNotice) {
-                    // Add fade out animation class
-                    infoNotice.style.transition = 'opacity 0.5s ease-out';
-                    
-                    // Set timer to hide the notice
-                    setTimeout(() => {
-                        infoNotice.style.opacity = '0';
-                        setTimeout(() => {
-                            infoNotice.style.display = 'none';
-                        }, 500);
-                    }, 3000); // 3 seconds
-
-                    // Show notice again when hovering
-                    infoNotice.addEventListener('mouseenter', () => {
-                        infoNotice.style.opacity = '1';
-                        infoNotice.style.display = 'block';
-                    });
-
-                    // Hide notice when mouse leaves
-                    infoNotice.addEventListener('mouseleave', () => {
-                        infoNotice.style.opacity = '0';
-                        setTimeout(() => {
-                            infoNotice.style.display = 'none';
-                        }, 500);
-                    });
-                }
+                `;
             });
         }
-
-        // Update the event listener to ensure it runs after the modal is fully shown
-        document.getElementById('packageModal').addEventListener('shown.bs.modal', () => {
-            setTimeout(handleInfoNotice, 100); // Small delay to ensure DOM is ready
-        });
-    </script>
-    <script>
-        // Add this to your existing JavaScript section
-        document.getElementById('paymentProof').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            const viewBtn = document.getElementById('viewProofBtn');
-            const maxSize = 5 * 1024 * 1024; // 5MB
-
-            // Enable/disable view button based on file selection
-            viewBtn.disabled = !file;
-
-            if (file) {
-                if (file.size > maxSize) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'File Too Large',
-                        text: 'Please upload an image less than 5MB',
-                        confirmButtonColor: '#d4af37'
-                    });
-                    this.value = '';
-                    viewBtn.disabled = true;
-                    return;
-                }
-
-                if (!file.type.startsWith('image/')) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Invalid File Type',
-                        text: 'Please upload an image file',
-                        confirmButtonColor: '#d4af37'
-                    });
-                    this.value = '';
-                    viewBtn.disabled = true;
-                    return;
-                }
-            }
-        });
-
-        // Add click handler for view button
-        document.getElementById('viewProofBtn').addEventListener('click', function() {
-            const fileInput = document.getElementById('paymentProof');
-            const file = fileInput.files[0];
-            
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    Swal.fire({
-                        title: 'Payment Proof Preview',
-                        imageUrl: e.target.result,
-                        imageAlt: 'Payment Proof',
-                        width: 600,
-                        confirmButtonColor: '#d4af37',
-                        confirmButtonText: 'Close'
-                    });
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    </script>
-    <script>
-        // Add this function to check availability for a specific date
-        function checkDateAvailability(packageName, selectedDate) {
-            return fetch('check_date_availability.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    packageName: packageName,
-                    date: selectedDate
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                return {
-                    isAvailable: !data.isBooked,
-                    bookings: data.bookings || []
-                };
-            });
-    }
-    </script>
-    <script>
-        // Add this to your existing JavaScript section
-    document.getElementById('eventType').addEventListener('change', function() {
-        const otherContainer = document.getElementById('otherEventTypeContainer');
-        const otherInput = document.getElementById('otherEventType');
         
-        if (this.value === 'Other') {
-            otherContainer.style.display = 'block';
-            otherInput.required = true;
-        } else {
-            otherContainer.style.display = 'none';
-            otherInput.required = false;
-            otherInput.value = '';
+        // Function to display package details
+        function displayPackageDetails(package) {
+            const modalContent = document.getElementById('packageDetailsContent');
+            
+            let menuItemsHtml = '';
+            if (package.menu_items && Object.keys(package.menu_items).length > 0) {
+                menuItemsHtml = '<div class="mb-4"><h6 class="mb-3"><i class="fas fa-utensils me-2"></i>Menu Items</h6><div class="row">';
+                
+                const categories = Object.keys(package.menu_items);
+                const half = Math.ceil(categories.length / 2);
+                const firstHalf = categories.slice(0, half);
+                const secondHalf = categories.slice(half);
+
+                menuItemsHtml += '<div class="col-md-6">';
+                firstHalf.forEach(category => {
+                    if (package.menu_items[category].length > 0) {
+                        menuItemsHtml += `<div class="mb-3"><strong>${category}:</strong><ul class="list-unstyled ms-2">`;
+                        package.menu_items[category].forEach(item => {
+                            menuItemsHtml += `<li class="mb-1">• ${item}</li>`;
+                        });
+                        menuItemsHtml += '</ul></div>';
+                    }
+                });
+                menuItemsHtml += '</div>';
+
+                if (secondHalf.length > 0) {
+                    menuItemsHtml += '<div class="col-md-6">';
+                    secondHalf.forEach(category => {
+                        if (package.menu_items[category].length > 0) {
+                            menuItemsHtml += `<div class="mb-3"><strong>${category}:</strong><ul class="list-unstyled ms-2">`;
+                            package.menu_items[category].forEach(item => {
+                                menuItemsHtml += `<li class="mb-1">• ${item}</li>`;
+                            });
+                            menuItemsHtml += '</ul></div>';
+                        }
+                    });
+                    menuItemsHtml += '</div>';
+                }
+
+                menuItemsHtml += '</div></div>';
+            }
+            
+            let detailsHtml = '';
+            if (package.details && package.details.length > 0) {
+                detailsHtml = '<div class="mb-4"><h6 class="mb-3"><i class="fas fa-info-circle me-2"></i>Package Details</h6><ul class="list-unstyled">';
+                package.details.forEach(detail => {
+                    detailsHtml += `<li class="mb-2"><i class="fas fa-${detail.icon} me-2 text-primary"></i>${detail.text}</li>`;
+                });
+                detailsHtml += '</ul></div>';
+            }
+            
+            let notesHtml = '';
+            if (package.notes && package.notes.length > 0) {
+                notesHtml = '<div class="mb-4"><h6 class="mb-3"><i class="fas fa-sticky-note me-2"></i>Important Notes</h6><ul class="list-unstyled">';
+                package.notes.forEach(note => {
+                    notesHtml += `<li class="mb-1"><i class="fas fa-check-circle me-2 text-success"></i>${note}</li>`;
+                });
+                notesHtml += '</ul></div>';
+            }
+            
+            // Build carousel with multiple images
+            let carouselHtml = '';
+            const images = [
+                package.image_path,
+                package.image_path2,
+                package.image_path3
+            ].filter(img => img && img !== null && img !== '');
+            
+            if (images.length > 1) {
+                // Create carousel if multiple images exist
+                carouselHtml = `
+                    <div id="packageCarousel" class="carousel slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            ${images.map((_, index) => `
+                                <button type="button" data-bs-target="#packageCarousel" data-bs-slide-to="${index}" 
+                                        class="${index === 0 ? 'active' : ''}" aria-current="${index === 0 ? 'true' : 'false'}"
+                                        aria-label="Slide ${index + 1}"></button>
+                            `).join('')}
+                        </div>
+                        <div class="carousel-inner">
+                            ${images.map((image, index) => `
+                                <div class="carousel-item ${index === 0 ? 'active' : ''}">
+                                    <img src="../../../Admin/adminBackend/event_packages_images/${image.split('/').pop()}" 
+                                         class="d-block w-100 img-fluid rounded" alt="${package.name} - Image ${index + 1}">
+                                </div>
+                            `).join('')}
+                        </div>
+                        ${images.length > 1 ? `
+                            <button class="carousel-control-prev" type="button" data-bs-target="#packageCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#packageCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        ` : ''}
+                    </div>
+                `;
+            } else if (images.length === 1) {
+                // Single image
+                carouselHtml = `
+                    <img src="../../../Admin/adminBackend/event_packages_images/${images[0].split('/').pop()}" 
+                         class="img-fluid rounded" alt="${package.name}">
+                `;
+            }
+            
+            modalContent.innerHTML = `
+                <div class="row">
+                    <div class="col-md-4">
+                        ${carouselHtml}
+                    </div>
+                    <div class="col-md-8">
+                        <h4 class="mb-3">${package.name}</h4>
+                        <div class="price mb-3">₱${package.price.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</div>
+                        <p class="text-muted">${package.description || 'No description available'}</p>
+                        ${detailsHtml}
+                        ${menuItemsHtml}
+                        ${notesHtml}
+                    </div>
+                </div>
+            `;
         }
     });
-    </script>
-    <script>
-        // Add this to your existing JavaScript
-        function checkDateAvailability(date) {
-            const selectedDate = document.getElementById('eventDate').value;
-            const packageName = document.getElementById('packageName').value;
 
-            fetch('check_date_availability.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    packageName: packageName,
-                    date: selectedDate
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.isBooked) {
-                    // Show warning about existing bookings
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Date Not Available',
-                        html: `
-                            <div class="text-left">
-                                <p>This date is already booked:</p>
-                                <div class="existing-bookings mt-3">
-                                    ${data.bookings.map(booking => `
-                                        <div class="booking-slot alert alert-warning">
-                                            <i class="fas fa-calendar-alt me-2"></i>
-                                            <strong>${booking.package_name}</strong><br>
-                                            Time: ${booking.start_time} - ${booking.end_time}<br>
-                                            Status: ${booking.booking_status}
-                                        </div>
-                                    `).join('')}
-                                </div>
-                                <p class="mt-3">Please select a different date.</p>
-                            </div>
-                        `,
-                        confirmButtonColor: '#d4af37'
-                    });
-                    // Clear the date input
-                    document.getElementById('eventDate').value = '';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to check date availability',
-                    confirmButtonColor: '#d4af37'
-                });
-            });
-        }
-
-        // Add event listener to date input
-        document.getElementById('eventDate').addEventListener('change', function() {
-            checkDateAvailability(this.value);
-        });
     </script>
-    <script>
-        // Add this JavaScript function
-        function viewBookedDates(packageName) {
-            fetch('get_booked_dates.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    package_name: packageName
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    Swal.fire({
-                        title: 'Booked Dates',
-                        html: `
-                            <div class="booking-status-container">
-                                <h6 class="text-muted mb-3">
-                                    <i class="fas fa-calendar-check me-2"></i>
-                                    Upcoming Bookings for ${packageName}
-                                </h6>
-                                ${data.bookings.length > 0 ? `
-                                    <div class="booking-dates">
-                                        ${data.bookings.map(booking => `
-                                            <div class="booking-date-item">
-                                                <div class="booking-details">
-                                                    <span class="date-badge booked">
-                                                        <i class="fas fa-calendar-alt me-1"></i>
-                                                        ${new Date(booking.event_date).toLocaleDateString('en-US', {
-                                                            month: 'short',
-                                                            day: 'numeric',
-                                                            year: 'numeric',
-                                                            weekday: 'short'
-                                                        })}
-                                                    </span>
-                                                    <div class="time-slot">
-                                                        <small class="text-muted">
-                                                            <i class="fas fa-clock me-1"></i>
-                                                            ${booking.start_time.slice(0, -3)} - ${booking.end_time.slice(0, -3)}
-                                                        </small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                ` : `
-                                    <div class="no-bookings">
-                                        <small class="text-muted">No upcoming bookings for this package</small>
-                                    </div>
-                                `}
-                            </div>
-                        `,
-                        width: '500px',
-                        confirmButtonText: 'Close',
-                        confirmButtonColor: '#d4af37',
-                        showClass: {
-                            popup: 'animate__animated animate__fadeIn'
-                        }
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to fetch booked dates',
-                        confirmButtonColor: '#d4af37'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to fetch booked dates',
-                    confirmButtonColor: '#d4af37'
-                });
-            });
-        }
-    </script>
-    <script>
-        // Add this function to check login before proceeding with event booking
-        function checkLoginAndProceed(eventId, eventName) {
-            // Check login status first
-            fetch('check_login.php')
-            .then(response => response.json())
-            .then(data => {
-                if (data.loggedIn) {
-                    // User is logged in, proceed with event booking
-                    proceedWithEventBooking(eventId, eventName);
-                } else {
-                    // User is not logged in, show login prompt
-                    Swal.fire({
-                        title: 'Login Required',
-                        text: 'Please login to book an event',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Login Now',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Store current page URL in session storage
-                            sessionStorage.setItem('redirectAfterLogin', window.location.href);
-                            // Store event details to restore after login
-                            sessionStorage.setItem('pendingEventId', eventId);
-                            sessionStorage.setItem('pendingEventName', eventName);
-                            // Redirect to login page with return URL
-                            window.location.href = data.redirect;
-                        }
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error checking login status:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred. Please try again.'
-                });
-            });
-        }
 
-        // Function to handle event booking
-        function proceedWithEventBooking(eventId, eventName) {
-            // Your existing event booking logic here
-            document.getElementById('event_id').value = eventId;
-            document.getElementById('event_name').value = eventName;
-            
-            // Show the booking modal
-            const bookingModal = new bootstrap.Modal(document.getElementById('eventBookingModal'));
-            bookingModal.show();
-        }
 
-        // Update your click handlers to use the new check login function
-        document.addEventListener('DOMContentLoaded', function() {
-            // Update any "Book Now" or booking buttons
-            const bookingButtons = document.querySelectorAll('.book-event-btn');
-            bookingButtons.forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const eventId = this.getAttribute('data-event-id');
-                    const eventName = this.getAttribute('data-event-name');
-                    checkLoginAndProceed(eventId, eventName);
-                });
-            });
-
-            // Check for stored event details after login
-            const pendingEventId = sessionStorage.getItem('pendingEventId');
-            const pendingEventName = sessionStorage.getItem('pendingEventName');
-            
-            if (pendingEventId && pendingEventName) {
-                // Clear stored data
-                sessionStorage.removeItem('pendingEventId');
-                sessionStorage.removeItem('pendingEventName');
-                // Proceed with event booking
-                proceedWithEventBooking(pendingEventId, pendingEventName);
-            }
-        });
-    </script>
-    <script>
-        // Function to redirect to payment page with form data
-        function redirectToPayment() {
-            // Get the form element
-            const form = document.getElementById('bookingForm');
-            const formData = new FormData(form);
-            
-            // Convert form data to URL-encoded string
-            const params = new URLSearchParams();
-            
-            // Add all form data to URL parameters
-            for (let [key, value] of formData.entries()) {
-                // Skip file inputs
-                if (!(form[key] && form[key].type === 'file')) {
-                    params.append(key, value);
-                }
-            }
-            
-            // Add any additional data that might be needed
-            const packageName = document.getElementById('packageName').value;
-            const eventDate = document.getElementById('eventDate').value;
-            const startTime = document.getElementById('startTime').value;
-            const endTime = document.getElementById('endTime').value;
-            const numberOfGuests = document.getElementById('numberOfGuests').value;
-            const eventType = document.getElementById('eventType').value;
-            const otherEventType = document.getElementById('otherEventType') ? document.getElementById('otherEventType').value : '';
-            
-            // Add these to the URL parameters
-            if (packageName) params.set('packageName', packageName);
-            if (eventDate) params.set('eventDate', eventDate);
-            if (startTime) params.set('startTime', startTime);
-            if (endTime) params.set('endTime', endTime);
-            if (numberOfGuests) params.set('numberOfGuests', numberOfGuests);
-            if (eventType) params.set('eventType', eventType);
-            if (otherEventType) params.set('otherEventType', otherEventType);
-            
-            // Get the payment method details
-            const paymentMethod = document.getElementById('paymentMethod') ? document.getElementById('paymentMethod').value : '';
-            const paymentType = document.getElementById('paymentType') ? document.getElementById('paymentType').value : '';
-            const referenceNumber = document.getElementById('referenceNumber') ? document.getElementById('referenceNumber').value : '';
-            
-            if (paymentMethod) params.set('paymentMethod', paymentMethod);
-            if (paymentType) params.set('paymentType', paymentType);
-            if (referenceNumber) params.set('referenceNumber', referenceNumber);
-            
-            // Get the total amount from the summary
-            const totalAmountElement = document.getElementById('summary-total-amount');
-            if (totalAmountElement) {
-                const totalAmount = totalAmountElement.textContent.replace(/[^0-9.]/g, '');
-                if (totalAmount) params.set('totalAmount', totalAmount);
-            }
-            
-            // Build the URL with parameters
-            const url = `event_payment_process.php?${params.toString()}`;
-            
-            // Redirect to the payment page
-            window.location.href = url;
-        }
-        
-        // Function to handle payment processing
-        function proceedToPayment() {
-            // Get form data
-            const formData = new FormData(document.getElementById('bookingForm'));
-            
-            // Show loading state
-            Swal.fire({
-                title: 'Processing Payment',
-                text: 'Please wait while we process your payment...',
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-            
-            // Submit the form
-            fetch('process_payment.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Payment successful
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Payment Successful',
-                        text: data.message || 'Your payment has been processed successfully!',
-                        confirmButtonText: 'Continue'
-                    }).then(() => {
-                        // Redirect or show success message
-                        if (data.redirect) {
-                            window.location.href = data.redirect;
-                        }
-                    });
-                } else {
-                    // Payment failed
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Payment Failed',
-                        text: data.message || 'There was an error processing your payment. Please try again.'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred while processing your payment. Please try again.'
-                });
-            });
-        }
-    </script>
 </body>
 </html>

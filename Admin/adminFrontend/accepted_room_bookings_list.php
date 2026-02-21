@@ -1,4 +1,9 @@
 <?php
+if (!isset($_SESSION['user_type']) || 
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')) {
+    header("Location: /Admin/Customer/aa/login.php");
+    exit;
+}
 include 'adminBackend/mydb.php';
 include 'adminFrontend/header.php';
 
@@ -263,7 +268,10 @@ function getRoomInfo($conn, $room_number_fk_id)
                                 </div>
                                 <div class="col-md-3">
                                     <label class="text-muted small">Discount</label>
-                                    <p class="mb-0 fw-semibold">₱<?= number_format($b['discount_amount'], 2) ?></p>
+                                    <p class="mb-0 fw-semibold">
+                                        ₱<?= number_format($b['discount_amount'] ?? 0, 2) ?>
+                                    </p>
+
                                 </div>
                             </div>
                         </div>

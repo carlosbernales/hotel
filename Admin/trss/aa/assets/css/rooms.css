@@ -1,0 +1,193 @@
+:root {
+    --primary-color: #ffc107;
+    --secondary-color: #6c757d;
+    --text-color: #333;
+    --light-bg: #f8f9fa;
+    --border-radius: 10px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+.container {
+    padding: 2rem 1rem;
+}
+
+.card {
+    border: none;
+    top: 200px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: transform 0.3s ease;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card-img-top {
+    height: 200px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.card-text {
+    font-size: 1.1rem;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.btn {
+    border-radius: 25px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.btn-warning {
+    background-color: var(--primary-color);
+    border: none;
+    color: var(--text-color);
+}
+
+.btn-warning:hover {
+    background-color: #ffb300;
+    transform: translateY(-2px);
+}
+
+/* Add all your existing CSS styles here */
+/* I'll show just a few key sections for brevity */
+
+.room-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    background: white;
+    height: 100%;
+}
+
+.room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--box-shadow);
+}
+
+.star-rating {
+    color: #ffc107;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* Cart Styles */
+#cartSidebar {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 1000;
+    width: 50px;
+    height: 50px;
+    background-color: var(--primary-color);
+    padding: 15px;
+    border-radius: 50%;
+    box-shadow: var(--box-shadow);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* Add all your other existing styles here */
+
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.room-image {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.room-details {
+    padding: 15px;
+}
+
+.room-title {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.room-price {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.book-btn {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.book-btn:hover {
+    background-color: #0056b3;
+}
+
+.booking-summary {
+    text-align: left;
+    padding: 1rem;
+}
+
+.summary-section {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 1rem;
+}
+
+.summary-section:last-child {
+    border-bottom: none;
+}
+
+.summary-section h6 {
+    color: #333;
+    margin-bottom: 0.5rem;
+}
+
+.room-item {
+    background-color: #f8f9fa;
+    padding: 0.5rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+}
+
+.swal2-html-container {
+    max-height: 70vh;
+    overflow-y: auto;
+} 

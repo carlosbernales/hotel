@@ -1,0 +1,541 @@
+[2025-12-28 13:14:56] New availability check request: {"timestamp":"2025-12-28 13:14:56","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:56] Database connection successful
+[2025-12-28 13:14:56] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:56] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:57] New availability check request: {"timestamp":"2025-12-28 13:14:57","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:57] Database connection successful
+[2025-12-28 13:14:57] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:57] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:57] New availability check request: {"timestamp":"2025-12-28 13:14:57","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:57] Database connection successful
+[2025-12-28 13:14:57] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:57] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:57] New availability check request: {"timestamp":"2025-12-28 13:14:57","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:57] Database connection successful
+[2025-12-28 13:14:57] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:57] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:57] New availability check request: {"timestamp":"2025-12-28 13:14:57","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:57] Database connection successful
+[2025-12-28 13:14:57] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:57] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:58] New availability check request: {"timestamp":"2025-12-28 13:14:58","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:58] Database connection successful
+[2025-12-28 13:14:58] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:58] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:59] New availability check request: {"timestamp":"2025-12-28 13:14:59","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:59] Database connection successful
+[2025-12-28 13:14:59] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:59] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:14:59] New availability check request: {"timestamp":"2025-12-28 13:14:59","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:14:59] Database connection successful
+[2025-12-28 13:14:59] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:14:59] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:00] New availability check request: {"timestamp":"2025-12-28 13:15:00","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:00] Database connection successful
+[2025-12-28 13:15:00] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:00] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:00] New availability check request: {"timestamp":"2025-12-28 13:15:00","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:00] Database connection successful
+[2025-12-28 13:15:00] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:00] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:00] New availability check request: {"timestamp":"2025-12-28 13:15:00","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:00] Database connection successful
+[2025-12-28 13:15:00] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:00] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:00] New availability check request: {"timestamp":"2025-12-28 13:15:00","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:00] Database connection successful
+[2025-12-28 13:15:00] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:00] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:01] New availability check request: {"timestamp":"2025-12-28 13:15:01","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:01] Database connection successful
+[2025-12-28 13:15:01] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:01] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:02] New availability check request: {"timestamp":"2025-12-28 13:15:02","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:02] Database connection successful
+[2025-12-28 13:15:02] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:02] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:02] New availability check request: {"timestamp":"2025-12-28 13:15:02","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:02] Database connection successful
+[2025-12-28 13:15:02] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:02] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:02] New availability check request: {"timestamp":"2025-12-28 13:15:02","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:02] Database connection successful
+[2025-12-28 13:15:02] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:02] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:03] New availability check request: {"timestamp":"2025-12-28 13:15:03","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:03] Database connection successful
+[2025-12-28 13:15:03] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:03] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:03] New availability check request: {"timestamp":"2025-12-28 13:15:03","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:03] Database connection successful
+[2025-12-28 13:15:03] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:03] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:03] New availability check request: {"timestamp":"2025-12-28 13:15:03","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:03] Database connection successful
+[2025-12-28 13:15:03] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:03] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:03] New availability check request: {"timestamp":"2025-12-28 13:15:03","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:03] Database connection successful
+[2025-12-28 13:15:03] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:03] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:04] New availability check request: {"timestamp":"2025-12-28 13:15:04","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:04] Database connection successful
+[2025-12-28 13:15:04] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:04] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:04] New availability check request: {"timestamp":"2025-12-28 13:15:04","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:04] Database connection successful
+[2025-12-28 13:15:04] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:04] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:15:48] New availability check request: {"timestamp":"2025-12-28 13:15:48","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:15:48] Database connection successful
+[2025-12-28 13:15:48] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:15:48] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_type_id' in 'field list'
+[2025-12-28 13:16:43] New availability check request: {"timestamp":"2025-12-28 13:16:43","method":"POST","post_data":{"date":"2025-12-28","time":"18:30"},"get_data":[]}
+[2025-12-28 13:16:43] Database connection successful
+[2025-12-28 13:16:43] Checking availability for date: 2025-12-28, time: 18:30:00
+[2025-12-28 13:16:43] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_id' in 'field list'
+[2025-12-28 13:16:53] New availability check request: {"timestamp":"2025-12-28 13:16:53","method":"POST","post_data":{"date":"2025-12-28","time":"11:00"},"get_data":[]}
+[2025-12-28 13:16:53] Database connection successful
+[2025-12-28 13:16:53] Checking availability for date: 2025-12-28, time: 11:00:00
+[2025-12-28 13:16:53] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'ttb.table_id' in 'field list'
+[2025-12-28 13:18:58] New availability check request: {"timestamp":"2025-12-28 13:18:58","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 13:18:58] Database connection successful
+[2025-12-28 13:18:58] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 13:18:58] Found 3 available tables
+[2025-12-28 13:20:59] New availability check request: {"timestamp":"2025-12-28 13:20:59","method":"POST","post_data":{"date":"2025-12-28","time":"12:30"},"get_data":[]}
+[2025-12-28 13:20:59] Database connection successful
+[2025-12-28 13:20:59] Checking availability for date: 2025-12-28, time: 12:30:00
+[2025-12-28 13:20:59] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 13:21:21] New availability check request: {"timestamp":"2025-12-28 13:21:21","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 13:21:21] Database connection successful
+[2025-12-28 13:21:21] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 13:21:21] Found 5 available tables
+[2025-12-28 13:22:13] New availability check request: {"timestamp":"2025-12-28 13:22:13","method":"POST","post_data":{"date":"2025-12-28","time":"20:30"},"get_data":[]}
+[2025-12-28 13:22:13] Database connection successful
+[2025-12-28 13:22:13] Checking availability for date: 2025-12-28, time: 20:30:00
+[2025-12-28 13:22:13] Found 5 available tables
+[2025-12-28 13:24:39] New availability check request: {"timestamp":"2025-12-28 13:24:39","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 13:24:39] Database connection successful
+[2025-12-28 13:24:39] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 13:24:39] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 13:24:41] New availability check request: {"timestamp":"2025-12-28 13:24:41","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 13:24:41] Database connection successful
+[2025-12-28 13:24:41] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 13:24:41] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 13:24:57] New availability check request: {"timestamp":"2025-12-28 13:24:57","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 13:24:57] Database connection successful
+[2025-12-28 13:24:57] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 13:24:57] Found 3 available tables
+[2025-12-28 14:01:53] New availability check request: {"timestamp":"2025-12-28 14:01:53","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:01:53] Database connection successful
+[2025-12-28 14:01:53] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:01:53] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 14:02:08] New availability check request: {"timestamp":"2025-12-28 14:02:08","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:02:08] Database connection successful
+[2025-12-28 14:02:08] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:02:09] Found 5 available tables
+[2025-12-28 14:23:29] New availability check request: {"timestamp":"2025-12-28 14:23:29","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:23:29] Database connection successful
+[2025-12-28 14:23:29] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:23:29] Error: SQLSTATE[HY093]: Invalid parameter number
+[2025-12-28 14:23:29] New availability check request: {"timestamp":"2025-12-28 14:23:29","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:23:29] Database connection successful
+[2025-12-28 14:23:29] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:23:29] Error: SQLSTATE[HY093]: Invalid parameter number
+[2025-12-28 14:23:30] New availability check request: {"timestamp":"2025-12-28 14:23:30","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:23:30] Database connection successful
+[2025-12-28 14:23:30] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:23:30] Error: SQLSTATE[HY093]: Invalid parameter number
+[2025-12-28 14:23:30] New availability check request: {"timestamp":"2025-12-28 14:23:30","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:23:30] Database connection successful
+[2025-12-28 14:23:30] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:23:30] Error: SQLSTATE[HY093]: Invalid parameter number
+[2025-12-28 14:23:53] New availability check request: {"timestamp":"2025-12-28 14:23:53","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:23:53] Database connection successful
+[2025-12-28 14:23:53] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:23:53] Error: SQLSTATE[HY093]: Invalid parameter number
+[2025-12-28 14:24:52] New availability check request: {"timestamp":"2025-12-28 14:24:52","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:24:52] Database connection successful
+[2025-12-28 14:24:52] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:24:52] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 14:25:02] New availability check request: {"timestamp":"2025-12-28 14:25:02","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:25:02] Database connection successful
+[2025-12-28 14:25:02] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:25:02] Found 3 available tables
+[2025-12-28 14:27:24] New availability check request: {"timestamp":"2025-12-28 14:27:24","method":"POST","post_data":{"date":"2025-12-29","time":"12:30"},"get_data":[]}
+[2025-12-28 14:27:24] Database connection successful
+[2025-12-28 14:27:24] Checking availability for date: 2025-12-29, time: 12:30:00
+[2025-12-28 14:27:24] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 14:27:24] New availability check request: {"timestamp":"2025-12-28 14:27:24","method":"POST","post_data":{"date":"2025-12-29","time":"12:30"},"get_data":[]}
+[2025-12-28 14:27:24] Database connection successful
+[2025-12-28 14:27:24] Checking availability for date: 2025-12-29, time: 12:30:00
+[2025-12-28 14:27:24] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'tb.table_id' in 'field list'
+[2025-12-28 14:27:49] New availability check request: {"timestamp":"2025-12-28 14:27:49","method":"POST","post_data":{"date":"2025-12-28","time":"11:00"},"get_data":[]}
+[2025-12-28 14:27:49] Database connection successful
+[2025-12-28 14:27:49] Checking availability for date: 2025-12-28, time: 11:00:00
+[2025-12-28 14:27:49] Found 3 available tables
+[2025-12-28 14:47:58] New availability check request: {"timestamp":"2025-12-28 14:47:58","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:47:58] Database connection successful
+[2025-12-28 14:47:58] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:47:58] Error: Table type ID is required
+[2025-12-28 14:47:59] New availability check request: {"timestamp":"2025-12-28 14:47:59","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:47:59] Database connection successful
+[2025-12-28 14:47:59] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:47:59] Error: Table type ID is required
+[2025-12-28 14:47:59] New availability check request: {"timestamp":"2025-12-28 14:47:59","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:47:59] Database connection successful
+[2025-12-28 14:47:59] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:47:59] Error: Table type ID is required
+[2025-12-28 14:48:57] New availability check request: {"timestamp":"2025-12-28 14:48:57","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:48:57] Database connection successful
+[2025-12-28 14:48:57] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:48:57] Error: Table type ID is required
+[2025-12-28 14:49:06] New availability check request: {"timestamp":"2025-12-28 14:49:06","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:49:06] Database connection successful
+[2025-12-28 14:49:06] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:49:06] Error: Table type ID is required
+[2025-12-28 14:49:41] New availability check request: {"timestamp":"2025-12-28 14:49:41","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:49:41] Database connection successful
+[2025-12-28 14:49:41] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:49:41] Error: Table type ID is required
+[2025-12-28 14:49:51] New availability check request: {"timestamp":"2025-12-28 14:49:51","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:49:51] Database connection successful
+[2025-12-28 14:49:51] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:49:51] Error: Table type ID is required
+[2025-12-28 14:50:16] New availability check request: {"timestamp":"2025-12-28 14:50:16","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:50:16] Database connection successful
+[2025-12-28 14:50:16] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:50:16] Error: Table type ID is required
+[2025-12-28 14:50:21] New availability check request: {"timestamp":"2025-12-28 14:50:21","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:50:21] Database connection successful
+[2025-12-28 14:50:21] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:50:21] Error: Table type ID is required
+[2025-12-28 14:51:18] New availability check request: {"timestamp":"2025-12-28 14:51:18","method":"POST","post_data":{"date":"2025-12-28","time":"12:00"},"get_data":[]}
+[2025-12-28 14:51:18] Database connection successful
+[2025-12-28 14:51:18] Checking availability for date: 2025-12-28, time: 12:00:00
+[2025-12-28 14:51:18] Error: Table type ID is required
+[2025-12-28 14:51:27] New availability check request: {"timestamp":"2025-12-28 14:51:27","method":"POST","post_data":{"date":"2025-12-28","time":"12:30"},"get_data":[]}
+[2025-12-28 14:51:27] Database connection successful
+[2025-12-28 14:51:27] Checking availability for date: 2025-12-28, time: 12:30:00
+[2025-12-28 14:51:27] Error: Table type ID is required
+[2025-12-28 14:52:34] New availability check request: {"timestamp":"2025-12-28 14:52:34","method":"POST","post_data":{"date":"2025-12-28","time":"12:30"},"get_data":[]}
+[2025-12-28 14:52:34] Database connection successful
+[2025-12-28 14:52:34] Checking availability for date: 2025-12-28, time: 12:30:00
+[2025-12-28 14:52:34] Error: Table type ID is required
+[2025-12-28 14:52:39] New availability check request: {"timestamp":"2025-12-28 14:52:39","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:52:39] Database connection successful
+[2025-12-28 14:52:39] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:52:39] Error: Table type ID is required
+[2025-12-28 14:53:24] New availability check request: {"timestamp":"2025-12-28 14:53:24","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:53:24] Database connection successful
+[2025-12-28 14:53:24] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:53:24] Missing table type ID. POST data: {"date":"2025-12-28","time":"11:30"}
+[2025-12-28 14:53:24] Error: Table type ID is required. Please select a table type.
+[2025-12-28 14:53:39] New availability check request: {"timestamp":"2025-12-28 14:53:39","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:53:39] Database connection successful
+[2025-12-28 14:53:39] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:53:39] Missing table type ID. POST data: {"date":"2025-12-28","time":"11:30"}
+[2025-12-28 14:53:39] Error: Table type ID is required. Please select a table type.
+[2025-12-28 14:53:40] New availability check request: {"timestamp":"2025-12-28 14:53:40","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:53:40] Database connection successful
+[2025-12-28 14:53:40] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:53:40] Missing table type ID. POST data: {"date":"2025-12-28","time":"11:30"}
+[2025-12-28 14:53:40] Error: Table type ID is required. Please select a table type.
+[2025-12-28 14:53:40] New availability check request: {"timestamp":"2025-12-28 14:53:40","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:53:40] Database connection successful
+[2025-12-28 14:53:40] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:53:40] Missing table type ID. POST data: {"date":"2025-12-28","time":"11:30"}
+[2025-12-28 14:53:40] Error: Table type ID is required. Please select a table type.
+[2025-12-28 14:53:57] New availability check request: {"timestamp":"2025-12-28 14:53:57","method":"POST","post_data":{"date":"2025-12-28","time":"11:30"},"get_data":[]}
+[2025-12-28 14:53:57] Database connection successful
+[2025-12-28 14:53:57] Checking availability for date: 2025-12-28, time: 11:30:00
+[2025-12-28 14:53:57] Found 3 available tables
+[2025-12-28 15:14:54] New availability check request: {"timestamp":"2025-12-28 15:14:54","method":"POST","post_data":{"date":"2025-12-28","time":"12:30"},"get_data":[]}
+[2025-12-28 15:14:54] Database connection successful
+[2025-12-28 15:14:54] Checking availability for date: 2025-12-28, time: 12:30:00
+[2025-12-28 15:14:54] Found 3 available tables
+[2025-12-30 17:01:02] New availability check request: {"timestamp":"2025-12-30 17:01:02","method":"POST","post_data":{"date":"2025-12-31","time":"11:30"},"get_data":[]}
+[2025-12-30 17:01:02] Database connection successful
+[2025-12-30 17:01:02] Checking availability for date: 2025-12-31, time: 11:30:00
+[2025-12-30 17:01:02] Found 3 available tables
+[2026-01-04 11:07:35] New availability check request: {"timestamp":"2026-01-04 11:07:35","method":"POST","post_data":{"date":"2026-01-05","time":"11:30"},"get_data":[]}
+[2026-01-04 11:07:35] Database connection successful
+[2026-01-04 11:07:35] Checking availability for date: 2026-01-05, time: 11:30:00
+[2026-01-04 11:07:35] Found 3 available tables
+[2026-01-05 11:33:37] New availability check request: {"timestamp":"2026-01-05 11:33:37","method":"POST","post_data":{"date":"2026-01-05","time":"18:33"},"get_data":[]}
+[2026-01-05 11:33:37] Database connection successful
+[2026-01-05 11:33:37] Checking availability for date: 2026-01-05, time: 18:33:00
+[2026-01-05 11:33:37] Found 3 available tables
+[2026-01-05 11:34:04] New availability check request: {"timestamp":"2026-01-05 11:34:04","method":"POST","post_data":{"date":"2026-01-22","time":"18:33"},"get_data":[]}
+[2026-01-05 11:34:04] Database connection successful
+[2026-01-05 11:34:04] Checking availability for date: 2026-01-22, time: 18:33:00
+[2026-01-05 11:34:04] Found 3 available tables
+[2026-01-05 11:34:05] New availability check request: {"timestamp":"2026-01-05 11:34:05","method":"POST","post_data":{"date":"2026-01-22","time":"18:33"},"get_data":[]}
+[2026-01-05 11:34:05] Database connection successful
+[2026-01-05 11:34:05] Checking availability for date: 2026-01-22, time: 18:33:00
+[2026-01-05 11:34:05] Found 3 available tables
+[2026-01-05 11:35:34] New availability check request: {"timestamp":"2026-01-05 11:35:34","method":"POST","post_data":{"date":"2026-01-05","time":"18:35"},"get_data":[]}
+[2026-01-05 11:35:34] Database connection successful
+[2026-01-05 11:35:34] Checking availability for date: 2026-01-05, time: 18:35:00
+[2026-01-05 11:35:34] Found 3 available tables
+[2026-01-05 11:41:54] New availability check request: {"timestamp":"2026-01-05 11:41:54","method":"POST","post_data":{"date":"2026-01-05","time":"18:41"},"get_data":[]}
+[2026-01-05 11:41:54] Database connection successful
+[2026-01-05 11:41:54] Checking availability for date: 2026-01-05, time: 18:41:00
+[2026-01-05 11:41:54] Found 3 available tables
+[2026-01-05 11:42:07] New availability check request: {"timestamp":"2026-01-05 11:42:07","method":"POST","post_data":{"date":"2026-01-05","time":"18:42"},"get_data":[]}
+[2026-01-05 11:42:07] Database connection successful
+[2026-01-05 11:42:07] Checking availability for date: 2026-01-05, time: 18:42:00
+[2026-01-05 11:42:07] Found 3 available tables
+[2026-01-07 12:52:31] New availability check request: {"timestamp":"2026-01-07 12:52:31","method":"POST","post_data":{"date":"2026-01-07","time":"19:52"},"get_data":[]}
+[2026-01-07 12:52:31] Database connection successful
+[2026-01-07 12:52:31] Checking availability for date: 2026-01-07, time: 19:52:00
+[2026-01-07 12:52:31] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 12:52:44] New availability check request: {"timestamp":"2026-01-07 12:52:44","method":"POST","post_data":{"date":"2026-01-07","time":"19:52"},"get_data":[]}
+[2026-01-07 12:52:44] Database connection successful
+[2026-01-07 12:52:44] Checking availability for date: 2026-01-07, time: 19:52:00
+[2026-01-07 12:52:44] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 12:53:47] New availability check request: {"timestamp":"2026-01-07 12:53:47","method":"POST","post_data":{"date":"2026-01-07","time":"19:53"},"get_data":[]}
+[2026-01-07 12:53:47] Database connection successful
+[2026-01-07 12:53:47] Checking availability for date: 2026-01-07, time: 19:53:00
+[2026-01-07 12:53:48] Found 3 available table types
+[2026-01-07 12:53:48] Type: Couples, Available: 1/0, Tables: 
+[2026-01-07 12:53:48] Type: Friends, Available: 1/0, Tables: 
+[2026-01-07 12:53:48] Type: Family, Available: 1/0, Tables: 
+[2026-01-07 12:53:48] Found 3 available tables
+[2026-01-07 12:53:53] New availability check request: {"timestamp":"2026-01-07 12:53:53","method":"POST","post_data":{"date":"2026-01-29","time":"19:53"},"get_data":[]}
+[2026-01-07 12:53:53] Database connection successful
+[2026-01-07 12:53:53] Checking availability for date: 2026-01-29, time: 19:53:00
+[2026-01-07 12:53:53] Found 3 available table types
+[2026-01-07 12:53:53] Type: Couples, Available: 1/0, Tables: 
+[2026-01-07 12:53:53] Type: Friends, Available: 1/0, Tables: 
+[2026-01-07 12:53:53] Type: Family, Available: 1/0, Tables: 
+[2026-01-07 12:53:53] Found 3 available tables
+[2026-01-07 12:54:00] New availability check request: {"timestamp":"2026-01-07 12:54:00","method":"POST","post_data":{"date":"2026-01-21","time":"19:53"},"get_data":[]}
+[2026-01-07 12:54:00] Database connection successful
+[2026-01-07 12:54:00] Checking availability for date: 2026-01-21, time: 19:53:00
+[2026-01-07 12:54:00] Found 3 available table types
+[2026-01-07 12:54:00] Type: Couples, Available: 1/0, Tables: 
+[2026-01-07 12:54:00] Type: Friends, Available: 1/0, Tables: 
+[2026-01-07 12:54:00] Type: Family, Available: 1/0, Tables: 
+[2026-01-07 12:54:00] Found 3 available tables
+[2026-01-07 12:54:20] New availability check request: {"timestamp":"2026-01-07 12:54:20","method":"POST","post_data":{"date":"2026-01-16","time":"19:53"},"get_data":[]}
+[2026-01-07 12:54:20] Database connection successful
+[2026-01-07 12:54:20] Checking availability for date: 2026-01-16, time: 19:53:00
+[2026-01-07 12:54:20] Found 3 available table types
+[2026-01-07 12:54:20] Type: Couples, Available: 1/0, Tables: 
+[2026-01-07 12:54:20] Type: Friends, Available: 1/0, Tables: 
+[2026-01-07 12:54:20] Type: Family, Available: 1/0, Tables: 
+[2026-01-07 12:54:20] Found 3 available tables
+[2026-01-07 12:55:48] New availability check request: {"timestamp":"2026-01-07 12:55:48","method":"POST","post_data":{"reservationDate":"2026-01-07","reservationTime":"19:55"},"get_data":[]}
+[2026-01-07 12:55:48] Error: Date and time are required
+[2026-01-07 13:00:18] New availability check request: {"reservationDate":"2026-01-07","reservationTime":"20:00"}
+[2026-01-07 13:00:18] Error: Date and time are required
+[2026-01-07 13:00:31] New availability check request: {"reservationDate":"2026-01-15","reservationTime":"20:00"}
+[2026-01-07 13:00:31] Error: Date and time are required
+[2026-01-07 13:03:40] New availability check request: {"date":"2026-01-07","time":"20:03"}
+[2026-01-07 13:03:40] Database connection successful
+[2026-01-07 13:03:40] Checking availability for date: 2026-01-07, time: 20:03:00
+[2026-01-07 13:03:40] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 13:10:10] New availability check request: {"timestamp":"2026-01-07 13:10:10","method":"POST","post_data":{"date":"2026-01-07","time":"20:10"},"get_data":[]}
+[2026-01-07 13:10:10] Database connection successful
+[2026-01-07 13:10:10] Checking availability for date: 2026-01-07, time: 20:10:00
+[2026-01-07 13:10:10] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 13:10:55] New availability check request: {"timestamp":"2026-01-07 13:10:55","method":"POST","post_data":{"date":"2026-01-07","time":"20:10"},"get_data":[]}
+[2026-01-07 13:10:55] Database connection successful
+[2026-01-07 13:10:55] Checking availability for date: 2026-01-07, time: 20:10:00
+[2026-01-07 13:10:55] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 13:49:29] New availability check request: {"timestamp":"2026-01-07 13:49:29","method":"POST","post_data":{"date":"2026-01-08","time":"11:49"},"get_data":[]}
+[2026-01-07 13:49:29] Database connection successful
+[2026-01-07 13:49:29] Checking availability for date: 2026-01-08, time: 11:49:00
+[2026-01-07 13:49:30] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 13:50:45] New availability check request: {"timestamp":"2026-01-07 13:50:45","method":"POST","post_data":{"date":"2026-01-08","time":"11:50"},"get_data":[]}
+[2026-01-07 13:50:45] Database connection successful
+[2026-01-07 13:50:45] Checking availability for date: 2026-01-08, time: 11:50:00
+[2026-01-07 13:50:45] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:50:45] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:50:45] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:50:45] Found 3 available table types
+[2026-01-07 13:50:45] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:50:45] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:50:45] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:50:45] Found 3 available tables
+[2026-01-07 13:51:05] New availability check request: {"timestamp":"2026-01-07 13:51:05","method":"POST","post_data":{"date":"2026-01-08","time":"11:50"},"get_data":[]}
+[2026-01-07 13:51:05] Database connection successful
+[2026-01-07 13:51:05] Checking availability for date: 2026-01-08, time: 11:50:00
+[2026-01-07 13:51:05] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:51:05] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:51:05] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:51:05] Found 3 available table types
+[2026-01-07 13:51:05] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:51:05] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:51:05] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:51:05] Found 3 available tables
+[2026-01-07 13:51:08] New availability check request: {"timestamp":"2026-01-07 13:51:08","method":"POST","post_data":{"date":"2026-01-08","time":"11:50"},"get_data":[]}
+[2026-01-07 13:51:08] Database connection successful
+[2026-01-07 13:51:08] Checking availability for date: 2026-01-08, time: 11:50:00
+[2026-01-07 13:51:08] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:51:08] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:51:08] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:51:08] Found 3 available table types
+[2026-01-07 13:51:08] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:51:08] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:51:08] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:51:08] Found 3 available tables
+[2026-01-07 13:52:45] New availability check request: {"timestamp":"2026-01-07 13:52:45","method":"POST","post_data":{"date":"2026-01-08","time":"11:52"},"get_data":[]}
+[2026-01-07 13:52:45] Database connection successful
+[2026-01-07 13:52:45] Checking availability for date: 2026-01-08, time: 11:52:00
+[2026-01-07 13:52:45] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:52:45] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:52:45] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:52:45] Found 3 available table types
+[2026-01-07 13:52:45] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:52:45] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:52:45] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:52:45] Found 3 available tables
+[2026-01-07 13:52:47] New availability check request: {"timestamp":"2026-01-07 13:52:47","method":"POST","post_data":{"date":"2026-01-08","time":"11:52"},"get_data":[]}
+[2026-01-07 13:52:47] Database connection successful
+[2026-01-07 13:52:47] Checking availability for date: 2026-01-08, time: 11:52:00
+[2026-01-07 13:52:47] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:52:47] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:52:47] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:52:47] Found 3 available table types
+[2026-01-07 13:52:47] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:52:47] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:52:47] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:52:47] Found 3 available tables
+[2026-01-07 13:52:56] New availability check request: {"timestamp":"2026-01-07 13:52:56","method":"POST","post_data":{"date":"2026-01-08","time":"11:52"},"get_data":[]}
+[2026-01-07 13:52:56] Database connection successful
+[2026-01-07 13:52:56] Checking availability for date: 2026-01-08, time: 11:52:00
+[2026-01-07 13:52:56] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:52:56] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:52:56] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:52:56] Found 3 available table types
+[2026-01-07 13:52:56] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:52:56] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:52:56] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:52:56] Found 3 available tables
+[2026-01-07 13:53:07] New availability check request: {"timestamp":"2026-01-07 13:53:07","method":"POST","post_data":{"date":"2026-01-08","time":"11:52"},"get_data":[]}
+[2026-01-07 13:53:07] Database connection successful
+[2026-01-07 13:53:07] Checking availability for date: 2026-01-08, time: 11:52:00
+[2026-01-07 13:53:07] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:53:07] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:53:07] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:53:07] Found 3 available table types
+[2026-01-07 13:53:07] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:53:07] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:53:07] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:53:07] Found 3 available tables
+[2026-01-07 13:53:13] New availability check request: {"timestamp":"2026-01-07 13:53:13","method":"POST","post_data":{"date":"2026-01-08","time":"11:52"},"get_data":[]}
+[2026-01-07 13:53:13] Database connection successful
+[2026-01-07 13:53:13] Checking availability for date: 2026-01-08, time: 11:52:00
+[2026-01-07 13:53:13] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:53:13] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:53:13] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:53:13] Found 3 available table types
+[2026-01-07 13:53:13] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:53:13] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:53:13] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:53:13] Found 3 available tables
+[2026-01-07 13:53:35] New availability check request: {"timestamp":"2026-01-07 13:53:35","method":"POST","post_data":{"date":"2026-01-08","time":"11:52"},"get_data":[]}
+[2026-01-07 13:53:35] Database connection successful
+[2026-01-07 13:53:35] Checking availability for date: 2026-01-08, time: 11:52:00
+[2026-01-07 13:53:35] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:53:35] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:53:35] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:53:35] Found 3 available table types
+[2026-01-07 13:53:35] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:53:35] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:53:35] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:53:35] Found 3 available tables
+[2026-01-07 13:59:13] New availability check request: {"timestamp":"2026-01-07 13:59:13","method":"POST","post_data":{"date":"2026-01-08","time":"11:59"},"get_data":[]}
+[2026-01-07 13:59:13] Database connection successful
+[2026-01-07 13:59:13] Checking availability for date: 2026-01-08, time: 11:59:00
+[2026-01-07 13:59:13] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 13:59:13] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 13:59:13] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 13:59:13] Found 3 available table types
+[2026-01-07 13:59:13] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 13:59:13] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 13:59:13] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 13:59:13] Found 3 available tables
+[2026-01-07 14:08:00] New availability check request: {"timestamp":"2026-01-07 14:08:00","method":"POST","post_data":{"date":"2026-01-08","time":"12:07"},"get_data":[]}
+[2026-01-07 14:08:00] Database connection successful
+[2026-01-07 14:08:00] Checking availability for date: 2026-01-08, time: 12:07:00
+[2026-01-07 14:08:00] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:08:00] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:08:00] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:08:00] Found 3 available table types
+[2026-01-07 14:08:00] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:08:00] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:08:00] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:08:00] Found 3 available tables
+[2026-01-07 14:08:03] New availability check request: {"timestamp":"2026-01-07 14:08:03","method":"POST","post_data":{"date":"2026-01-08","time":"12:07"},"get_data":[]}
+[2026-01-07 14:08:03] Database connection successful
+[2026-01-07 14:08:03] Checking availability for date: 2026-01-08, time: 12:07:00
+[2026-01-07 14:08:03] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:08:03] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:08:03] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:08:03] Found 3 available table types
+[2026-01-07 14:08:03] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:08:03] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:08:03] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:08:03] Found 3 available tables
+[2026-01-07 14:08:05] New availability check request: {"timestamp":"2026-01-07 14:08:05","method":"POST","post_data":{"date":"2026-01-08","time":"12:07"},"get_data":[]}
+[2026-01-07 14:08:05] Database connection successful
+[2026-01-07 14:08:05] Checking availability for date: 2026-01-08, time: 12:07:00
+[2026-01-07 14:08:05] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:08:05] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:08:05] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:08:05] Found 3 available table types
+[2026-01-07 14:08:05] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:08:05] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:08:05] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:08:05] Found 3 available tables
+[2026-01-07 14:11:43] New availability check request: {"timestamp":"2026-01-07 14:11:43","method":"POST","post_data":{"date":"2026-01-08","time":"11:11"},"get_data":[]}
+[2026-01-07 14:11:43] Database connection successful
+[2026-01-07 14:11:43] Checking availability for date: 2026-01-08, time: 11:11:00
+[2026-01-07 14:11:43] Error: SQLSTATE[HY093]: Invalid parameter number
+[2026-01-07 14:14:19] New availability check request: {"timestamp":"2026-01-07 14:14:19","method":"POST","post_data":{"date":"2026-01-08","time":"11:14"},"get_data":[]}
+[2026-01-07 14:14:19] Database connection successful
+[2026-01-07 14:14:19] Checking availability for date: 2026-01-08, time: 11:14:00
+[2026-01-07 14:14:20] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:14:20] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:14:20] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:14:20] Found 3 available table types
+[2026-01-07 14:14:20] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:14:20] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:14:20] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:14:20] Found 3 available tables
+[2026-01-07 14:14:21] New availability check request: {"timestamp":"2026-01-07 14:14:21","method":"POST","post_data":{"date":"2026-01-08","time":"11:14"},"get_data":[]}
+[2026-01-07 14:14:21] Database connection successful
+[2026-01-07 14:14:21] Checking availability for date: 2026-01-08, time: 11:14:00
+[2026-01-07 14:14:22] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:14:22] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:14:22] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:14:22] Found 3 available table types
+[2026-01-07 14:14:22] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:14:22] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:14:22] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:14:22] Found 3 available tables
+[2026-01-07 14:21:31] New availability check request: {"timestamp":"2026-01-07 14:21:31","method":"POST","post_data":{"date":"2026-01-08","time":"11:21"},"get_data":[]}
+[2026-01-07 14:21:31] Database connection successful
+[2026-01-07 14:21:31] Checking availability for date: 2026-01-08, time: 11:21:00
+[2026-01-07 14:21:31] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:21:31] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:21:31] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:21:31] Found 3 available table types
+[2026-01-07 14:21:31] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:21:31] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:21:31] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:21:31] Found 3 available tables
+[2026-01-07 14:21:37] New availability check request: {"timestamp":"2026-01-07 14:21:37","method":"POST","post_data":{"date":"2026-01-08","time":"11:21"},"get_data":[]}
+[2026-01-07 14:21:37] Database connection successful
+[2026-01-07 14:21:37] Checking availability for date: 2026-01-08, time: 11:21:00
+[2026-01-07 14:21:37] Type: Couples, Available: 0/0, Tables: None
+[2026-01-07 14:21:37] Type: Friends, Available: 0/0, Tables: None
+[2026-01-07 14:21:37] Type: Family, Available: 0/0, Tables: None
+[2026-01-07 14:21:37] Found 3 available table types
+[2026-01-07 14:21:37] Type: Couples, Available: 0/0, Tables: 
+[2026-01-07 14:21:37] Type: Friends, Available: 0/0, Tables: 
+[2026-01-07 14:21:37] Type: Family, Available: 0/0, Tables: 
+[2026-01-07 14:21:37] Found 3 available tables

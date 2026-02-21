@@ -330,14 +330,6 @@ $currentPage = basename($page);
     <nav class="top-navbar">
         <div class="d-flex justify-content-between align-items-center">
             <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
-            <div class="nav-icons">
-                <a href="#"><i class="fas fa-shopping-cart"></i></a>
-                <a href="#"><i class="fas fa-envelope"></i></a>
-                <a href="#" class="position-relative">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </a>
-                <a href="#"><i class="fas fa-user"></i></a>
-            </div>
+            
         </div>
     </nav>

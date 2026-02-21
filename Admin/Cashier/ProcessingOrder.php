@@ -1,2162 +1,2270 @@
 <?php
-require "db.php"; // Include the database connection file
+// Include necessary files
+require_once 'db.php';
+session_start();
 
-// Add these CSS and JS includes at the very top, before any HTML output
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php');
+    exit();
+}
+
+// Get processing orders from database with item count and addons
+$stmt = $pdo->prepare("
+    SELECT 
+        o.order_id,
+        o.user_id,
+        o.order_type,
+        o.firstname,
+        o.lastname,
+        o.contact,
+        o.email,
+        o.date_time,
+        o.total,
+        o.balance,
+        o.downpayment,
+        o.amount_paid,
+        o.discount_type,
+        o.discount_percentage,
+        o.discount_amount,
+        o.change_amount,
+        o.payment_method,
+        o.status,
+        (
+            SELECT GROUP_CONCAT(
+                DISTINCT CONCAT(ott2.table_name, ' (', ott2.table_number, ')')
+                SEPARATOR ', '
+            )
+            FROM orders_table_type ott2
+            WHERE ott2.table_booking_fk_id = o.id
+        ) as table_info,
+        COUNT(DISTINCT oi.id) as item_count,
+        (
+            SELECT GROUP_CONCAT(
+                DISTINCT CONCAT(oi2.item_name, 
+                    IF(
+                        EXISTS (
+                            SELECT 1 
+                            FROM order_item_addons oia 
+                            WHERE oia.order_item_fk_id = oi2.id
+                        ),
+                        CONCAT(' (', 
+                            COALESCE(
+                                (SELECT GROUP_CONCAT(DISTINCT oia2.addon_name SEPARATOR ', ')
+                                 FROM order_item_addons oia2 
+                                 WHERE oia2.order_item_fk_id = oi2.id),
+                                ''
+                            ),
+                            ')'
+                        ),
+                        ''
+                    )
+                )
+                SEPARATOR ', '
+            )
+            FROM order_items oi2
+            WHERE oi2.order_fk_id = o.id
+        ) as item_names
+    FROM orders_table o
+    LEFT JOIN order_items oi ON o.id = oi.order_fk_id
+    LEFT JOIN orders_table_type ott ON o.id = ott.table_booking_fk_id
+    WHERE o.status = 'processing'
+    GROUP BY o.id, o.order_id, o.user_id, o.order_type, o.firstname, o.lastname, 
+             o.contact, o.email, o.date_time, o.total, o.balance, o.downpayment, 
+             o.amount_paid, o.discount_type, o.discount_percentage, o.discount_amount, 
+             o.change_amount, o.payment_method, o.status
+    ORDER BY o.date_time DESC
+");
+$stmt->execute();
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!-- Add required CSS and JS -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-<script src="js/jquery-1.11.1.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<?php
-// SQL query to fetch order details with processed_by field and user details
-$sql = "SELECT 
-    orders.*,
-    CONCAT(userss.first_name, ' ', userss.last_name) as customer_name,
-    order_items.id as item_id,
-    order_items.item_name,
-    order_items.quantity,
-    order_items.unit_price,
-    GROUP_CONCAT(DISTINCT order_item_addons.addon_name SEPARATOR '||') as addon_names,
-    GROUP_CONCAT(DISTINCT order_item_addons.addon_price SEPARATOR '||') as addon_prices,
-    COALESCE(orders.processed_by, 'Not processed yet') as processed_by,
-    orders.discount_type,
-    orders.discount_amount,
-    orders.amount_paid,
-    orders.change_amount as change_amount,
-    orders.payment_status,
-    orders.table_name,
-    (
-        SELECT SUM(oi.quantity * oi.unit_price + COALESCE((
-            SELECT SUM(oia.addon_price)
-            FROM order_item_addons oia
-            WHERE oia.order_item_id = oi.id
-        ), 0))
-        FROM order_items oi
-        WHERE oi.order_id = orders.id
-    ) as calculated_total
-FROM orders 
-LEFT JOIN userss ON orders.user_id = userss.id
-LEFT JOIN order_items ON orders.id = order_items.order_id 
-LEFT JOIN order_item_addons ON order_items.id = order_item_addons.order_item_id
-WHERE orders.status = 'processing'
-GROUP BY 
-    orders.id,
-    orders.customer_name,
-    orders.processed_by,
-    orders.discount_type,
-    orders.discount_amount,
-    orders.amount_paid,
-    orders.change_amount,
-    orders.payment_status,
-    orders.table_name,
-    orders.order_date,
-    order_items.id,
-    order_items.item_name,
-    order_items.quantity,
-    order_items.unit_price,
-    order_items.order_id
-ORDER BY orders.order_date DESC";
-
-$result = $connection->query($sql);
-
-// Initialize orders array with improved structure
-$orders = [];
-
-// Process the results with better error handling
-if ($result) {
-    while ($row = $result->fetch_assoc()) {
-        $orderId = $row['id'];
-        
-        // Debug logging
-        error_log("Order ID: " . $orderId . " Change Amount: " . $row['change_amount']);
-        
-        // Initialize order if not exists
-        if (!isset($orders[$orderId])) {
-            // Calculate discount and final amount
-            $originalAmount = floatval($row['calculated_total']);
-            $discountType = $row['discount_type'];
-            $discountAmount = floatval($row['discount_amount'] ?? 0);
-            $amountPaid = floatval($row['amount_paid'] ?? 0);
-            $changeAmount = floatval($row['change_amount'] ?? 0);
-            
-            // Debug logging
-            error_log("Processing order $orderId - Change Amount: $changeAmount");
-            
-            // Calculate discounted amount
-            $discountedAmount = $originalAmount;
-            if ($discountType === 'senior_citizen' || $discountType === 'pwd') {
-                if ($discountAmount === 0) {
-                    $discountAmount = $originalAmount * 0.20; // 20% discount
-                }
-                $discountedAmount = $originalAmount - $discountAmount;
-            } else if ($discountAmount > 0) {
-                $discountedAmount = $originalAmount - $discountAmount;
-            }
-
-            // Calculate remaining balance
-            $remainingBalance = $discountedAmount - $amountPaid;
-            
-            $orders[$orderId] = [
-                'id' => $orderId,
-                'user_id' => $row['user_id'],
-                'customer_name' => $row['customer_name'],
-                'payment_method' => $row['payment_method'],
-                'table_name' => $row['table_name'] ?? 'N/A',
-                'total_amount' => $originalAmount,
-                'discount_type' => $discountType,
-                'discount_amount' => $discountAmount,
-                'final_amount' => $discountedAmount,
-                'amount_paid' => $amountPaid,
-                'change_amount' => $changeAmount,
-                'remaining_balance' => max(0, $remainingBalance),
-                'payment_status' => $row['payment_status'],
-                'order_date' => $row['order_date'],
-                'status' => $row['status'],
-                'order_type' => $row['order_type'],
-                'type_of_order' => $row['type_of_order'] ?? 'dine_in',
-                'processed_by' => $row['processed_by'] ?? 'Not processed yet',
-                'items' => [],
-            ];
-        }
-
-        // Process item and its addons
-        if (!empty($row['item_name'])) {
-            $itemId = $row['item_id'];
-            if (!isset($orders[$orderId]['items'][$itemId])) {
-                $addonNames = !empty($row['addon_names']) ? explode('||', $row['addon_names']) : [];
-                $addonPrices = !empty($row['addon_prices']) ? explode('||', $row['addon_prices']) : [];
-                
-                $addons = [];
-                foreach ($addonNames as $index => $addonName) {
-                    if (isset($addonPrices[$index])) {
-                        $addons[] = [
-                            'name' => trim($addonName),
-                            'price' => floatval(trim($addonPrices[$index]))
-                        ];
-                    }
-                }
-
-                // Ensure proper numeric values
-                $quantity = intval($row['quantity']);
-                $unitPrice = is_numeric($row['unit_price']) ? floatval($row['unit_price']) : 0;
-                $itemSubtotal = $quantity * $unitPrice;
-                
-                // Add addon prices to subtotal
-                foreach ($addons as $addon) {
-                    $itemSubtotal += floatval($addon['price']);
-                }
-
-                $orders[$orderId]['items'][$itemId] = [
-                    'id' => $itemId,
-                    'name' => $row['item_name'],
-                    'quantity' => $quantity,
-                    'unit_price' => $unitPrice,
-                    'addons' => !empty($row['addon_names']) ? implode(', ', explode('||', $row['addon_names'])) : 'None',
-                    'subtotal' => $itemSubtotal
-                ];
-            }
-        }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processing Orders - Casa Estela Boutique Hotel & Cafe</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Custom CSS -->
+    <style>
+        /* Primary color variables */
+    :root {
+        --primary-color: #b8860b;
+        --primary-hover: #9a7209;
+        --primary-light: rgba(184, 134, 11, 0.1);
+        --primary-light-hover: rgba(184, 134, 11, 0.2);
     }
-} else {
-    // Handle query error
-    error_log("Query error: " . $connection->error);
-}
+    
+    body {
+            background-color: #f8f9fa;
+        }
+        .main-content {
+            margin-left: 20px;
+            padding: 20px;
+            margin-top: 60px;
+            transition: all 0.3s ease;
+            width: calc(100% - 40px);
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+        @media (max-width: 992px) {
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+                padding: 20px 15px;
+            }
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .card-header {
+            background-color: var(--primary-color) !important;
+            color: white;
+            font-weight: 600;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .table {
+            width: 100%;
+            table-layout: auto;
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .table th {
+            background-color: var(--primary-color) !important;
+            color: white;
+            font-weight: 600;
+            white-space: nowrap;
+            padding: 15px 12px;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            border: none;
+        }
+        .table td {
+            padding: 12px;
+            vertical-align: middle;
+            border-bottom: 1px solid #f0f0f0;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+        .table tbody tr:hover {
+            background-color: #f8f9ff;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .table tbody tr:hover td {
+            border-bottom-color: #e0e0ff;
+        }
+        .order-id-cell {
+            font-weight: 700;
+            color: #667eea;
+            font-size: 0.9rem;
+        }
+        .customer-cell {
+            font-weight: 500;
+            color: #333;
+        }
+        .items-cell {
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .amount-cell {
+            font-weight: 600;
+            color: #2d3748;
+            font-family: 'Courier New', monospace;
+        }
+        .discount-amount {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .table-info-cell {
+            background: linear-gradient(135deg, #f6f8fb 0%, #e9ecef 100%);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            color: #495057;
+            text-align: center;
+        }
+        .order-type-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .order-type-dinein {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+        .order-type-takeout {
+            background: linear-gradient(135deg, #4299e1 0%, #3182ce 100%);
+            color: white;
+        }
+        .order-type-delivery {
+            background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+            color: white;
+        }
+        .payment-method-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: #f7fafc;
+            border: 1px solid #e2e8f0;
+            color: #4a5568;
+        }
+        .payment-method-badge i {
+            font-size: 0.9rem;
+        }
+        .date-time-cell {
+            font-size: 0.85rem;
+            color: #718096;
+            white-space: nowrap;
+        }
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .status-processing {
+            background: linear-gradient(135deg, #ffd93d 0%, #ffb347 100%);
+            color: #744210;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+        .action-buttons .btn {
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-view {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-edit {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+        }
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(245, 87, 108, 0.4);
+        }
+        .btn-complete {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+        }
+        .btn-complete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 172, 254, 0.4);
+        }
+        .table-responsive {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .card {
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            border: none;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        }
+        .card-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 700;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 20px 25px;
+            border: none;
+        }
+        .no-orders-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #718096;
+        }
+        .no-orders-state i {
+            font-size: 4rem;
+            color: #cbd5e0;
+            margin-bottom: 20px;
+        }
+        .no-orders-state h5 {
+            color: #4a5568;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .status-badge {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .status-processing {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .menu-item-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+        }
+        .btn-outline-primary {
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .btn-outline-primary:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        .menu-item-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+        }
+        .menu-item-card:active {
+            transform: translateY(-1px);
+        }
+        .menu-item-card .card-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #333;
+        }
+        .menu-item-card .card-text {
+            font-size: 0.8rem;
+            line-height: 1.3;
+        }
+        .menu-item-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        .menu-item-card .input-group-sm .form-control {
+            font-size: 0.875rem;
+        }
+        .order-summary-item {
+            border-bottom: 1px solid #e9ecef;
+            padding-bottom: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .order-summary-item:last-child {
+            border-bottom: none;
+        }
+        .nav-tabs {
+            flex-wrap: wrap;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .nav-tabs .nav-link {
+            white-space: normal;
+            text-align: center;
+            min-width: 120px;
+            padding: 0.5rem 1rem;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 0.375rem 0.375rem 0 0;
+            margin-bottom: -1px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        .nav-tabs .nav-link:hover {
+            border-color: var(--primary-color);
+            background-color: var(--primary-light);
+            isolation: isolate;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            background-color: #fff;
+            border-color: var(--primary-color) var(--primary-color) #fff;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Include Sidebar -->
+    <?php include 'sidebar.php'; ?>
 
-// Convert items from associative to indexed array for easier handling in the view
-foreach ($orders as &$order) {
-    $order['items'] = array_values($order['items']);
-}
-unset($order); // Break the reference
-?>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h2><i class="fas fa-cogs me-2"></i>Processing Orders</h2>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="index.php">Dashboard</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Processing Orders</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
 
-<div class="main">
-    <div class="row">
-        <ol class="breadcrumb">
-            <li><a href="#">
-                <img src="img/house.png" alt="Home Icon" style="width: 20px; height: 20px;">
-            </a></li>
-            <li class="active">Processing Orders</li>
-        </ol>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-12">
-            <div id="flashMessage" class="alert" style="display: none;"></div>
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-list-ul me-2"></i>Processing Order List</span>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="input-group" style="width: 250px;">
+                            <input type="text" class="form-control" id="orderSearchInput" placeholder="Search orders...">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <colgroup>
+                                <col style="width: 100px;">
+                                <col style="min-width: 150px;">
+                                <col style="width: 70px;">
+                                <col style="min-width: 200px;">
+                                <col style="width: 120px;">
+                                <col style="width: 120px;">
+                                <col style="width: 140px;">
+                                <col style="width: 130px;">
+                                <col style="width: 160px;">
+                                <col style="width: 100px;">
+                                <col style="width: 130px;">
+                                <col style="width: 150px;">
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-hashtag me-1"></i> Order ID</th>
+                                    <th><i class="fas fa-user me-1"></i> Customer</th>
+                                    <th><i class="fas fa-box me-1"></i> Items</th>
+                                    <th><i class="fas fa-utensils me-1"></i> Item Names</th>
+                                    <th><i class="fas fa-money-bill me-1"></i> Total</th>
+                                    <th><i class="fas fa-percentage me-1"></i> Discount</th>
+                                    <th><i class="fas fa-table me-1"></i> Table Info</th>
+                                    <th><i class="fas fa-concierge-bell me-1"></i> Order Type</th>
+                                    <th><i class="fas fa-credit-card me-1"></i> Payment</th>
+                                    <th><i class="fas fa-calendar me-1"></i> Date</th>
+                                    <th><i class="fas fa-info-circle me-1"></i> Status</th>
+                                    <th><i class="fas fa-cogs me-1"></i> Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if (count($orders) > 0): ?>
+                                    <?php foreach ($orders as $order): ?>
+                                        <tr>
+                                            <td class="order-id-cell">#<?= htmlspecialchars($order['order_id']) ?></td>
+                                            <td class="customer-cell"><?= htmlspecialchars($order['firstname'] . ' ' . $order['lastname'] ?? 'Walk-in Customer') ?></td>
+                                            <td class="text-center"><?= $order['item_count'] ?? 0 ?> items</td>
+                                            <td class="items-cell" title="<?= htmlspecialchars($order['item_names'] ?? 'N/A') ?>"><?= htmlspecialchars($order['item_names'] ?? 'N/A') ?></td>
+                                            <td class="amount-cell">₱<?= number_format($order['total'] ?? 0, 2) ?></td>
+                                            <td class="discount-cell">
+                                                <?php 
+                                                $discountInfo = [];
+                                                if (!empty($order['discount_type'])) {
+                                                    $discountInfo[] = htmlspecialchars($order['discount_type']);
+                                                }
+                                                if (!empty($order['discount_percentage']) && $order['discount_percentage'] > 0) {
+                                                    $discountInfo[] = $order['discount_percentage'] . '%';
+                                                }
+                                                if (!empty($order['discount_amount']) && $order['discount_amount'] > 0) {
+                                                    $discountInfo[] = '₱' . number_format($order['discount_amount'], 2);
+                                                }
+                                                echo !empty($discountInfo) ? implode(' - ', $discountInfo) : '₱0.00';
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php if (!empty($order['table_info'])): ?>
+                                                    <div class="table-info-cell">
+                                                        <i class="fas fa-chair me-1"></i>
+                                                        <?= htmlspecialchars($order['table_info']) ?>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <span class="text-muted">No Table</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                $orderType = $order['order_type'] ?? 'N/A';
+                                                $badgeClass = 'order-type-' . strtolower(str_replace(['-', ' '], '', $orderType));
+                                                ?>
+                                                <span class="order-type-badge <?= $badgeClass ?>">
+                                                    <?= htmlspecialchars($orderType) ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                $paymentMethod = $order['payment_method'] ?? 'Cash';
+                                                $iconClass = match($paymentMethod) {
+                                                    'Cash' => 'fa-money-bill-wave',
+                                                    'Card' => 'fa-credit-card',
+                                                    'GCash' => 'fa-mobile-alt',
+                                                    default => 'fa-money-bill'
+                                                };
+                                                ?>
+                                                <div class="payment-method-badge">
+                                                    <i class="fas <?= $iconClass ?>"></i>
+                                                    <?= htmlspecialchars($paymentMethod) ?>
+                                                </div>
+                                            </td>
+                                            <td class="date-time-cell">
+                                                <div><?= date('M d, Y', strtotime($order['date_time'])) ?></div>
+                                                <small><?= date('h:i A', strtotime($order['date_time'])) ?></small>
+                                            </td>
+                                            <td>
+                                                <span class="status-badge status-processing">
+                                                    <i class="fas fa-spinner fa-spin"></i>
+                                                    Processing
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="action-buttons">
+                                                    <button class="btn btn-sm btn-view view-order" data-id="<?= htmlspecialchars($order['order_id']) ?>" title="View Order">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-edit edit-order" data-id="<?= htmlspecialchars($order['order_id']) ?>" title="Edit Order">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                    <button class="btn btn-sm btn-complete complete-order" data-id="<?= htmlspecialchars($order['order_id']) ?>" title="Complete Order">
+                                                        <i class="fas fa-check"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    <tr>
+                                        <td colspan="13">
+                                            <div class="no-orders-state">
+                                                <i class="fas fa-inbox"></i>
+                                                <h5>No Processing Orders</h5>
+                                                <p>There are currently no orders being processed. New orders will appear here automatically.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <?php if (count($orders) > 0): ?>
+                    <div class="card-footer bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-muted">
+                                Showing <strong><?= count($orders) ?></strong> processing orders
+                            </div>
+                            <nav>
+                                <ul class="pagination pagination-sm mb-0">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Next</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 
-    <br>
+    <!-- View Order Modal -->
+    <div class="modal fade" id="viewOrderModal" tabindex="-1" aria-labelledby="viewOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--primary-color); color: white;">
+                    <h5 class="modal-title" id="viewOrderModalLabel">Order Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="orderDetailsContent">
+                    <!-- Order details will be loaded here via AJAX -->
+                    <div class="text-center my-5">
+                        <div class="spinner-border" role="status" style="color: var(--primary-color);">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading order details...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="editOrderBtn">
+                        <i class="fas fa-edit me-1"></i> Edit Order
+                    </button>
+                    <button type="button" class="btn btn-success" id="completeOrderBtn">
+                        <i class="fas fa-check me-1"></i> Complete Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Processing Orders</div>
-                <div class="panel-body">
-                    <table class="table table-striped table-bordered table-responsive" cellspacing="0" width="100%"
-                           id="rooms">
-                        <thead>
+    <!-- Edit Order Modal -->
+    <div class="modal fade" id="editOrderModal" tabindex="-1" aria-labelledby="editOrderModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--primary-color); color: white;">
+                    <h5 class="modal-title" id="editOrderModalLabel">Edit Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="editOrderContent">
+                    <!-- Edit form will be loaded here via AJAX -->
+                    <div class="text-center my-5">
+                        <div class="spinner-border" role="status" style="color: var(--primary-color);">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading order data for editing...</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="saveOrderBtn">
+                        <i class="fas fa-save me-1"></i> Save Changes
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu Items Modal -->
+    <div class="modal fade" id="menuItemsModal" tabindex="-1" aria-labelledby="menuItemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--primary-color); color: white;">
+                    <h5 class="modal-title" id="menuItemsModalLabel"> Menu</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs mb-3" id="menuCategoriesTab" role="tablist">
+                        <!-- Category tabs will be injected here by JavaScript -->
+                    </ul>
+                    <div class="tab-content" id="menuCategoriesTabContent">
+                        <!-- Menu items grouped by category will be injected here by JavaScript -->
+                    </div>
+                    
+                    <!-- Order Summary Section -->
+                    <div class="card mt-4">
+                        <div class="card-header bg-light fw-bold">Order Summary</div>
+                        <div class="card-body">
+                            <div id="orderSummaryItems">
+                                <!-- Selected items will be listed here -->
+                                <p class="text-muted">No items added yet.</p>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">Total:</h5>
+                                <h5 class="mb-0 text-success" id="orderTotal">₱0.00</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="clearOrderBtn"><i class="fas fa-trash"></i> Clear Order</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="advanceOrderBtn">Add to Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: var(--primary-color); color: white;">
+                    <h5 class="modal-title" id="paymentModalLabel">Process Payment</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="paymentOrderId">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Amount Due:</label>
+                            <div class="form-control-plaintext fw-bold text-danger" id="paymentBalance">₱0.00</div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Amount Paid:</label>
+                            <input type="number" class="form-control" id="paymentAmountPaid" step="0.01" min="0" placeholder="Enter amount">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="form-label">Payment Method:</label>
+                            <select class="form-select" id="paymentMethod">
+                                <option value="Cash">Cash</option>
+                                <option value="Card">Card</option>
+                                <option value="GCash">GCash</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Change:</label>
+                            <div class="form-control-plaintext fw-bold text-success" id="paymentChange">₱0.00</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="processPaymentBtn">
+                        <i class="fas fa-credit-card me-1"></i> Process Payment
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Global variable to store selected items
+let selectedItems = {};
+
+function displayMenuItems() {
+    console.log('Loading menu items...');
+    
+    $.get('get_menu_items.php', function(response) {
+        console.log('Menu items response:', response);
+        
+        if (response.success) {
+            const menuItems = response.menu_items;
+            const categories = Object.keys(menuItems);
+            
+            // Generate category tabs
+            let tabsHtml = '';
+            let contentHtml = '';
+            
+            categories.forEach((category, index) => {
+                const categoryId = category.replace(/\s+/g, '-').toLowerCase();
+                const isActive = index === 0 ? 'active' : '';
+                
+                // Create tab
+                tabsHtml += `
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link ${isActive}" id="${categoryId}-tab" data-bs-toggle="tab" 
+                                data-bs-target="#${categoryId}" type="button" role="tab">
+                            ${category}
+                        </button>
+                    </li>
+                `;
+                
+                // Create tab content
+                contentHtml += `
+                    <div class="tab-pane fade ${isActive}" id="${categoryId}" role="tabpanel">
+                        <div class="row g-3">
+                `;
+                
+                // Add menu items for this category
+                menuItems[category].forEach(item => {
+                    contentHtml += `
+                        <div class="col-md-6 col-lg-4">
+                            <div class="card menu-item-card h-100" data-item-id="${item.id}" data-item-name="${item.name}" data-item-price="${item.price}">
+                                <div class="card-body">
+                                    <div class="d-flex">
+                                        <div class="menu-item-icon me-3">
+                                            <i class="fas fa-utensils fa-2x text-muted"></i>
+                                        </div>
+                                        <div class="flex-grow-1">
+                                            <h6 class="card-title mb-1">${item.name}</h6>
+                                            ${item.description ? `<p class="card-text small text-muted mb-2">${item.description}</p>` : ''}
+                                            <div class="text-success fw-bold mb-2">₱${parseFloat(item.price).toFixed(2)}</div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-2">
+                                        <div class="input-group input-group-sm" style="width: 120px;">
+                                            <button class="btn btn-outline-secondary decrement-qty" type="button">-</button>
+                                            <input type="number" class="form-control text-center item-quantity" value="0" min="0" max="99" readonly>
+                                            <button class="btn btn-outline-secondary increment-qty" type="button">+</button>
+                                        </div>
+                                        <button class="btn btn-primary btn-sm add-to-order">Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                contentHtml += `
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Inject tabs and content
+            $('#menuCategoriesTab').html(tabsHtml);
+            $('#menuCategoriesTabContent').html(contentHtml);
+            
+            // Add event handlers
+            initializeMenuItemsHandlers();
+            
+        } else {
+            $('#menuCategoriesTabContent').html(`
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    ${response.message || 'Failed to load menu items'}
+                </div>
+            `);
+        }
+    }, 'json').fail(function(xhr, status, error) {
+        console.error('Failed to load menu items:', error);
+        $('#menuCategoriesTabContent').html(`
+            <div class="alert alert-danger">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Error loading menu items. Please try again.
+            </div>
+        `);
+    });
+}
+
+function initializeMenuItemsHandlers() {
+    // Quantity increment/decrement
+    $('.increment-qty').click(function() {
+        const input = $(this).siblings('.item-quantity');
+        const currentVal = parseInt(input.val()) || 0;
+        if (currentVal < 99) {
+            input.val(currentVal + 1);
+        }
+    });
+    
+    $('.decrement-qty').click(function() {
+        const input = $(this).siblings('.item-quantity');
+        const currentVal = parseInt(input.val()) || 0;
+        if (currentVal > 0) {
+            input.val(currentVal - 1);
+        }
+    });
+    
+    // Add to order button
+    $('.add-to-order').click(function() {
+        const card = $(this).closest('.menu-item-card');
+        const itemId = card.data('item-id');
+        const itemName = card.data('item-name');
+        const itemPrice = parseFloat(card.data('item-price'));
+        const quantity = parseInt(card.find('.item-quantity').val()) || 0;
+        
+        if (quantity > 0) {
+            // Add to selected items
+            if (selectedItems[itemId]) {
+                selectedItems[itemId].quantity += quantity;
+            } else {
+                selectedItems[itemId] = {
+                    name: itemName,
+                    price: itemPrice,
+                    quantity: quantity
+                };
+            }
+            
+            // Reset quantity input
+            card.find('.item-quantity').val(0);
+            
+            // Update order summary
+            updateOrderSummary();
+        }
+    });
+}
+
+function updateOrderSummary() {
+    const summaryContainer = $('#orderSummaryItems');
+    const totalElement = $('#orderTotal');
+    
+    if (Object.keys(selectedItems).length === 0) {
+        summaryContainer.html('<p class="text-muted">No items added yet.</p>');
+        totalElement.text('₱0.00');
+        return;
+    }
+    
+    let summaryHtml = '';
+    let total = 0;
+    
+    Object.keys(selectedItems).forEach(itemId => {
+        const item = selectedItems[itemId];
+        const itemTotal = item.price * item.quantity;
+        total += itemTotal;
+        
+        summaryHtml += `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div>
+                    <div class="fw-bold">${item.name}</div>
+                    <small class="text-muted">₱${item.price.toFixed(2)} x ${item.quantity}</small>
+                </div>
+                <div class="text-end">
+                    <div class="fw-bold">₱${itemTotal.toFixed(2)}</div>
+                    <button class="btn btn-sm btn-outline-danger remove-item" data-item-id="${itemId}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    summaryContainer.html(summaryHtml);
+    totalElement.text('₱' + total.toFixed(2));
+    
+    // Add remove item handlers
+    $('.remove-item').click(function() {
+        const itemId = $(this).data('item-id');
+        delete selectedItems[itemId];
+        updateOrderSummary();
+    });
+}
+        
+        function addNewItemToOrder(itemId, itemName, itemPrice) {
+            console.log('Adding new item:', itemId, itemName, itemPrice);
+            
+            const itemsTable = $('#editItemsTable tbody');
+            const itemCount = itemsTable.find('tr').length;
+            
+            const newRow = `
+                <tr class="order-item-row" data-item-id="${itemId}">
+                    <td>${itemCount + 1}</td>
+                    <td>
+                        <input type="text" class="form-control form-control-sm item-name" value="${itemName}" readonly>
+                    </td>
+                    <td class="text-center">
+                        <input type="number" class="form-control form-control-sm item-quantity" value="1" min="1" style="width: 80px;">
+                    </td>
+                    <td class="text-end">
+                        <input type="number" class="form-control form-control-sm item-price" value="${parseFloat(itemPrice).toFixed(2)}" step="0.01" min="0" style="width: 100px;">
+                    </td>
+                    <td class="text-end item-total">₱${parseFloat(itemPrice).toFixed(2)}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-danger remove-item">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            
+            itemsTable.append(newRow);
+            
+            // Recalculate totals
+            calculateItemTotals();
+            calculateOrderTotals();
+        }
+        
+        function populateTableSelection(order) {
+            // Fetch all tables
+            $.get('get_all_tables.php', function(response) {
+                if (response.status === 'success') {
+                    const tables = response.tables;
+                    const tableBody = $('#availableTablesTable tbody');
+                    
+                    // Clear existing content
+                    tableBody.empty();
+                    
+                    // Get currently assigned tables for this order
+                    const assignedTables = order.tables || [];
+                    const assignedTableIds = assignedTables.map(t => t.table_number_id);
+                    
+                    // Generate table rows
+                    Object.keys(tables).forEach(tableName => {
+                        const tableType = tables[tableName];
+                        
+                        tableType.table_numbers.forEach(tableInfo => {
+                            const isAssignedToCurrentOrder = assignedTableIds.includes(tableInfo.table_id);
+                            const isAssignedToOtherOrder = tableInfo.assignment_status === 'Assigned' && !isAssignedToCurrentOrder;
+                            const isOccupied = tableInfo.assignment_status === 'Occupied';
+                            
+                            // Determine status display and checkbox state
+                            let statusClass, statusText, disabledAttr, checkedAttr;
+                            
+                            if (isAssignedToCurrentOrder) {
+                                // Table assigned to current order being edited
+                                statusClass = 'table-primary';
+                                statusText = 'Assigned to this order';
+                                disabledAttr = '';
+                                checkedAttr = 'checked';
+                            } else if (isAssignedToOtherOrder) {
+                                // Table assigned to another order with non-completed status
+                                statusClass = 'table-danger';
+                                statusText = `Assigned to Order #${tableInfo.assigned_order_number}`;
+                                disabledAttr = 'disabled';
+                                checkedAttr = '';
+                            } else if (isOccupied) {
+                                // Table is occupied (status = unavailable)
+                                statusClass = 'table-warning';
+                                statusText = 'Occupied';
+                                disabledAttr = 'disabled';
+                                checkedAttr = '';
+                            } else {
+                                // Table is available
+                                statusClass = 'table-success';
+                                statusText = 'Available';
+                                disabledAttr = '';
+                                checkedAttr = '';
+                            }
+                            
+                            const row = `
+                                <tr>
+                                    <td class="text-center">
+                                        <input type="checkbox" 
+                                               class="form-check-input table-checkbox" 
+                                               value="${tableInfo.table_id}"
+                                               data-table-name="${tableName}"
+                                               data-table-number="${tableInfo.table_number}"
+                                               data-assignment-status="${tableInfo.assignment_status}"
+                                               ${checkedAttr}
+                                               ${disabledAttr}>
+                                    </td>
+                                    <td>${tableName}</td>
+                                    <td>${tableInfo.table_number}</td>
+                                    <td>${tableType.capacity} seats</td>
+                                    <td>
+                                        <span class="badge ${statusClass}">${statusText}</span>
+                                        ${isAssignedToOtherOrder ? `<br><small class="text-muted">Status: ${tableInfo.assigned_order_status}</small>` : ''}
+                                        ${isAssignedToCurrentOrder ? '<span class="badge bg-primary ms-1">Current Order</span>' : ''}
+                                    </td>
+                                </tr>
+                            `;
+                            tableBody.append(row);
+                        });
+                    });
+                    
+                    // Add click handlers for checkboxes
+                    $('.table-checkbox').on('change', function() {
+                        updateTableSelectionSummary();
+                    });
+                    
+                    // Initialize summary
+                    updateTableSelectionSummary();
+                    
+                } else {
+                    console.error('Error loading tables:', response.message);
+                    $('#availableTablesTable tbody').html(`
                         <tr>
-                            <th>Order Details</th>
-                            <th>Customer Name</th>
-                            <th>Table Number</th>
-                            <th>Order Type</th>
-                            <th>Mode of Order</th>
-                            <th>Payment Method</th>
-                            <th>Total Amount</th>
-                            <th>Ordered At</th>
-                            <th>Status</th>
-                            <th>Processed By</th>
-                            <th>Actions</th>
+                            <td colspan="5" class="text-center text-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error loading tables: ${response.message}
+                            </td>
                         </tr>
+                    `);
+                }
+            }).fail(function() {
+                console.error('Failed to load tables');
+                $('#availableTablesTable tbody').html(`
+                    <tr>
+                        <td colspan="5" class="text-center text-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Failed to load tables. Please try again.
+                        </td>
+                    </tr>
+                `);
+            });
+        }
+        
+        function updateTableSelectionSummary() {
+            const selectedTables = $('.table-checkbox:checked');
+            const selectedCount = selectedTables.length;
+            
+            // Update summary text
+            let summaryText = '';
+            if (selectedCount === 0) {
+                summaryText = 'No tables selected';
+            } else {
+                const tableNames = [];
+                selectedTables.each(function() {
+                    const tableName = $(this).data('table-name');
+                    const tableNumber = $(this).data('table-number');
+                    tableNames.push(`${tableName} ${tableNumber}`);
+                });
+                summaryText = `${selectedCount} table(s) selected: ${tableNames.join(', ')}`;
+            }
+            
+            // Update or create summary element
+            let summaryDiv = $('#tableSelectionSummary');
+            if (summaryDiv.length === 0) {
+                $('#tableSelectionArea').append(`
+                    <div id="tableSelectionSummary" class="mt-2">
+                        <small class="text-info">
+                            <i class="fas fa-check-circle me-1"></i>
+                            <span id="summaryText">${summaryText}</span>
+                        </small>
+                    </div>
+                `);
+            } else {
+                $('#summaryText').text(summaryText);
+            }
+        }
+        
+        function getSelectedTables() {
+            const selectedTables = [];
+            $('.table-checkbox:checked').each(function() {
+                selectedTables.push({
+                    table_id: $(this).val(),
+                    table_name: $(this).data('table-name'),
+                    table_number: $(this).data('table-number')
+                });
+            });
+            return selectedTables;
+        }
+        
+        function displayEditForm(order) {
+            console.log('displayEditForm called with order:', order);
+            
+            let itemsHtml = '';
+            let subtotal = 0;
+            
+            // Generate editable items HTML
+            order.items.forEach((item, index) => {
+                const itemTotal = parseFloat(item.unit_price) * parseInt(item.quantity);
+                subtotal += itemTotal;
+                
+                itemsHtml += `
+                    <tr class="order-item-row" data-item-id="${item.id}">
+                        <td>${index + 1}</td>
+                        <td>
+                            <input type="text" class="form-control form-control-sm item-name" value="${item.item_name}" readonly>
+                            ${item.addons && item.addons.length > 0 ? `
+                                <div class="mt-1">
+                                    <small class="text-muted">Addons:</small>
+                                    ${item.addons.map(addon => `
+                                        <div class="d-flex align-items-center gap-2 mt-1">
+                                            <input type="text" class="form-control form-control-sm addon-name" value="${addon.addon_name}" readonly>
+                                            <input type="number" class="form-control form-control-sm addon-price" value="${parseFloat(addon.price).toFixed(2)}" step="0.01" min="0" style="width: 100px;">
+                                            <button type="button" class="btn btn-sm btn-danger remove-addon">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </td>
+                        <td class="text-center">
+                            <input type="number" class="form-control form-control-sm item-quantity" value="${item.quantity}" min="1" style="width: 80px;">
+                        </td>
+                        <td class="text-end">
+                            <input type="number" class="form-control form-control-sm item-price" value="${parseFloat(item.unit_price).toFixed(2)}" step="0.01" min="0" style="width: 100px;">
+                        </td>
+                        <td class="text-end item-total">₱${itemTotal.toFixed(2)}</td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-danger remove-item">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+                
+                // Add addon costs to subtotal
+                if (item.addons) {
+                    item.addons.forEach(addon => {
+                        subtotal += parseFloat(addon.price);
+                    });
+                }
+            });
+            
+            const editFormHtml = `
+                <form id="editOrderForm">
+                    <input type="hidden" id="editOrderId" value="${order.order_id}">
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Customer Information</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">First Name</label>
+                                    <input type="text" class="form-control" id="editFirstname" value="${order.firstname || ''}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Last Name</label>
+                                    <input type="text" class="form-control" id="editLastname" value="${order.lastname || ''}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Contact</label>
+                                    <input type="text" class="form-control" id="editContact" value="${order.contact || ''}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="editEmail" value="${order.email || ''}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3">Order Information</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Order Type</label>
+                                    <select class="form-select" id="editOrderType">
+                                        <option value="Dine-in" ${order.type_of_order === 'Dine-in' ? 'selected' : ''}>Dine-in</option>
+                                        <option value="Take-out" ${order.type_of_order === 'Take-out' ? 'selected' : ''}>Take-out</option>
+                                        <option value="Delivery" ${order.type_of_order === 'Delivery' ? 'selected' : ''}>Delivery</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Payment Method</label>
+                                    <select class="form-select" id="editPaymentMethod">
+                                        <option value="Cash" ${order.payment_method === 'Cash' ? 'selected' : ''}>Cash</option>
+                                        <option value="Card" ${order.payment_method === 'Card' ? 'selected' : ''}>Card</option>
+                                        <option value="GCash" ${order.payment_method === 'GCash' ? 'selected' : ''}>GCash</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-3">
+                                    <label class="form-label">Table Assignment <span class="text-danger">*</span></label>
+                                    <div id="tableSelectionArea">
+                                        <div class="table-responsive">
+                                            <table class="table table-sm table-bordered" id="availableTablesTable">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th width="50">Select</th>
+                                                        <th>Table Name</th>
+                                                        <th>Table Number</th>
+                                                        <th>Capacity</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td colspan="5" class="text-center">
+                                                            <div class="spinner-border spinner-border-sm" role="status">
+                                                                <span class="visually-hidden">Loading tables...</span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="mt-2">
+                                            <small class="text-muted">
+                                                <i class="fas fa-info-circle me-1"></i>
+                                                Select multiple tables for this order. Currently assigned tables are pre-selected.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Discount Type</label>
+                                    <select class="form-select" id="editDiscountType">
+                                        <option value="">None</option>
+                                        <option value="Senior Citizen" ${order.discount_type === 'Senior Citizen' ? 'selected' : ''}>Senior Citizen</option>
+                                        <option value="PWD" ${order.discount_type === 'PWD' ? 'selected' : ''}>PWD</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Discount %</label>
+                                    <input type="number" class="form-control" id="editDiscountPercentage" value="${order.discount_percentage || 0}" min="0" max="100">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h6 class="text-muted mb-3">Order Items</h6>
+                    <div class="table-responsive mb-4">
+                        <table class="table table-sm" id="editItemsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th width="50">#</th>
+                                    <th>Item Name</th>
+                                    <th width="80" class="text-center">Qty</th>
+                                    <th width="100" class="text-end">Unit Price</th>
+                                    <th width="100" class="text-end">Total</th>
+                                    <th width="80" class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${itemsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="button" class="btn btn-sm btn-success" id="addItemBtn">
+                                <i class="fas fa-plus me-1"></i> Add New Item
+                            </button>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <table class="table table-sm table-borderless mb-0">
+                                        <tr>
+                                            <td width="120"><strong>Subtotal:</strong></td>
+                                            <td class="text-end" id="editSubtotal">₱${subtotal.toFixed(2)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Discount:</strong></td>
+                                            <td class="text-end text-danger" id="editDiscount">-₱${parseFloat(order.discount_amount || 0).toFixed(2)}</td>
+                                        </tr>
+                                        <tr class="border-top">
+                                            <td><strong>Total Amount:</strong></td>
+                                            <td class="text-end"><strong id="editTotal">₱${parseFloat(order.total).toFixed(2)}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Downpayment:</strong></td>
+                                            <td class="text-end text-info" id="editDownpayment">₱${parseFloat(order.downpayment || 0).toFixed(2)}</td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Amount Paid:</strong></td>
+                                            <td class="text-end">
+                                                <input type="number" class="form-control form-control-sm text-end" id="editAmountPaid" 
+                                                       value="${parseFloat(order.amount_paid || 0).toFixed(2)}" 
+                                                       step="0.01" min="0" placeholder="Enter amount paid">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Balance:</strong></td>
+                                            <td class="text-end text-warning" id="editBalance">₱${parseFloat(order.balance || 0).toFixed(2)}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            `;
+            
+            console.log('Setting edit form HTML...');
+            $('#editOrderContent').html(editFormHtml);
+            console.log('Edit form HTML set successfully');
+            
+            // Initialize event listeners for auto-calculation
+            initializeCalculationListeners();
+            
+            // Populate table selection interface
+            populateTableSelection(order);
+            
+            // Handle order type change to show/hide table requirement
+            $('#editOrderType').off('change').on('change', function() {
+                const orderType = $(this).val();
+                const tableSelectionArea = $('#tableSelectionArea');
+                
+                if (orderType === 'Dine-in') {
+                    tableSelectionArea.show();
+                    tableSelectionArea.find('label span.text-danger').show();
+                } else {
+                    tableSelectionArea.hide();
+                    // Clear table selections for non-dine-in orders
+                    $('.table-checkbox').prop('checked', false);
+                    updateTableSelectionSummary();
+                }
+            });
+            
+            // Trigger the change event on page load
+            $('#editOrderType').trigger('change');
+        }
+        
+        function initializeCalculationListeners() {
+            // Calculate totals when quantity or price changes
+            $(document).on('input', '.item-quantity, .item-price, .addon-price', function() {
+                calculateItemTotals();
+                calculateOrderTotals();
+            });
+            
+            // Calculate totals when discount type or percentage changes
+            $(document).on('change', '#editDiscountType, #editDiscountPercentage', function() {
+                calculateOrderTotals();
+            });
+            
+            // Recalculate balance when amount paid changes
+            $(document).on('input', '#editAmountPaid', function() {
+                calculateOrderTotals();
+            });
+            
+            // Remove item functionality
+            $(document).on('click', '.remove-item', function() {
+                $(this).closest('tr').remove();
+                calculateItemTotals();
+                calculateOrderTotals();
+            });
+            
+            // Remove addon functionality
+            $(document).on('click', '.remove-addon', function() {
+                $(this).closest('div').remove();
+                calculateItemTotals();
+                calculateOrderTotals();
+            });
+        }
+        
+        function calculateItemTotals() {
+            $('.order-item-row').each(function() {
+                const quantity = parseFloat($(this).find('.item-quantity').val()) || 0;
+                const price = parseFloat($(this).find('.item-price').val()) || 0;
+                let addonTotal = 0;
+                
+                // Calculate addon totals
+                $(this).find('.addon-price').each(function() {
+                    addonTotal += parseFloat($(this).val()) || 0;
+                });
+                
+                const itemTotal = (quantity * price) + addonTotal;
+                $(this).find('.item-total').text('₱' + itemTotal.toFixed(2));
+            });
+        }
+        
+        function calculateOrderTotals() {
+            let subtotal = 0;
+            
+            // Calculate subtotal from all items
+            $('.order-item-row').each(function() {
+                const itemTotalText = $(this).find('.item-total').text();
+                const itemTotal = parseFloat(itemTotalText.replace('₱', '')) || 0;
+                subtotal += itemTotal;
+            });
+            
+            // Get discount values
+            const discountType = $('#editDiscountType').val();
+            const discountPercentage = parseFloat($('#editDiscountPercentage').val()) || 0;
+            
+            // Calculate discount amount
+            let discountAmount = 0;
+            if (discountType && discountPercentage > 0) {
+                discountAmount = (subtotal * discountPercentage) / 100;
+            }
+            
+            // Calculate total
+            const total = subtotal - discountAmount;
+            
+            // Get downpayment and amount paid
+            const downpayment = parseFloat($('#editDownpayment').text().replace('₱', '')) || 0;
+            const amountPaid = parseFloat($('#editAmountPaid')?.val() || 0);
+            
+            // Calculate balance: Total - Downpayment - Amount Paid
+            const balance = Math.max(0, total - downpayment - amountPaid);
+            
+            // Update display
+            $('#editSubtotal').text('₱' + subtotal.toFixed(2));
+            $('#editDiscount').text('-₱' + discountAmount.toFixed(2));
+            $('#editTotal').text('₱' + total.toFixed(2));
+            $('#editBalance').text('₱' + balance.toFixed(2));
+        }
+        
+        function displayOrderDetails(order) {
+            let itemsHtml = '';
+            let subtotal = 0;
+            
+            // Generate items HTML
+            order.items.forEach((item, index) => {
+                const itemTotal = parseFloat(item.unit_price) * parseInt(item.quantity);
+                subtotal += itemTotal;
+                
+                itemsHtml += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>
+                            <strong>${item.item_name}</strong>
+                            ${item.addons && item.addons.length > 0 ? `
+                                <br><small class="text-muted">
+                                    Addons: ${item.addons.map(addon => `${addon.addon_name} (₱${parseFloat(addon.price).toFixed(2)})`).join(', ')}
+                                </small>
+                            ` : ''}
+                        </td>
+                        <td class="text-center">${item.quantity}</td>
+                        <td class="text-end">₱${parseFloat(item.unit_price).toFixed(2)}</td>
+                        <td class="text-end">₱${itemTotal.toFixed(2)}</td>
+                    </tr>
+                `;
+                
+                // Add addon costs to subtotal
+                if (item.addons) {
+                    item.addons.forEach(addon => {
+                        subtotal += parseFloat(addon.price);
+                    });
+                }
+            });
+            
+            const detailsHtml = `
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Order Information</h6>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td width="120"><strong>Order ID:</strong></td>
+                                <td>#${String(order.order_id).padStart(6, '0')}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Date & Time:</strong></td>
+                                <td>${new Date(order.date_time).toLocaleString()}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Cashier:</strong></td>
+                                <td>${order.cashier_name || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Order Type:</strong></td>
+                                <td>${order.type_of_order || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment Method:</strong></td>
+                                <td>${order.payment_method || 'N/A'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Payment Option:</strong></td>
+                                <td>${order.payment_option || 'N/A'}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-3">Table Information</h6>
+                        <table class="table table-sm table-borderless">
+                            <tr>
+                                <td width="120"><strong>Table Info:</strong></td>
+                                <td>${order.tables_info || 'No tables assigned'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Discount Type:</strong></td>
+                                <td>${order.discount_type || 'None'}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td><span class="badge bg-warning text-dark">${order.status}</span></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <h6 class="text-muted mb-3">Order Items</h6>
+                <div class="table-responsive mb-4">
+                    <table class="table table-sm">
+                        <thead class="table-light">
+                            <tr>
+                                <th width="50">#</th>
+                                <th>Item Name</th>
+                                <th width="80" class="text-center">Qty</th>
+                                <th width="100" class="text-end">Unit Price</th>
+                                <th width="100" class="text-end">Total</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        <?php foreach ($orders as $orderId => $order): ?>
-                            <tr data-order-id="<?php echo $orderId; ?>">
-                                <td class="order-details">
-                                    <?php foreach ($order['items'] as $item): ?>
-                                        <div>
-                                            <?php 
-                                                // Ensure price is properly formatted
-                                                $unitPrice = is_numeric($item['unit_price']) ? number_format($item['unit_price'], 2) : '0.00';
-                                                echo htmlspecialchars($item['name']); ?> 
-                                                (<?php echo htmlspecialchars($item['quantity']); ?> x ₱<?php echo $unitPrice; ?>)
-                                            <?php if (!empty($item['addons'])): ?>
-                                                <br>Add-ons: <?php echo htmlspecialchars($item['addons']); ?>
-                                            <?php endif; ?>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </td>
-                                <td><?php 
-                                    // Show the actual customer name from the database instead of hardcoded "Walkin Customers"
-                                    echo htmlspecialchars($order['customer_name'] ?? 'N/A'); 
-                                ?></td>
-                                <td>
-                                    <?php if ($order['table_name'] === 'N/A' || empty($order['table_name'])): ?>
-                                        <span class="text-muted">N/A</span>
-                                        <button class="btn btn-primary btn-sm ml-2 select-table" 
-                                                data-order-id="<?php echo $orderId; ?>"
-                                                data-toggle="tooltip"
-                                                data-placement="top"
-                                                title="Select Table">
-                                            <i class="fas fa-chair"></i> Select Table
-                                        </button>
-                                    <?php else: ?>
-                                        <?php echo htmlspecialchars($order['table_name']); ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php 
-                                        $orderType = strtolower($order['order_type'] ?? '');
-                                        $displayType = '';
-                                        
-                                        // Properly handle different order types
-                                        switch($orderType) {
-                                            case 'online':
-                                                $displayType = 'Online Order';
-                                                break;
-                                            case 'advance':
-                                                $displayType = 'Advance Order';
-                                                break;
-                                            case 'walk-in':
-                                                $displayType = 'Walk-in Order';
-                                                break;
-                                            default:
-                                                $displayType = ucfirst($orderType) . ' Order';
-                                        }
-                                        echo htmlspecialchars($displayType);
-                                    ?>
-                                </td>
-                                <td><?php echo !empty($order['type_of_order']) ? htmlspecialchars(ucfirst($order['type_of_order'])) : 'Dine-in'; ?></td>
-                                <td><?php echo htmlspecialchars($order['payment_method']); ?></td>
-                                <td class="total-amount">
-                                    <?php if (!empty($order['discount_type'])): ?>
-                                        ₱<?php echo htmlspecialchars(number_format($order['total_amount'], 2)); ?><br>
-                                        <span class="text-success">
-                                            Discount (20%): ₱<?php echo htmlspecialchars(number_format($order['discount_amount'], 2)); ?>
-                                        </span><br>
-                                        <strong class="text-primary">
-                                            Final Amount: ₱<?php echo htmlspecialchars(number_format($order['final_amount'], 2)); ?>
-                                        </strong>
-                                    <?php else: ?>
-                                        ₱<?php echo htmlspecialchars(number_format($order['total_amount'], 2)); ?>
-                                    <?php endif; ?>
-                                </td>
-                                <td><?php echo htmlspecialchars($order['order_date']); ?></td>
-                                <td>
-                                    <span class="label label-info">Processing</span>
-                                </td>
-                                <td>
-    <?php 
-    if (!empty($order['processed_by']) && $order['processed_by'] !== 'Not processed yet') {
-        echo htmlspecialchars($order['processed_by']);
-        // Add a small user icon before the name
-        echo ' <i class="fas fa-user-check text-success" data-toggle="tooltip" title="Processed by staff"></i>';
-    } else {
-        echo '<span class="text-muted">Not processed yet <i class="fas fa-user-clock" data-toggle="tooltip" title="Awaiting processing"></i></span>';
-    }
-    ?>
-</td>
-                                <td>
-                                    <div class="btn-group">
-                                        <button class="btn btn-info btn-sm view-order" 
-                                                data-order-id="<?php echo $orderId; ?>" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="View Order Details">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-success btn-sm finish-order" 
-                                                data-order-id="<?php echo $orderId; ?>" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Mark Order as Finished">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-                                        <button class="btn btn-secondary btn-sm print-order" 
-                                                data-order-id="<?php echo $orderId; ?>" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Print Order">
-                                            <i class="fas fa-print"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
+                            ${itemsHtml}
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add this modal HTML at the bottom of your file, before the scripts -->
-<div class="modal fade" id="orderDetailsModal" tabindex="-1" role="dialog" aria-labelledby="orderDetailsModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" id="orderDetailsModalLabel">Order Details</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5>Customer Information</h5>
-                        <p><strong>Name:</strong> <span id="customerName"></span></p>
-                        <p><strong>Table Number:</strong> <span id="tableName"></span></p>
-                        <p><strong>Order Type:</strong> <span id="orderType"></span></p>
-                        <p><strong>Payment Method:</strong> <span id="paymentMethod"></span></p>
-                        <p><strong>Order Date:</strong> <span id="orderDate"></span></p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5>Order Summary</h5>
-                        <p><strong>Status:</strong> <span id="orderStatus" class="label label-info"></span></p>
-                        <p><strong>Total Amount:</strong> ₱<span id="totalAmount">0.00</span></p>
-                        <p class="discount-info" style="display: none;">
-                            <strong>Discount:</strong> ₱<span id="discountAmount">0.00</span>
-                            (<span id="discountType"></span>)
-                        </p>
-                        <p><strong>Final Amount:</strong> ₱<span id="finalAmount">0.00</span></p>
-                        <p><strong>Amount Paid:</strong> ₱<span id="amountPaid">0.00</span></p>
-                        <p><strong>Change:</strong> ₱<span id="changeAmount">0.00</span></p>
-                        <p class="remaining-balance" style="display: none;">
-                            <strong>Remaining Balance:</strong> ₱<span id="remainingBalance">0.00</span>
-                        </p>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <h5>Order Items</h5>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Unit Price</th>
-                                    <th>Add-ons</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody id="orderItemsBody">
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add this modal HTML before the existing modals -->
-<div class="modal fade" id="addOrderModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Add Additional Orders</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="addOrderForm">
-                    <input type="hidden" name="order_id" id="additionalOrderId">
-                    
-                    <!-- Menu Categories -->
-                    <div class="form-group">
-                        <label>Select Category:</label>
-                        <select class="form-control" id="menuCategory">
-                            <option value="">Select Category</option>
-                            <!-- Categories will be loaded dynamically -->
-                        </select>
-                    </div>
-
-                    <!-- Menu Items -->
-                    <div class="form-group">
-                        <label>Select Item:</label>
-                        <select class="form-control" id="menuItem" disabled>
-                            <option value="">Select Item First</option>
-                        </select>
-                    </div>
-
-                    <!-- Quantity -->
-                    <div class="form-group">
-                        <label>Quantity:</label>
-                        <input type="number" class="form-control" id="itemQuantity" min="1" value="1">
-                    </div>
-
-                    <!-- Add-ons Section -->
-                    <div class="form-group" id="addonsSection" style="display: none;">
-                        <label>Available Add-ons:</label>
-                        <div id="addonsList">
-                            <!-- Add-ons will be loaded dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Selected Items Table -->
-                    <div class="form-group">
-                        <label>Selected Items:</label>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Add-ons</th>
-                                    <th>Price</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="selectedItemsList">
-                                <!-- Selected items will appear here -->
-                            </tbody>
-                        </table>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="addSelectedItem">Add Item</button>
-                <button type="button" class="btn btn-success" id="saveAdditionalOrders">Save Orders</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Edit Order Modal -->
-<div class="modal fade" id="editOrderModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Edit Order</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="editOrderForm">
-                    <input type="hidden" id="editOrderId" name="order_id">
-                    
-                    <!-- Menu Categories Dropdown -->
-                    <div class="form-group">
-                        <label>Select Category:</label>
-                        <select class="form-control" id="editMenuCategory">
-                            <option value="">Select Category</option>
-                        </select>
-                    </div>
-
-                    <!-- Menu Items Dropdown -->
-                    <div class="form-group">
-                        <label>Select Item:</label>
-                        <select class="form-control" id="editMenuItem">
-                            <option value="">Select Category First</option>
-                        </select>
-                    </div>
-
-                    <!-- Quantity Input -->
-                    <div class="form-group">
-                        <label>Quantity:</label>
-                        <input type="number" class="form-control" id="editItemQuantity" min="1" value="1">
-                    </div>
-
-                    <!-- Add-ons Section -->
-                    <div class="form-group" id="editAddonsSection" style="display: none;">
-                        <label>Available Add-ons:</label>
-                        <div id="editAddonsList">
-                            <!-- Add-ons will be loaded dynamically -->
-                        </div>
-                    </div>
-
-                    <!-- Current Order Items Table -->
-                    <div class="form-group">
-                        <label>Current Order Items:</label>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Add-ons</th>
-                                    <th>Price</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="editOrderItems">
-                                <!-- Order items will be loaded here -->
-                            </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3" class="text-right"><strong>Total Amount:</strong></td>
-                                    <td colspan="2"><strong id="editTotalAmount">₱0.00</strong></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="addEditItem">Add Item</button>
-                <button type="button" class="btn btn-success" id="saveOrderChanges">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add this modal HTML before the existing modals -->
-<div class="modal fade" id="paymentModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Process Payment</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="paymentForm">
-                    <input type="hidden" id="payment_order_id" name="order_id">
-                    
-                    <div class="form-group">
-                        <label>Total Amount:</label>
-                        <input type="text" class="form-control" id="total_amount" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Amount Paid:</label>
-                        <input type="text" class="form-control" id="amount_paid" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Remaining Balance:</label>
-                        <input type="text" class="form-control" id="remaining_balance" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Payment Amount:</label>
-                        <input type="number" class="form-control" id="payment_amount" name="payment_amount" step="0.01" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Payment Method:</label>
-                        <select class="form-control" id="payment_method" name="payment_method" required>
-                            <option value="">Select Payment Method</option>
-                            <option value="cash">Cash</option>
-                            <option value="gcash">GCash</option>
-                            <option value="maya">Maya</option>
-                            <option value="bank">Bank Transfer</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="processPayment">Process Payment</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- First, add this new payment modal HTML after your existing modals -->
-<div class="modal fade" id="additionalOrderPaymentModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Process Payment for Additional Orders</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <form id="additionalOrderPaymentForm">
-                    <input type="hidden" id="additional_order_id" name="order_id">
-                    
-                    <div class="form-group">
-                        <label>Total Amount:</label>
-                        <input type="text" class="form-control" id="additional_total_amount" readonly>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Payment Amount:</label>
-                        <input type="number" class="form-control" id="additional_payment_amount" name="payment_amount" step="0.01" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Payment Method:</label>
-                        <select class="form-control" id="additional_payment_method" name="payment_method" required>
-                            <option value="">Select Payment Method</option>
-                            <option value="cash">Cash</option>
-                            <option value="gcash">GCash</option>
-                            <option value="maya">Maya</option>
-                            <option value="bank">Bank Transfer</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="processAdditionalPayment">Process Payment</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<style>
-/* Update the .main class margin */
-.main {
-    margin-left: 0 !important; /* Remove left margin */
-    padding-left: 15px; /* Add some padding instead */
-    width: 100%; /* Ensure full width */
-    padding-top: 50px;
-}
-
-/* Adjust the existing col-sm-offset and col-lg-offset classes */
-.col-sm-offset-3,
-.col-lg-offset-2 {
-    margin-left: 0 !important; /* Remove the bootstrap offset */
-}
-
-del {
-    color: #6c757d;
-    text-decoration: line-through;
-}
-
-.text-success {
-    color: #28a745 !important;
-}
-
-.text-primary {
-    color: #007bff !important;
-}
-
-.label-info {
-    background-color: #5bc0de;
-    color: white;
-    padding: 2px 5px;
-    border-radius: 3px;
-    font-size: 0.8em;
-}
-
-.btn-sm {
-    margin: 0 2px;
-}
-
-.btn i {
-    margin-right: 0;
-}
-
-.btn {
-    padding: 5px 10px;
-}
-
-/* Tooltip styling */
-.tooltip {
-    font-size: 12px;
-}
-
-.tooltip-inner {
-    background-color: #333;
-    padding: 5px 10px;
-}
-
-.btn-group {
-    display: flex;
-    gap: 5px;
-}
-
-.btn-group .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 4px;
-}
-
-.btn-group .btn i {
-    font-size: 14px;
-}
-
-.btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
-    transition: all 0.2s;
-}
-
-.btn:active {
-    transform: translateY(0);
-}
-
-/* Make sure icons are visible */
-.fas {
-    line-height: 1;
-}
-
-/* Additional styles to ensure proper spacing */
-.breadcrumb {
-    margin-top: 10px;
-}
-
-.modal-lg {
-    max-width: 80%;
-}
-
-.modal-body {
-    padding: 20px;
-    max-height: calc(100vh - 200px);
-    overflow-y: auto;
-}
-
-.modal-header {
-    background-color: #f8f9fa;
-    border-bottom: 1px solid #dee2e6;
-}
-
-.modal-footer {
-    background-color: #f8f9fa;
-    border-top: 1px solid #dee2e6;
-}
-
-.table th {
-    background-color: #f8f9fa;
-}
-
-.mt-4 {
-    margin-top: 1.5rem;
-}
-
-/* Add these to your existing styles */
-.alert {
-    padding: 15px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-}
-
-.alert-success {
-    color: #155724;
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-}
-
-.alert-danger {
-    color: #721c24;
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-}
-
-.alert-warning {
-    color: #856404;
-    background-color: #fff3cd;
-    border-color: #ffeeba;
-}
-
-.text-success {
-    color: #28a745;
-    font-weight: 500;
-}
-
-.text-primary {
-    color: #007bff;
-    font-weight: 500;
-}
-
-#orderDetailsModal table td {
-    vertical-align: middle;
-}
-
-#orderDetailsModal .row {
-    margin-bottom: 20px;
-}
-
-#orderDetailsModal h5 {
-    color: #333;
-    margin-bottom: 15px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 5px;
-}
-
-/* Add to your existing styles */
-#orderDetailsModal p {
-    margin-bottom: 10px;
-    line-height: 1.5;
-}
-
-#orderDetailsModal .text-success,
-#orderDetailsModal .text-primary {
-    font-weight: 600;
-}
-
-#amountPaid, #changeAmount {
-    font-size: 1.1em;
-}
-
-#orderDetailsModal .col-md-6 {
-    margin-bottom: 20px;
-}
-
-/* Add to your existing styles */
-.text-warning {
-    color: #ffc107;
-    font-weight: 500;
-}
-
-.text-muted {
-    color: #6c757d;
-    font-weight: 500;
-}
-
-/* Payment Status Labels */
-.label {
-    display: inline-block;
-    padding: 4px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 3px;
-}
-
-.label-success {
-    background-color: #28a745;
-    color: white;
-}
-
-.label-warning {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.label-info {
-    background-color: #17a2b8;
-    color: white;
-}
-
-/* Add data-order-id attribute to the order row */
-.modal-body p {
-    margin-bottom: 10px;
-    line-height: 1.5;
-}
-
-.label {
-    display: inline-block;
-    padding: 4px 8px;
-    font-size: 12px;
-    font-weight: 600;
-    line-height: 1;
-    text-align: center;
-    white-space: nowrap;
-    vertical-align: baseline;
-    border-radius: 3px;
-}
-
-.label-info {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.btn-sm {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.875rem;
-    line-height: 1.5;
-    border-radius: 0.2rem;
-}
-
-.ml-2 {
-    margin-left: 0.5rem;
-}
-
-.discount-info, .remaining-balance {
-    color: #dc3545;
-    font-weight: 500;
-}
-
-.table tfoot tr:last-child {
-    font-size: 1.1em;
-}
-
-.table tfoot td {
-    border-top: 2px solid #dee2e6;
-}
-</style>
-
-<script>
-$(document).ready(function() {
-    // Initialize DataTable
-    $('#rooms').DataTable();
-
-    // Initialize tooltips
-    $('[data-toggle="tooltip"]').tooltip();
-
-    // Helper function for SweetAlert2 messages
-    function showAlert(title, text, icon) {
-        Swal.fire({
-            title: title,
-            text: text,
-            icon: icon,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
-        });
-    }
-
-    // Modify the view-order click handler to check for remaining balance
-    $('.view-order').on('click', function(e) {
-        e.preventDefault();
-        var orderId = $(this).data('order-id');
-        
-        $.ajax({
-            url: 'get_order_details.php',
-            method: 'GET',
-            data: { order_id: orderId },
-            success: function(response) {
-                if(response.success) {
-                    // Add debug logging
-                    console.log('Order response:', response);
-                    
-                    // Populate customer information
-                    $('#customerName').text(response.order.customer_name || 'Walk-in Customer');
-                    $('#tableName').text(response.order.table_name || 'N/A');
-                    $('#orderType').text(response.order.order_type === 'advance' ? 'Advance Order' : 'Walk-in Order');
-                    $('#paymentMethod').text(response.order.payment_method);
-                    $('#orderDate').text(response.order.order_date);
-                    $('#orderStatus').text(response.order.status);
-                    
-                    // Format and display amounts
-                    $('#totalAmount').text(parseFloat(response.order.total_amount).toFixed(2));
-                    
-                    // Handle discount display
-                    if (response.order.discount_amount > 0) {
-                        $('.discount-info').show();
-                        $('#discountAmount').text(parseFloat(response.order.discount_amount).toFixed(2));
-                        $('#discountType').text(response.order.discount_type ? 
-                            response.order.discount_type.replace('_', ' ').toUpperCase() : '');
-                    } else {
-                        $('.discount-info').hide();
-                    }
-                    
-                    // Display final amount
-                    $('#finalAmount').text(parseFloat(response.order.final_amount).toFixed(2));
-                    
-                    // Handle payment information
-                    const amountPaid = parseFloat(response.order.amount_paid || 0);
-                    const changeAmount = parseFloat(response.order.change_amount || 0);
-                    const remainingBalance = parseFloat(response.order.remaining_balance || 0);
-                    
-                    // Debug logging
-                    console.log('Amount Paid:', amountPaid);
-                    console.log('Change Amount:', changeAmount);
-                    
-                    $('#amountPaid').text(amountPaid.toFixed(2));
-                    $('#changeAmount').text(changeAmount.toFixed(2));
-                    
-                    if (remainingBalance > 0) {
-                        $('.remaining-balance').show();
-                        $('#remainingBalance').text(remainingBalance.toFixed(2));
-                        
-                        // Add payment button if there's remaining balance
-                        $('#amountPaid').after(`
-                            <button class="btn btn-primary btn-sm ml-2" onclick="showPaymentModal(
-                                ${response.order.id}, 
-                                ${response.order.final_amount}, 
-                                ${amountPaid}, 
-                                ${remainingBalance}
-                            )">
-                                Process Payment
-                            </button>
-                        `);
-                    } else {
-                        $('.remaining-balance').hide();
-                    }
-                    
-                    // Populate order items table
-                    let itemsHtml = '';
-                    response.order.items.forEach(function(item) {
-                        let addonsText = item.addons.map(addon => 
-                            `${addon.name} (₱${parseFloat(addon.price).toFixed(2)})`
-                        ).join(', ') || 'None';
-                        
-                        itemsHtml += `
-                            <tr>
-                                <td>${item.name}</td>
-                                <td>${item.quantity}</td>
-                                <td>₱${parseFloat(item.unit_price).toFixed(2)}</td>
-                                <td>${addonsText}</td>
-                                <td>₱${parseFloat(item.subtotal).toFixed(2)}</td>
-                            </tr>
-                        `;
-                    });
-                    $('#orderItemsBody').html(itemsHtml);
-                    
-                    // Show the modal
-                    $('#orderDetailsModal').modal('show');
-                } else {
-                    showAlert('Error', response.message || 'Failed to load order details', 'error');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Ajax error:', error);
-                console.log('Response:', xhr.responseText);
-                showAlert('Error', 'Failed to load order details: ' + error, 'error');
-            }
-        });
-    });
-
-    // Finish Order Handler
-    $('.finish-order').on('click', function(e) {
-        e.preventDefault();
-        var orderId = $(this).data('order-id');
-        
-        // First check if there's any remaining balance
-        $.ajax({
-            url: 'get_order_details.php',
-            method: 'GET',
-            data: { order_id: orderId },
-            success: function(response) {
-                if(response.success) {
-                    if(response.order.remaining_balance > 0) {
-                        Swal.fire({
-                            title: 'Cannot Complete Order',
-                            text: 'This order has a remaining balance of ₱' + parseFloat(response.order.remaining_balance).toFixed(2) + '. Please process the full payment before marking the order as finished.',
-                            icon: 'warning',
-                            showCancelButton: true,
-                            confirmButtonColor: '#3085d6',
-                            cancelButtonColor: '#d33',
-                            confirmButtonText: 'Process Payment',
-                            cancelButtonText: 'Close'
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                // Show payment modal with order details
-                                $('#payment_order_id').val(response.order.id);
-                                $('#total_amount').val('₱' + parseFloat(response.order.total_amount).toFixed(2));
-                                $('#amount_paid').val('₱' + parseFloat(response.order.amount_paid).toFixed(2));
-                                $('#remaining_balance').val('₱' + parseFloat(response.order.remaining_balance).toFixed(2));
-                                $('#payment_amount').attr('max', response.order.remaining_balance);
-                                $('#payment_amount').val('');
-                                $('#payment_method').val('');
-                                
-                                // Show the payment modal
-                                $('#paymentModal').modal('show');
-                            }
-                        });
-                        return;
-                    }
-
-                    // Rest of the existing finish order code...
-                    Swal.fire({
-                        title: 'Confirm Order Completion',
-                        text: 'Are you sure you want to mark this order as finished?',
-                        icon: 'question',
-                        showCancelButton: true,
-                        confirmButtonColor: '#28a745',
-                        cancelButtonColor: '#dc3545',
-                        confirmButtonText: 'Yes, finish it!',
-                        cancelButtonText: 'Cancel'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: 'finish_order.php',
-                                method: 'POST',
-                                data: { 
-                                    order_id: orderId,
-                                    cashier_id: <?php echo $_SESSION['user_id']; ?> // Add cashier ID
-                                },
-                                dataType: 'json',
-                                success: function(response) {
-                                    if(response.success) {
-                                        Swal.fire({
-                                            title: 'Success!',
-                                            text: 'Order marked as finished successfully!',
-                                            icon: 'success',
-                                            timer: 1500,
-                                            showConfirmButton: false
-                                        }).then(() => {
-                                            location.reload();
-                                        });
-                                    } else {
-                                        showAlert('Error', response.message || 'Failed to finish order', 'error');
-                                    }
-                                },
-                                error: function(xhr, status, error) {
-                                    console.error(error);
-                                    showAlert('Error', 'An error occurred while processing the request', 'error');
-                                }
-                            });
-                        }
-                    });
-                } else {
-                    showAlert('Error', response.message || 'Failed to check order details', 'error');
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error(error);
-                showAlert('Error', 'An error occurred while checking order details', 'error');
-            }
-        });
-    });
-
-    // Process payment button handler
-    $('#processPayment').click(function() {
-        const form = $('#paymentForm')[0];
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-        
-        const paymentAmount = parseFloat($('#payment_amount').val());
-        const remainingBalance = parseFloat($('#remaining_balance').val().replace('₱', ''));
-        
-        if (isNaN(paymentAmount) || paymentAmount <= 0) {
-            showAlert('Error', 'Please enter a valid payment amount', 'error');
-            return;
-        }
-        
-        if (paymentAmount > remainingBalance) {
-            showAlert('Error', `Payment amount (₱${paymentAmount.toFixed(2)}) cannot exceed remaining balance (₱${remainingBalance.toFixed(2)})`, 'error');
-            return;
-        }
-        
-        // Disable the process payment button and show loading state
-        const $processBtn = $('#processPayment');
-        const originalText = $processBtn.text();
-        $processBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
-        
-        $.ajax({
-            url: 'process_payment.php',
-            method: 'POST',
-            data: {
-                order_id: $('#payment_order_id').val(),
-                payment_amount: paymentAmount,
-                payment_method: $('#payment_method').val()
-            },
-            dataType: 'json',
-            success: function(response) {
-                if(response.success) {
-                    // Update the status label in the table
-                    const orderId = $('#payment_order_id').val();
-                    const statusCell = $(`tr[data-order-id="${orderId}"] td:nth-last-child(2)`);
-                    
-                    if (response.payment_status === 'Paid') {
-                        statusCell.html('<span class="label label-success">Paid</span>');
-                    } else {
-                        statusCell.html('<span class="label label-warning">Partial</span>');
-                    }
-                    
-                    Swal.fire({
-                        title: 'Success!',
-                        text: response.message,
-                        icon: 'success',
-                        timer: 2000,
-                        showConfirmButton: false
-                    }).then(() => {
-                        $('#paymentModal').modal('hide');
-                        location.reload();
-                    });
-                } else {
-                    showAlert('Error', response.message, 'error');
-                }
-            },
-            error: function(xhr) {
-                let errorMessage = 'Failed to process payment';
-                try {
-                    const response = JSON.parse(xhr.responseText);
-                    if (response.message) {
-                        errorMessage = response.message;
-                    }
-                } catch (e) {
-                    console.error('Error parsing response:', e);
-                }
-                showAlert('Error', errorMessage, 'error');
-            },
-            complete: function() {
-                // Re-enable the process payment button
-                $processBtn.prop('disabled', false).text(originalText);
-            }
-        });
-    });
-
-    // Add input validation for payment amount
-    $('#payment_amount').on('input', function() {
-        const input = $(this);
-        const value = parseFloat(input.val());
-        const remainingBalance = parseFloat($('#remaining_balance').val().replace('₱', ''));
-        
-        if (value > remainingBalance) {
-            input.val(remainingBalance.toFixed(2));
-            showAlert('Warning', 'Payment amount cannot exceed remaining balance', 'warning');
-        }
-        
-        // Ensure positive numbers only
-        if (value < 0) {
-            input.val('0.00');
-        }
-    });
-
-    // Format payment amount on blur
-    $('#payment_amount').on('blur', function() {
-        const input = $(this);
-        const value = parseFloat(input.val());
-        if (!isNaN(value)) {
-            input.val(value.toFixed(2));
-        }
-    });
-
-    // Validate payment method selection
-    $('#payment_method').on('change', function() {
-        if (!$(this).val()) {
-            showAlert('Warning', 'Please select a payment method', 'warning');
-        }
-    });
-
-    // Handle payment modal close
-    $('#paymentModal').on('hidden.bs.modal', function () {
-        $('#orderDetailsModal').modal('show');
-    });
-
-    // Function to show payment modal
-    function showPaymentModal(orderId, totalAmount, amountPaid, remainingBalance) {
-        $('#payment_order_id').val(orderId);
-        $('#total_amount').val('₱' + parseFloat(totalAmount).toFixed(2));
-        $('#amount_paid').val('₱' + parseFloat(amountPaid).toFixed(2));
-        $('#remaining_balance').val('₱' + parseFloat(remainingBalance).toFixed(2));
-        $('#payment_amount').attr('max', remainingBalance);
-        $('#payment_amount').val('');
-        $('#payment_method').val('');
-        
-        $('#orderDetailsModal').modal('hide');
-        $('#paymentModal').modal('show');
-    }
-
-    // Additional Orders Handler
-    $('.add-orders').on('click', function(e) {
-        e.preventDefault();
-        const orderId = $(this).data('order-id');
-        $('#additionalOrderId').val(orderId);
-        
-        // Load menu categories
-        $.ajax({
-            url: 'get_menu_categories.php',
-            method: 'GET',
-            success: function(response) {
-                if(response.success) {
-                    const categorySelect = $('#menuCategory');
-                    categorySelect.empty();
-                    categorySelect.append('<option value="">Select Category</option>');
-                    
-                    response.categories.forEach(function(category) {
-                        categorySelect.append(`<option value="${category.id}">${category.name}</option>`);
-                    });
-                }
-            }
-        });
-
-        $('#addOrderModal').modal('show');
-    });
-
-    // Category Change Handler
-    $('#menuCategory').change(function() {
-        const categoryId = $(this).val();
-        const menuItemSelect = $('#menuItem');
-        
-        if(categoryId) {
-            $.ajax({
-                url: 'get_menu_items.php',
-                method: 'GET',
-                data: { category_id: categoryId },
-                success: function(response) {
-                    if(response.success) {
-                        menuItemSelect.empty().prop('disabled', false); // Enable the dropdown
-                        menuItemSelect.append('<option value="">Select Item</option>');
-                        
-                        response.items.forEach(function(item) {
-                            menuItemSelect.append(`
-                                <option value="${item.id}" data-price="${item.price}">
-                                    ${item.name} - ₱${parseFloat(item.price).toFixed(2)}
-                                </option>
-                            `);
-                        });
-                    } else {
-                        menuItemSelect.prop('disabled', true);
-                        menuItemSelect.html('<option value="">Error loading items</option>');
-                        showAlert('Error', response.message || 'Failed to load menu items', 'error');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    menuItemSelect.prop('disabled', true);
-                    menuItemSelect.html('<option value="">Error loading items</option>');
-                    showAlert('Error', 'Failed to load menu items: ' + error, 'error');
-                }
-            });
-        } else {
-            menuItemSelect.prop('disabled', true);
-            menuItemSelect.html('<option value="">Select Category First</option>');
-        }
-    });
-
-    // Menu Item Change Handler
-    $('#menuItem').change(function() {
-        const itemId = $(this).val();
-        
-        if(itemId) {
-            $.ajax({
-                url: 'get_item_addons.php',
-                method: 'GET',
-                data: { item_id: itemId },
-                success: function(response) {
-                    if(response.success && response.addons.length > 0) {
-                        const addonsList = $('#addonsList');
-                        addonsList.empty();
-                        
-                        response.addons.forEach(function(addon) {
-                            addonsList.append(`
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" class="addon-checkbox" 
-                                               value="${addon.id}" 
-                                               data-price="${addon.price}">
-                                        ${addon.name} - ₱${addon.price}
-                                    </label>
-                                </div>
-                            `);
-                        });
-                        $('#addonsSection').show();
-                    } else {
-                        $('#addonsSection').hide();
-                    }
-                }
-            });
-        } else {
-            $('#addonsSection').hide();
-        }
-    });
-
-    // Add Selected Item Button Handler
-    $('#addSelectedItem').click(function() {
-        const itemSelect = $('#menuItem');
-        const item = itemSelect.find('option:selected');
-        const quantity = parseInt($('#itemQuantity').val()) || 1;
-        
-        if(!item.val()) {
-            showAlert('Warning', 'Please select an item', 'warning');
-            return;
-        }
-
-        const selectedAddons = [];
-        let addonsTotalPrice = 0;
-        $('.addon-checkbox:checked').each(function() {
-            const addonPrice = parseFloat($(this).data('price')) || 0;
-            addonsTotalPrice += addonPrice;
-            selectedAddons.push({
-                id: $(this).val(),
-                name: $(this).parent().text().trim(),
-                price: addonPrice
-            });
-        });
-
-        const itemPrice = parseFloat(item.data('price')) || 0;
-        const totalItemPrice = (itemPrice + addonsTotalPrice) * quantity;
-
-        // Add the item to the selected items list with proper price formatting
-        $('#selectedItemsList').append(`
-            <tr>
-                <td>${item.text()}</td>
-                <td>${quantity}</td>
-                <td>${selectedAddons.map(addon => addon.name).join(', ') || 'None'}</td>
-                <td>₱${totalItemPrice.toFixed(2)}</td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm remove-item">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `);
-
-        // Update the total amount immediately after adding the item
-        updateTotalAmount();
-        resetItemForm();
-    });
-
-    // Remove Item Handler with total update
-    $(document).on('click', '.remove-item', function() {
-        $(this).closest('tr').remove();
-        updateTotalAmount();
-    });
-
-    // Save Additional Orders Handler
-    $('#saveAdditionalOrders').click(function() {
-        const orderId = $('#additionalOrderId').val();
-        const items = [];
-        let totalAmount = 0;
-        
-        $('#selectedItemsList tr').each(function() {
-            const $row = $(this);
-            const price = parseFloat($row.find('td:eq(3)').text().replace('₱', '').replace(/,/g, '')) || 0;
-            totalAmount += price;
-            
-            items.push({
-                item_name: $row.find('td:first').text(),
-                quantity: $row.find('td:eq(1)').text(),
-                addons: $row.find('td:eq(2)').text(),
-                price: price
-            });
-        });
-
-        if(items.length === 0) {
-            showAlert('Warning', 'Please add at least one item', 'warning');
-            return;
-        }
-
-        Swal.fire({
-            title: 'Save Additional Orders',
-            text: 'Are you sure you want to save these additional orders?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, save it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Show payment modal instead of direct save
-                $('#additional_order_id').val(orderId);
-                $('#additional_total_amount').val(`₱${totalAmount.toFixed(2)}`);
-                $('#additional_payment_amount').val(totalAmount.toFixed(2));
-                $('#additional_payment_method').val('');
                 
-                $('#addOrderModal').modal('hide');
-                $('#additionalOrderPaymentModal').modal('show');
-            }
-        });
-    });
-
-    // Add Process Additional Payment Handler
-    $('#processAdditionalPayment').click(function() {
-        const form = $('#additionalOrderPaymentForm')[0];
-        if (!form.checkValidity()) {
-            form.reportValidity();
-            return;
-        }
-
-        const orderId = $('#additional_order_id').val();
-        const paymentAmount = parseFloat($('#additional_payment_amount').val());
-        const paymentMethod = $('#additional_payment_method').val();
-        const items = [];
-        
-        $('#selectedItemsList tr').each(function() {
-            const $row = $(this);
-            items.push({
-                item_name: $row.find('td:first').text(),
-                quantity: $row.find('td:eq(1)').text(),
-                addons: $row.find('td:eq(2)').text(),
-                price: parseFloat($row.find('td:eq(3)').text().replace('₱', '').replace(/,/g, ''))
-            });
-        });
-
-        // Disable the button and show loading state
-        const $btn = $(this);
-        const originalText = $btn.text();
-        $btn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Processing...');
-
-        // Send both order and payment data
-        $.ajax({
-            url: 'save_additional_orders.php',
-            method: 'POST',
-            data: {
-                order_id: orderId,
-                items: JSON.stringify(items),
-                payment_amount: paymentAmount,
-                payment_method: paymentMethod
-            },
-            success: function(response) {
-                if(response.success) {
-                    Swal.fire({
-                        title: 'Success!',
-                        text: 'Additional orders and payment processed successfully!',
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false
-                    }).then(() => {
-                        $('#additionalOrderPaymentModal').modal('hide');
-                        location.reload();
-                    });
-                } else {
-                    showAlert('Error', response.message || 'Error processing order and payment', 'error');
-                }
-            },
-            error: function() {
-                showAlert('Error', 'Error processing order and payment', 'error');
-            },
-            complete: function() {
-                $btn.prop('disabled', false).text(originalText);
-            }
-        });
-    });
-
-    // Add payment validation
-    $('#additional_payment_amount').on('input', function() {
-        const input = $(this);
-        const value = parseFloat(input.val());
-        const totalAmount = parseFloat($('#additional_total_amount').val().replace('₱', '').replace(/,/g, ''));
-        
-        if (value < totalAmount) {
-            input.addClass('is-invalid');
-            showAlert('Warning', 'Payment amount must be at least equal to the total amount', 'warning');
-        } else {
-            input.removeClass('is-invalid');
-        }
-    });
-
-    // Handle modal chain
-    $('#additionalOrderPaymentModal').on('hidden.bs.modal', function() {
-        $('#addOrderModal').modal('show');
-    });
-
-    // Helper Functions
-    function updateTotalAmount() {
-        let total = 0;
-        $('#selectedItemsList tr').each(function() {
-            const $row = $(this);
-            const priceText = $row.find('td:eq(3)').text();
-            // Remove ₱ symbol and any commas, then parse as float
-            const price = parseFloat(priceText.replace(/[₱,]/g, '')) || 0;
-            total += price;
-        });
-
-        // Update both the total cell and the total amount span
-        $('#selectedItemsList').closest('table').find('tfoot').remove(); // Remove existing footer if any
-        $('#selectedItemsList').closest('table').append(`
-            <tfoot>
-                <tr>
-                    <td colspan="3" class="text-right"><strong>Total Amount:</strong></td>
-                    <td colspan="2"><strong>₱${total.toFixed(2)}</strong></td>
-                </tr>
-            </tfoot>
-        `);
-    }
-
-    function resetItemForm() {
-        $('#menuItem').val('');
-        $('#itemQuantity').val(1);
-        $('.addon-checkbox').prop('checked', false);
-        $('#addonsSection').hide();
-    }
-
-    // Edit Order Handler
-    $('.edit-order').on('click', function(e) {
-        e.preventDefault();
-        const orderId = $(this).data('order-id');
-        $('#editOrderId').val(orderId);
-        
-        // Reset and disable menu item select initially
-        $('#editMenuItem').prop('disabled', true).html('<option value="">Select Category First</option>');
-        
-        // Load categories
-        $.ajax({
-            url: 'get_menu_categories.php',
-            method: 'GET',
-            success: function(response) {
-                if(response.success) {
-                    const categorySelect = $('#editMenuCategory');
-                    categorySelect.empty();
-                    categorySelect.append('<option value="">Select Category</option>');
-                    
-                    response.categories.forEach(function(category) {
-                        categorySelect.append(`
-                            <option value="${category.id}">
-                                ${category.display_name || category.name}
-                            </option>
-                        `);
-                    });
-                    
-                    // Load current order details
-                    loadOrderDetails(orderId);
-                } else {
-                    showAlert('Error', response.message || 'Failed to load categories', 'error');
-                }
-            },
-            error: function(xhr, status, error) {
-                showAlert('Error', 'Failed to load categories: ' + error, 'error');
-            }
-        });
-        
-        $('#editOrderModal').modal('show');
-    });
-
-    // Category Change Handler
-    $('#editMenuCategory').change(function() {
-        const categoryId = $(this).val();
-        const menuItemSelect = $('#editMenuItem');
-        
-        // Reset and show loading state
-        menuItemSelect.prop('disabled', true);
-        menuItemSelect.html('<option value="">Loading items...</option>');
-        
-        if (!categoryId) {
-            menuItemSelect.html('<option value="">Select Category First</option>');
-            return;
+                <div class="row">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <table class="table table-sm table-borderless mb-0">
+                                    <tr>
+                                        <td width="120"><strong>Subtotal:</strong></td>
+                                        <td class="text-end">₱${subtotal.toFixed(2)}</td>
+                                    </tr>
+                                    ${order.discount_amount && parseFloat(order.discount_amount) > 0 ? `
+                                        <tr>
+                                            <td><strong>Discount:</strong></td>
+                                            <td class="text-end text-danger">-₱${parseFloat(order.discount_amount).toFixed(2)}</td>
+                                        </tr>
+                                    ` : ''}
+                                    <tr class="border-top">
+                                        <td><strong>Total Amount:</strong></td>
+                                        <td class="text-end"><strong>₱${parseFloat(order.total).toFixed(2)}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Amount Paid:</strong></td>
+                                        <td class="text-end">₱${parseFloat(order.amount_paid || 0).toFixed(2)}</td>
+                                    </tr>
+                                    ${order.downpayment && parseFloat(order.downpayment) > 0 ? `
+                                        <tr>
+                                            <td><strong>Downpayment:</strong></td>
+                                            <td class="text-end text-info">₱${parseFloat(order.downpayment).toFixed(2)}</td>
+                                        </tr>
+                                    ` : ''}
+                                    ${order.balance && parseFloat(order.balance) > 0 ? `
+                                        <tr>
+                                            <td><strong>Balance:</strong></td>
+                                            <td class="text-end text-warning">₱${parseFloat(order.balance).toFixed(2)}</td>
+                                        </tr>
+                                    ` : ''}
+                                    <tr>
+                                        <td><strong>Change:</strong></td>
+                                        <td class="text-end">₱${parseFloat(order.change_amount || 0).toFixed(2)}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            $('#orderDetailsContent').html(detailsHtml);
         }
         
-        // Fetch menu items
-        $.ajax({
-            url: 'get_menu_items.php',
-            method: 'GET',
-            data: { category_id: categoryId },
-            dataType: 'json',
-            success: function(response) {
-                if (response.success && Array.isArray(response.items)) {
-                    menuItemSelect.empty();
-                    menuItemSelect.append('<option value="">Select Item</option>');
+        $(document).ready(function() {
+            // Search functionality for orders
+            $('#orderSearchInput').on('keyup', function() {
+                const searchTerm = $(this).val().toLowerCase();
+                
+                $('.table tbody tr').each(function() {
+                    const row = $(this);
+                    const rowText = row.text().toLowerCase();
                     
-                    response.items.forEach(function(item) {
-                        menuItemSelect.append(`
-                            <option value="${item.id}" data-price="${item.price}">
-                                ${item.name} - ₱${item.price.toFixed(2)}
-                            </option>
-                        `);
-                    });
-                    
-                    menuItemSelect.prop('disabled', false);
-                } else {
-                    menuItemSelect.prop('disabled', true);
-                    menuItemSelect.html('<option value="">Error loading items</option>');
-                    console.error('Invalid response:', response);
-                }
-            },
-            error: function(xhr, status, error) {
-                menuItemSelect.prop('disabled', true);
-                menuItemSelect.html('<option value="">Error loading items</option>');
-                console.error('Ajax error:', error);
-                console.log('Response:', xhr.responseText);
-            }
-        });
-    });
-
-    // Menu Item Change Handler
-    $('#editMenuItem').change(function() {
-        const itemId = $(this).val();
-        
-        if(itemId) {
-            $.ajax({
-                url: 'get_item_addons.php',
-                method: 'GET',
-                data: { item_id: itemId },
-                success: function(response) {
-                    if(response.success && response.addons.length > 0) {
-                        const addonsList = $('#editAddonsList');
-                        addonsList.empty();
-                        
-                        response.addons.forEach(function(addon) {
-                            addonsList.append(`
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" class="addon-checkbox" 
-                                               value="${addon.id}" 
-                                               data-price="${addon.price}">
-                                        ${addon.name} - ₱${addon.price}
-                                    </label>
-                                </div>
-                            `);
-                        });
-                        $('#editAddonsSection').show();
+                    if (rowText.includes(searchTerm)) {
+                        row.show();
                     } else {
-                        $('#editAddonsSection').hide();
+                        row.hide();
                     }
-                }
-            });
-        } else {
-            $('#editAddonsSection').hide();
-        }
-    });
-
-    // Add Item to Order Handler
-    $('#addEditItem').click(function() {
-        const itemSelect = $('#editMenuItem option:selected');
-        const quantity = parseInt($('#editItemQuantity').val()) || 1;
-        
-        if(!itemSelect.val()) {
-            showAlert('Warning', 'Please select an item', 'warning');
-            return;
-        }
-
-        const itemPrice = parseFloat(itemSelect.data('price')) || 0;
-        let addonsTotalPrice = 0;
-        const selectedAddons = [];
-        
-        $('.addon-checkbox:checked').each(function() {
-            const addonPrice = parseFloat($(this).data('price')) || 0;
-            addonsTotalPrice += addonPrice;
-            selectedAddons.push({
-                id: $(this).val(),
-                name: $(this).parent().text().trim(),
-                price: addonPrice
-            });
-        });
-
-        const totalItemPrice = (itemPrice * quantity) + addonsTotalPrice;
-        const addonsText = selectedAddons.length > 0 
-            ? selectedAddons.map(addon => addon.name).join(', ')
-            : 'None';
-
-        $('#editOrderItems').append(`
-            <tr>
-                <td>${itemSelect.text()}</td>
-                <td>${quantity}</td>
-                <td>${addonsText}</td>
-                <td>₱${totalItemPrice.toFixed(2)}</td>
-                <td>
-                    <button type="button" class="btn btn-danger btn-sm remove-item">
-                        <i class="fas fa-trash"></i>
-                    </button>
-                </td>
-            </tr>
-        `);
-
-        updateEditTotalAmount();
-        resetEditItemForm();
-    });
-
-    // Helper Functions
-    function loadOrderDetails(orderId) {
-        $.ajax({
-            url: 'get_order_details.php',
-            method: 'GET',
-            data: { order_id: orderId },
-            success: function(response) {
-                if(response.success) {
-                    const tbody = $('#editOrderItems');
-                    tbody.empty();
-                    let totalAmount = 0;
-                    
-                    response.order.items.forEach(function(item) {
-                        // Calculate item total including addons
-                        const itemPrice = parseFloat(item.unit_price) || 0;
-                        const quantity = parseInt(item.quantity) || 0;
-                        let addonTotal = 0;
-                        
-                        // Calculate addons total if any
-                        if (Array.isArray(item.addons)) {
-                            item.addons.forEach(addon => {
-                                addonTotal += parseFloat(addon.price) || 0;
-                            });
-                        }
-                        
-                        const itemTotal = (itemPrice * quantity) + addonTotal;
-                        totalAmount += itemTotal;
-                        
-                        const addonsText = Array.isArray(item.addons) && item.addons.length > 0 
-                            ? item.addons.map(addon => `${addon.name} (₱${parseFloat(addon.price).toFixed(2)})`).join(', ')
-                            : 'None';
-                        
-                        tbody.append(`
-                            <tr>
-                                <td>${item.name}</td>
-                                <td>${quantity}</td>
-                                <td>${addonsText}</td>
-                                <td>₱${itemTotal.toFixed(2)}</td>
-                                <td>
-                                    <button type="button" class="btn btn-danger btn-sm remove-item">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
+                });
+                
+                // Show message if no results found
+                const visibleRows = $('.table tbody tr:visible').length;
+                if (visibleRows === 0 && searchTerm !== '') {
+                    if (!$('.no-results-message').length) {
+                        $('.table tbody').append(`
+                            <tr class="no-results-message">
+                                <td colspan="13" class="text-center py-4">
+                                    <i class="fas fa-search fa-3x text-muted mb-3"></i>
+                                    <p class="mb-0">No orders found matching "${searchTerm}"</p>
                                 </td>
                             </tr>
                         `);
-                    });
-                    
-                    // Update total amount
-                    $('#editTotalAmount').text(`₱${totalAmount.toFixed(2)}`);
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error('Error loading order details:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to load order details. Please try again.'
-                });
-            }
-        });
-    }
-
-    function updateEditTotalAmount() {
-        let total = 0;
-        $('#editOrderItems tr').each(function() {
-            const priceText = $(this).find('td:eq(3)').text();
-            const price = parseFloat(priceText.replace(/[₱,]/g, '')) || 0;
-            total += price;
-        });
-        $('#editTotalAmount').text(`₱${total.toFixed(2)}`);
-    }
-
-    function resetEditItemForm() {
-        $('#editMenuItem').val('');
-        $('#editItemQuantity').val(1);
-        $('.addon-checkbox').prop('checked', false);
-        $('#editAddonsSection').hide();
-    }
-
-    // Remove item handler
-    $(document).on('click', '.remove-item', function() {
-        $(this).closest('tr').remove();
-        updateEditTotalAmount();
-    });
-
-    // Add this helper function for flash messages
-    function showFlashMessage(message, type) {
-        const iconMap = {
-            success: 'success',
-            error: 'error',
-            warning: 'warning',
-            info: 'info'
-        };
-
-        Swal.fire({
-            title: type.charAt(0).toUpperCase() + type.slice(1),
-            text: message,
-            icon: iconMap[type] || 'info',
-            timer: 3000,
-            timerProgressBar: true,
-            showConfirmButton: false
-        });
-    }
-
-    // Add data-order-id attribute to each order row for status updates
-    $('.finish-order').each(function() {
-        const orderId = $(this).data('order-id');
-        $(this).closest('tr').attr('data-order-id', orderId);
-    });
-    
-    // Print Order Handler
-    $('.print-order').on('click', function(e) {
-        e.preventDefault();
-        const orderId = $(this).data('order-id');
-        
-        // Show loading state
-        const $printBtn = $(this);
-        const originalHtml = $printBtn.html();
-        $printBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
-        
-        // Call generate_receipt.php
-        $.ajax({
-            url: 'generate_receipt.php',
-            method: 'GET',
-            data: { order_id: orderId },
-            success: function(response) {
-                // Create a new window for the receipt
-                const printWindow = window.open('', '_blank', 'width=400,height=600');
-                if (printWindow) {
-                    printWindow.document.write(response);
-                    printWindow.document.close();
-                    
-                    // Wait for content to load then print
-                    printWindow.onload = function() {
-                        printWindow.focus();
-                        printWindow.print();
-                        
-                        // Close window after printing (optional - comment out if you want it to stay open)
-                        printWindow.onafterprint = function() {
-                            printWindow.close();
-                        };
-                    };
+                    }
                 } else {
+                    $('.no-results-message').remove();
+                }
+            });
+
+            // Edit Order from table
+            $('.edit-order').click(function() {
+                const orderId = $(this).data('id');
+                console.log('Edit button clicked, Order ID:', orderId);
+                
+                if (orderId) {
+                    const modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
+                    
+                    // Show loading spinner
+                    $('#editOrderContent').html(`
+                        <div class="text-center my-5">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading order data for editing...</p>
+                        </div>
+                    `);
+                    
+                    modal.show();
+                    
+                    // Load order details for editing via AJAX
+                    $.get('get_order_details.php', { id: orderId }, function(response) {
+                        console.log('Response received:', response);
+                        
+                        if (response.success) {
+                            displayEditForm(response.order);
+                        } else {
+                            $('#editOrderContent').html(`
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    ${response.message || 'Failed to load order data for editing'}
+                                </div>
+                            `);
+                        }
+                    }, 'json').fail(function(xhr, status, error) {
+                        console.error('AJAX failed:', status, error);
+                        console.log('Response text:', xhr.responseText);
+                        
+                        $('#editOrderContent').html(`
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error loading order data. Please try again.
+                                <br><small>Details: ${error}</small>
+                            </div>
+                        `);
+                    });
+                } else {
+                    console.error('No order ID found');
                     Swal.fire({
+                        title: 'Error!',
+                        text: 'No order ID found',
                         icon: 'error',
-                        title: 'Error',
-                        text: 'Please allow pop-ups to print the receipt'
+                        confirmButtonColor: '#b8860b'
                     });
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('Print Error:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to generate receipt. Please try again.'
+            });
+
+            // View Order Details
+            $('.view-order').click(function() {
+                const orderId = $(this).data('id');
+                const modal = new bootstrap.Modal(document.getElementById('viewOrderModal'));
+                
+                // Show loading spinner
+                $('#orderDetailsContent').html(`
+                    <div class="text-center my-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2">Loading order details...</p>
+                    </div>
+                `);
+                
+                modal.show();
+                
+                // Load order details via AJAX
+                $.get('get_order_details.php', { id: orderId }, function(response) {
+                    if (response.success) {
+                        displayOrderDetails(response.order);
+                    } else {
+                        $('#orderDetailsContent').html(`
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                ${response.message || 'Failed to load order details'}
+                            </div>
+                        `);
+                    }
+                }, 'json').fail(function() {
+                    $('#orderDetailsContent').html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Error loading order details. Please try again.
+                        </div>
+                    `);
                 });
-            },
-            complete: function() {
-                // Reset button state
-                $printBtn.prop('disabled', false).html(originalHtml);
-            }
-        });
-    });
-
-    // After successful order update, update the order details in the table
-    function updateOrderRow(orderId, updatedData) {
-        const $orderRow = $(`tr[data-order-id="${orderId}"]`);
-        
-        // Update the order details cell
-        let itemsHtml = '';
-        let totalAmount = 0;
-        
-        updatedData.items.forEach(item => {
-            const itemTotal = item.quantity * item.unit_price;
-            totalAmount += itemTotal;
-            
-            itemsHtml += `
-                <div>
-                    ${item.name} (${item.quantity} x ₱${parseFloat(item.unit_price).toFixed(2)})
-                    ${item.addons !== 'None' ? '<br>Add-ons: ' + item.addons : ''}
-                </div>
-            `;
-        });
-
-        $orderRow.find('.order-details').html(itemsHtml);
-        
-        // Update amounts
-        if (updatedData.discount_type) {
-            const discountAmount = totalAmount * 0.20;
-            const finalAmount = totalAmount - discountAmount;
-            
-            $orderRow.find('.total-amount').html(`
-                ₱${totalAmount.toFixed(2)}<br>
-                <span class="text-success">Discount (20%): ₱${discountAmount.toFixed(2)}</span><br>
-                <strong class="text-primary">Final Amount: ₱${finalAmount.toFixed(2)}</strong>
-            `);
-        } else {
-            $orderRow.find('.total-amount').text(`₱${totalAmount.toFixed(2)}`);
-        }
-    }
-
-    // Save Order Changes Handler
-    $('#saveOrderChanges').click(function() {
-        const orderId = $('#editOrderId').val();
-        const items = [];
-        
-        // Collect all items from the table
-        $('#editOrderItems tr').each(function() {
-            const $row = $(this);
-            const itemName = $row.find('td:eq(0)').text();
-            const quantity = parseInt($row.find('td:eq(1)').text());
-            const addons = $row.find('td:eq(2)').text();
-            const priceText = $row.find('td:eq(3)').text();
-            const price = parseFloat(priceText.replace('₱', '').replace(',', ''));
-            
-            items.push({
-                name: itemName,
-                quantity: quantity,
-                addons: addons === 'None' ? [] : addons.split(', '),
-                price: price
+                
+                // Set the order ID in the complete button
+                $('#completeOrderBtn').data('order-id', orderId);
+                // Set the order ID in the edit button
+                $('#editOrderBtn').data('order-id', orderId);
             });
-        });
 
-        if (items.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'No Items',
-                text: 'Please add at least one item to the order'
+            // Edit Order
+            $('#editOrderBtn').click(function() {
+                const orderId = $(this).data('order-id');
+                console.log('Modal Edit button clicked, Order ID:', orderId);
+                
+                if (orderId) {
+                    const modal = new bootstrap.Modal(document.getElementById('editOrderModal'));
+                    
+                    // Show loading spinner
+                    $('#editOrderContent').html(`
+                        <div class="text-center my-5">
+                            <div class="spinner-border text-warning" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading order data for editing...</p>
+                        </div>
+                    `);
+                    
+                    modal.show();
+                    
+                    // Load order details for editing via AJAX
+                    $.get('get_order_details.php', { id: orderId }, function(response) {
+                        console.log('Modal response received:', response);
+                        
+                        if (response.success) {
+                            displayEditForm(response.order);
+                        } else {
+                            $('#editOrderContent').html(`
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>
+                                    ${response.message || 'Failed to load order data for editing'}
+                                </div>
+                            `);
+                        }
+                    }, 'json').fail(function(xhr, status, error) {
+                        console.error('Modal AJAX failed:', status, error);
+                        console.log('Response text:', xhr.responseText);
+                        
+                        $('#editOrderContent').html(`
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                Error loading order data. Please try again.
+                                <br><small>Details: ${error}</small>
+                            </div>
+                        `);
+                    });
+                } else {
+                    console.error('No order ID found in modal edit button');
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'No order ID found',
+                        icon: 'error',
+                        confirmButtonColor: '#b8860b'
+                    });
+                }
             });
-            return;
-        }
 
-        // Confirm before saving
-        Swal.fire({
-            title: 'Save Changes?',
-            text: 'Are you sure you want to update this order?',
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, save changes'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // Show loading state
-                const $saveBtn = $('#saveOrderChanges');
-                const originalText = $saveBtn.text();
-                $saveBtn.prop('disabled', true).text('Saving...');
-
-                // Send update request
+            // Complete Order button
+            $('.complete-order, #completeOrderBtn').click(function() {
+                const orderId = $(this).data('order-id') || $(this).closest('.complete-order').data('id');
+                
+                if (!orderId) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Order ID not found',
+                        icon: 'error',
+                        confirmButtonColor: '#b8860b'
+                    });
+                    return;
+                }
+                
+                // Check order balance first
                 $.ajax({
-                    url: 'update_order.php',
-                    method: 'POST',
-                    data: {
-                        order_id: orderId,
-                        items: JSON.stringify(items),
-                        total_amount: parseFloat($('#editTotalAmount').text().replace('₱', ''))
-                    },
+                    url: 'check_order_balance.php',
+                    method: 'GET',
+                    data: { order_id: orderId },
+                    dataType: 'json',
                     success: function(response) {
                         if (response.success) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: 'Order updated successfully',
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                // Close modal and refresh page
-                                $('#editOrderModal').modal('hide');
-                                location.reload();
-                            });
+                            const order = response.order;
+                            const balance = parseFloat(order.balance);
+                            
+                            if (balance > 0) {
+                                // Show payment modal
+                                showPaymentModal(orderId, balance);
+                            } else {
+                                // No balance, mark as finished directly
+                                Swal.fire({
+                                    title: 'Complete Order?',
+                                    text: 'Are you sure you want to mark this order as finished?',
+                                    icon: 'question',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#b8860b',
+                                    cancelButtonColor: '#6c757d',
+                                    confirmButtonText: 'Yes, Complete!',
+                                    cancelButtonText: 'Cancel'
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        markOrderAsFinished(orderId);
+                                    }
+                                });
+                            }
                         } else {
                             Swal.fire({
+                                title: 'Error!',
+                                text: 'Error checking order balance: ' + (response.message || 'Unknown error'),
                                 icon: 'error',
-                                title: 'Error',
-                                text: response.message || 'Failed to update order'
+                                confirmButtonColor: '#b8860b'
                             });
                         }
                     },
                     error: function(xhr, status, error) {
-                        console.error('Save Error:', error);
+                        console.error('Error checking order balance:', error);
                         Swal.fire({
+                            title: 'Error!',
+                            text: 'Error checking order balance. Please try again.',
                             icon: 'error',
-                            title: 'Error',
-                            text: 'Failed to save changes. Please try again.'
+                            confirmButtonColor: '#b8860b'
                         });
+                    }
+                });
+            });
+            
+            // Function to show payment modal
+            function showPaymentModal(orderId, balance) {
+                $('#paymentOrderId').val(orderId);
+                $('#paymentBalance').text('₱' + balance.toFixed(2));
+                $('#paymentAmountPaid').val('');
+                $('#paymentChange').text('₱0.00');
+                $('#paymentMethod').val('Cash');
+                
+                const modal = new bootstrap.Modal(document.getElementById('paymentModal'));
+                modal.show();
+            }
+            
+            // Function to mark order as finished
+            function markOrderAsFinished(orderId) {
+                $.ajax({
+                    url: 'mark_order_finished.php',
+                    method: 'POST',
+                    data: { order_id: orderId },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Order marked as finished successfully!',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Error marking order as finished: ' + (response.message || 'Unknown error'),
+                                icon: 'error',
+                                confirmButtonColor: '#b8860b'
+                            });
+                        }
                     },
-                    complete: function() {
-                        // Reset button state
-                        $saveBtn.prop('disabled', false).text(originalText);
+                    error: function(xhr, status, error) {
+                        console.error('Error marking order as finished:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Error marking order as finished. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#b8860b'
+                        });
                     }
                 });
             }
-        });
-    });
-    // Function to show alerts
-    function showAlert(type, message) {
-        Swal.fire({
-            icon: type === 'success' ? 'success' : 'error',
-            title: type === 'success' ? 'Success' : 'Error',
-            text: message,
-            confirmButtonColor: '#3085d6'
-        });
-    }
-    
-    // Table selection functionality
-    $('.select-table').on('click', function(e) {
-        e.preventDefault();
-        const orderId = $(this).data('order-id');
-        $('#table_order_id').val(orderId);
-        
-        // Fetch available tables
-        $.ajax({
-            url: 'get_tables.php',
-            method: 'GET',
-            dataType: 'json',  // Expect JSON response
-            success: function(data) {
-                if (data.success) {
-                    const tablesList = $('#available_tables');
-                    tablesList.empty();
+            
+            // Payment amount paid input handler
+            $(document).on('input', '#paymentAmountPaid', function() {
+                const balance = parseFloat($('#paymentBalance').text().replace('₱', '').replace(',', ''));
+                const amountPaid = parseFloat($(this).val()) || 0;
+                const change = amountPaid - balance;
+                $('#paymentChange').text('₱' + change.toFixed(2));
+            });
+            
+            // Process Payment button
+            $(document).on('click', '#processPaymentBtn', function() {
+                const orderId = $('#paymentOrderId').val();
+                const balance = parseFloat($('#paymentBalance').text().replace('₱', '').replace(',', ''));
+                const amountPaid = parseFloat($('#paymentAmountPaid').val()) || 0;
+                const paymentMethod = $('#paymentMethod').val();
+                
+                if (amountPaid <= 0) {
+                    Swal.fire({
+                        title: 'Invalid Amount!',
+                        text: 'Please enter a valid payment amount',
+                        icon: 'warning',
+                        confirmButtonColor: '#b8860b'
+                    });
+                    return;
+                }
+                
+                if (amountPaid < balance) {
+                    Swal.fire({
+                        title: 'Partial Payment?',
+                        text: 'Partial payment of ₱' + amountPaid.toFixed(2) + ' will be processed. Remaining balance will be ₱' + (balance - amountPaid).toFixed(2) + '. Continue?',
+                        icon: 'question',
+                        showCancelButton: true,
+                        confirmButtonColor: '#b8860b',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Yes, Process',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            processPayment(orderId, amountPaid, balance);
+                        }
+                    });
+                    return;
+                }
+                
+                // Show loading state
+                $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Processing...');
+                
+                // Process payment
+                $.ajax({
+                    url: 'process_payment.php',
+                    method: 'POST',
+                    data: {
+                        order_id: orderId,
+                        amount_paid: amountPaid,
+                        payment_method: paymentMethod
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            let message = 'Payment processed successfully!';
+                            
+                            if (response.new_balance && response.new_balance > 0) {
+                                message += ' Remaining balance: ₱' + response.new_balance.toFixed(2);
+                            }
+                            
+                            Swal.fire({
+                                title: 'Success!',
+                                text: message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Error processing payment: ' + (response.message || 'Unknown error'),
+                                icon: 'error',
+                                confirmButtonColor: '#b8860b'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error processing payment:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Error processing payment. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#b8860b'
+                        });
+                    },
+                    complete: function() {
+                        // Restore button state
+                        $('#processPaymentBtn').prop('disabled', false).html('<i class="fas fa-credit-card me-1"></i> Process Payment');
+                    }
+                });
+            });
+
+            // Add New Item button
+            $(document).on('click', '#addItemBtn', function() {
+                console.log('Add Item button clicked');
+                
+                // Reset selected items
+                selectedItems = {};
+                
+                // Show menu items modal
+                const modal = new bootstrap.Modal(document.getElementById('menuItemsModal'));
+                modal.show();
+                
+                // Load menu items
+                displayMenuItems();
+            });
+
+            // Save Order button
+            $(document).on('click', '#saveOrderBtn', function() {
+                console.log('Save Order button clicked');
+                
+                // Validate form
+                const orderId = $('#editOrderId').val();
+                if (!orderId) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'Order ID not found',
+                        icon: 'error',
+                        confirmButtonColor: '#b8860b'
+                    });
+                    return;
+                }
+                
+                // Validate table selection for dine-in orders
+                const orderType = $('#editOrderType').val();
+                const selectedTables = getSelectedTables();
+                
+                if (orderType === 'Dine-in' && selectedTables.length === 0) {
+                    Swal.fire({
+                        title: 'Table Required!',
+                        text: 'Table selection is required for dine-in orders. Please select at least one table.',
+                        icon: 'warning',
+                        confirmButtonColor: '#b8860b'
+                    });
+                    return;
+                }
+                
+                // Collect order data
+                const orderData = {
+                    order_id: orderId,
+                    firstname: $('#editFirstname').val(),
+                    lastname: $('#editLastname').val(),
+                    contact: $('#editContact').val(),
+                    email: $('#editEmail').val(),
+                    order_type: $('#editOrderType').val(),
+                    payment_method: $('#editPaymentMethod').val(),
+                    selected_tables: selectedTables,
+                    discount_type: $('#editDiscountType').val(),
+                    discount_percentage: $('#editDiscountPercentage').val(),
+                    subtotal: 0,
+                    items: []
+                };
+                
+                // Collect items data
+                $('.order-item-row').each(function() {
+                    const item = {
+                        item_name: $(this).find('.item-name').val(),
+                        quantity: parseInt($(this).find('.item-quantity').val()) || 0,
+                        unit_price: parseFloat($(this).find('.item-price').val()) || 0,
+                        addons: []
+                    };
                     
-                    // Add tables to the list
-                    data.tables.forEach(function(table) {
-                        if (!table.is_occupied) {
-                            tablesList.append(
-                                `<div class="col-md-3 mb-3">
-                                    <button class="btn btn-outline-primary w-100 table-select-btn" 
-                                            data-table-id="${table.id}" 
-                                            data-table-number="${table.table_number}">
-                                        Table ${table.table_number}
-                                    </button>
-                                 </div>`
-                            );
+                    // Collect addons for this item
+                    $(this).find('.addon-name').each(function(index) {
+                        const addonName = $(this).val();
+                        const addonPrice = parseFloat($(this).siblings('.addon-price').eq(index).val()) || 0;
+                        if (addonName && addonPrice > 0) {
+                            item.addons.push({
+                                addon_name: addonName,
+                                price: addonPrice
+                            });
                         }
                     });
                     
-                    // Show modal
-                    $('#tableSelectionModal').modal('show');
-                } else {
-                    showAlert('error', 'Failed to fetch tables: ' + (data.message || 'Unknown error'));
+                    if (item.quantity > 0) {
+                        orderData.items.push(item);
+                    }
+                });
+                
+                if (orderData.items.length === 0) {
+                    Swal.fire({
+                        title: 'No Items!',
+                        text: 'Order must have at least one item',
+                        icon: 'warning',
+                        confirmButtonColor: '#b8860b'
+                    });
+                    return;
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error:', status, error);
-                showAlert('error', 'Failed to connect to server: ' + error);
-            }
-        });
-    });
-    
-    // Handle table selection
-    $(document).on('click', '.table-select-btn', function() {
-        const tableId = $(this).data('table-id');
-        const tableNumber = $(this).data('table-number');
-        const orderId = $('#table_order_id').val();
-        
-        // Update order with selected table
-        $.ajax({
-            url: 'update_order_table.php',
-            method: 'POST',
-            dataType: 'json',  // Expect JSON response
-            data: {
-                order_id: orderId,
-                table_id: tableId,
-                table_number: tableNumber
-            },
-            success: function(data) {
-                if (data.success) {
-                    showAlert('success', 'Table assigned successfully');
-                    $('#tableSelectionModal').modal('hide');
-                    
-                    // Refresh the page to show updated table assignment
-                    setTimeout(function() {
-                        window.location.reload();
-                    }, 1000);
-                } else {
-                    showAlert('error', 'Failed to assign table: ' + (data.message || 'Unknown error'));
+                
+                // Calculate subtotal
+                orderData.subtotal = orderData.items.reduce((sum, item) => {
+                    const itemTotal = (item.unit_price * item.quantity) + 
+                        item.addons.reduce((addonSum, addon) => addonSum + addon.price, 0);
+                    return sum + itemTotal;
+                }, 0);
+                
+                // Calculate discount amount
+                let discountAmount = 0;
+                if (orderData.discount_type && orderData.discount_percentage > 0) {
+                    discountAmount = (orderData.subtotal * orderData.discount_percentage) / 100;
                 }
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error:', status, error);
-                showAlert('error', 'Failed to connect to server: ' + error);
-            }
-        });
-    });
-});
-</script> 
+                
+                // Calculate total and balance
+                const total = orderData.subtotal - discountAmount;
+                const downpayment = parseFloat($('#editDownpayment').text().replace('₱', '')) || 0;
+                const amountPaid = parseFloat($('#editAmountPaid')?.val() || 0);
+                const balance = Math.max(0, total - downpayment - amountPaid);
+                
+                // Add calculated values to order data
+                orderData.total = total;
+                orderData.discount_amount = discountAmount;
+                orderData.downpayment = downpayment;
+                orderData.amount_paid = amountPaid;
+                orderData.balance = balance;
+                
+                // Show loading state
+                $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i> Saving...');
+                
+                // Update order via AJAX
+                $.ajax({
+                    url: 'update_order.php',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(orderData),
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: 'Order updated successfully!',
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false
+                            }).then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Error updating order: ' + (response.message || 'Unknown error'),
+                                icon: 'error',
+                                confirmButtonColor: '#b8860b'
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Update order error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Error updating order. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#b8860b'
+                        });
+                    },
+                    complete: function() {
+                        // Restore button state
+                        $('#saveOrderBtn').prop('disabled', false).html('<i class="fas fa-save me-1"></i> Save Changes');
+                    }
+                });
+            });
 
-<!-- Table Selection Modal -->
-<div class="modal fade" id="tableSelectionModal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Select a Table</h4>
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" id="table_order_id">
-                <div class="row" id="available_tables">
-                    <!-- Tables will be loaded here dynamically -->
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+            // Clear Order button
+            $(document).on('click', '#clearOrderBtn', function() {
+                Swal.fire({
+                    title: 'Clear Order?',
+                    text: 'Are you sure you want to clear the order?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#b8860b',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Clear!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        selectedItems = {};
+                        updateOrderSummary();
+                    }
+                });
+            });
+
+            // Advance Order button
+            $(document).on('click', '#advanceOrderBtn', function() {
+                if (Object.keys(selectedItems).length === 0) {
+                    Swal.fire({
+                        title: 'No Items!',
+                        text: 'Please add items to the order first.',
+                        icon: 'warning',
+                        confirmButtonColor: '#b8860b'
+                    });
+                    return;
+                }
+                
+                // Add selected items to the edit order form
+                Object.keys(selectedItems).forEach(itemId => {
+                    const item = selectedItems[itemId];
+                    for (let i = 0; i < item.quantity; i++) {
+                        addNewItemToOrder(itemId, item.name, item.price);
+                    }
+                });
+                
+                // Close menu modal
+                bootstrap.Modal.getInstance(document.getElementById('menuItemsModal')).hide();
+                
+                // Reset selected items
+                selectedItems = {};
+            });
+        });
+    </script>
+</body>
+</html>

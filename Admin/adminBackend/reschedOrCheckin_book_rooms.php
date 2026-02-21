@@ -10,6 +10,8 @@ $total_amount = $data['total_amount'];
 $payment_input = $data['payment_input'];
 $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
+$number_nights = $data['number_nights'];
+
 $status = $data['status'];
 $resched_reason = isset($data['resched_reason']) ? $data['resched_reason'] : null;
 
@@ -52,10 +54,11 @@ $updateBooking = $conn->prepare("
         remaining_balance = ?, 
         payment_method = ?,  
         status = ?,
-        discount_amount = ?
+        discount_amount = ?,
+        nights = ?
     WHERE booking_id = ?
 ");
-$updateBooking->bind_param("sddssiddsssdi", $discount_type, $discount_percentage, $discount_amount, $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $discount_amount, $booking_id);
+$updateBooking->bind_param("sddssiddsssdii", $discount_type, $discount_percentage, $discount_amount, $checkin, $checkout, $nights, $total_amount, $downpayment_amount, $remaining_balance, $payment_method, $status, $discount_amount, $number_nights, $booking_id);
 $updateBooking->execute();
 
 

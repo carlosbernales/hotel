@@ -1,553 +1,960 @@
+<?php
+
+// Load security helper
+require_once 'includes/security_helper.php';
+
+// For home page, we allow access but will show different content based on login status
+// If user is logged in but not a customer, redirect them to their proper area
+if (isLoggedIn() && getUserRole() !== 'customer') {
+    $userRole = getUserRole();
+    switch($userRole) {
+        case 'admin':
+            header('Location: /Admin/index.php?dashboard');
+            break;
+        case 'cashier':
+            header('Location: /Admin/Cashier/index.php?pos');
+            break;
+        case 'frontdesk':
+            header('Location: /Admin/Frontdesk/index.php?dashboard');
+            break;
+        default:
+            header('Location: /login.php');
+    }
+    exit();
+}
+
+// Add this at the very beginning of index.php, before any output
+require 'maintenance_config.php';
+
+if ($maintenanceConfig->isMaintenanceMode() && !$maintenanceConfig->isAllowedIP()) {
+    include 'maintenance.php';
+    exit();
+}
+
+require 'db_con.php';
+
+$userid = $_SESSION['userid'] ?? 1; 
+try {
+    $sql = "SELECT profile_photo FROM userss WHERE userid = :userid";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':userid', $userid, PDO::PARAM_INT);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $profilePhoto = $user && !empty($user['profile_photo']) ? $user['profile_photo'] : 'images/default.jpg';
+} catch (PDOException $e) {
+    $profilePhoto = 'images/default.jpg';
+}
+
+// Fetch best offers from database
+try {
+    $sql = "SELECT * FROM offers WHERE active = 1 ORDER BY id DESC LIMIT 3";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $bestOffers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Process each offer to ensure the image path is correct
+    foreach ($bestOffers as &$offer) {
+        $offer['image'] = '/Admin/uploads/offers/' . basename($offer['image']);
+    }
+    unset($offer); // Unset the reference
+    
+} catch (PDOException $e) {
+    // Log the error and set empty array if there's an error
+    error_log('Error fetching offers: ' . $e->getMessage());
+    $bestOffers = [];
+}
+
+// Fetch facilities from database
+try {
+    // Get active categories
+    $sql = "SELECT * FROM facility_categories WHERE active = 1 ORDER BY display_order ASC";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $categories = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Get facilities for each category
+    $facilities = [];
+    foreach ($categories as $category) {
+        $sql = "SELECT * FROM facilities WHERE category_id = :category_id AND active = 1 ORDER BY display_order ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':category_id', $category['id'], PDO::PARAM_INT);
+        $stmt->execute();
+        $categoryFacilities = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        if (!empty($categoryFacilities)) {
+            $facilities[$category['name']] = $categoryFacilities;
+        }
+    }
+    
+    // If no facilities found in database, use default hardcoded values
+    if (empty($facilities)) {
+        $facilities = [
+            'Parking' => [
+                ['name' => 'Free private parking spaces'],
+                ['name' => 'Valet parking'],
+                ['name' => 'Parking garage'],
+                ['name' => 'Accessible parking']
+            ],
+            'Safety & Security' => [
+                ['name' => 'Fire extinguishers'],
+                ['name' => 'CCTV'],
+                ['name' => 'Smoke alarms'],
+                ['name' => 'Security alarm'],
+                ['name' => 'Key card access'],
+                ['name' => '24-hour security']
+            ],
+            'Food & Drink' => [
+                ['name' => 'Coffee house'],
+                ['name' => 'Snack bar'],
+                ['name' => 'Restaurant']
+            ],
+            'Reception Services' => [
+                ['name' => 'Private check-in/check-out'],
+                ['name' => 'Luggage storage'],
+                ['name' => '24-hour front desk']
+            ],
+            'Languages Spoken' => [
+                ['name' => 'English'],
+                ['name' => 'Filipino']
+            ],
+            'Internet' => [
+                ['name' => 'Free Wi-Fi']
+            ],
+            'Bathroom' => [
+                ['name' => 'Toilet paper'],
+                ['name' => 'Bidet'],
+                ['name' => 'Slippers'],
+                ['name' => 'Private bathroom'],
+                ['name' => 'Toilet'],
+                ['name' => 'Hairdryer'],
+                ['name' => 'Shower']
+            ]
+        ];
+    }
+} catch (PDOException $e) {
+    // Use default hardcoded values if there's an error
+    $facilities = [
+        'Parking' => [
+            ['name' => 'Free private parking spaces'],
+            ['name' => 'Valet parking'],
+            ['name' => 'Parking garage'],
+            ['name' => 'Accessible parking']
+        ],
+        'Safety & Security' => [
+            ['name' => 'Fire extinguishers'],
+            ['name' => 'CCTV'],
+            ['name' => 'Smoke alarms'],
+            ['name' => 'Security alarm'],
+            ['name' => 'Key card access'],
+            ['name' => '24-hour security']
+        ],
+        'Food & Drink' => [
+            ['name' => 'Coffee house'],
+            ['name' => 'Snack bar'],
+            ['name' => 'Restaurant']
+        ],
+        'Reception Services' => [
+            ['name' => 'Private check-in/check-out'],
+            ['name' => 'Luggage storage'],
+            ['name' => '24-hour front desk']
+        ],
+        'Languages Spoken' => [
+            ['name' => 'English'],
+            ['name' => 'Filipino']
+        ],
+        'Internet' => [
+            ['name' => 'Free Wi-Fi']
+        ],
+        'Bathroom' => [
+            ['name' => 'Toilet paper'],
+            ['name' => 'Bidet'],
+            ['name' => 'Slippers'],
+            ['name' => 'Private bathroom'],
+            ['name' => 'Toilet'],
+            ['name' => 'Hairdryer'],
+            ['name' => 'Shower']
+        ]
+    ];
+}
+
+// Fetch featured rooms
+try {
+    // Get room types with their amenities - removed availability check
+    $sql = "SELECT rt.*, rt.beds, rt.description
+            FROM room_types rt 
+            WHERE rt.status = 'active'
+            ORDER BY rt.room_type_id 
+            LIMIT 3";
+            
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $featuredRooms = [];
+    
+    while ($room = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        // Get amenities for each room type
+        $amenityQuery = "SELECT a.name, a.icon 
+                        FROM amenities a 
+                        INNER JOIN room_type_amenities rta ON a.amenity_id = rta.amenity_id 
+                        WHERE rta.room_type_id = :room_type_id";
+        $amenityStmt = $pdo->prepare($amenityQuery);
+        $amenityStmt->bindParam(':room_type_id', $room['room_type_id'], PDO::PARAM_INT);
+        $amenityStmt->execute();
+        $amenities = $amenityStmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Format amenities as features
+        $features = [];
+        foreach ($amenities as $amenity) {
+            $features[] = $amenity['name'];
+        }
+
+        // Add bed type to features if available
+        if (!empty($room['beds'])) {
+            array_unshift($features, $room['beds']);
+        }
+
+        // Format the room data
+        $featuredRooms[] = [
+            'name' => $room['room_type'],
+            'image' => !empty($room['image']) ? '../../uploads/rooms/' . basename($room['image']) : 'images/default.jpg',
+            'price' => number_format($room['price'], 0, '.', ','),
+            'capacity' => $room['capacity'] . ' Guests',
+            'features' => $features ?: ['Standard Amenities']
+        ];
+    }
+
+    // If no rooms found in database, use default rooms
+    if (empty($featuredRooms)) {
+        throw new Exception("No featured rooms found");
+    }
+
+} catch (Exception $e) {
+    // Use default rooms if there's an error
+    error_log("Error fetching featured rooms: " . $e->getMessage());
+    $featuredRooms = [
+        [
+            'name' => 'Deluxe Suite',
+            'image' => 'images/5.jpg',
+            'price' => '5,100',
+            'capacity' => '5 Guests',
+            'features' => ['King Bed', 'Ocean View', 'Private Balcony', 'Mini Bar']
+        ],
+        [
+            'name' => 'Family Room',
+            'image' => 'images/3.jpg',
+            'price' => '4,200',
+            'capacity' => '4 Guests',
+            'features' => ['2 Queen Beds', 'City View', 'Living Area', 'Kitchenette']
+        ],
+        [
+            'name' => 'Standard Double',
+            'image' => 'images/double.jpg',
+            'price' => '3,200',
+            'capacity' => '2 Guests',
+            'features' => ['Queen Bed', 'Garden View', 'Work Desk', 'En-suite Bath']
+        ]
+    ];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casa Estela Dashboard</title>
+    <title>Casa Estela - Your Home Away From Home</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/home.css">
+    <link rel="stylesheet" href="room-availability.css">
     <style>
-        :root {
-            --gold: #D4AF37;
-            --dark-bg: #2c2c2c;
-            --sidebar-width: 250px;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* Top Navbar */
-        .top-navbar {
-            background: linear-gradient(135deg, var(--gold) 0%, #b8941f 100%);
-            padding: 12px 20px;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1030;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-        .top-navbar .navbar-brand {
-            color: #2c2c2c;
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .top-navbar .nav-icons {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
-
-        .top-navbar .nav-icons a {
-            color: #2c2c2c;
-            font-size: 1.2rem;
-            position: relative;
-            transition: transform 0.2s;
-        }
-
-        .top-navbar .nav-icons a:hover {
-            transform: scale(1.1);
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            font-size: 10px;
+        .hero-section {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6)), url('images/casa.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
+            position: relative;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            width: var(--sidebar-width);
-            height: calc(100vh - 50px);
-            background: var(--dark-bg);
-            transition: transform 0.3s ease;
-            z-index: 1020;
-            overflow-y: auto;
-        }
-
-        .sidebar.hidden {
-            transform: translateX(-100%);
-        }
-
-        .sidebar-header {
-            padding: 20px;
+        .hero-content {
             text-align: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            backdrop-filter: blur(5px);
+            padding: 40px;
         }
 
-        .sidebar-header img {
-            width: 80px;
-            height: 80px;
+        .hero-title {
+            font-size: 50px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: 1.8rem;
+            margin-bottom: 2.5rem;
+            font-weight: 300;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+
+        .btn-custom {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            background-color: #d4af37;
+            border: 2px solid #d4af37;
+            color: white;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            animation: fadeInUp 1s ease-out 1s backwards;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .btn-custom:hover {
+            background-color: transparent;
+            color: #d4af37;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 3rem;
+            }
+            .hero-subtitle {
+                font-size: 1.4rem;
+            }
+            .hero-content {
+                padding: 30px;
+                margin: 0 20px;
+            }
+        }
+
+        /* Button size adjustments */
+        .btn {
+            padding: 6px 15px !important;
+            font-size: 0.9rem !important;
+        }
+
+        .btn-lg {
+            padding: 8px 20px !important;
+            font-size: 1rem !important;
+        }
+
+        .btn-custom {
+            padding: 8px 20px !important;
+            font-size: 0.95rem !important;
+            letter-spacing: 0.5px !important;
+        }
+
+        .btn-custom.btn-lg {
+            padding: 10px 25px !important;
+            font-size: 1rem !important;
+        }
+
+        .btn i {
+            font-size: 0.9rem !important;
+        }
+
+        /* Keep hero section button slightly larger but still reduced */
+        .hero-section .btn-custom {
+            padding: 10px 30px !important;
+            font-size: 1.1rem !important;
+        }
+
+        /* Adjust other section buttons */
+        .best-offers .btn-custom,
+        .featured-rooms .btn-custom,
+        .events-tables .btn-custom {
+            padding: 6px 15px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Search section button */
+        #check-availability .btn-custom {
+            padding: 6px 15px !important;
+            font-size: 0.9rem !important;
+        }
+
+        /* Maintain proper spacing */
+        .btn + .btn {
+            margin-left: 5px !important;
+        }
+
+        .developers-section {
+            background-color: #f8f9fa;
+        }
+
+        .developer-card {
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .developer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .developer-image {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            border: 5px solid #d4af37;
             border-radius: 50%;
-            border: 3px solid var(--gold);
+        }
+
+        .developer-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .developer-info h4 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+
+        .developer-info .role {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .social-links a {
+            color: #d4af37;
+            margin: 0 15px;  /* Increased margin for better spacing with fewer icons */
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-links a:hover {
+            color: #b08f2a;
+        }
+
+        @media (max-width: 768px) {
+            .developer-image {
+                width: 120px;
+                height: 120px;
+            }
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: #1a1a1a !important;
+        }
+
+        .text-gold {
+            color: #d4af37 !important;
+        }
+
+        .footer-links a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: block;
             margin-bottom: 10px;
         }
 
-        .sidebar-header h5 {
-            color: var(--gold);
-            margin: 0;
-            font-size: 1.1rem;
+        .footer-links a:hover {
+            color: #d4af37;
         }
 
-        .sidebar-menu {
-            padding: 20px 0;
+        .footer .social-links a {
+            color: #fff;
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
         }
 
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            padding: 12px 25px;
-            color: #ffffff;
-            text-decoration: none;
-            transition: all 0.3s;
-            border-left: 3px solid transparent;
+        .footer .social-links a:hover {
+            color: #d4af37;
         }
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active {
-            background: rgba(212, 175, 55, 0.1);
-            border-left-color: var(--gold);
-            color: var(--gold);
+        .footer hr {
+            opacity: 0.2;
         }
 
-        .sidebar-menu a i {
-            margin-right: 12px;
-            width: 20px;
-            text-align: center;
+        .footer i {
+            color: #d4af37;
         }
 
-        /* Dropdown Styles */
-        .sidebar-dropdown {
-            position: relative;
-        }
-
-        .sidebar-dropdown > a {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sidebar-dropdown .dropdown-icon {
-            transition: transform 0.3s;
-            margin-left: auto;
-            margin-right: 0;
-        }
-
-        .sidebar-dropdown.active .dropdown-icon {
-            transform: rotate(180deg);
-        }
-
-        .sidebar-submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            background: rgba(0,0,0,0.2);
-        }
-
-        .sidebar-dropdown.active .sidebar-submenu {
-            max-height: 500px;
-        }
-
-        .sidebar-submenu a {
-            padding: 10px 25px 10px 55px;
-            font-size: 0.9rem;
-            border-left: 3px solid transparent;
-        }
-
-        .sidebar-submenu a:hover,
-        .sidebar-submenu a.active {
-            background: rgba(212, 175, 55, 0.15);
-            border-left-color: var(--gold);
-        }
-
-        /* Main Content */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            margin-top: 50px;
-            padding: 30px;
-            transition: margin-left 0.3s ease;
-            min-height: calc(100vh - 50px);
-            background: #f8f9fa;
-        }
-
-        .main-content.expanded {
-            margin-left: 0;
-        }
-
-        .toggle-sidebar {
-            position: fixed;
-            top: 60px;
-            left: 10px;
-            z-index: 1025;
-            background: var(--gold);
-            border: none;
-            color: #2c2c2c;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .toggle-sidebar:hover {
-            transform: scale(1.1);
-        }
-
-        .toggle-sidebar.shifted {
-            left: calc(var(--sidebar-width) + 10px);
-        }
-
-        /* Breadcrumb */
-        .breadcrumb-custom {
-            background: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-
-        .breadcrumb-custom i {
-            color: var(--gold);
-            margin-right: 8px;
-        }
-
-        /* Card */
-        .info-card {
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        }
-
-        .info-card h4 {
-            color: #2c2c2c;
-            margin-bottom: 20px;
-            font-size: 1.3rem;
-        }
-
-        /* Status Badges */
-        .badge-verified {
-            background: #28a745;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-        }
-
-        .badge-pending {
-            background: #ffc107;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #2c2c2c;
-        }
-
-        /* DataTable Custom Styling */
-        .dataTables_wrapper {
-            padding: 0;
-        }
-
-        table.dataTable thead th {
-            background: var(--gold);
-            color: #2c2c2c;
-            font-weight: 600;
-            border: none;
-        }
-
-        table.dataTable tbody tr:hover {
-            background: rgba(212, 175, 55, 0.05);
-        }
-
-        /* Responsive */
         @media (max-width: 768px) {
-            .sidebar {
-                transform: translateX(-100%);
+            .footer {
+                text-align: center;
             }
 
-            .sidebar.show {
-                transform: translateX(0);
+            .footer .social-links {
+                justify-content: center;
+                margin-bottom: 20px;
             }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .toggle-sidebar.shifted {
-                left: 10px;
-            }
-
-            .top-navbar .navbar-brand {
-                font-size: 0.85rem;
-            }
-
-            .top-navbar .nav-icons {
-                gap: 15px;
-            }
-
-            .top-navbar .nav-icons a {
-                font-size: 1.1rem;
-            }
-        }
-
-        /* Scrollbar */
-        .sidebar::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: var(--gold);
-            border-radius: 3px;
         }
     </style>
 </head>
 <body>
-    <!-- Top Navbar -->
-    <nav class="top-navbar">
-        <div class="d-flex justify-content-between align-items-center">
-            <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
-            <div class="nav-icons">
-                <a href="#"><i class="fas fa-shopping-cart"></i></a>
-                <a href="#"><i class="fas fa-envelope"></i></a>
-                <a href="#" class="position-relative">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </a>
-                <a href="#"><i class="fas fa-user"></i></a>
+    <?php include('nav.php'); ?>
+     <?php include 'message_box.php'; ?>
+
+    <!-- Welcome Alert -->
+    <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true): ?>
+    <div id="welcomeAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>! You are now logged in to CASA ESTELA.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    <?php endif; ?>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to Casa Estela</h1>
+                <p class="hero-subtitle">Experience luxury and comfort in the heart of the city</p>
+                <a href="#check-availability" class="btn btn-custom btn-lg">Book Your Stay</a>
             </div>
         </div>
-    </nav>
+    </section>
 
-    <!-- Toggle Sidebar Button -->
-    <button class="toggle-sidebar shifted" id="toggleBtn">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <img src="https://via.placeholder.com/80/D4AF37/2c2c2c?text=CE" alt="Logo">
-            <h5>Admin</h5>
+    <!-- Best Offers Section -->
+    <section class="best-offers">
+        <div class="container">
+            <h2 class="section-title">Best Offers</h2>
+            <div class="row">
+                <?php foreach ($bestOffers as $offer): ?>
+                <div class="col-md-4">
+                    <div class="offer-card card">
+                        <img src="<?php echo htmlspecialchars($offer['image']); ?>" class="offer-img card-img-top" alt="<?php echo htmlspecialchars($offer['title']); ?>">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo htmlspecialchars($offer['title']); ?></h5>
+                            <p class="card-text"><?php echo htmlspecialchars($offer['description']); ?></p>
+                            <?php 
+                                $link = 'roomss.php';
+                                if (stripos($offer['title'], 'cafe') !== false) {
+                                    $link = 'cafes.php';
+                                } elseif (stripos($offer['title'], 'event') !== false) {
+                                    $link = 'events.php';
+                                }
+                            ?>
+                            <a href="<?php echo $link; ?>" class="btn btn-custom">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
         </div>
-        <div class="sidebar-menu">
-            <a href="#"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a href="#" class="active"><i class="fas fa-users"></i> Customer Info</a>
-            
-            <!-- Bookings Dropdown -->
-            <div class="sidebar-dropdown">
-                <a href="#" class="dropdown-toggle">
-                    <span><i class="fas fa-calendar-check"></i> Bookings</span>
-                    <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <div class="sidebar-submenu">
-                    <a href="#"><i class="fas fa-list"></i> All Bookings</a>
-                    <a href="#"><i class="fas fa-plus-circle"></i> New Booking</a>
-                    <a href="#"><i class="fas fa-clock"></i> Pending Bookings</a>
-                    <a href="#"><i class="fas fa-check-circle"></i> Confirmed Bookings</a>
+    </section>
+
+    <!-- Room Availability Search -->
+    <section id="check-availability" class="py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow">
+                        <div class="card-body">
+                            <h3 class="text-center mb-4">Check Room Availability</h3>
+                            <form class="row g-3" id="availability-form">
+                                <div class="col-md-5">
+                                    <label for="checkin" class="form-label">Check-in Date</label>
+                                    <input type="date" class="form-control" id="checkin" name="checkin" required min="<?php echo date('Y-m-d'); ?>">
+                                </div>
+                                <div class="col-md-5">
+                                    <label for="checkout" class="form-label">Check-out Date</label>
+                                    <input type="date" class="form-control" id="checkout" name="checkout" required min="<?php echo date('Y-m-d'); ?>">
+                                </div>
+                                <div class="col-md-2 d-flex align-items-end">
+                                    <button type="button" id="searchBtn" class="btn btn-custom w-100">Search</button>
+                                </div>
+                            </form>
+                            <div id="availability-results" class="mt-4" style="display: none;">
+                                <!-- Results will be displayed here -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <a href="#"><i class="fas fa-info-circle"></i> Booking Status</a>
-            <a href="#"><i class="fas fa-utensils"></i> Table Orders</a>
-            <a href="#"><i class="fas fa-sign-in-alt"></i> Checked In</a>
-            <a href="#"><i class="fas fa-sign-out-alt"></i> Checked Out</a>
-            
-            <!-- Staff Section Dropdown -->
-            <div class="sidebar-dropdown">
-                <a href="#" class="dropdown-toggle">
-                    <span><i class="fas fa-user-tie"></i> Staff Section</span>
-                    <i class="fas fa-chevron-down dropdown-icon"></i>
-                </a>
-                <div class="sidebar-submenu">
-                    <a href="#"><i class="fas fa-users-cog"></i> All Staff</a>
-                    <a href="#"><i class="fas fa-user-plus"></i> Add Staff</a>
-                    <a href="#"><i class="fas fa-calendar-alt"></i> Staff Schedule</a>
-                    <a href="#"><i class="fas fa-tasks"></i> Attendance</a>
+    <!-- Featured Rooms -->
+    <section class="featured-rooms">
+        <div class="container">
+            <h2 class="section-title">Featured Rooms</h2>
+            <div class="row">
+                <?php foreach ($featuredRooms as $room): ?>
+                <div class="col-md-4">
+                    <div class="room-card card">
+                        <img src="<?php echo htmlspecialchars($room['image']); ?>" 
+                             class="room-img card-img-top" 
+                             alt="<?php echo htmlspecialchars($room['name']); ?>">
+                        <div class="card-body">
+                            <h5 class="card-title"><?php echo htmlspecialchars($room['name']); ?></h5>
+                            <p class="room-price">₱<?php echo htmlspecialchars($room['price']); ?> / night</p>
+                            <p class="text-muted">
+                                <i class="fas fa-users"></i> <?php echo htmlspecialchars($room['capacity']); ?>
+                            </p>
+                            <ul class="room-features">
+                                <?php foreach ($room['features'] as $feature): ?>
+                                <li><i class="fas fa-check"></i> <?php echo htmlspecialchars($feature); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                            <a href="roomss.php?type=<?php echo urlencode($room['name']); ?>" 
+                               class="btn btn-custom w-100">Book Now</a>
+                        </div>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="container section-box">
+        <h3 class="section-title text-center">Casa Estela Boutique Hotel and Café Facilities</h3>
+        <div class="row facilities-container">
+            <div class="col-md-4">
+                <?php
+                // Split facilities into 3 columns
+                $totalCategories = count($facilities);
+                $categoriesPerColumn = ceil($totalCategories / 3);
+                $categoryCount = 0;
+                $columnCount = 1;
+                
+                foreach ($facilities as $category => $categoryFacilities):
+                    $categoryCount++;
+                    if ($columnCount == 1 && $categoryCount > $categoriesPerColumn) {
+                        echo '</div><div class="col-md-4">';
+                        $categoryCount = 1;
+                        $columnCount++;
+                    } elseif ($columnCount == 2 && $categoryCount > $categoriesPerColumn) {
+                        echo '</div><div class="col-md-4">';
+                        $categoryCount = 1;
+                        $columnCount++;
+                    }
+                ?>
+                <h5 class="facility-category"><?php echo htmlspecialchars($category); ?></h5>
+                <ul class="facilities-list">
+                    <?php foreach ($categoryFacilities as $facility): ?>
+                    <li>
+                        <?php if (!empty($facility['icon'])): ?>
+                        <i class="<?php echo htmlspecialchars($facility['icon']); ?>"></i>
+                        <?php endif; ?>
+                        <?php echo htmlspecialchars($facility['name']); ?>
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events & Tables Preview -->
+    <section class="events-tables">
+        <div class="container">
+            <h2 class="section-title">Special Events & Dining</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="preview-card">
+                        <div class="preview-icon">
+                            <i class="fas fa-glass-cheers"></i>
+                        </div>
+                        <h3>Event Venues</h3>
+                        <p>Perfect spaces for weddings, conferences, and special celebrations</p>
+                        <a href="events.php" class="btn btn-custom">View Events</a>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="preview-card">
+                        <div class="preview-icon">
+                            <i class="fas fa-utensils"></i>
+                        </div>
+                        <h3>Restaurant & Dining</h3>
+                        <p>Experience exquisite dining with our world-class cuisine</p>
+                        <a href="table.php" class="btn btn-custom">Reserve a Table</a>
+                    </div>
                 </div>
             </div>
-
-            <a href="#"><i class="fas fa-comments"></i> Feedback</a>
-            <a href="#"><i class="fas fa-chart-line"></i> Sales Report</a>
-            <a href="#"><i class="fas fa-cog"></i> Settings</a>
         </div>
-    </div>
+    </section>
 
-    <!-- Main Content -->
-    <div class="main-content" id="mainContent">
-        <!-- Breadcrumb -->
-        <div class="breadcrumb-custom">
-            <i class="fas fa-home"></i>
-            <span>User Information</span>
-        </div>
-
-        <!-- User Information Card -->
-        <div class="info-card">
-            <h4>User Information</h4>
-            
-            <div class="table-responsive">
-                <table id="userTable" class="table table-hover table-striped">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Carlos Bernales</td>
-                            <td>carlosbernales24@gmail.com</td>
-                            <td>09951776920</td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                        </tr>
-                        <tr>
-                            <td>Chan Chan</td>
-                            <td>chan.christians123@gmail.com</td>
-                            <td>09112222222</td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                        </tr>
-                        <tr>
-                            <td>Christian Realisan</td>
-                            <td>chano@gmail.com</td>
-                            <td>09123456789</td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                        </tr>
-                        <tr>
-                            <td>christian realisan Christian Realisan realisan</td>
-                            <td>chanomabalo@gmail.com</td>
-                            <td>09124343343</td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                        </tr>
-                        <tr>
-                            <td>Elly Mildred</td>
-                            <td>ellymildred846@gmail.com</td>
-                            <td>09951779200</td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                        </tr>
-                        <tr>
-                            <td>Fammela De Guzman</td>
-                            <td>mysterywoman1242@gmail.com</td>
-                            <td>09363960987</td>
-                            <td><span class="badge badge-pending">Pending</span></td>
-                        </tr>
-                        <tr>
-                            <td>Lab Mo</td>
-                            <td>christianrealisan25@gmail.com</td>
-                            <td>09123456799</td>
-                            <td><span class="badge badge-verified">Verified</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+    <!-- Developers Section -->
+    <section class="developers-section py-5">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Our Development Team</h2>
+            <div class="developers-circle">
+                <div class="row justify-content-center">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="developer-card">
+                            <div class="developer-image">
+                                <img src="images/aizzy.jpeg" alt="Developer 1" class="rounded-circle">
+                            </div>
+                            <div class="developer-info">
+                                <h4>Aizzy Villanueva</h4>
+                                <p class="role">Project Manager / Technical Writer</p>
+                                <div class="social-links">
+                                    <a href="mailto:aizzyvillanueva43@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    <a href="https://www.facebook.com/itsaizzycv04"><i class="fab fa-facebook"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="developer-card">
+                            <div class="developer-image">
+                                <img src="images/chano.jpg" alt="Developer 2" class="rounded-circle">
+                            </div>
+                            <div class="developer-info">
+                                <h4>Christian Realisan</h4>
+                                <p class="role">Frontend Developer / Backend Developer</p>
+                                <div class="social-links">
+                                    <a href="mailto:christianrealisan3@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    <a href="https://www.facebook.com/christian.realisan.2024"><i class="fab fa-facebook"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="developer-card">
+                            <div class="developer-image">
+                                <img src="images/al.jpeg" alt="Developer 3" class="rounded-circle">
+                            </div>
+                            <div class="developer-info">
+                                <h4>Alfred Hendrik Aceveda</h4>
+                                <p class="role">Frontend Developer / Backend Developer</p>
+                                <div class="social-links">
+                                    <a href="mailto:alfredaceveda.3@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    <a href="https://www.facebook.com/alfredacevedaa"><i class="fab fa-facebook"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="developer-card">
+                            <div class="developer-image">
+                                <img src="images/fam.jpg" alt="Developer 4" class="rounded-circle">
+                            </div>
+                            <div class="developer-info">
+                                <h4>Fammela Nicole De Guzman</h4>
+                                <p class="role">System Analyst / Technical Writer </p>
+                                <div class="social-links">
+                                    <a href="mailto:fammeladeguzman21@gmail.com"><i class="fas fa-envelope"></i></a>
+                                    <a href="https://www.facebook.com/feneloepe.nics"><i class="fab fa-facebook"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <?php include('footer.php'); ?>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Initialize DataTable
-        $(document).ready(function() {
-            $('#userTable').DataTable({
-                responsive: true,
-                pageLength: 10,
-                lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-                language: {
-                    search: "Search users:",
-                    lengthMenu: "Show _MENU_ entries",
-                    info: "Showing _START_ to _END_ of _TOTAL_ users",
-                    paginate: {
-                        first: "First",
-                        last: "Last",
-                        next: "Next",
-                        previous: "Previous"
-                    }
-                }
-            });
-        });
-
-        // Sidebar Toggle
-        const toggleBtn = document.getElementById('toggleBtn');
-        const sidebar = document.getElementById('sidebar');
-        const mainContent = document.getElementById('mainContent');
-
-        toggleBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            sidebar.classList.toggle('hidden');
-            
-            // On mobile, add 'show' class instead
-            if (window.innerWidth <= 768) {
-                if (sidebar.classList.contains('hidden')) {
-                    sidebar.classList.remove('show');
-                } else {
-                    sidebar.classList.add('show');
-                }
-            }
-            
-            mainContent.classList.toggle('expanded');
-            toggleBtn.classList.toggle('shifted');
-        });
-
-        // Dropdown Toggle
-        const dropdownToggles = document.querySelectorAll('.dropdown-toggle');
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchBtn = document.getElementById('searchBtn');
         
-        dropdownToggles.forEach(toggle => {
-            toggle.addEventListener('click', function(e) {
-                e.preventDefault();
-                const parent = this.parentElement;
-                const allDropdowns = document.querySelectorAll('.sidebar-dropdown');
-                
-                // Close other dropdowns
-                allDropdowns.forEach(dropdown => {
-                    if (dropdown !== parent && dropdown.classList.contains('active')) {
-                        dropdown.classList.remove('active');
-                    }
-                });
-                
-                // Toggle current dropdown
-                parent.classList.toggle('active');
-            });
-        });
+        // Set minimum dates for inputs
+        const today = new Date().toISOString().split('T')[0];
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        const tomorrowStr = tomorrow.toISOString().split('T')[0];
+        
+        document.getElementById('checkin').min = today;
+        document.getElementById('checkout').min = tomorrowStr;
 
-        // Close sidebar on mobile when clicking outside
-        document.addEventListener('click', function(event) {
-            if (window.innerWidth <= 768) {
-                const isClickInsideSidebar = sidebar.contains(event.target);
-                const isClickOnToggle = toggleBtn.contains(event.target);
-                
-                if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('show')) {
-                    sidebar.classList.add('hidden');
-                    sidebar.classList.remove('show');
-                    mainContent.classList.add('expanded');
-                    toggleBtn.classList.remove('shifted');
-                }
+        // Update checkout min date when checkin changes
+        document.getElementById('checkin').addEventListener('change', function() {
+            const checkInDate = new Date(this.value);
+            checkInDate.setDate(checkInDate.getDate() + 1);
+            const minCheckOut = checkInDate.toISOString().split('T')[0];
+            document.getElementById('checkout').min = minCheckOut;
+            
+            if (document.getElementById('checkout').value && document.getElementById('checkout').value < minCheckOut) {
+                document.getElementById('checkout').value = '';
             }
         });
+
+        searchBtn.addEventListener('click', async function() {
+            const checkIn = document.getElementById('checkin').value;
+            const checkOut = document.getElementById('checkout').value;
+
+            if (!checkIn || !checkOut) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Information',
+                    text: 'Please select both check-in and check-out dates.',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
+            // Show loading state
+            const originalText = searchBtn.innerHTML;
+            searchBtn.disabled = true;
+            searchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Checking...';
+
+            try {
+                const response = await fetch(`check_room_availability.php?check_in=${checkIn}&check_out=${checkOut}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    // Show unavailable status with table
+                    let alertHtml = `<div class="text-center">
+                        <i class="fas fa-calendar-times fa-3x text-warning mb-3"></i>
+                        <h5 class="mb-3">No Rooms Available</h5>
+                        <p class="mb-3">${data.message}</p>`;
+
+                    if (data.availability_info && data.availability_info.length > 0) {
+                        alertHtml += `<div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Room Type</th>
+                                        <th>Total</th>
+                                        <th>Available</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                        data.availability_info.forEach(room => {
+                            const isAvailable = room.available_rooms > 0;
+                            const statusClass = isAvailable ? 'text-success' : 'text-danger';
+                            const statusIcon = isAvailable ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+                            alertHtml += `
+                                <tr>
+                                    <td>${room.room_type}</td>
+                                    <td>${room.total_rooms}</td>
+                                    <td>${room.available_rooms}</td>
+                                    <td class="${statusClass}">
+                                        <i class="${statusIcon}"></i>
+                                        ${isAvailable ? 'Available' : 'Not Available'}
+                                    </td>
+                                </tr>`;
+                        });
+
+                        alertHtml += `</tbody></table></div>`;
+                    }
+
+                    alertHtml += `</div>`;
+
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Room Availability Check',
+                        html: alertHtml,
+                        confirmButtonText: 'OK',
+                        width: '600px'
+                    });
+                } else {
+                    // Show success with table
+                    let successHtml = `<div class="text-center">
+                        <i class="fas fa-calendar-check fa-3x text-success mb-3"></i>
+                        <h5 class="mb-3">Rooms Available!</h5>
+                        <p class="mb-3">Check-in: ${checkIn} | Check-out: ${checkOut}</p>`;
+
+                    if (data.availability_info && data.availability_info.length > 0) {
+                        successHtml += `<div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Room Type</th>
+                                        <th>Total</th>
+                                        <th>Available</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+
+                        data.availability_info.forEach(room => {
+                            const isAvailable = room.available_rooms > 0;
+                            const statusClass = isAvailable ? 'text-success' : 'text-danger';
+                            const statusIcon = isAvailable ? 'fas fa-check-circle' : 'fas fa-times-circle';
+
+                            successHtml += `
+                                <tr>
+                                    <td>${room.room_type}</td>
+                                    <td>${room.total_rooms}</td>
+                                    <td>${room.available_rooms}</td>
+                                    <td class="${statusClass}">
+                                        <i class="${statusIcon}"></i>
+                                        ${isAvailable ? 'Available' : 'Not Available'}
+                                    </td>
+                                </tr>`;
+                        });
+
+                        successHtml += `</tbody></table></div>`;
+                    }
+
+                    successHtml += `<p class="mt-3 text-muted">Click below to view and book available rooms.</p></div>`;
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Availability Confirmed',
+                        html: successHtml,
+                        confirmButtonText: 'View Rooms',
+                        showCancelButton: true,
+                        cancelButtonText: 'Close',
+                        width: '600px'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = 'roomss.php';
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Error checking availability:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Unable to check room availability. Please try again.',
+                    confirmButtonText: 'OK'
+                });
+            } finally {
+                // Restore button state
+                searchBtn.disabled = false;
+                searchBtn.innerHTML = originalText;
+            }
+        });
+    });
     </script>
 </body>
 </html>

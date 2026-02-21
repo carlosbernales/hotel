@@ -31,6 +31,7 @@ try {
     }
 
     $imagePath = $imageDir . "receipt_event_$event_id.png";
+
     if (!file_put_contents($imagePath, $imageData)) {
         throw new Exception("Failed to save receipt image.");
     }
@@ -63,36 +64,46 @@ try {
     $updateStmt->bind_param("i", $event_id);
     $updateStmt->execute();
 
-    $emailBody = (function () use ($booking) {
-        return include __DIR__ . "/../adminFrontend/emails/acp_event_receipt_email.php";
-    })();
+    $emailSent = false;
 
-    $mail = new PHPMailer(true);
-    $mail->isSMTP();
-    $mail->Host = 'smtp.gmail.com';
-    $mail->SMTPAuth = true;
-    $mail->Username = 'casaestelaboutiquehotelandcafe@gmail.com';
-    $mail->Password = 'vcagmikptjlcqqrl'; // App password
-    $mail->SMTPSecure = 'tls';
-    $mail->Port = 587;
+    if (!empty($booking['email']) && filter_var($booking['email'], FILTER_VALIDATE_EMAIL)) {
 
-    $mail->setFrom(
-        'casaestelaboutiquehotelandcafe@gmail.com',
-        'Casa Estela Boutique Hotel & Cafe'
-    );
+        $emailBody = (function () use ($booking) {
+            return include __DIR__ . "/../adminFrontend/emails/acp_event_receipt_email.php";
+        })();
 
-    $mail->addAddress($booking['email'], $booking['customer_name']);
-    $mail->addAttachment($imagePath, "Event_Booking_Receipt.png");
+        $mail = new PHPMailer(true);
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com';
+        $mail->SMTPAuth = true;
+        $mail->Username = 'casaestelaboutiquehotelandcafe@gmail.com';
+        $mail->Password = 'vcagmikptjlcqqrl'; // ⚠️ Move to secure config in production
+        $mail->SMTPSecure = 'tls';
+        $mail->Port = 587;
 
-    $mail->isHTML(true);
-    $mail->Subject = "Event Booking Accepted - Ref: " . $booking['booking_refId'];
-    $mail->Body = $emailBody;
+        $mail->setFrom(
+            'casaestelaboutiquehotelandcafe@gmail.com',
+            'Casa Estela Boutique Hotel & Cafe'
+        );
 
-    $mail->send();
+        $mail->addAddress($booking['email'], $booking['customer_name']);
+        $mail->addAttachment($imagePath, "Event_Booking_Receipt.png");
+
+        $mail->isHTML(true);
+        $mail->Subject = "Event Booking Accepted - Ref: " . $booking['booking_refId'];
+        $mail->Body = $emailBody;
+
+        $mail->send();
+        $emailSent = true;
+    }
 
     $conn->commit();
 
-    echo "Receipt saved, booking accepted, and email sent successfully!";
+    if ($emailSent) {
+        echo "Receipt saved, booking accepted, and email sent successfully!";
+    } else {
+        echo "Receipt saved and booking accepted successfully! (No email provided)";
+    }
 
 } catch (Exception $e) {
 

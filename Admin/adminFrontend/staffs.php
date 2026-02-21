@@ -30,14 +30,51 @@ if ($result) {
 
 <link rel="stylesheet" href="../Admin/adminFrontend/css/amenity_list.css">
 
+
+<style>
+    .btn-casa-gold {
+        background-color: #c9a349 !important;
+        border-color: #c9a349 !important;
+        color: white !important;
+    }
+
+    .btn-casa-outline {
+        background-color: transparent !important;
+        border-color: #c9a349 !important;
+        color: #c9a349 !important;
+    }
+
+    .btn-casa-gold:hover {
+        background-color: #b08d3a;
+        border-color: #b08d3a;
+        color: #ffffff;
+    }
+
+
+    .btn-casa-outline:hover {
+        background-color: #c9a349;
+        color: #ffffff;
+    }
+</style>
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
             <i class="fas fa-home"> Staff Management</i>
         </div>
+
+        <div class="d-flex gap-2">
+            <button id="btnCategory" class="btn btn-casa-gold" onclick="showTable('category')">
+                Staffs
+            </button>
+            <button id="btnFacilities" class="btn btn-casa-outline" onclick="showTable('facilities')">
+                Types
+            </button>
+        </div>
     </div>
 
-    <div class="info-card" style="margin-bottom: 40px;">
+    <div id="categoryTableWrapper" class="info-card" style="margin-bottom: 40px;">
+
+
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="m-0"></h5>
             <a class="btn table-add-btn" data-bs-toggle="modal" data-bs-target="#addStaffModal">+ Add Staff</a>
@@ -256,6 +293,148 @@ if ($result) {
         </div>
     </div>
 
+    <div id="facilitiesTableWrapper" class="info-card d-none">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="m-0">Staff Type Management</h5>
+            <button class="btn table-add-btn" data-bs-toggle="modal" data-bs-target="#addStaffTypeModal">
+                + Add Staff Type
+            </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>Staff Type</th>
+                        <th width="120"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($staff_types as $type): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($type['staff_type']); ?></td>
+                            <td>
+                                <button type="button" class="btn btn-sm table-action-btn table-action-edit"
+                                    data-bs-toggle="modal" data-bs-target="#editStaffTypeModal<?= $type['id'] ?>">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+
+                                <form method="POST"
+                                    action="../Admin/adminBackend/staff_type_delete.php?id=<?= $type['id'] ?>"
+                                    style="display:inline-block;">
+                                    <button type="submit" class="btn btn-sm table-action-btn table-action-delete"
+                                        onclick="return confirm('Delete this staff type?')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Edit Staff Type Modal -->
+                        <div class="modal fade" id="editStaffTypeModal<?= $type['id'] ?>" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content package-modal">
+                                    <form method="POST"
+                                        action="../Admin/adminBackend/staff_type_edit.php?id=<?= $type['id'] ?>">
+
+
+                                        <div class="modal-header package-modal-header">
+                                            <h5 class="modal-title fw-bold">
+                                                Edit Staff Type
+                                            </h5>
+                                            <button type="button" class="btn-close package-modal-close"
+                                                data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body package-modal-body">
+                                            <div class="mb-3">
+                                                <label class="form-label package-label">
+                                                    Staff Type Name
+                                                </label>
+                                                <input type="text" name="staff_type" class="form-control package-input"
+                                                    value="<?= htmlspecialchars($type['staff_type']); ?>" required>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn package-btn-save">
+                                                Save Changes
+                                            </button>
+                                        </div>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="addStaffTypeModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog">
+            <div class="modal-content package-modal">
+                <form method="POST" action="../Admin/adminBackend/staff_type_add.php">
+
+                    <div class="modal-header package-modal-header">
+                        <h5 class="modal-title fw-bold">
+                            Add Staff Type
+                        </h5>
+                        <button type="button" class="btn-close package-modal-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body package-modal-body">
+                        <div class="mb-3">
+                            <label class="form-label package-label">
+                                Staff Type Name
+                            </label>
+                            <input type="text" name="staff_type" class="form-control package-input" required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn package-btn-save">
+                            Add Staff Type
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+
 </div>
+
+
+<script>
+    function showTable(type) {
+        if (type === 'category') {
+            $('#categoryTableWrapper').removeClass('d-none');
+            $('#facilitiesTableWrapper').addClass('d-none');
+
+            $('#btnCategory').addClass('btn-casa-gold').removeClass('btn-casa-outline');
+            $('#btnFacilities').addClass('btn-casa-outline').removeClass('btn-casa-gold');
+
+            if (typeof categoryTable !== 'undefined') {
+                categoryTable.columns.adjust().responsive.recalc();
+            }
+        } else {
+            $('#facilitiesTableWrapper').removeClass('d-none');
+            $('#categoryTableWrapper').addClass('d-none');
+
+            $('#btnFacilities').addClass('btn-casa-gold').removeClass('btn-casa-outline');
+            $('#btnCategory').addClass('btn-casa-outline').removeClass('btn-casa-gold');
+
+            if (typeof facilitiesTable !== 'undefined') {
+                facilitiesTable.columns.adjust().responsive.recalc();
+            }
+        }
+    }
+</script>
 
 <?php include 'adminFrontend/footer.php'; ?>

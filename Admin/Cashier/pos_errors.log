@@ -1,0 +1,130 @@
+[23-Jan-2026 05:57:07 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 05:58:21 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:12:31 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:42:24 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:42:24 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 06:42:29 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:42:29 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 06:46:00 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:46:00 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 06:46:35 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:46:35 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 06:46:46 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:46:46 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 06:47:25 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:47:25 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 06:55:16 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 06:55:16 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:05:23 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:05:24 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:20 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:20 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:21 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:21 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:21 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:21 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:22 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:22 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:29 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:30 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:30 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:30 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:12:31 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 07:12:31 Europe/Berlin] Failed to process order: SQLSTATE[HY093]: Invalid parameter number: parameter was not defined\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(133): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 07:24:26 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 11:02:07 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 11:41:04 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 11:42:50 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 11:47:30 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 11:51:29 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 12:18:11 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Undefined variable $table in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 177
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 177
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Undefined variable $availableTable in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 178
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 178
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Undefined variable $availableTable in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 179
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 179
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Undefined variable $availableTable in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 180
+[23-Jan-2026 12:18:12 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 180
+[23-Jan-2026 12:18:12 Europe/Berlin] Failed to process order: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_type_fk_id' cannot be null\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(180): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Undefined variable $table in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 177
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 177
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Undefined variable $availableTable in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 178
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 178
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Undefined variable $availableTable in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 179
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 179
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Undefined variable $availableTable in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 180
+[23-Jan-2026 12:18:16 Europe/Berlin] PHP Warning:  Trying to access array offset on value of type null in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 180
+[23-Jan-2026 12:18:16 Europe/Berlin] Failed to process order: SQLSTATE[23000]: Integrity constraint violation: 1048 Column 'table_type_fk_id' cannot be null\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(180): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 12:59:30 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 13:04:19 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 13:23:06 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 13:44:56 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 13:44:56 Europe/Berlin] Failed to process order: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`hotelms`.`orders_table`, CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `userss` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(165): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 13:45:17 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 13:45:17 Europe/Berlin] Failed to process order: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`hotelms`.`orders_table`, CONSTRAINT `fk_orders_user` FOREIGN KEY (`user_id`) REFERENCES `userss` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)\n#0 D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php(165): PDOStatement->execute(Array)
+#1 {main}
+[23-Jan-2026 13:50:45 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 13:57:33 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 14:00:13 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[23-Jan-2026 14:14:57 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 02:27:34 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 02:28:50 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:09:17 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:38:34 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:40:33 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:45:17 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:46:22 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:50:27 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 03:59:53 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:00:53 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:16:03 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:17:24 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:23:47 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:24:28 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:26:51 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:33:14 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:44:47 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[24-Jan-2026 04:53:44 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[26-Jan-2026 14:25:20 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[26-Jan-2026 14:35:28 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[26-Jan-2026 16:10:10 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[28-Jan-2026 08:10:25 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[28-Jan-2026 08:22:00 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[28-Jan-2026 17:02:21 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[28-Jan-2026 17:14:00 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[28-Jan-2026 17:30:45 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashiera\pos_insert_order.php on line 9
+[12-Feb-2026 16:19:21 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashier\pos_insert_order.php on line 9
+[12-Feb-2026 16:21:14 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashier\pos_insert_order.php on line 9
+[12-Feb-2026 16:26:02 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashier\pos_insert_order.php on line 9
+[12-Feb-2026 16:31:23 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashier\pos_insert_order.php on line 9
+[12-Feb-2026 16:40:14 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashier\pos_insert_order.php on line 9
+[12-Feb-2026 16:45:52 Europe/Berlin] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in D:\casaaa\htdocs\Admin\Cashier\pos_insert_order.php on line 9
+[17-Feb-2026 13:28:58 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php on line 9
+[17-Feb-2026 13:28:58 UTC] Failed to process order: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id_number' in 'INSERT INTO'\n#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php(61): PDO->prepare()
+#1 {main}
+[17-Feb-2026 13:29:38 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php on line 9
+[17-Feb-2026 13:29:38 UTC] Failed to process order: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id_number' in 'INSERT INTO'\n#0 /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php(61): PDO->prepare()
+#1 {main}
+[17-Feb-2026 13:37:55 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php on line 9
+[17-Feb-2026 13:40:30 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php on line 9
+[17-Feb-2026 13:58:49 UTC] PHP Notice:  session_start(): Ignoring session_start() because a session is already active in /home/u763377220/domains/indigo-shark-198239.hostingersite.com/public_html/Admin/Cashier/pos_insert_order.php on line 9

@@ -20,8 +20,8 @@ if ($result) {
 <div class="main-content" id="mainContent">
     <div class="breadcrumb-custom d-flex justify-content-between align-items-center">
         <div>
-            <i class="fas fa-home"></i>
-            <span>Amenities</span>
+            <i class="fas fa-home"> Amenities</i>
+            
         </div>
     </div>
 

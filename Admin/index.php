@@ -220,6 +220,8 @@ elseif (isset($_GET['room_mang'])) {
 } elseif (isset($_GET['terms-condition'])) {
     $page = "adminFrontend/terms_and_condition.php";
 
+} elseif (isset($_GET['inclusion'])) {
+    $page = "adminFrontend/inclusion.php";
 
     ///THIS IS TEST
 } elseif (isset($_GET['test'])) {

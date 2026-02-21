@@ -75,6 +75,7 @@ while ($g = $resGuests->fetch_assoc()) {
                     <tr>
                         <th>Booking ID</th>
                         <th>Fullname</th>
+                        <th>Room Type</th>
                         <th>Contact</th>
                         <th>Schedule</th>
                         <th>Status</th>
@@ -87,6 +88,16 @@ while ($g = $resGuests->fetch_assoc()) {
                         <tr>
                             <td><?= $b['booking_reference'] ?></td>
                             <td><?= $b['first_name'] . ' ' . $b['last_name'] ?></td>
+                            <td>
+                                <?php
+                                if (!empty($data['rooms'])) {
+                                    $types = array_column($data['rooms'], 'room_type_name');
+                                    echo implode(", ", $types);
+                                } else {
+                                    echo "N/A";
+                                }
+                                ?>
+                            </td>
                             <td><?= $b['contact'] ?></td>
                             <td>
                                 <?= date("F j, Y", strtotime($b['check_in'])) ?> -

@@ -1,0 +1,2199 @@
+[2026-01-12 16:23:52] Starting availability check
+[2026-01-12 16:23:52] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:23:52] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:23:52] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:23:52] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:23:52] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:23:52] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:23:55] Starting availability check
+[2026-01-12 16:23:55] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:23:55] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:23:55] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:23:55] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:23:55] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:23:55] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:23:55] Starting availability check
+[2026-01-12 16:23:55] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:23:55] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:23:55] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:23:55] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:23:55] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:23:55] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:23:56] Starting availability check
+[2026-01-12 16:23:56] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:23:56] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:23:56] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:23:56] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:23:56] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:23:56] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:03] Starting availability check
+[2026-01-12 16:24:03] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:03] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:03] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:03] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:03] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:03] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:04] Starting availability check
+[2026-01-12 16:24:04] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:04] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:04] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:04] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:04] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:04] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:04] Starting availability check
+[2026-01-12 16:24:04] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:04] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:04] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:04] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:04] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:04] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:05] Starting availability check
+[2026-01-12 16:24:05] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:05] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:05] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:05] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:05] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:05] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:05] Starting availability check
+[2026-01-12 16:24:05] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:05] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:05] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:05] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:05] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:05] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:06] Starting availability check
+[2026-01-12 16:24:06] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:06] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:06] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:06] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:06] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:06] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:06] Starting availability check
+[2026-01-12 16:24:06] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:06] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:06] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:06] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:06] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:06] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:06] Starting availability check
+[2026-01-12 16:24:06] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:06] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:06] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:06] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:06] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:06] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:07] Starting availability check
+[2026-01-12 16:24:07] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:07] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:07] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:07] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:07] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:07] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:07] Starting availability check
+[2026-01-12 16:24:07] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:07] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:07] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:07] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:07] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:07] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:08] Starting availability check
+[2026-01-12 16:24:08] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:08] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:08] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:08] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:08] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:08] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:09] Starting availability check
+[2026-01-12 16:24:09] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:09] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:09] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:09] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:09] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:09] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:10] Starting availability check
+[2026-01-12 16:24:10] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:10] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:10] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:10] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:10] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:10] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:10] Starting availability check
+[2026-01-12 16:24:10] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:10] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:10] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:10] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:10] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:10] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:11] Starting availability check
+[2026-01-12 16:24:11] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:11] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:11] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:11] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:11] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:11] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:11] Starting availability check
+[2026-01-12 16:24:11] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:11] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:11] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:11] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:11] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:11] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:12] Starting availability check
+[2026-01-12 16:24:12] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:12] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:12] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:12] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:12] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:12] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:12] Starting availability check
+[2026-01-12 16:24:12] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:12] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:12] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:12] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:12] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:12] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:13] Starting availability check
+[2026-01-12 16:24:13] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:13] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:13] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:13] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:13] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:13] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:13] Starting availability check
+[2026-01-12 16:24:13] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:13] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:13] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:13] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:13] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:13] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:14] Starting availability check
+[2026-01-12 16:24:14] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:14] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:14] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:14] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:14] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:14] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:14] Starting availability check
+[2026-01-12 16:24:14] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:14] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:14] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:14] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:14] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:14] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:15] Starting availability check
+[2026-01-12 16:24:15] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:15] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:15] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:15] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:15] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:15] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:15] Starting availability check
+[2026-01-12 16:24:15] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:15] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:15] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:15] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:15] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:15] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:16] Starting availability check
+[2026-01-12 16:24:16] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:16] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:16] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:16] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:16] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:16] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:16] Starting availability check
+[2026-01-12 16:24:16] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:16] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:16] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:16] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:16] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:16] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:24:17] Starting availability check
+[2026-01-12 16:24:17] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:24:17] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:24:17] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:24:17] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start AND :end)
+                OR (date_time_end BETWEEN :start AND :end)
+                OR (date_time_start <= :start AND date_time_end >= :end)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:24:17] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:24:17] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:26:29] Starting availability check
+[2026-01-12 16:26:29] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:23","packageId":"1"}
+[2026-01-12 16:26:29] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:23
+    [packageId] => 1
+)
+
+[2026-01-12 16:26:29] Checking availability from 2026-01-12 16:23:00 to 2026-01-12 18:23:00
+[2026-01-12 16:26:29] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start_date AND :end_date)
+                OR (date_time_end BETWEEN :start_date AND :end_date)
+                OR (date_time_start <= :start_date AND date_time_end >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:26:29] Binding parameters
+Data: Array
+(
+    [:start_date] => 2026-01-12 16:23:00
+    [:end_date] => 2026-01-12 18:23:00
+)
+
+[2026-01-12 16:26:29] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:26:29] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:26:33] Starting availability check
+[2026-01-12 16:26:33] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:26","packageId":"1"}
+[2026-01-12 16:26:33] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:26
+    [packageId] => 1
+)
+
+[2026-01-12 16:26:33] Checking availability from 2026-01-12 16:26:00 to 2026-01-12 18:26:00
+[2026-01-12 16:26:33] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start_date AND :end_date)
+                OR (date_time_end BETWEEN :start_date AND :end_date)
+                OR (date_time_start <= :start_date AND date_time_end >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:26:33] Binding parameters
+Data: Array
+(
+    [:start_date] => 2026-01-12 16:26:00
+    [:end_date] => 2026-01-12 18:26:00
+)
+
+[2026-01-12 16:26:33] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:26:33] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:26:34] Starting availability check
+[2026-01-12 16:26:34] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:26","packageId":"1"}
+[2026-01-12 16:26:34] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:26
+    [packageId] => 1
+)
+
+[2026-01-12 16:26:34] Checking availability from 2026-01-12 16:26:00 to 2026-01-12 18:26:00
+[2026-01-12 16:26:34] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start_date AND :end_date)
+                OR (date_time_end BETWEEN :start_date AND :end_date)
+                OR (date_time_start <= :start_date AND date_time_end >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:26:34] Binding parameters
+Data: Array
+(
+    [:start_date] => 2026-01-12 16:26:00
+    [:end_date] => 2026-01-12 18:26:00
+)
+
+[2026-01-12 16:26:34] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:26:34] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:26:35] Starting availability check
+[2026-01-12 16:26:35] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:26","packageId":"1"}
+[2026-01-12 16:26:35] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:26
+    [packageId] => 1
+)
+
+[2026-01-12 16:26:35] Checking availability from 2026-01-12 16:26:00 to 2026-01-12 18:26:00
+[2026-01-12 16:26:35] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start_date AND :end_date)
+                OR (date_time_end BETWEEN :start_date AND :end_date)
+                OR (date_time_start <= :start_date AND date_time_end >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:26:35] Binding parameters
+Data: Array
+(
+    [:start_date] => 2026-01-12 16:26:00
+    [:end_date] => 2026-01-12 18:26:00
+)
+
+[2026-01-12 16:26:35] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:26:35] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:27:30] Starting availability check
+[2026-01-12 16:27:30] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:26","packageId":"1"}
+[2026-01-12 16:27:30] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:26
+    [packageId] => 1
+)
+
+[2026-01-12 16:27:30] Checking availability from 2026-01-12 16:26:00 to 2026-01-12 18:26:00
+[2026-01-12 16:27:30] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (date_time_start BETWEEN :start_date AND :end_date)
+                OR (date_time_end BETWEEN :start_date AND :end_date)
+                OR (date_time_start <= :start_date AND date_time_end >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled', 'completed')
+        
+[2026-01-12 16:27:30] Binding parameters
+Data: Array
+(
+    [:start_date] => 2026-01-12 16:26:00
+    [:end_date] => 2026-01-12 18:26:00
+)
+
+[2026-01-12 16:27:30] Database error: SQLSTATE[HY093]: Invalid parameter number
+Data: Array
+(
+    [code] => HY093
+)
+
+[2026-01-12 16:27:30] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:29:54] Starting availability check
+[2026-01-12 16:29:54] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:26","packageId":"1"}
+[2026-01-12 16:29:54] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:26
+    [packageId] => 1
+)
+
+[2026-01-12 16:29:54] Checking availability from 2026-01-12 16:26:00 to 2026-01-12 18:26:00
+[2026-01-12 16:29:54] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (start_time BETWEEN :start_date AND :end_date)
+                OR (end_time BETWEEN :start_date AND :end_date)
+                OR (start_time <= :start_date AND end_time >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled')
+        
+[2026-01-12 16:29:54] Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'start_time' in 'where clause'
+Data: Array
+(
+    [code] => 42S22
+)
+
+[2026-01-12 16:29:54] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:29:55] Starting availability check
+[2026-01-12 16:29:55] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:26","packageId":"1"}
+[2026-01-12 16:29:55] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:26
+    [packageId] => 1
+)
+
+[2026-01-12 16:29:55] Checking availability from 2026-01-12 16:26:00 to 2026-01-12 18:26:00
+[2026-01-12 16:29:55] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (start_time BETWEEN :start_date AND :end_date)
+                OR (end_time BETWEEN :start_date AND :end_date)
+                OR (start_time <= :start_date AND end_time >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled')
+        
+[2026-01-12 16:29:55] Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'start_time' in 'where clause'
+Data: Array
+(
+    [code] => 42S22
+)
+
+[2026-01-12 16:29:55] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:29:59] Starting availability check
+[2026-01-12 16:29:59] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:29","packageId":"1"}
+[2026-01-12 16:29:59] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:29
+    [packageId] => 1
+)
+
+[2026-01-12 16:29:59] Checking availability from 2026-01-12 16:29:00 to 2026-01-12 18:29:00
+[2026-01-12 16:29:59] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (start_time BETWEEN :start_date AND :end_date)
+                OR (end_time BETWEEN :start_date AND :end_date)
+                OR (start_time <= :start_date AND end_time >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled')
+        
+[2026-01-12 16:29:59] Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'start_time' in 'where clause'
+Data: Array
+(
+    [code] => 42S22
+)
+
+[2026-01-12 16:29:59] Global error: Unable to check availability at this time. Please try again later.
+[2026-01-12 16:30:00] Starting availability check
+[2026-01-12 16:30:00] Raw input received
+Data: {"eventDateTime":"2026-01-12T16:29","packageId":"1"}
+[2026-01-12 16:30:00] Decoded input data
+Data: Array
+(
+    [eventDateTime] => 2026-01-12T16:29
+    [packageId] => 1
+)
+
+[2026-01-12 16:30:01] Checking availability from 2026-01-12 16:29:00 to 2026-01-12 18:29:00
+[2026-01-12 16:30:01] Executing SQL query
+Data: 
+            SELECT COUNT(*) as booking_count 
+            FROM event_bookings
+            WHERE (
+                (start_time BETWEEN :start_date AND :end_date)
+                OR (end_time BETWEEN :start_date AND :end_date)
+                OR (start_time <= :start_date AND end_time >= :end_date)
+            )
+            AND booking_status NOT IN ('cancelled')
+        
+[2026-01-12 16:30:01] Database error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'start_time' in 'where clause'
+Data: Array
+(
+    [code] => 42S22
+)
+
+[2026-01-12 16:30:01] Global error: Unable to check availability at this time. Please try again later.
+2026-01-13 11:18:44 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:18:45 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:22:21 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+2026-01-13 11:22:22 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+2026-01-13 11:22:22 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+2026-01-13 11:22:48 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+2026-01-13 11:24:00 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:02 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:02 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:02 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:06 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 15:18:00
+    [end_datetime] => 2026-01-13 19:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:09 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:17 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:18 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:19 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:19 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:19 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:24:20 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:18:00
+    [end_datetime] => 2026-01-13 07:18:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:25:59 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:25:00
+    [end_datetime] => 2026-01-13 07:25:00
+)
+
+Availability result: Array
+(
+    [available] => 1
+    [message] => The selected time slot is available
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:26:07 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:25:00
+    [end_datetime] => 2026-01-13 07:25:00
+)
+
+Availability result: Array
+(
+    [available] => 1
+    [message] => The selected time slot is available
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:29:30 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-14 18:25:00
+    [end_datetime] => 2026-02-14 22:25:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:29:31 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-14 18:25:00
+    [end_datetime] => 2026-02-14 22:25:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:29:32 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-14 18:25:00
+    [end_datetime] => 2026-02-14 22:25:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:29:44 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-14 21:25:00
+    [end_datetime] => 2026-02-15 01:25:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:29:57 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-15 03:29:00
+    [end_datetime] => 2026-02-15 07:29:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:02 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-15 03:29:00
+    [end_datetime] => 2026-02-15 07:29:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-15 03:29:00
+    [end_datetime] => 2026-02-15 07:29:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-15 03:29:00
+    [end_datetime] => 2026-02-15 07:29:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-02-15 03:29:00
+    [end_datetime] => 2026-02-15 07:29:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:07 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:08 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:08 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:11 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:12 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:12 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:12 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:12 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:12 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:13 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:13 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:13 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:30:00
+    [end_datetime] => 2026-01-13 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:18 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:18 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:19 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:30:19 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:31:06 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:31:07 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:31:07 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:31:07 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:31:07 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-15 03:30:00
+    [end_datetime] => 2026-01-15 07:30:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:33:58 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:33:00
+    [end_datetime] => 2026-01-13 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:33:59 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-13 03:33:00
+    [end_datetime] => 2026-01-13 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:34:02 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-16 03:33:00
+    [end_datetime] => 2026-01-16 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:34:02 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-16 03:33:00
+    [end_datetime] => 2026-01-16 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:34:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-16 03:33:00
+    [end_datetime] => 2026-01-16 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:34:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-16 03:33:00
+    [end_datetime] => 2026-01-16 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+
+2026-01-13 11:34:03 - Action: check_availability
+POST data: Array
+(
+    [action] => check_availability
+    [start_datetime] => 2026-01-16 03:33:00
+    [end_datetime] => 2026-01-16 07:33:00
+)
+
+Availability result: Array
+(
+    [available] => 
+    [message] => Error checking availability: SQLSTATE[HY093]: Invalid parameter number
+    [conflicting_events] => Array
+        (
+        )
+
+)
+

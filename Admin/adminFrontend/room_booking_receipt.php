@@ -297,7 +297,7 @@ if (isset($_GET['booking_id'])) {
                     while ($room = $rooms_result->fetch_assoc()) {
                         echo "<tr>
                                 <td>" . htmlspecialchars($room['room_type_name']) . "</td>
-                                <td style='text-align: right;'>₱" . number_format($room['price'], 2) . "</td>
+                                <td style='text-align: right;'>₱" . number_format($room['price'], 2) . " per night/s</td>
                               </tr>";
                     }
                     echo "</table>";
@@ -440,10 +440,26 @@ if (isset($_GET['booking_id'])) {
                         <span>TOTAL AMOUNT:</span>
                         <span>₱<?= number_format($booking['total_amount'], 2) ?></span>
                     </div>
+
+                    <?php if (!empty($booking['payment_amount']) && $booking['payment_amount'] > 0): ?>
+                        <div class="total-row" style="font-weight: bold;">
+                            <span>Payment Amount:</span>
+                            <span>₱<?= number_format($booking['payment_amount'], 2) ?></span>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if (!empty($booking['payment_change']) && $booking['payment_change'] > 0): ?>
+                        <div class="total-row" style="font-weight: bold;">
+                            <span>Change:</span>
+                            <span>₱<?= number_format($booking['payment_change'], 2) ?></span>
+                        </div>
+                    <?php endif; ?>
+
                     <div class="total-row" style="font-weight: bold;">
                         <span>Remaining Balance:</span>
                         <span>₱<?= number_format($booking['remaining_balance'], 2) ?></span>
                     </div>
+
                     <div class="detail-row" style="margin-top: 15px;">
                         <span class="detail-label">Payment Method:</span>
                         <span><?= htmlspecialchars($booking['payment_method']) ?></span>
@@ -482,7 +498,7 @@ if (isset($_GET['booking_id'])) {
                             margin-bottom: 20px;
                         ">
                     </div>
-                    <div id="loadingText">Please wait... processing your request</div>
+                    <div id="loadingText">Sending email receipt to the booker… please wait.</div>
                 </div>
 
                 <div id="successBox" style="
@@ -496,7 +512,7 @@ if (isset($_GET['booking_id'])) {
                             animation: fadein 0.4s ease-out;
                         ">
                     <div style="font-size:26px; font-weight:bold; margin-bottom:10px;">
-                        Request done!
+                        Done! Back to List
                     </div>
                     <button id="okBtn" style="
                         background:white;

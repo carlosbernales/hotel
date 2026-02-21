@@ -1,0 +1,642 @@
+[03-Jan-2026 13:56:36 Europe/Berlin] 
+================================================================================
+[03-Jan-2026 13:56:36 Europe/Berlin] [2026-01-03 13:56:36] New order request received
+[03-Jan-2026 13:56:36 Europe/Berlin] Request method: POST
+[03-Jan-2026 13:56:36 Europe/Berlin] Content type: multipart/form-data; boundary=----WebKitFormBoundaryWkyR9F6XYBPaHVlu
+[03-Jan-2026 13:56:36 Europe/Berlin] Raw input data: 
+[03-Jan-2026 13:56:36 Europe/Berlin] No raw input, using $_POST data
+[03-Jan-2026 13:56:36 Europe/Berlin] Found order_data in POST, attempting to decode...
+[03-Jan-2026 13:56:36 Europe/Berlin] Successfully decoded order_data
+[03-Jan-2026 13:56:36 Europe/Berlin] Parsed request data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[{"name":"cheese","price":20},{"name":"Gravy","price":20}]},{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":340,"extra_fee":0,"final_total":340,"order_type":"regular","special_requests":"","table_details":null,"payment_option_display":"50% Downpayment","subtotal":"340","total":170,"total_items":"2"}
+    [current_date] => 2026-01-03 12:56:36
+    [debug] => true
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => cheese
+                                    [price] => 20
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => Gravy
+                                    [price] => 20
+                                )
+
+                        )
+
+                )
+
+            [1] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 340
+    [extra_fee] => 0
+    [final_total] => 340
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+    [payment_option_display] => 50% Downpayment
+    [subtotal] => 340
+    [total] => 170
+    [total_items] => 2
+)
+
+[03-Jan-2026 13:56:36 Europe/Berlin] Items array contains 2 items
+[03-Jan-2026 13:56:36 Europe/Berlin] First item structure: Array
+(
+    [0] => name
+    [1] => price
+    [2] => quantity
+    [3] => addons
+)
+
+[03-Jan-2026 13:56:36 Europe/Berlin] Found 2 items in the order
+[03-Jan-2026 13:56:36 Europe/Berlin] Items details: Array
+(
+    [0] => Array
+        (
+            [name] => Chicken Wings
+            [price] => 180
+            [quantity] => 1
+            [addons] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => cheese
+                            [price] => 20
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Gravy
+                            [price] => 20
+                        )
+
+                )
+
+        )
+
+    [1] => Array
+        (
+            [name] => Carbonara
+            [price] => 120
+            [quantity] => 1
+            [addons] => Array
+                (
+                )
+
+        )
+
+)
+
+[03-Jan-2026 13:56:36 Europe/Berlin] Order inserted with ID: 13
+[03-Jan-2026 13:56:36 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Chicken Wings
+    [price] => 180
+    [quantity] => 1
+    [addons] => Array
+        (
+            [0] => Array
+                (
+                    [name] => cheese
+                    [price] => 20
+                )
+
+            [1] => Array
+                (
+                    [name] => Gravy
+                    [price] => 20
+                )
+
+        )
+
+)
+
+[03-Jan-2026 13:56:36 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Carbonara
+    [price] => 120
+    [quantity] => 1
+    [addons] => Array
+        (
+        )
+
+)
+
+[03-Jan-2026 13:56:36 Europe/Berlin] Order processing completed successfully. Order ID: 13
+[03-Jan-2026 14:00:03 Europe/Berlin] 
+================================================================================
+[03-Jan-2026 14:00:03 Europe/Berlin] [2026-01-03 14:00:03] New order request received
+[03-Jan-2026 14:00:03 Europe/Berlin] Request method: POST
+[03-Jan-2026 14:00:03 Europe/Berlin] Content type: multipart/form-data; boundary=----WebKitFormBoundaryHUPsbbQ8BfypcXtR
+[03-Jan-2026 14:00:03 Europe/Berlin] Raw input data: 
+[03-Jan-2026 14:00:03 Europe/Berlin] No raw input, using $_POST data
+[03-Jan-2026 14:00:03 Europe/Berlin] Found order_data in POST, attempting to decode...
+[03-Jan-2026 14:00:03 Europe/Berlin] Successfully decoded order_data
+[03-Jan-2026 14:00:03 Europe/Berlin] Parsed request data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[{"name":"cheese","price":20},{"name":"Gravy","price":20}]},{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":340,"extra_fee":0,"final_total":340,"order_type":"regular","special_requests":"","table_details":null,"payment_option_display":"50% Downpayment","subtotal":"340","total":170,"total_items":"2"}
+    [current_date] => 2026-01-03 13:00:03
+    [debug] => true
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => cheese
+                                    [price] => 20
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => Gravy
+                                    [price] => 20
+                                )
+
+                        )
+
+                )
+
+            [1] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 340
+    [extra_fee] => 0
+    [final_total] => 340
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+    [payment_option_display] => 50% Downpayment
+    [subtotal] => 340
+    [total] => 170
+    [total_items] => 2
+)
+
+[03-Jan-2026 14:00:03 Europe/Berlin] Items array contains 2 items
+[03-Jan-2026 14:00:03 Europe/Berlin] First item structure: Array
+(
+    [0] => name
+    [1] => price
+    [2] => quantity
+    [3] => addons
+)
+
+[03-Jan-2026 14:00:03 Europe/Berlin] Found 2 items in the order
+[03-Jan-2026 14:00:03 Europe/Berlin] Items details: Array
+(
+    [0] => Array
+        (
+            [name] => Chicken Wings
+            [price] => 180
+            [quantity] => 1
+            [addons] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => cheese
+                            [price] => 20
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Gravy
+                            [price] => 20
+                        )
+
+                )
+
+        )
+
+    [1] => Array
+        (
+            [name] => Carbonara
+            [price] => 120
+            [quantity] => 1
+            [addons] => Array
+                (
+                )
+
+        )
+
+)
+
+[03-Jan-2026 14:00:03 Europe/Berlin] Order inserted with ID: 14
+[03-Jan-2026 14:00:03 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Chicken Wings
+    [price] => 180
+    [quantity] => 1
+    [addons] => Array
+        (
+            [0] => Array
+                (
+                    [name] => cheese
+                    [price] => 20
+                )
+
+            [1] => Array
+                (
+                    [name] => Gravy
+                    [price] => 20
+                )
+
+        )
+
+)
+
+[03-Jan-2026 14:00:03 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Carbonara
+    [price] => 120
+    [quantity] => 1
+    [addons] => Array
+        (
+        )
+
+)
+
+[03-Jan-2026 14:00:03 Europe/Berlin] Order processing completed successfully. Order ID: 14
+[03-Jan-2026 14:00:35 Europe/Berlin] 
+================================================================================
+[03-Jan-2026 14:00:35 Europe/Berlin] [2026-01-03 14:00:35] New order request received
+[03-Jan-2026 14:00:35 Europe/Berlin] Request method: POST
+[03-Jan-2026 14:00:35 Europe/Berlin] Content type: multipart/form-data; boundary=----WebKitFormBoundaryAgdAMN2NhHwsVnGJ
+[03-Jan-2026 14:00:35 Europe/Berlin] Raw input data: 
+[03-Jan-2026 14:00:35 Europe/Berlin] No raw input, using $_POST data
+[03-Jan-2026 14:00:35 Europe/Berlin] Found order_data in POST, attempting to decode...
+[03-Jan-2026 14:00:35 Europe/Berlin] Successfully decoded order_data
+[03-Jan-2026 14:00:35 Europe/Berlin] Parsed request data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[{"name":"cheese","price":20},{"name":"Gravy","price":20}]},{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":340,"extra_fee":0,"final_total":340,"order_type":"regular","special_requests":"","table_details":null,"payment_option_display":"50% Downpayment","subtotal":"340","total":170,"total_items":"2"}
+    [current_date] => 2026-01-03 13:00:35
+    [debug] => true
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => cheese
+                                    [price] => 20
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => Gravy
+                                    [price] => 20
+                                )
+
+                        )
+
+                )
+
+            [1] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 340
+    [extra_fee] => 0
+    [final_total] => 340
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+    [payment_option_display] => 50% Downpayment
+    [subtotal] => 340
+    [total] => 170
+    [total_items] => 2
+)
+
+[03-Jan-2026 14:00:35 Europe/Berlin] Items array contains 2 items
+[03-Jan-2026 14:00:35 Europe/Berlin] First item structure: Array
+(
+    [0] => name
+    [1] => price
+    [2] => quantity
+    [3] => addons
+)
+
+[03-Jan-2026 14:00:35 Europe/Berlin] Found 2 items in the order
+[03-Jan-2026 14:00:35 Europe/Berlin] Items details: Array
+(
+    [0] => Array
+        (
+            [name] => Chicken Wings
+            [price] => 180
+            [quantity] => 1
+            [addons] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => cheese
+                            [price] => 20
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Gravy
+                            [price] => 20
+                        )
+
+                )
+
+        )
+
+    [1] => Array
+        (
+            [name] => Carbonara
+            [price] => 120
+            [quantity] => 1
+            [addons] => Array
+                (
+                )
+
+        )
+
+)
+
+[03-Jan-2026 14:00:35 Europe/Berlin] Order inserted with ID: 15
+[03-Jan-2026 14:00:35 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Chicken Wings
+    [price] => 180
+    [quantity] => 1
+    [addons] => Array
+        (
+            [0] => Array
+                (
+                    [name] => cheese
+                    [price] => 20
+                )
+
+            [1] => Array
+                (
+                    [name] => Gravy
+                    [price] => 20
+                )
+
+        )
+
+)
+
+[03-Jan-2026 14:00:35 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Carbonara
+    [price] => 120
+    [quantity] => 1
+    [addons] => Array
+        (
+        )
+
+)
+
+[03-Jan-2026 14:00:35 Europe/Berlin] Order processing completed successfully. Order ID: 15
+[03-Jan-2026 14:02:52 Europe/Berlin] 
+================================================================================
+[03-Jan-2026 14:02:52 Europe/Berlin] [2026-01-03 14:02:52] New order request received
+[03-Jan-2026 14:02:52 Europe/Berlin] Request method: POST
+[03-Jan-2026 14:02:52 Europe/Berlin] Content type: multipart/form-data; boundary=----WebKitFormBoundary5ztA50qt1LQQW4Ci
+[03-Jan-2026 14:02:52 Europe/Berlin] Raw input data: 
+[03-Jan-2026 14:02:52 Europe/Berlin] No raw input, using $_POST data
+[03-Jan-2026 14:02:52 Europe/Berlin] Found order_data in POST, attempting to decode...
+[03-Jan-2026 14:02:52 Europe/Berlin] Successfully decoded order_data
+[03-Jan-2026 14:02:52 Europe/Berlin] Parsed request data: Array
+(
+    [order_data] => {"items":[{"name":"Chicken Wings","price":180,"quantity":1,"addons":[{"name":"cheese","price":20},{"name":"Gravy","price":20}]},{"name":"Carbonara","price":120,"quantity":1,"addons":[]}],"payment_option":"partial","payment_method":"maya","total_amount":340,"extra_fee":0,"final_total":340,"order_type":"regular","special_requests":"","table_details":null,"payment_option_display":"50% Downpayment","subtotal":"340","total":170,"total_items":"2"}
+    [current_date] => 2026-01-03 13:02:52
+    [debug] => true
+    [items] => Array
+        (
+            [0] => Array
+                (
+                    [name] => Chicken Wings
+                    [price] => 180
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                            [0] => Array
+                                (
+                                    [name] => cheese
+                                    [price] => 20
+                                )
+
+                            [1] => Array
+                                (
+                                    [name] => Gravy
+                                    [price] => 20
+                                )
+
+                        )
+
+                )
+
+            [1] => Array
+                (
+                    [name] => Carbonara
+                    [price] => 120
+                    [quantity] => 1
+                    [addons] => Array
+                        (
+                        )
+
+                )
+
+        )
+
+    [payment_option] => partial
+    [payment_method] => maya
+    [total_amount] => 340
+    [extra_fee] => 0
+    [final_total] => 340
+    [order_type] => regular
+    [special_requests] => 
+    [table_details] => 
+    [payment_option_display] => 50% Downpayment
+    [subtotal] => 340
+    [total] => 170
+    [total_items] => 2
+)
+
+[03-Jan-2026 14:02:52 Europe/Berlin] Items array contains 2 items
+[03-Jan-2026 14:02:52 Europe/Berlin] First item structure: Array
+(
+    [0] => name
+    [1] => price
+    [2] => quantity
+    [3] => addons
+)
+
+[03-Jan-2026 14:02:52 Europe/Berlin] Found 2 items in the order
+[03-Jan-2026 14:02:52 Europe/Berlin] Items details: Array
+(
+    [0] => Array
+        (
+            [name] => Chicken Wings
+            [price] => 180
+            [quantity] => 1
+            [addons] => Array
+                (
+                    [0] => Array
+                        (
+                            [name] => cheese
+                            [price] => 20
+                        )
+
+                    [1] => Array
+                        (
+                            [name] => Gravy
+                            [price] => 20
+                        )
+
+                )
+
+        )
+
+    [1] => Array
+        (
+            [name] => Carbonara
+            [price] => 120
+            [quantity] => 1
+            [addons] => Array
+                (
+                )
+
+        )
+
+)
+
+[03-Jan-2026 14:02:52 Europe/Berlin] Order inserted with ID: 16
+[03-Jan-2026 14:02:52 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Chicken Wings
+    [price] => 180
+    [quantity] => 1
+    [addons] => Array
+        (
+            [0] => Array
+                (
+                    [name] => cheese
+                    [price] => 20
+                )
+
+            [1] => Array
+                (
+                    [name] => Gravy
+                    [price] => 20
+                )
+
+        )
+
+)
+
+[03-Jan-2026 14:02:52 Europe/Berlin] Skipping invalid item: Array
+(
+    [name] => Carbonara
+    [price] => 120
+    [quantity] => 1
+    [addons] => Array
+        (
+        )
+
+)
+
+[03-Jan-2026 14:02:52 Europe/Berlin] \n================================================================================
+[03-Jan-2026 14:02:52 Europe/Berlin] ORDER PROCESSING SUMMARY
+[03-Jan-2026 14:02:52 Europe/Berlin] Order ID: 16
+[03-Jan-2026 14:02:52 Europe/Berlin] Order Number: ORD-000016
+[03-Jan-2026 14:02:52 Europe/Berlin] Total Items: 2
+[03-Jan-2026 14:02:52 Europe/Berlin] Items Processed: 
+[03-Jan-2026 14:02:52 Europe/Berlin] Last Insert ID: 0
+[03-Jan-2026 14:02:52 Europe/Berlin] Array
+(
+    [order_id] => 16
+    [order_number] => ORD-000016
+    [items_count] => 2
+    [items_processed] => 
+    [server_time] => 2026-01-03 14:02:52
+    [request_data] => Array
+        (
+            [0] => items
+            [1] => payment_option
+            [2] => payment_method
+            [3] => total_amount
+            [4] => extra_fee
+            [5] => final_total
+            [6] => order_type
+            [7] => special_requests
+            [8] => table_details
+            [9] => payment_option_display
+            [10] => subtotal
+            [11] => total
+            [12] => total_items
+        )
+
+    [last_insert_id] => 0
+    [last_error] => Array
+        (
+            [0] => 00000
+            [1] => 
+            [2] => 
+        )
+
+)
+
+[03-Jan-2026 14:02:52 Europe/Berlin] ================================================================================\n
+[03-Jan-2026 14:02:52 Europe/Berlin] Order processing completed successfully. Order ID: 16

@@ -1,9 +1,23 @@
 <?php
 require_once 'db.php';
 
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
+// Get logged in admin user
+$adminUser = null;
+
+if (isset($_SESSION['user_id'])) {
+    $adminId = $_SESSION['user_id'];
+
+    $adminQuery = $con->prepare("SELECT * FROM userss WHERE id = ?");
+    $adminQuery->bind_param("i", $adminId);
+    $adminQuery->execute();
+    $adminUser = $adminQuery->get_result()->fetch_assoc();
+}
+
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
@@ -91,7 +105,9 @@ if ($selectedUserId > 0) {
     $selectedUser = $userStmt->get_result()->fetch_assoc();
 }
 ?>
-
+<?php
+$currentPage = basename($_SERVER['PHP_SELF']);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,12 +126,8 @@ if ($selectedUserId > 0) {
         <div class="d-flex justify-content-between align-items-center">
             <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
             <div class="nav-icons">
-                <a href="index.php?messages"><i class="fas fa-envelope"></i></a>
-                <a href="#" class="position-relative">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge">3</span>
-                </a>
-                <a href="#"><i class="fas fa-user"></i></a>
+               
+                
             </div>
         </div>
     </nav>
@@ -127,12 +139,16 @@ if ($selectedUserId > 0) {
     <div class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <?php
-            $sidebarProfile = !empty($user['profile_photo'])
-                ? "../Admin/adminBackend/user_photo/" . htmlspecialchars($user['profile_photo'])
+            $sidebarProfile = !empty($adminUser['profile_photo'])
+                ? "../Admin/adminBackend/user_photo/" . htmlspecialchars($adminUser['profile_photo'])
                 : "../Admin/adminBackend/user_photo/default.png";
             ?>
+
             <img src="<?= $sidebarProfile ?>" alt="Profile Photo" class="rounded-circle" width="80" height="80">
-            <h5><?= htmlspecialchars($user['first_name'] . ' ' . $user['last_name']) ?></h5>
+            <h5>
+                <?= htmlspecialchars(($adminUser['first_name'] ?? '') . ' ' . ($adminUser['last_name'] ?? '')) ?>
+            </h5>
+
         </div>
 
         <div class="sidebar-menu">

@@ -1,0 +1,59 @@
+[2025-06-10 02:21:03] Payment process started. Request: Array
+(
+    [payment] => success
+    [ref] => EVT-1749514368-1405
+    [amount] => 8400000
+    [package] => 
+)
+
+[2025-06-10 02:21:03] GET parameters: Array
+(
+    [payment] => success
+    [ref] => EVT-1749514368-1405
+    [amount] => 8400000
+    [package] => 
+)
+
+[2025-06-10 02:21:03] Payment success detected
+[2025-06-10 02:21:03] Processing booking with data: Array
+(
+    [reference] => EVT-1749514368-1405
+    [user_id] => 0
+    [package_name] => 
+    [event_type] => 
+    [event_date] => 
+    [total_amount] => 0
+)
+
+[2025-06-10 02:21:03] Executing SQL: INSERT INTO event_bookings (
+            reference, user_id, package_name, event_type, event_date, start_time, 
+            end_time, guest_count, base_price, extra_guest_charge, 
+            overtime_hours, overtime_charge, payment_method, payment_type, 
+            total_amount, status, created_at
+        ) VALUES (
+            :reference, :user_id, :package_name, :event_type, :event_date, :start_time,
+            :end_time, :guest_count, :base_price, :extra_guest_charge,
+            :overtime_hours, :overtime_charge, :payment_method, :payment_type,
+            :total_amount, 'pending', NOW()
+        )
+[2025-06-10 02:21:03] With parameters: Array
+(
+    [:reference] => EVT-1749514368-1405
+    [:user_id] => 0
+    [:package_name] => 
+    [:event_type] => 
+    [:event_date] => 
+    [:start_time] => 
+    [:end_time] => 
+    [:guest_count] => 0
+    [:base_price] => 0
+    [:extra_guest_charge] => 0
+    [:overtime_hours] => 0
+    [:overtime_charge] => 0
+    [:payment_method] => 
+    [:payment_type] => 
+    [:total_amount] => 0
+)
+
+[2025-06-10 02:21:03] Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reference' in 'field list'
+[2025-06-10 02:21:03] Session error set: Error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'reference' in 'field list'

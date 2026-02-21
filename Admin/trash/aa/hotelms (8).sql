@@ -1,0 +1,2032 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Feb 18, 2025 at 01:35 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `hotelms`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admin`
+--
+
+CREATE TABLE `admin` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `middle_initial` varchar(1) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `position` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `profile_image` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admin`
+--
+
+INSERT INTO `admin` (`id`, `username`, `password`, `first_name`, `middle_initial`, `last_name`, `age`, `address`, `position`, `email`, `contact`, `profile_image`, `created_at`) VALUES
+(1, 'admin', '$2y$10$VLIHEg53Wc4m28V.iwDDyuLW8f2IsAFhYRc02.1yTyNHSzxr754Uy', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-02-16 18:15:04'),
+(2, 'admin@example.com', '$2y$10$dlPR3HFncDBOCr/zZz4SH.QAGLbJwLgU4zqSFtof432mJGdqmFqfa', 'Alfred Hendrik', 'A', 'Aceveda', 20, 'Balite Calapan City Oriental Mindoro', 'Manager', 'admin@example.com', NULL, NULL, '2025-02-16 18:25:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advance_orders`
+--
+
+CREATE TABLE `advance_orders` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `advance_orders`
+--
+
+INSERT INTO `advance_orders` (`id`, `booking_id`, `menu_item_id`, `quantity`, `price`, `created_at`) VALUES
+(1, 10, 1, 1, 120.00, '2025-02-17 16:48:09'),
+(2, 11, 1, 1, 120.00, '2025-02-17 17:03:53'),
+(3, 13, 1, 1, 120.00, '2025-02-17 22:36:45');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `advance_order_addons`
+--
+
+CREATE TABLE `advance_order_addons` (
+  `id` int(11) NOT NULL,
+  `advance_order_id` int(11) NOT NULL,
+  `addon_id` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `amenities`
+--
+
+CREATE TABLE `amenities` (
+  `amenity_id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `icon` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `amenities`
+--
+
+INSERT INTO `amenities` (`amenity_id`, `name`, `icon`) VALUES
+(1, 'Air Conditioning', 'fa-snowflake-o'),
+(2, 'Private Bathroom', 'fa-bath'),
+(3, 'Flat-screen TV', 'fa-television'),
+(4, 'Free WiFi', 'fa-wifi'),
+(5, 'Hot Shower', 'fa-shower');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `announcements`
+--
+
+CREATE TABLE `announcements` (
+  `id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` enum('gcash','maya','general') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `valid_until` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `announcements`
+--
+
+INSERT INTO `announcements` (`id`, `title`, `message`, `type`, `created_at`, `valid_until`) VALUES
+(1, 'Payment Disruption', 'Para sa mga abno jan, wala muna hong gagamit ng gcash at maya at may sira ho.', 'general', '2025-01-27 23:24:36', '2025-01-28 23:24:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking`
+--
+
+CREATE TABLE `booking` (
+  `booking_id` int(10) NOT NULL,
+  `customer_id` int(10) NOT NULL,
+  `room_id` int(10) NOT NULL,
+  `booking_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `check_in` varchar(100) DEFAULT NULL,
+  `check_out` varchar(100) NOT NULL,
+  `total_price` int(10) NOT NULL,
+  `remaining_price` int(10) NOT NULL,
+  `payment_status` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `booking`
+--
+
+INSERT INTO `booking` (`booking_id`, `customer_id`, `room_id`, `booking_date`, `check_in`, `check_out`, `total_price`, `remaining_price`, `payment_status`) VALUES
+(1, 1, 5, '2017-11-13 05:45:17', '13-11-2017', '15-11-2017', 3000, 0, 0),
+(2, 2, 2, '2017-11-13 05:46:04', '13-11-2017', '16-11-2017', 6000, 0, 1),
+(3, 3, 2, '2017-11-11 06:49:19', '11-11-2017', '14-11-2017', 6000, 3000, 0),
+(4, 4, 7, '2017-11-09 06:50:24', '11-11-2017', '15-11-2017', 10000, 10000, 0),
+(5, 6, 9, '2021-04-08 09:45:56', '08-04-2021', '10-04-2021', 3000, 3000, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `bookings`
+--
+
+CREATE TABLE `bookings` (
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `first_name` varchar(50) DEFAULT NULL,
+  `last_name` varchar(50) DEFAULT NULL,
+  `booking_type` varchar(50) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact` varchar(20) DEFAULT NULL,
+  `check_in` date DEFAULT NULL,
+  `check_out` date DEFAULT NULL,
+  `arrival_time` time DEFAULT NULL,
+  `number_of_guests` int(11) DEFAULT NULL,
+  `payment_option` varchar(50) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
+  `total_amount` int(11) NOT NULL,
+  `status` varchar(50) DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `nights` int(11) NOT NULL,
+  `downpayment_amount` decimal(10,2) DEFAULT NULL,
+  `cancellation_reason` text DEFAULT NULL,
+  `cancelled_at` datetime DEFAULT NULL,
+  `rejection_reason` varchar(255) NOT NULL,
+  `rejected_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`booking_id`, `user_id`, `first_name`, `last_name`, `booking_type`, `email`, `contact`, `check_in`, `check_out`, `arrival_time`, `number_of_guests`, `payment_option`, `payment_method`, `total_amount`, `status`, `created_at`, `nights`, `downpayment_amount`, `cancellation_reason`, `cancelled_at`, `rejection_reason`, `rejected_at`) VALUES
+(30, NULL, 'Christian', 'Realisan', 'Walkin', 'christianrealisan3@gmail.com', '9876543200', '2025-02-13', '2025-02-15', '02:48:44', 1, 'full', 'Cash', 7400, 'Rejected', '2025-02-12 18:48:44', 2, 0.00, NULL, NULL, '', NULL),
+(31, NULL, 'Christian', 'Realisan', 'Walkin', 'christianrealisan3@gmail.com', '9876543200', '2025-02-13', '2025-02-18', '03:01:57', 1, 'full', 'Cash', 18500, 'Rejected', '2025-02-12 19:01:57', 5, 0.00, NULL, NULL, '', NULL),
+(32, NULL, 'Christian', 'Realisan', 'Walkin', 'christianrealisan3@gmail.com', '9876543200', '2025-02-13', '2025-02-18', '03:05:04', 1, 'full', 'Cash', 18500, 'Rejected', '2025-02-12 19:05:04', 5, 0.00, NULL, NULL, '', NULL),
+(33, NULL, 'Christian', 'Realisan', 'Walkin', 'christianrealisan3@gmail.com', '9876543200', '2025-02-13', '2025-02-15', '03:10:44', 1, 'full', 'Cash', 7400, 'Rejected', '2025-02-12 19:10:44', 2, 0.00, NULL, NULL, '', NULL),
+(34, NULL, 'Christian', 'Realisan', 'Walkin', 'christianrealisan3@gmail.com', '9876543200', '2025-02-13', '2025-02-15', '03:14:06', 2, 'full', 'Cash', 9000, 'Rejected', '2025-02-12 19:14:06', 2, 0.00, NULL, NULL, '', NULL),
+(35, NULL, 'Christian', 'Realisan', 'Walkin', 'christianrealisan3@gmail.com', '9876543200', '2025-02-13', '2025-02-15', '04:57:12', 1, 'full', 'Cash', 4000, 'Rejected', '2025-02-12 20:57:12', 2, 0.00, NULL, NULL, '', NULL),
+(36, NULL, 'Fammela Nicole', 'De Guzman', 'Walkin', 'fammeladeguzman21@gmail.com', '09951779220', '2025-02-14', '2025-02-15', '17:34:00', 2, 'downpayment', 'Cash', 3000, 'Checked Out', '2025-02-13 09:34:00', 1, 1500.00, NULL, NULL, '', NULL),
+(58, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-13', '2025-02-14', '14:00:00', 1, 'full', 'gcash', 5700, 'pending', '2025-02-13 15:40:41', 1, 5700.00, NULL, NULL, '', NULL),
+(59, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-13', '2025-02-15', '14:00:00', 2, 'full', 'cash', 4000, 'pending', '2025-02-13 15:42:18', 2, 4000.00, NULL, NULL, '', NULL),
+(60, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-13', '2025-02-14', '14:00:00', 2, 'full', 'cash', 3700, 'pending', '2025-02-13 15:45:26', 1, 3700.00, NULL, NULL, '', NULL),
+(61, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-14', '2025-02-27', '14:00:00', 2, 'downpayment', 'cash', 32500, 'pending', '2025-02-13 15:57:06', 13, 16250.00, NULL, NULL, '', NULL),
+(62, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-27', '14:00:00', 2, 'full', 'gcash', 30000, 'pending', '2025-02-13 16:00:26', 12, 30000.00, NULL, NULL, '', NULL),
+(63, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-22', '2025-02-26', '14:00:00', 1, '', '', 8000, 'pending', '2025-02-13 16:35:56', 4, 8000.00, NULL, NULL, '', NULL),
+(64, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-17', '14:00:00', 2, 'full', 'cash', 4000, 'Archived', '2025-02-13 16:36:42', 2, 4000.00, NULL, NULL, '', NULL),
+(65, NULL, 'Chanchan', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-22', '14:00:00', 2, 'full', 'cash', 25900, 'pending', '2025-02-13 16:44:35', 7, 25900.00, NULL, NULL, '', NULL),
+(66, NULL, 'Chano', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-03-06', '14:00:00', 2, 'downpayment', 'cash', 70300, 'pending', '2025-02-13 16:48:39', 19, 35150.00, NULL, NULL, '', NULL),
+(67, NULL, 'Chan', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-22', '14:00:00', 2, 'downpayment', 'cash', 25900, 'pending', '2025-02-13 16:54:12', 7, 12950.00, NULL, NULL, '', NULL),
+(68, NULL, 'Cha', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-22', '14:00:00', 2, 'full', 'Cash', 25900, 'Checked Out', '2025-02-13 16:56:21', 7, 25900.00, NULL, NULL, '', NULL),
+(69, NULL, 'h', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-25', '14:00:00', 2, 'full', 'cash', 37000, 'pending', '2025-02-13 16:57:27', 10, 37000.00, NULL, NULL, '', NULL),
+(70, NULL, 'h', 'Pogi', 'Online', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-20', '14:00:00', 2, 'full', 'cash', 18500, 'pending', '2025-02-13 16:58:34', 5, 18500.00, NULL, NULL, '', NULL),
+(71, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-15', '2025-02-18', '14:00:00', 2, 'downpayment', 'cash', 11100, 'pending', '2025-02-13 16:59:13', 3, 5550.00, NULL, NULL, '', NULL),
+(72, NULL, 'Chano', 'Pogi', 'Walkin', 'GFD@gmail.com', '9876543200', '2025-02-22', '2025-03-04', '00:59:47', 1, 'downpayment', 'Cash', 37000, 'Rejected', '2025-02-13 16:59:47', 10, 18500.00, NULL, NULL, 'Duplicate Booking', NULL),
+(73, NULL, 'Chano', 'Pogi', 'Walkin', 'GFD@gmail.com', '9876543200', '2025-02-22', '2025-03-04', '00:59:47', 1, 'downpayment', 'Maya', 37000, 'Checked Out', '2025-02-13 16:59:47', 10, 18500.00, NULL, NULL, '', NULL),
+(74, NULL, 'Chanchan', 'Pogi', 'Walkin', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-03-05', '01:00:29', 1, 'downpayment', 'Cash', 66600, 'pending', '2025-02-13 17:00:29', 18, 33300.00, NULL, NULL, '', NULL),
+(75, NULL, 'alfred', 'aceveda', 'Walkin', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-21', '01:06:23', 1, 'downpayment', 'Cash', 22200, 'pending', '2025-02-13 17:06:23', 6, 11100.00, NULL, NULL, '', NULL),
+(76, NULL, 'alfredo', 'aceveda', 'Walkin', 'GFD@gmail.com', '9876543200', '2025-02-15', '2025-02-27', '01:06:53', 1, 'downpayment', 'GCash', 44400, 'Rejected', '2025-02-13 17:06:53', 12, 22200.00, NULL, NULL, '', NULL),
+(77, NULL, 'Aizzyy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-15', '2025-02-22', '14:00:00', 2, 'full', 'cash', 25900, 'Archived', '2025-02-13 17:07:33', 7, 25900.00, NULL, NULL, '', NULL),
+(80, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-03-06', NULL, 2, 'downpayment', 'gcash', 74000, 'Rejected', '2025-02-13 17:25:01', 0, 37000.00, NULL, NULL, '', NULL),
+(81, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-02-22', NULL, 2, 'full', 'gcash', 29600, 'Checked Out', '2025-02-13 17:32:07', 0, 29600.00, NULL, NULL, '', NULL),
+(82, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-02-26', NULL, 2, 'downpayment', 'cash', 44400, 'pending', '2025-02-13 17:37:33', 0, 22200.00, NULL, NULL, '', NULL),
+(83, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-02-21', NULL, 2, 'downpayment', 'cash', 25900, 'pending', '2025-02-13 17:39:59', 0, 12950.00, NULL, NULL, '', NULL),
+(84, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-03-05', NULL, 2, 'downpayment', 'gcash', 70300, 'pending', '2025-02-13 17:41:37', 0, 35150.00, NULL, NULL, '', NULL),
+(85, NULL, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-02-27', NULL, 2, 'full', 'cash', 48100, 'pending', '2025-02-13 17:41:59', 0, 48100.00, NULL, NULL, '', NULL),
+(86, 1, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-02-27', NULL, 2, 'downpayment', 'cash', 48100, 'cancelled', '2025-02-13 17:44:21', 0, 24050.00, NULL, NULL, '', NULL),
+(87, 1, 'Aizzy', 'Villanueva', 'Online', 'aizzyvillanueva43@gmail.com', '9876543200', '2025-02-14', '2025-03-08', NULL, 2, 'full', 'cash', 81400, 'cancelled', '2025-02-13 17:50:56', 0, 81400.00, NULL, NULL, '', NULL),
+(88, 1, 'Myra', 'Luceno', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-15', '2025-02-20', NULL, 1, 'full', 'gcash', 28500, 'cancelled', '2025-02-15 11:40:16', 0, 28500.00, NULL, NULL, '', NULL),
+(89, 3, 'Myra', 'Luceno', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-15', '2025-02-17', NULL, 1, 'full', 'cash', 4000, 'pending', '2025-02-15 14:58:51', 0, 4000.00, NULL, NULL, '', NULL),
+(90, 3, 'Myra', 'Luceno', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-16', '2025-02-25', NULL, 1, 'downpayment', 'cash', 18000, 'cancelled', '2025-02-15 16:08:35', 0, 9000.00, NULL, NULL, '', NULL),
+(91, NULL, 'Myra', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-02-25', '22:45:23', 1, 'downpayment', 'Cash', 29600, 'pending', '2025-02-16 14:45:23', 8, 14800.00, NULL, NULL, '', NULL),
+(92, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-28', '2025-03-01', '23:30:57', 1, 'downpayment', 'Cash', 2000, 'Checked Out', '2025-02-16 15:30:57', 1, 1000.00, NULL, NULL, '', NULL),
+(93, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-02-25', '23:32:36', 1, 'full', 'Cash', 29600, 'Checked Out', '2025-02-16 15:32:36', 8, 0.00, NULL, NULL, '', NULL),
+(94, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-02-25', '23:36:20', 1, 'full', 'Cash', 29600, 'Checked Out', '2025-02-16 15:36:20', 8, 0.00, NULL, NULL, '', NULL),
+(95, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-02-26', '23:38:58', 1, 'full', 'Cash', 33300, 'Checked Out', '2025-02-16 15:38:58', 9, 0.00, NULL, NULL, '', NULL),
+(96, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-03-05', '23:50:40', 1, 'full', 'Cash', 32000, 'Checked Out', '2025-02-16 15:50:40', 16, 0.00, NULL, NULL, '', NULL),
+(97, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-25', '23:59:02', 1, 'full', 'Cash', 25900, 'Checked Out', '2025-02-16 15:59:02', 7, 0.00, NULL, NULL, '', NULL),
+(98, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-03-06', '00:04:15', 1, 'full', 'Cash', 59200, 'pending', '2025-02-16 16:04:15', 16, 0.00, NULL, NULL, '', NULL),
+(99, NULL, 'hanna', 'Luceno', 'Walkin', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-19', '19:59:30', 1, 'downpayment', 'Cash', 2000, 'pending', '2025-02-17 11:59:30', 1, 1000.00, NULL, NULL, '', NULL),
+(100, 4, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-02-20', NULL, 5, 'downpayment', 'cash', 11100, 'pending', '2025-02-17 12:11:57', 0, 5550.00, NULL, NULL, '', NULL),
+(101, 4, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-17', '2025-02-21', NULL, 5, 'downpayment', 'cash', 24000, 'pending', '2025-02-17 12:26:01', 0, 12000.00, NULL, NULL, '', NULL),
+(102, 3, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-20', NULL, 1, 'full', 'cash', 7400, 'Checked Out', '2025-02-17 20:24:55', 0, 7400.00, NULL, NULL, '', NULL),
+(103, 3, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-20', NULL, 1, 'downpayment', 'gcash', 7400, 'cancelled', '2025-02-17 20:39:41', 0, 3700.00, 'change_of_plans', '2025-02-18 06:37:21', '', NULL),
+(104, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-21', NULL, 1, 'full', 'cash', 7500, 'cancelled', '2025-02-17 20:47:12', 0, 7500.00, 'change_of_plans', '2025-02-18 04:49:02', '', NULL),
+(105, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-20', NULL, 1, 'full', 'gcash', 5000, 'Rejected', '2025-02-17 20:53:08', 0, 5000.00, NULL, NULL, '', NULL),
+(106, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-03-08', NULL, 1, 'full', 'cash', 45000, 'Checked Out', '2025-02-17 21:02:39', 0, 45000.00, NULL, NULL, '', NULL),
+(107, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-19', NULL, 1, 'full', 'cash', 3700, 'cancelled', '2025-02-17 21:05:15', 0, 3700.00, 'change_of_plans', '2025-02-18 05:05:32', '', NULL),
+(108, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-19', NULL, 1, 'downpayment', 'cash', 2000, 'Rejected', '2025-02-17 21:12:15', 0, 1000.00, NULL, NULL, '', NULL),
+(109, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-21', NULL, 1, 'full', 'cash', 6000, 'cancelled', '2025-02-17 21:13:01', 0, 6000.00, 'change_of_plans', '2025-02-18 05:13:10', '', NULL),
+(110, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-03-28', NULL, 1, 'downpayment', 'cash', 140600, 'cancelled', '2025-02-17 21:28:09', 0, 70300.00, 'change_of_plans', '2025-02-18 05:30:04', '', NULL),
+(111, 2, 'Kenjo', 'Marimon', 'Online', 'aizzyvillanueva43@gmail.com', '09363950698', '2025-02-18', '2025-02-19', NULL, 1, 'full', 'cash', 3700, 'cancelled', '2025-02-17 21:32:43', 0, 3700.00, 'change_of_plans', '2025-02-18 05:33:06', '', NULL),
+(112, 1, 'Robin', 'Almarez', 'Online', 'christianrealisan3@gmail.com', '0987654321', '2025-02-18', '2025-04-29', NULL, 1, 'downpayment', 'gcash', 175000, 'cancelled', '2025-02-17 22:01:11', 0, 87500.00, 'change_of_plans', '2025-02-18 06:01:45', '', NULL),
+(113, 1, 'Robin', 'Almarez', 'Online', 'christianrealisan3@gmail.com', '0987654321', '2025-02-18', '2025-02-19', NULL, 1, 'full', 'gcash', 2500, 'Checked Out', '2025-02-17 22:02:39', 0, 2500.00, NULL, NULL, '', NULL),
+(114, 3, 'Robin', 'Almarez', 'Online', 'christianrealisan3@gmail.com', '0987654321', '2025-02-18', '2025-02-28', NULL, 1, 'downpayment', 'GCash', 25000, 'Checked Out', '2025-02-17 23:33:19', 0, 12500.00, NULL, NULL, '', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_cancellations`
+--
+
+CREATE TABLE `booking_cancellations` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reason` text NOT NULL,
+  `cancelled_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `booking_cancellations`
+--
+
+INSERT INTO `booking_cancellations` (`id`, `booking_id`, `user_id`, `reason`, `cancelled_at`) VALUES
+(1, 104, 2, 'change_of_plans', '2025-02-18 04:49:02'),
+(2, 107, 2, 'change_of_plans', '2025-02-18 05:05:32'),
+(3, 109, 2, 'change_of_plans', '2025-02-18 05:13:10'),
+(4, 110, 2, 'change_of_plans', '2025-02-18 05:30:04'),
+(5, 111, 2, 'change_of_plans', '2025-02-18 05:33:06'),
+(6, 112, 1, 'change_of_plans', '2025-02-18 06:01:45'),
+(7, 103, 3, 'change_of_plans', '2025-02-18 06:37:21');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `booking_display_settings`
+--
+
+CREATE TABLE `booking_display_settings` (
+  `id` int(11) NOT NULL,
+  `booking_type` enum('room','table','event') NOT NULL,
+  `display_fields` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`display_fields`)),
+  `image_settings` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`image_settings`)),
+  `layout_order` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `booking_display_settings`
+--
+
+INSERT INTO `booking_display_settings` (`id`, `booking_type`, `display_fields`, `image_settings`, `layout_order`, `created_at`, `updated_at`) VALUES
+(1, 'room', 'null', '{\"width\":\"\",\"height\":\"\",\"enable\":false}', 0, '2025-02-08 17:52:53', '2025-02-08 17:52:53'),
+(2, 'room', '[]', '{\"width\":\"\",\"height\":\"\",\"enable\":false}', 0, '2025-02-08 17:53:33', '2025-02-08 17:53:33'),
+(3, 'room', '[]', '{\"width\":\"\",\"height\":\"\",\"enable\":false}', 0, '2025-02-08 17:53:35', '2025-02-08 17:53:35'),
+(4, 'table', '[\"name\",\"price\",\"capacity\"]', '{\"width\":\"\",\"height\":\"\",\"enable\":true}', 0, '2025-02-08 17:53:57', '2025-02-08 17:53:57'),
+(5, 'room', '[\"name\",\"price\"]', '{\"width\":\"\",\"height\":\"\",\"enable\":false}', 0, '2025-02-08 17:54:15', '2025-02-08 17:54:15'),
+(6, 'room', '[\"name\",\"price\"]', '{\"width\":\"\",\"height\":\"\",\"enable\":false}', 0, '2025-02-08 18:55:29', '2025-02-08 18:55:29');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer`
+--
+
+CREATE TABLE `customer` (
+  `customer_id` int(10) NOT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `contact_no` bigint(20) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `id_card_type_id` int(10) NOT NULL,
+  `id_card_no` varchar(20) NOT NULL,
+  `address` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `customer`
+--
+
+INSERT INTO `customer` (`customer_id`, `customer_name`, `contact_no`, `email`, `id_card_type_id`, `id_card_no`, `address`) VALUES
+(1, 'Alfred Aceveda', 7540001240, 'alfred@gmail.com', 1, '422510099122', '3166 Rockford Road'),
+(2, 'John Rich Alveyra', 2870214970, 'johnrich@gmail.com', 2, '422510099122', '1954 Armory Road'),
+(3, 'Aries King Nieto', 1247778460, 'ariesking@gmail.com', 1, '422510099122', '4879 Shearwood Forest Drive'),
+(4, 'Aizzy Villanueva', 1478546500, 'aizzy@gmail.com', 3, '0', '926 Richland Avenue\n'),
+(5, 'Christian Realisan', 2671249780, 'christian@gmail.com', 1, '422510099122', '4698 Columbia Road\n'),
+(6, 'Fammela De Guzman', 1245554780, 'fammela@gmail.com', 4, 'AASS 12454784541', '4764 Warner Street\n'),
+(7, 'Myra Kristine Grace Luceno', 2450006974, 'myra@gmail.com', 1, '457896000002', '1680  Brownton Road'),
+(8, 'Earl Aceveda', 2457778450, 'earl@gmail.com', 1, '147000245810', '766  Lodgeville Road');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `dining_tables`
+--
+
+CREATE TABLE `dining_tables` (
+  `id` int(11) NOT NULL,
+  `table_name` varchar(100) NOT NULL,
+  `table_type` enum('Couple','Friends','Family','Package A','Package B','Package C') NOT NULL,
+  `category` enum('regular','ultimate') NOT NULL DEFAULT 'regular',
+  `capacity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `status` enum('available','occupied') DEFAULT 'available',
+  `image_path` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `dining_tables`
+--
+
+INSERT INTO `dining_tables` (`id`, `table_name`, `table_type`, `category`, `capacity`, `price`, `status`, `image_path`, `created_at`, `updated_at`) VALUES
+(1, 'Package D', 'Family', 'ultimate', 48, 70000.00, 'available', 'uploads/tables/67a862a913c4b.jpg', '2025-02-09 08:09:13', '2025-02-09 08:09:13'),
+(2, 'Family Table', 'Family', 'regular', 7, 10000.00, 'available', 'uploads/tables/67a862e402fde.jpg', '2025-02-09 08:10:12', '2025-02-09 08:10:12'),
+(3, 'Package D', 'Family', 'ultimate', 12, 100000.00, 'available', 'uploads/tables/67aa27b98c995.jpg', '2025-02-10 16:22:17', '2025-02-10 16:22:17');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `emp_history`
+--
+
+CREATE TABLE `emp_history` (
+  `id` int(11) NOT NULL,
+  `emp_id` int(11) NOT NULL,
+  `shift_id` int(11) NOT NULL,
+  `from_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `to_date` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `emp_history`
+--
+
+INSERT INTO `emp_history` (`id`, `emp_id`, `shift_id`, `from_date`, `to_date`, `created_at`) VALUES
+(1, 1, 1, '2017-11-13 05:39:06', '2017-11-15 02:22:26', '2017-11-13 05:39:06'),
+(2, 2, 3, '2017-11-13 05:39:39', '2017-11-15 02:22:43', '2017-11-13 05:39:39'),
+(3, 3, 1, '2017-11-13 05:40:18', '2017-11-15 02:22:49', '2017-11-13 05:40:18'),
+(4, 4, 1, '2017-11-13 05:40:56', '2017-11-15 02:22:35', '2017-11-13 05:40:56'),
+(11, 1, 2, '2017-11-15 06:52:26', '2017-11-17 02:23:05', '2017-11-15 06:52:26'),
+(12, 4, 3, '2017-11-15 06:52:35', NULL, '2017-11-15 06:52:35'),
+(13, 2, 3, '2017-11-15 06:52:43', NULL, '2017-11-15 06:52:43'),
+(14, 3, 3, '2017-11-15 06:52:49', NULL, '2017-11-15 06:52:49'),
+(15, 1, 3, '2017-11-17 06:53:05', '2025-02-13 09:35:30', '2017-11-17 06:53:05'),
+(22, 1, 2, '2025-02-13 09:35:30', NULL, '2025-02-13 09:35:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_bookings`
+--
+
+CREATE TABLE `event_bookings` (
+  `id` varchar(20) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `package_name` varchar(100) NOT NULL,
+  `package_price` decimal(10,2) NOT NULL,
+  `base_price` decimal(10,2) NOT NULL,
+  `overtime_hours` int(11) DEFAULT 0,
+  `overtime_charge` decimal(10,2) DEFAULT 0.00,
+  `total_amount` decimal(10,2) NOT NULL,
+  `paid_amount` decimal(10,2) NOT NULL,
+  `remaining_balance` decimal(10,2) NOT NULL,
+  `reservation_date` date NOT NULL,
+  `start_time` time NOT NULL,
+  `end_time` time NOT NULL,
+  `number_of_guests` int(11) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `payment_type` varchar(50) NOT NULL,
+  `booking_status` varchar(20) DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_bookings`
+--
+
+INSERT INTO `event_bookings` (`id`, `user_id`, `package_name`, `package_price`, `base_price`, `overtime_hours`, `overtime_charge`, `total_amount`, `paid_amount`, `remaining_balance`, `reservation_date`, `start_time`, `end_time`, `number_of_guests`, `payment_method`, `payment_type`, `booking_status`, `created_at`, `updated_at`) VALUES
+('TB20250213191100509', 1, 'Standard Package', 73500.00, 47500.00, 13, 26000.00, 73500.00, 36750.00, 36750.00, '2025-02-14', '02:10:00', '20:10:00', 30, 'cash', 'downpayment', 'pending', '2025-02-13 18:11:00', '2025-02-13 18:11:00'),
+('TB20250215175540283', 3, 'Standard Package', 47500.00, 47500.00, 0, 0.00, 47500.00, 23750.00, 23750.00, '2025-02-16', '00:55:00', '04:55:00', 30, 'cash', 'downpayment', 'pending', '2025-02-15 16:55:41', '2025-02-15 16:55:41'),
+('TB20250217230534902', 1, 'Standard Package', 49500.00, 47500.00, 1, 2000.00, 49500.00, 49500.00, 0.00, '2025-02-18', '06:05:00', '12:05:00', 29, 'gcash', 'full', 'pending', '2025-02-17 22:05:34', '2025-02-17 22:05:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_images`
+--
+
+CREATE TABLE `event_images` (
+  `id` int(11) NOT NULL,
+  `package_id` int(11) DEFAULT NULL,
+  `image_path` varchar(255) NOT NULL,
+  `caption` varchar(255) DEFAULT NULL,
+  `is_featured` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_images`
+--
+
+INSERT INTO `event_images` (`id`, `package_id`, `image_path`, `caption`, `is_featured`, `created_at`) VALUES
+(1, NULL, 'images/hall.jpg', 'Elegant Wedding Reception', 1, '2025-02-12 02:48:47'),
+(2, NULL, 'images/hall2.jpg', 'Garden Wedding Ceremony', 0, '2025-02-12 02:48:47'),
+(3, NULL, 'images/hall3.jpg', 'Birthday Celebration Setup', 0, '2025-02-12 02:48:47'),
+(4, NULL, 'images/gard.jpg', 'Corporate Event Space', 0, '2025-02-12 02:48:47'),
+(5, NULL, 'images/garden1.jpg', 'Outdoor Reception Area', 0, '2025-02-12 02:48:47'),
+(6, NULL, 'images/garden.jpg', 'Garden Party Setup', 0, '2025-02-12 02:48:47');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `event_packages`
+--
+
+CREATE TABLE `event_packages` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `description` text DEFAULT NULL,
+  `max_guests` int(11) NOT NULL DEFAULT 30,
+  `duration` int(11) NOT NULL DEFAULT 5 COMMENT 'Duration in hours',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `event_packages`
+--
+
+INSERT INTO `event_packages` (`id`, `name`, `price`, `description`, `max_guests`, `duration`, `created_at`) VALUES
+(1, 'Standard Package', 47500.00, 'Up to 30 Pax\n5-hour venue rental\nBasic sound system\nStandard decoration\nBasic catering service', 30, 5, '2025-02-12 02:48:46'),
+(2, 'Premium Package', 55000.00, 'Up to 30 Pax\n5-hour venue rental\nPremium sound system\nEnhanced decoration\nPremium catering service\nEvent coordinator', 30, 5, '2025-02-12 02:48:46'),
+(3, 'Deluxe Package', 76800.00, 'Up to 30 Pax\n5-hour venue rental\nProfessional DJ\nLuxury decoration\nPremium catering service\nEvent coordinator\nPhoto/Video coverage', 30, 5, '2025-02-12 02:48:46'),
+(4, 'Venue Rental Only', 20000.00, '5-hour venue rental\nTables and Tiffany chairs', 30, 5, '2025-02-12 02:48:46');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `guest_names`
+--
+
+CREATE TABLE `guest_names` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `guest_name` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `guest_names`
+--
+
+INSERT INTO `guest_names` (`id`, `booking_id`, `guest_name`, `created_at`) VALUES
+(1, 1, 'QQQ', '2025-01-28 08:36:52'),
+(2, 2, 'QQQ', '2025-01-28 08:37:28'),
+(3, 2, 'QQQ', '2025-01-28 08:37:28'),
+(4, 3, 'QQQ', '2025-01-28 08:38:07'),
+(5, 3, 'QQQ', '2025-01-28 08:38:07'),
+(6, 3, 'QQQ', '2025-01-28 08:38:07'),
+(7, 3, 'QQQ', '2025-01-28 08:38:07'),
+(8, 4, 'QQQ', '2025-01-28 08:43:05'),
+(9, 4, 'QQQ', '2025-01-28 08:43:05'),
+(10, 4, 'QQQ', '2025-01-28 08:43:05'),
+(11, 4, 'QQQ', '2025-01-28 08:43:05'),
+(12, 4, 'QQQ', '2025-01-28 08:43:05'),
+(13, 4, 'QQQ', '2025-01-28 08:43:05'),
+(14, 4, 'QQQ', '2025-01-28 08:43:05'),
+(15, 4, 'QQQ', '2025-01-28 08:43:05'),
+(16, 5, 'Pogi ', '2025-01-28 08:58:04'),
+(17, 6, 'Pogi ', '2025-01-28 09:13:34'),
+(18, 7, 'Good Aftie', '2025-01-28 20:46:50'),
+(19, 8, 'Christian', '2025-02-08 08:46:23'),
+(20, 8, 'Chano', '2025-02-08 08:46:23'),
+(21, 5, 'Christian', '2025-02-09 21:46:47'),
+(22, 6, 'Christian', '2025-02-09 22:27:47'),
+(23, 7, 'Christian', '2025-02-09 22:44:23'),
+(24, 8, 'Christian', '2025-02-09 22:44:23'),
+(25, 9, 'Christian', '2025-02-09 22:45:43'),
+(26, 9, 'Christian', '2025-02-09 22:45:43'),
+(27, 10, 'Christian', '2025-02-09 23:19:02'),
+(28, 11, 'Christian', '2025-02-09 23:19:02'),
+(29, 12, 'Christian', '2025-02-09 23:38:38'),
+(30, 12, 'Christian', '2025-02-09 23:38:38'),
+(31, 13, 'Christian', '2025-02-09 23:48:14'),
+(32, 14, 'yuyuyui', '2025-02-09 23:50:43'),
+(33, 15, 'Christian', '2025-02-10 00:41:19'),
+(34, 16, 'Christian', '2025-02-10 01:08:27'),
+(35, 17, 'Christian', '2025-02-10 01:12:16'),
+(36, 18, 'Christian', '2025-02-10 01:12:16'),
+(37, 19, 'Christian', '2025-02-10 01:16:08'),
+(38, 20, 'Christian', '2025-02-10 01:20:12'),
+(39, 20, 'Christian', '2025-02-10 01:20:12'),
+(40, 21, 'Christian', '2025-02-10 03:05:36'),
+(41, 22, 'Christian', '2025-02-10 03:08:55'),
+(42, 23, 'Christian', '2025-02-10 03:09:50'),
+(43, 24, 'Christian', '2025-02-10 03:09:50'),
+(44, 25, 'Christian', '2025-02-10 03:12:32'),
+(45, 26, 'Christian', '2025-02-10 03:12:33'),
+(46, 27, 'Christian', '2025-02-10 03:17:53'),
+(47, 28, 'Christian', '2025-02-10 03:23:15'),
+(48, 29, 'Christian', '2025-02-10 03:23:16'),
+(49, 30, 'Christian', '2025-02-10 03:56:24'),
+(50, 31, 'Christian', '2025-02-10 03:58:07'),
+(51, 32, 'Christian', '2025-02-10 04:01:43'),
+(52, 33, 'Christian', '2025-02-10 04:03:31'),
+(53, 34, 'Christian', '2025-02-10 04:12:29'),
+(54, 35, 'Christian', '2025-02-10 04:50:24'),
+(55, 36, 'Christian', '2025-02-10 04:57:04'),
+(56, 37, 'Christian', '2025-02-10 04:57:04'),
+(57, 38, 'Christian', '2025-02-10 05:16:41'),
+(58, 39, 'Christian', '2025-02-12 02:18:44'),
+(59, 40, 'dfgfd', '2025-02-12 08:09:12'),
+(60, 30, 'dddd', '2025-02-12 18:48:44'),
+(61, 31, 'dddd', '2025-02-12 19:01:57'),
+(62, 32, 'dddd', '2025-02-12 19:05:04'),
+(63, 33, '23423sdfgsd', '2025-02-12 19:10:44'),
+(64, 34, 'Twoo', '2025-02-12 19:14:06'),
+(65, 34, 'Onne', '2025-02-12 19:14:06'),
+(66, 35, '23423sdfgsd', '2025-02-12 20:57:12'),
+(67, 36, 'Fammela', '2025-02-13 09:34:00'),
+(68, 36, 'David', '2025-02-13 09:34:00'),
+(69, 58, 'sfsdf', '2025-02-13 15:40:41'),
+(70, 59, 'Chano', '2025-02-13 15:42:18'),
+(71, 59, 'Chano', '2025-02-13 15:42:18'),
+(72, 60, 'Chano', '2025-02-13 15:45:26'),
+(73, 60, 'Chano', '2025-02-13 15:45:26'),
+(74, 61, 'a', '2025-02-13 15:57:06'),
+(75, 61, 'a', '2025-02-13 15:57:06'),
+(76, 62, 'a', '2025-02-13 16:00:26'),
+(77, 62, 'a', '2025-02-13 16:00:26'),
+(78, 63, 'sfsdf', '2025-02-13 16:35:56'),
+(79, 64, 'sfsdf', '2025-02-13 16:36:42'),
+(80, 64, 'sfsdf', '2025-02-13 16:36:42'),
+(81, 65, 'a', '2025-02-13 16:44:35'),
+(82, 65, 'a', '2025-02-13 16:44:35'),
+(83, 66, '2', '2025-02-13 16:48:39'),
+(84, 66, 'a', '2025-02-13 16:48:39'),
+(85, 67, '2', '2025-02-13 16:54:12'),
+(86, 67, 'a', '2025-02-13 16:54:12'),
+(87, 68, 'a', '2025-02-13 16:56:21'),
+(88, 68, 'b', '2025-02-13 16:56:21'),
+(89, 69, 'a', '2025-02-13 16:57:27'),
+(90, 69, 'a', '2025-02-13 16:57:27'),
+(91, 70, 'a', '2025-02-13 16:58:34'),
+(92, 70, 'b', '2025-02-13 16:58:34'),
+(93, 71, 'sfsdf', '2025-02-13 16:59:13'),
+(94, 71, '2', '2025-02-13 16:59:13'),
+(95, 72, '23423sdfgsd', '2025-02-13 16:59:47'),
+(96, 73, '23423sdfgsd', '2025-02-13 16:59:47'),
+(97, 74, 'a', '2025-02-13 17:00:29'),
+(98, 75, 'a', '2025-02-13 17:06:23'),
+(99, 76, 'a', '2025-02-13 17:06:53'),
+(100, 77, 'a', '2025-02-13 17:07:33'),
+(101, 77, 'c', '2025-02-13 17:07:33'),
+(104, 80, 'a', '2025-02-13 17:25:01'),
+(105, 80, 'c', '2025-02-13 17:25:01'),
+(106, 81, 'sfsdf', '2025-02-13 17:32:07'),
+(107, 81, 'sfsdf', '2025-02-13 17:32:07'),
+(108, 82, 'Chano', '2025-02-13 17:37:33'),
+(109, 82, 'a', '2025-02-13 17:37:33'),
+(110, 83, 'a', '2025-02-13 17:39:59'),
+(111, 83, '2', '2025-02-13 17:39:59'),
+(112, 84, 'a', '2025-02-13 17:41:37'),
+(113, 84, '2', '2025-02-13 17:41:37'),
+(114, 85, 'a', '2025-02-13 17:41:59'),
+(115, 85, 'a', '2025-02-13 17:41:59'),
+(116, 86, 'a', '2025-02-13 17:44:21'),
+(117, 86, 'Chano', '2025-02-13 17:44:21'),
+(118, 87, 'a', '2025-02-13 17:50:57'),
+(119, 87, 'sfsdf', '2025-02-13 17:50:57'),
+(120, 88, '22', '2025-02-15 11:40:16'),
+(121, 89, '22', '2025-02-15 14:58:51'),
+(122, 90, '22GFHFHFGHFG', '2025-02-15 16:08:35'),
+(123, 91, 'a', '2025-02-16 14:45:23'),
+(124, 92, 'a', '2025-02-16 15:30:57'),
+(125, 93, 'a', '2025-02-16 15:32:36'),
+(126, 94, 'a', '2025-02-16 15:36:20'),
+(127, 95, 'a', '2025-02-16 15:38:58'),
+(128, 96, 'a', '2025-02-16 15:50:40'),
+(129, 97, 'a', '2025-02-16 15:59:02'),
+(130, 98, 'a', '2025-02-16 16:04:15'),
+(131, 99, 'asdf', '2025-02-17 11:59:30'),
+(132, 100, 'asdfh', '2025-02-17 12:11:57'),
+(133, 100, 'sdfgjk', '2025-02-17 12:11:57'),
+(134, 100, 'stjlyxyedc', '2025-02-17 12:11:57'),
+(135, 100, 'fvjmhljltg', '2025-02-17 12:11:57'),
+(136, 100, 'sdfnm', '2025-02-17 12:11:57'),
+(137, 101, 'asdfh', '2025-02-17 12:26:01'),
+(138, 101, 'sdfgjk', '2025-02-17 12:26:01'),
+(139, 101, 'stjlyxyedc', '2025-02-17 12:26:01'),
+(140, 101, 'fvjmhljltg', '2025-02-17 12:26:01'),
+(141, 101, 'sdfnm', '2025-02-17 12:26:01'),
+(142, 102, 'asdfh', '2025-02-17 20:24:55'),
+(143, 103, '22GFHFHFGHFG', '2025-02-17 20:39:41'),
+(144, 104, '22GFHFHFGHFG', '2025-02-17 20:47:12'),
+(145, 105, 'qws', '2025-02-17 20:53:08'),
+(146, 106, '22', '2025-02-17 21:02:39'),
+(147, 107, '22', '2025-02-17 21:05:15'),
+(148, 108, '22', '2025-02-17 21:12:15'),
+(149, 109, '22', '2025-02-17 21:13:01'),
+(150, 110, '22', '2025-02-17 21:28:09'),
+(151, 111, 'qws', '2025-02-17 21:32:43'),
+(152, 112, 'Chano', '2025-02-17 22:01:11'),
+(153, 113, '2', '2025-02-17 22:02:39'),
+(154, 114, 'sfsdf', '2025-02-17 23:33:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `id_card_type`
+--
+
+CREATE TABLE `id_card_type` (
+  `id_card_type_id` int(10) NOT NULL,
+  `id_card_type` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `id_card_type`
+--
+
+INSERT INTO `id_card_type` (`id_card_type_id`, `id_card_type`) VALUES
+(1, 'National Identity Card'),
+(2, 'Voter Id Card'),
+(3, 'Passport'),
+(4, 'Driving License'),
+(5, 'Postal Identity Card');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inquiries`
+--
+
+CREATE TABLE `inquiries` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `room_type` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inquiries`
+--
+
+INSERT INTO `inquiries` (`id`, `name`, `email`, `subject`, `message`, `room_type`, `created_at`) VALUES
+(1, 'christian realisan', 'chano@gmail.com', 'Inquiry about Standard Double Room', 'hello', '', '2025-02-12 02:43:26'),
+(2, 'christian realisan', 'chano@gmail.com', 'Inquiry about Standard Double Room', 'Hi, I would like to inquire about the Standard Double Room...', 'Standard Double Room', '2025-02-12 02:43:57');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_categories`
+--
+
+CREATE TABLE `menu_categories` (
+  `id` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `display_name` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu_categories`
+--
+
+INSERT INTO `menu_categories` (`id`, `name`, `display_name`) VALUES
+(1, 'small-plates', 'SMALL PLATES'),
+(2, 'soup-salad', 'SOUP & SALAD'),
+(3, 'pasta', 'PASTA'),
+(4, 'sandwiches', 'SANDWICHES'),
+(5, 'coffee', 'COFFEE & LATTE'),
+(6, 'iceblend', 'ICE BLENDED'),
+(7, 'tea', 'TEA'),
+(8, 'otherdrinks', 'OTHER DRINKS'),
+(9, 'Christian Realisan', '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_items`
+--
+
+CREATE TABLE `menu_items` (
+  `id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu_items`
+--
+
+INSERT INTO `menu_items` (`id`, `category_id`, `name`, `price`, `image_path`) VALUES
+(1, 1, 'Hand-cut Potato Fries', 120.00, 'images/fries.jpg'),
+(2, 1, 'Mozzarella Stick', 150.00, 'images/mozzarella.jpg'),
+(3, 1, 'Chicken Wings', 180.00, 'images/wings.jpg'),
+(4, 2, 'Salad', 200.00, 'images/menu_67b3c1aec5d2f.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_items_addons`
+--
+
+CREATE TABLE `menu_items_addons` (
+  `id` int(11) NOT NULL,
+  `menu_item_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu_items_addons`
+--
+
+INSERT INTO `menu_items_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
+(0, 1, 'HAtdog', 15.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `menu_item_addons`
+--
+
+CREATE TABLE `menu_item_addons` (
+  `id` int(11) NOT NULL,
+  `menu_item_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `menu_item_addons`
+--
+
+INSERT INTO `menu_item_addons` (`id`, `menu_item_id`, `name`, `price`) VALUES
+(1, 1, 'Cheese', 30.00),
+(2, 1, 'Mayo', 50.00),
+(3, 2, 'Extra Sauce', 20.00),
+(4, 2, 'Extra Mozzarella', 40.00),
+(5, 3, 'Buffalo Sauce', 25.00),
+(6, 3, 'Extra Ranch', 30.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `sender_id`, `receiver_id`, `subject`, `message`, `is_read`, `created_at`) VALUES
+(1, 18, 2, 'Inquiries', 'kupal ka ba bossing', 0, '2025-02-16 19:31:22');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `type` varchar(50) NOT NULL,
+  `icon` varchar(50) NOT NULL,
+  `reference_id` int(11) DEFAULT NULL,
+  `is_read` tinyint(1) DEFAULT 0,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`id`, `user_id`, `title`, `message`, `type`, `icon`, `reference_id`, `is_read`, `created_at`) VALUES
+(1, 1, 'Booking Confirmed', 'Your booking #86 has been confirmed. Check-in date: Feb 14, 2025', 'booking', 'fas fa-calendar-check', 86, 1, '2025-02-13 17:44:21'),
+(2, 1, 'New Booking Confirmation', 'Your booking #87 has been confirmed. Check-in date: Feb 14, 2025', 'booking', 'fas fa-calendar-check', 87, 1, '2025-02-13 17:50:57'),
+(3, 1, 'New Booking Confirmation', 'Your booking #88 has been confirmed. Check-in date: Feb 15, 2025', 'booking', 'fas fa-calendar-check', 88, 1, '2025-02-15 11:40:16'),
+(4, 3, 'New Booking Confirmation', 'Your booking #89 has been confirmed. Check-in date: Feb 15, 2025', 'booking', 'fas fa-calendar-check', 89, 1, '2025-02-15 14:58:51'),
+(5, 3, '', 'Your order has been placed successfully. Please pick up at 12:05', 'order', '', NULL, 1, '2025-02-15 15:06:00'),
+(6, 3, '', 'Your order has been placed successfully. Please pick up at 23:47', 'order', '', NULL, 1, '2025-02-15 15:47:34'),
+(7, 3, 'New Booking Confirmation', 'Your booking #90 has been confirmed. Check-in date: Feb 16, 2025', 'booking', 'fas fa-calendar-check', 90, 1, '2025-02-15 16:08:35'),
+(8, 3, '', 'Your order has been placed successfully. Please pick up at 00:18', 'order', '', NULL, 1, '2025-02-15 16:18:19'),
+(9, 3, '', 'Your order has been placed successfully. Please pick up at 00:29', 'order', '', NULL, 1, '2025-02-15 16:29:49'),
+(10, 1, '', 'Your order has been placed successfully. Please pick up at 20:11', 'order', '', NULL, 1, '2025-02-16 12:11:20'),
+(11, 1, '', 'Your order has been placed successfully. Please pick up at 21:19', 'order', '', NULL, 1, '2025-02-16 13:19:26'),
+(12, 1, '', 'Your order has been placed successfully. Please pick up at 21:19', 'order', '', NULL, 1, '2025-02-16 13:22:02'),
+(13, 1, '', 'Your order has been placed successfully. Please pick up at 21:28', 'order', '', NULL, 1, '2025-02-16 13:28:44'),
+(14, 1, '', 'Your order has been placed successfully. Please pick up at 01:28', 'order', '', NULL, 1, '2025-02-16 17:29:07'),
+(15, 4, 'New Booking Confirmation', 'Your booking #100 has been confirmed. Check-in date: Feb 17, 2025', 'booking', 'fas fa-calendar-check', 100, 1, '2025-02-17 12:11:57'),
+(16, 4, 'New Booking Confirmation', 'Your booking #101 has been confirmed. Check-in date: Feb 17, 2025', 'booking', 'fas fa-calendar-check', 101, 1, '2025-02-17 12:26:01'),
+(17, 3, '', 'Your order has been placed successfully. Please pick up at 03:54', 'order', '', NULL, 1, '2025-02-17 19:54:48'),
+(18, 3, 'New Booking Confirmation', 'Your booking #102 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 102, 1, '2025-02-17 20:24:55'),
+(19, 3, 'New Booking Confirmation', 'Your booking #103 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 103, 1, '2025-02-17 20:39:41'),
+(20, 2, 'New Booking Confirmation', 'Your booking #104 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 104, 1, '2025-02-17 20:47:12'),
+(21, 2, 'New Booking Confirmation', 'Your booking #105 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 105, 1, '2025-02-17 20:53:08'),
+(22, 2, 'New Booking Confirmation', 'Your booking #106 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 106, 1, '2025-02-17 21:02:39'),
+(23, 2, 'New Booking Confirmation', 'Your booking #107 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 107, 1, '2025-02-17 21:05:15'),
+(24, 2, 'New Booking Confirmation', 'Your booking #108 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 108, 1, '2025-02-17 21:12:15'),
+(25, 2, 'New Booking Confirmation', 'Your booking #109 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 109, 1, '2025-02-17 21:13:01'),
+(26, 2, 'New Booking Confirmation', 'Your booking #110 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 110, 1, '2025-02-17 21:28:09'),
+(27, 2, 'New Booking Confirmation', 'Your booking #111 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 111, 1, '2025-02-17 21:32:43'),
+(28, 2, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', '', 111, 1, '2025-02-17 21:33:06'),
+(29, 1, 'New Booking Confirmation', 'Your booking #112 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 112, 0, '2025-02-17 22:01:12'),
+(30, 1, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', '', 112, 0, '2025-02-17 22:01:45'),
+(31, 1, 'New Booking Confirmation', 'Your booking #113 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 113, 0, '2025-02-17 22:02:39'),
+(32, 3, '', 'Your order has been placed successfully. Please pick up at 06:34', 'order', '', NULL, 1, '2025-02-17 22:34:40'),
+(33, 3, '', 'Your room booking has been cancelled successfully.', 'booking_cancelled', '', 103, 0, '2025-02-17 22:37:21'),
+(34, 3, 'New Booking Confirmation', 'Your booking #114 has been confirmed. Check-in date: Feb 18, 2025', 'booking', 'fas fa-calendar-check', 114, 0, '2025-02-17 23:33:19');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `order-type` varchar(255) NOT NULL,
+  `pickup_time` time NOT NULL,
+  `special_instructions` text DEFAULT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `status` varchar(20) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `order_type` varchar(50) DEFAULT 'Walk-in'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`id`, `user_id`, `total_amount`, `order-type`, `pickup_time`, `special_instructions`, `payment_method`, `status`, `created_at`, `order_type`) VALUES
+(1, 3, 150.00, '', '22:36:00', '34rre', 'gcash', 'finished', '2025-02-15 14:36:34', 'Walk-in'),
+(2, 3, 270.00, '', '22:36:00', '34rre', 'gcash', 'finished', '2025-02-15 14:41:54', 'Walk-in'),
+(3, 3, 120.00, '', '12:05:00', '', 'gcash', 'finished', '2025-02-15 15:06:00', 'Walk-in'),
+(4, 3, 120.00, '', '23:47:00', 'gh', 'gcash', 'finished', '2025-02-15 15:47:34', 'Walk-in'),
+(5, 3, 120.00, '', '00:18:00', '', 'gcash', 'finished', '2025-02-15 16:18:19', 'Walk-in'),
+(6, 3, 150.00, '', '00:29:00', 'sadas', 'gcash', 'finished', '2025-02-15 16:29:49', 'Walk-in'),
+(7, 1, 120.00, '', '20:11:00', '', 'gcash', 'finished', '2025-02-16 12:11:20', 'Walk-in'),
+(8, 1, 120.00, '', '21:19:00', '', 'gcash', 'finished', '2025-02-16 13:19:26', 'Walk-in'),
+(9, 1, 120.00, '', '21:19:00', '', 'gcash', 'finished', '2025-02-16 13:22:02', 'Walk-in'),
+(10, 1, 240.00, '', '21:28:00', '', 'maya', 'finished', '2025-02-16 13:28:44', 'Walk-in'),
+(11, 1, 120.00, '', '01:28:00', '', 'gcash', 'finished', '2025-02-16 17:29:07', 'Walk-in'),
+(12, 1, 150.00, '', '02:59:11', '', 'gcash', 'finished', '2025-02-16 18:59:11', 'Walk-in'),
+(13, 1, 150.00, '', '02:59:21', '', 'gcash', 'finished', '2025-02-16 18:59:21', 'Walk-in'),
+(14, 1, 150.00, '', '03:02:48', '', 'gcash', 'finished', '2025-02-16 19:02:48', 'Walk-in'),
+(15, 1, 900.00, '', '03:03:14', '', 'gcash', 'finished', '2025-02-16 19:03:14', 'Walk-in'),
+(16, 1, 330.00, '', '20:02:26', '', 'maya', 'finished', '2025-02-17 12:02:27', 'Walk-in'),
+(17, 3, 150.00, '', '02:50:50', '', 'gcash', 'finished', '2025-02-17 18:50:50', 'Walk-in'),
+(18, 3, 235.00, '', '03:54:00', '', 'gcash', 'finished', '2025-02-17 19:54:48', 'Walk-in'),
+(19, 3, 150.00, '', '04:00:47', '', 'gcash', 'finished', '2025-02-17 20:00:47', 'Walk-in'),
+(20, 3, 200.00, '', '06:34:00', '', 'gcash', 'finished', '2025-02-17 22:34:40', 'Walk-in');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_items`
+--
+
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `item_name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `subtotal` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_items`
+--
+
+INSERT INTO `order_items` (`id`, `order_id`, `item_name`, `quantity`, `unit_price`, `subtotal`) VALUES
+(1, 1, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(2, 2, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(3, 2, 'Mozzarella Stick', 1, 150.00, 150.00),
+(4, 3, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(5, 4, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(6, 5, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(7, 6, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(8, 7, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(9, 8, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(10, 9, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(11, 10, 'Hand-cut Potato Fries', 2, 120.00, 240.00),
+(12, 11, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(13, 12, 'Mozzarella Stick', 1, 150.00, 150.00),
+(14, 13, 'Mozzarella Stick', 1, 150.00, 150.00),
+(15, 14, 'Mozzarella Stick', 1, 150.00, 150.00),
+(16, 15, 'Mozzarella Stick', 6, 150.00, 900.00),
+(17, 16, 'Hand-cut Potato Fries', 1, 120.00, 120.00),
+(18, 16, 'Chicken Wings', 1, 180.00, 180.00),
+(19, 17, 'Mozzarella Stick', 1, 150.00, 150.00),
+(20, 18, 'Chicken Wings', 1, 180.00, 180.00),
+(21, 19, 'Mozzarella Stick', 1, 150.00, 150.00),
+(22, 20, 'Hand-cut Potato Fries', 1, 120.00, 120.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_item_addons`
+--
+
+CREATE TABLE `order_item_addons` (
+  `id` int(11) NOT NULL,
+  `order_item_id` int(11) NOT NULL,
+  `addon_name` varchar(255) NOT NULL,
+  `addon_price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `order_item_addons`
+--
+
+INSERT INTO `order_item_addons` (`id`, `order_item_id`, `addon_name`, `addon_price`) VALUES
+(1, 1, 'Cheese', 30.00),
+(2, 7, 'Cheese', 30.00),
+(3, 17, 'Cheese', 30.00),
+(4, 20, 'Buffalo Sauce', 25.00),
+(5, 20, 'Extra Ranch', 30.00),
+(6, 22, 'Cheese', 30.00),
+(7, 22, 'Mayo', 50.00);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rooms`
+--
+
+CREATE TABLE `rooms` (
+  `id` int(11) NOT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `total_rooms` int(11) DEFAULT NULL,
+  `available_rooms` int(11) DEFAULT NULL,
+  `status` varchar(20) DEFAULT 'Available'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rooms`
+--
+
+INSERT INTO `rooms` (`id`, `room_type_id`, `total_rooms`, `available_rooms`, `status`) VALUES
+(3, 3, 4, 3, 'Available'),
+(10, 1, 2, 0, 'Available'),
+(11, 2, 2, 0, 'Available');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_bookings`
+--
+
+CREATE TABLE `room_bookings` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) DEFAULT NULL,
+  `room_type_id` int(11) DEFAULT NULL,
+  `room_name` varchar(255) DEFAULT NULL,
+  `room_price` decimal(10,2) DEFAULT NULL,
+  `room_quantity` int(11) DEFAULT NULL,
+  `number_of_days` int(11) DEFAULT NULL,
+  `subtotal` decimal(10,2) DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `guest_count` int(11) NOT NULL,
+  `extra_guest_fee` decimal(10,2) DEFAULT 0.00,
+  `number_of_nights` int(11) DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `room_bookings`
+--
+
+INSERT INTO `room_bookings` (`id`, `booking_id`, `room_type_id`, `room_name`, `room_price`, `room_quantity`, `number_of_days`, `subtotal`, `created_at`, `guest_count`, `extra_guest_fee`, `number_of_nights`) VALUES
+(1, 7, 1, 'Standard Double Room', 1500.00, 1, 9, 13500.00, '2025-02-09 22:44:23', 0, 0.00, 1),
+(2, 8, 1, 'Standard Double Room', 1500.00, 1, 9, 13500.00, '2025-02-09 22:44:23', 0, 0.00, 1),
+(3, 9, 2, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-09 22:45:43', 0, 0.00, 1),
+(4, 9, 1, 'Standard Double Room', 1500.00, 1, 2, 3000.00, '2025-02-09 22:45:43', 0, 0.00, 1),
+(5, 10, 2, 'Deluxe Family Room', 2000.00, 1, 8, 16000.00, '2025-02-09 23:19:02', 0, 0.00, 1),
+(6, 11, 2, 'Deluxe Family Room', 2000.00, 1, 8, 16000.00, '2025-02-09 23:19:02', 0, 0.00, 1),
+(7, 12, 2, 'Deluxe Family Room', 2000.00, 1, 10, 20000.00, '2025-02-09 23:38:38', 0, 0.00, 1),
+(8, 12, 3, 'Family Room', 2500.00, 1, 10, 25000.00, '2025-02-09 23:38:38', 0, 0.00, 1),
+(9, 13, 2, 'Deluxe Family Room', 2000.00, 1, 0, 0.00, '2025-02-09 23:48:14', 0, 0.00, 1),
+(10, 14, 3, 'Family Room', 2500.00, 1, 8, 20000.00, '2025-02-09 23:50:43', 0, 0.00, 1),
+(11, 15, NULL, 'Family Room', 2500.00, 1, 2, 5000.00, '2025-02-10 00:41:19', 0, 0.00, 1),
+(12, 16, NULL, 'Family Room', 2500.00, 1, 9, 22500.00, '2025-02-10 01:08:27', 0, 0.00, 1),
+(13, 17, NULL, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-10 01:12:16', 0, 0.00, 1),
+(14, 18, NULL, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-10 01:12:16', 0, 0.00, 1),
+(15, 19, NULL, 'Deluxe Family Room', 2000.00, 1, 1, 2000.00, '2025-02-10 01:16:08', 0, 0.00, 1),
+(16, 20, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 01:20:12', 0, 0.00, 1),
+(17, 20, NULL, 'Deluxe Family Room', 2000.00, 1, 1, 2000.00, '2025-02-10 01:20:12', 0, 0.00, 1),
+(18, 21, NULL, 'Deluxe Family Room', 2000.00, 1, 1, 2000.00, '2025-02-10 03:05:36', 0, 0.00, 1),
+(19, 22, NULL, 'Family Room', 2500.00, 1, 1, 2500.00, '2025-02-10 03:08:55', 0, 0.00, 1),
+(20, 23, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 03:09:50', 0, 0.00, 1),
+(21, 24, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 03:09:50', 0, 0.00, 1),
+(22, 25, NULL, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-10 03:12:32', 0, 0.00, 1),
+(23, 26, NULL, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-10 03:12:33', 0, 0.00, 1),
+(24, 27, NULL, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-10 03:17:53', 0, 0.00, 1),
+(25, 28, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 03:23:15', 0, 0.00, 1),
+(26, 29, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 03:23:16', 0, 0.00, 1),
+(27, 30, NULL, 'Standard Double Room', 1500.00, 1, 2, 3000.00, '2025-02-10 03:56:24', 0, 0.00, 1),
+(28, 31, NULL, 'Standard Double Room', 1500.00, 1, 2, 3000.00, '2025-02-10 03:58:07', 0, 0.00, 1),
+(29, 32, NULL, 'Standard Double Room', 1500.00, 1, 2, 3000.00, '2025-02-10 04:01:43', 0, 0.00, 1),
+(30, 33, NULL, 'Standard Double Room', 1500.00, 1, 2, 3000.00, '2025-02-10 04:03:31', 0, 0.00, 1),
+(31, 34, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 04:12:29', 0, 0.00, 1),
+(32, 35, NULL, 'Standard Double Room', 1500.00, 1, 6, 9000.00, '2025-02-10 04:50:24', 0, 0.00, 1),
+(33, 36, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 04:57:04', 0, 0.00, 1),
+(34, 37, NULL, 'Standard Double Room', 1500.00, 1, 1, 1500.00, '2025-02-10 04:57:04', 0, 0.00, 1),
+(35, 38, NULL, 'Standard Double Room', 1500.00, 1, 2, 3000.00, '2025-02-10 05:16:41', 0, 0.00, 1),
+(36, 39, NULL, 'Standard Double Room', 1500.00, 1, 6, 9000.00, '2025-02-12 02:18:44', 0, 0.00, 1),
+(37, 40, 2, 'Deluxe Family Room', 1600.00, 1, 2, 3200.00, '2025-02-12 08:09:12', 0, 0.00, 1),
+(38, 30, 1, 'Standard Double Room', 3700.00, 1, 2, 7400.00, '2025-02-12 18:48:44', 1, 0.00, 2),
+(39, 31, 1, 'Standard Double Room', 3700.00, 1, 5, 18500.00, '2025-02-12 19:01:57', 1, 0.00, 5),
+(40, 32, 1, 'Standard Double Room', 3700.00, 1, 5, 18500.00, '2025-02-12 19:05:04', 1, 0.00, 5),
+(41, 33, 1, 'Standard Double Room', 3700.00, 1, 2, 7400.00, '2025-02-12 19:10:44', 1, 0.00, 2),
+(42, 34, 2, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-12 19:14:06', 1, 0.00, 2),
+(43, 34, 3, 'Family Room', 2500.00, 1, 2, 5000.00, '2025-02-12 19:14:06', 1, 0.00, 2),
+(44, 35, 2, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-12 20:57:12', 1, 0.00, 2),
+(45, 36, 2, 'Deluxe Family Room', 2000.00, 1, 1, 3000.00, '2025-02-13 09:34:00', 2, 1000.00, 1),
+(51, 72, 1, 'Standard Double Room', 3700.00, 1, 10, 37000.00, '2025-02-13 16:59:47', 1, 0.00, 10),
+(52, 73, 1, 'Standard Double Room', 3700.00, 1, 10, 37000.00, '2025-02-13 16:59:47', 1, 0.00, 10),
+(53, 74, 1, 'Standard Double Room', 3700.00, 1, 18, 66600.00, '2025-02-13 17:00:29', 1, 0.00, 18),
+(54, 75, 1, 'Standard Double Room', 3700.00, 1, 6, 22200.00, '2025-02-13 17:06:23', 1, 0.00, 6),
+(55, 76, 1, 'Standard Double Room', 3700.00, 1, 12, 44400.00, '2025-02-13 17:06:53', 1, 0.00, 12),
+(56, 80, 1, 'Standard Double Room', 3700.00, 1, 20, 74000.00, '2025-02-13 17:25:01', 0, 0.00, 20),
+(57, 81, 1, 'Standard Double Room', 3700.00, 1, 8, 29600.00, '2025-02-13 17:32:07', 0, 0.00, 8),
+(58, 82, 1, 'Standard Double Room', 3700.00, 1, 12, 44400.00, '2025-02-13 17:37:33', 0, 0.00, 12),
+(59, 83, 1, 'Standard Double Room', 3700.00, 1, 7, 25900.00, '2025-02-13 17:39:59', 0, 0.00, 7),
+(60, 84, 1, 'Standard Double Room', 3700.00, 1, 19, 70300.00, '2025-02-13 17:41:37', 0, 0.00, 19),
+(61, 85, 1, 'Standard Double Room', 3700.00, 1, 13, 48100.00, '2025-02-13 17:41:59', 0, 0.00, 13),
+(62, 86, 1, 'Standard Double Room', 3700.00, 1, 13, 48100.00, '2025-02-13 17:44:21', 0, 0.00, 1),
+(63, 87, 1, 'Standard Double Room', 3700.00, 1, 22, 81400.00, '2025-02-13 17:50:57', 0, 0.00, 1),
+(64, 88, 1, 'Standard Double Room', 3700.00, 1, 5, 18500.00, '2025-02-15 11:40:16', 0, 0.00, 1),
+(65, 88, 2, 'Deluxe Family Room', 2000.00, 1, 5, 10000.00, '2025-02-15 11:40:16', 0, 0.00, 1),
+(66, 89, 2, 'Deluxe Family Room', 2000.00, 1, 2, 4000.00, '2025-02-15 14:58:51', 0, 0.00, 1),
+(67, 90, 2, 'Deluxe Family Room', 2000.00, 1, 9, 18000.00, '2025-02-15 16:08:35', 0, 0.00, 1),
+(68, 91, 1, 'Standard Double Room', 3700.00, 1, 8, 29600.00, '2025-02-16 14:45:23', 1, 0.00, 8),
+(69, 92, 2, 'Deluxe Family Room', 2000.00, 1, 1, 2000.00, '2025-02-16 15:30:57', 1, 0.00, 1),
+(70, 93, 1, 'Standard Double Room', 3700.00, 1, 8, 29600.00, '2025-02-16 15:32:36', 1, 0.00, 8),
+(71, 94, 1, 'Standard Double Room', 3700.00, 1, 8, 29600.00, '2025-02-16 15:36:20', 1, 0.00, 8),
+(72, 95, 1, 'Standard Double Room', 3700.00, 1, 9, 33300.00, '2025-02-16 15:38:58', 1, 0.00, 9),
+(73, 96, 2, 'Deluxe Family Room', 2000.00, 1, 16, 32000.00, '2025-02-16 15:50:40', 1, 0.00, 16),
+(74, 97, 1, 'Standard Double Room', 3700.00, 1, 7, 25900.00, '2025-02-16 15:59:02', 1, 0.00, 7),
+(75, 98, 1, 'Standard Double Room', 3700.00, 1, 16, 59200.00, '2025-02-16 16:04:15', 1, 0.00, 16),
+(76, 99, 2, 'Deluxe Family Room', 2000.00, 1, 1, 2000.00, '2025-02-17 11:59:30', 1, 0.00, 1),
+(77, 100, 1, 'Standard Double Room', 3700.00, 1, 3, 11100.00, '2025-02-17 12:11:57', 0, 0.00, 1),
+(78, 101, 2, 'Deluxe Family Room', 2000.00, 1, 4, 8000.00, '2025-02-17 12:26:01', 0, 0.00, 1),
+(79, 102, 1, 'Standard Double Room', 3700.00, 1, 2, 7400.00, '2025-02-17 20:24:55', 0, 0.00, 1),
+(80, 103, 1, 'Standard Double Room', 3700.00, 1, 2, 7400.00, '2025-02-17 20:39:41', 0, 0.00, 1),
+(81, 104, 3, 'Family Room', 2500.00, 1, 3, 7500.00, '2025-02-17 20:47:12', 0, 0.00, 1),
+(82, 105, 3, 'Family Room', 2500.00, 1, 2, 5000.00, '2025-02-17 20:53:08', 0, 0.00, 1),
+(83, 106, 3, 'Family Room', 2500.00, 1, 18, 45000.00, '2025-02-17 21:02:39', 0, 0.00, 1),
+(84, 107, 1, 'Standard Double Room', 3700.00, 1, 1, 3700.00, '2025-02-17 21:05:15', 0, 0.00, 1),
+(85, 108, 2, 'Deluxe Family Room', 2000.00, 1, 1, 2000.00, '2025-02-17 21:12:15', 0, 0.00, 1),
+(86, 109, 2, 'Deluxe Family Room', 2000.00, 1, 3, 6000.00, '2025-02-17 21:13:01', 0, 0.00, 1),
+(87, 110, 1, 'Standard Double Room', 3700.00, 1, 38, 140600.00, '2025-02-17 21:28:09', 0, 0.00, 1),
+(88, 111, 1, 'Standard Double Room', 3700.00, 1, 1, 3700.00, '2025-02-17 21:32:43', 0, 0.00, 1),
+(89, 112, 3, 'Family Room', 2500.00, 1, 70, 175000.00, '2025-02-17 22:01:11', 0, 0.00, 1),
+(90, 113, 3, 'Family Room', 2500.00, 1, 1, 2500.00, '2025-02-17 22:02:39', 0, 0.00, 1),
+(91, 114, 3, 'Family Room', 2500.00, 1, 10, 25000.00, '2025-02-17 23:33:19', 0, 0.00, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_types`
+--
+
+CREATE TABLE `room_types` (
+  `room_type_id` int(11) NOT NULL,
+  `room_type` varchar(100) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `beds` varchar(100) DEFAULT NULL,
+  `rating` decimal(3,1) DEFAULT NULL,
+  `image` varchar(255) DEFAULT NULL,
+  `discount_percent` int(11) DEFAULT 0,
+  `discount_valid_until` date DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `room_types`
+--
+
+INSERT INTO `room_types` (`room_type_id`, `room_type`, `price`, `capacity`, `description`, `beds`, `rating`, `image`, `discount_percent`, `discount_valid_until`) VALUES
+(1, 'Standard Double Room', 3700.00, 21, 'Cozy and comfortable, our standard room comes with 2 single beds, ideal for friends or business travelers.', '2 Single Beds', 4.5, 'uploads/rooms/room_type_67addf8f186aa.jpg', 20, '2025-02-25'),
+(2, 'Deluxe Family Room', 2000.00, 1, 'Our deluxe room offers a queen bed and a single bed, perfect for small families or groups.', '1 Queen Bed, 1 Single Bed', 4.8, 'uploads/rooms/room_type_67ade041022dc.jpg', 20, '2025-02-23'),
+(3, 'Family Room', 2500.00, 5, 'Perfect for families, this spacious room features 1 queen bed and 2 single beds.', '1 Queen Bed, 2 Single Beds', 5.0, 'images/5.jpg', 25, '2025-02-12');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `room_type_amenities`
+--
+
+CREATE TABLE `room_type_amenities` (
+  `room_type_id` int(11) NOT NULL,
+  `amenity_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `room_type_amenities`
+--
+
+INSERT INTO `room_type_amenities` (`room_type_id`, `amenity_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(2, 1),
+(2, 2),
+(2, 3),
+(2, 4),
+(2, 5),
+(3, 1),
+(3, 2),
+(3, 3),
+(3, 4),
+(3, 5);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sales`
+--
+
+CREATE TABLE `sales` (
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `payment_method` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `sales`
+--
+
+INSERT INTO `sales` (`id`, `order_id`, `total_amount`, `payment_method`, `created_at`) VALUES
+(1, 13, 150.00, 'gcash', '2025-02-17 19:51:30'),
+(2, 12, 150.00, 'gcash', '2025-02-17 19:51:47'),
+(3, 18, 235.00, 'gcash', '2025-02-17 19:55:03'),
+(4, 19, 150.00, 'gcash', '2025-02-17 20:01:01'),
+(5, 20, 200.00, 'gcash', '2025-02-17 22:35:04');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `shift`
+--
+
+CREATE TABLE `shift` (
+  `shift_id` int(10) NOT NULL,
+  `shift` varchar(100) NOT NULL,
+  `shift_timing` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `shift`
+--
+
+INSERT INTO `shift` (`shift_id`, `shift`, `shift_timing`) VALUES
+(1, 'Morning', '5:00 AM - 10:00 AM'),
+(2, 'Day', '10:00 AM - 4:00PM'),
+(3, 'Evening', '4:00 PM - 10:00 PM'),
+(4, 'Night', '10:00PM - 5:00AM');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff`
+--
+
+CREATE TABLE `staff` (
+  `emp_id` int(11) NOT NULL,
+  `emp_name` varchar(100) NOT NULL,
+  `staff_type_id` int(11) NOT NULL,
+  `shift_id` int(11) NOT NULL,
+  `id_card_type` int(11) NOT NULL,
+  `id_card_no` varchar(20) NOT NULL,
+  `address` varchar(100) NOT NULL,
+  `contact_no` bigint(20) NOT NULL,
+  `salary` bigint(20) NOT NULL,
+  `joining_date` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `staff`
+--
+
+INSERT INTO `staff` (`emp_id`, `emp_name`, `staff_type_id`, `shift_id`, `id_card_type`, `id_card_no`, `address`, `contact_no`, `salary`, `joining_date`, `updated_at`) VALUES
+(1, 'Alfred Aceveda', 1, 2, 1, '422510099122', '4516 Spruce Drive\n', 3479454777, 21000, '2020-11-13 05:39:06', '2025-02-13 09:35:30'),
+(2, 'Aizzy Villanueva', 3, 3, 1, '422510099122', '2555 Hillside Drive', 1479994500, 12500, '2021-04-07 20:21:00', '2021-04-08 17:36:23'),
+(3, 'Fammela De Guzman', 2, 3, 1, '422510099122', 'Ap #897-1459 Quam Avenue', 976543111, 25000, '2019-11-13 05:40:18', '2021-04-08 17:36:27'),
+(4, 'Christian Realisan', 2, 3, 2, '0', '2272 Sun Valley Road\n', 7451112450, 31000, '2017-11-13 05:40:55', '2021-04-08 17:36:33');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `staff_type`
+--
+
+CREATE TABLE `staff_type` (
+  `staff_type_id` int(10) NOT NULL,
+  `staff_type` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `staff_type`
+--
+
+INSERT INTO `staff_type` (`staff_type_id`, `staff_type`) VALUES
+(1, 'Manager'),
+(2, 'Housekeeping Manager'),
+(3, 'Front Desk Receptionist'),
+(4, 'Cheif'),
+(5, 'Waiter'),
+(6, 'Room Attendant'),
+(7, 'Concierge'),
+(8, 'Hotel Maintenance Engineer'),
+(9, 'Hotel Sales Manager');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tables`
+--
+
+CREATE TABLE `tables` (
+  `id` int(11) NOT NULL,
+  `table_number` varchar(50) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `location` enum('Indoor','Outdoor','Balcony') NOT NULL,
+  `status` enum('Available','Occupied') DEFAULT 'Available'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_bookings`
+--
+
+CREATE TABLE `table_bookings` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `booking_id` varchar(20) NOT NULL,
+  `customer_name` varchar(100) NOT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `contact_number` varchar(20) NOT NULL,
+  `email_address` varchar(100) NOT NULL,
+  `booking_date` date NOT NULL,
+  `booking_time` time NOT NULL,
+  `num_guests` int(11) NOT NULL,
+  `special_requests` text DEFAULT NULL,
+  `payment_method` varchar(20) NOT NULL,
+  `total_amount` decimal(10,2) NOT NULL,
+  `amount_paid` decimal(10,2) DEFAULT 0.00,
+  `change_amount` decimal(10,2) DEFAULT 0.00,
+  `payment_status` varchar(20) DEFAULT 'Pending',
+  `status` varchar(20) DEFAULT 'Pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `package_type` varchar(50) DEFAULT NULL,
+  `cancellation_reason` text DEFAULT NULL,
+  `cancelled_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `table_bookings`
+--
+
+INSERT INTO `table_bookings` (`id`, `user_id`, `booking_id`, `customer_name`, `package_name`, `contact_number`, `email_address`, `booking_date`, `booking_time`, `num_guests`, `special_requests`, `payment_method`, `total_amount`, `amount_paid`, `change_amount`, `payment_status`, `status`, `created_at`, `package_type`, `cancellation_reason`, `cancelled_at`) VALUES
+(1, NULL, 'TBL-20250208-6326', 'robin almares', '', '', '', '2025-12-12', '11:11:00', 2, '', 'Cash', 199.00, 200.00, 1.00, 'Pending', 'Checked Out', '2025-02-08 10:26:37', 'Couple', NULL, NULL),
+(2, NULL, '20250208-9710', 'Allaine Franz Aceveda', '', '', '', '2025-02-19', '14:22:00', 2, '', 'cash', 1500.00, 0.00, 0.00, 'Pending', 'Pending', '2025-02-08 12:45:35', '0', NULL, NULL),
+(3, NULL, '20250208-7433', 'Allaine Franz Aceveda', '', '', '', '2025-02-22', '11:11:00', 2, '', 'cash', 9000.00, 0.00, 0.00, 'Pending', 'Archived', '2025-02-08 12:46:26', '0', NULL, NULL),
+(4, NULL, 'TBL-20250208-6495', 'robin almares', '', '', '', '2025-02-22', '10:07:00', 2, 'pwede palagyan ng chicaron', 'Cash', 199.00, 200.00, 1.00, 'Pending', 'Pending', '2025-02-08 14:08:34', 'Couple', NULL, NULL),
+(5, NULL, 'TBL-20250209-7538', 'alfred', '', '', '', '2025-01-01', '11:11:00', 2, '', 'Cash', 10000.00, 10000.00, 0.00, 'Pending', 'Pending', '2025-02-09 08:40:14', 'Family Table', NULL, NULL),
+(6, NULL, 'TBL-20250212-9423', 'alfredoo', '', '', '', '2025-02-13', '20:28:00', 2, '', 'Cash', 199.00, 200.00, 1.00, 'Pending', 'Checked Out', '2025-02-12 12:27:32', 'Couple', NULL, NULL),
+(7, NULL, 'TB-20250217-001', 'Kenjo M. Marimon', '', '09362715617', 'aizzyvillanueva43@gmail.com', '2025-02-17', '22:35:00', 2, NULL, 'GCash', 199.00, 0.00, 0.00, 'Pending', 'Pending', '2025-02-17 14:35:25', 'Koupals', NULL, NULL),
+(9, 4, 'TB-20250217-79d0', 'Kenjo M. Marimon', '', '09362715617', 'aizzyvillanueva43@gmail.com', '2025-02-17', '23:43:00', 2, NULL, 'GCash', 149.50, 74.75, 0.00, 'Partially Paid', 'Pending', '2025-02-17 15:43:25', 'Friends', NULL, NULL),
+(10, 4, 'BK000010', 'Kenjo M. Marimon', 'Koupals', '09362715617', 'aizzyvillanueva43@gmail.com', '2025-02-18', '00:47:00', 2, NULL, 'Cash', 219.50, 109.75, 0.00, 'Partially Paid', 'Pending', '2025-02-17 16:48:09', NULL, NULL, NULL),
+(11, 4, 'BK000011', 'Kenjo M. Marimon', 'Koupals', '09362715617', 'aizzyvillanueva43@gmail.com', '2025-02-18', '01:03:00', 2, NULL, 'GCash', 219.50, 169.75, 0.00, 'Partially Paid', 'Pending', '2025-02-17 17:03:53', NULL, NULL, NULL),
+(12, 4, 'BK000012', 'Kenjo M. Marimon', 'Friends', '09362715617', 'aizzyvillanueva43@gmail.com', '2025-02-18', '01:05:00', 2, NULL, 'GCash', 149.50, 74.75, 0.00, 'Partially Paid', 'Pending', '2025-02-17 17:05:49', NULL, NULL, NULL),
+(13, 3, 'BK000013', 'Aizzy', 'Koupals', '9876543200', 'chsdjf@gmail.com', '2025-02-18', '06:35:00', 2, NULL, 'GCash', 319.00, 319.00, 0.00, 'Fully Paid', 'Pending', '2025-02-17 22:36:45', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_cancellations`
+--
+
+CREATE TABLE `table_cancellations` (
+  `id` int(11) NOT NULL,
+  `booking_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `reason` text NOT NULL,
+  `cancelled_at` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `table_packages`
+--
+
+CREATE TABLE `table_packages` (
+  `id` int(11) NOT NULL,
+  `package_name` varchar(255) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `capacity` int(11) NOT NULL,
+  `description` text DEFAULT NULL,
+  `available_tables` int(11) NOT NULL,
+  `image_path` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `table_packages`
+--
+
+INSERT INTO `table_packages` (`id`, `package_name`, `price`, `capacity`, `description`, `available_tables`, `image_path`) VALUES
+(1, 'Koupals', 199.00, 2, 'Perfect for kupals', 0, 'images/couple.jpg'),
+(2, 'Friends', 299.00, 4, 'Ideal for small groups', 0, 'images/friends.jpg'),
+(3, 'Family', 599.00, 10, 'Great for family gatherings', 0, 'images/family.jpg'),
+(7, 'Package A', 20000.00, 30, 'Basic package for large groups', 2, 'images/table2.jpg'),
+(8, 'Pacakge B', 33000.00, 40, 'Premium package with extra services', 2, 'images/table1.jpg'),
+(9, 'Package C', 45000.00, 50, 'All-inclusive luxury package', 1, 'images/table3.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `is_verified` tinyint(1) DEFAULT 0,
+  `verification_code` varchar(6) DEFAULT NULL,
+  `verification_expiry` datetime DEFAULT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `reset_token` varchar(64) DEFAULT NULL,
+  `reset_token_expires` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `password`, `is_verified`, `verification_code`, `verification_expiry`, `created_at`, `updated_at`, `reset_token`, `reset_token_expires`) VALUES
+(1, 'Christian Realisan', 'christianrealisan3@gmail.com', '$2y$10$wTeWBkmwQn7UUuxW0ahQveDtRIhPULLjCBbND2MZ.mdXcnVvoxv8e', 1, '986507', '2025-02-12 16:24:15', '2025-02-12 15:22:15', '2025-02-12 15:22:51', NULL, NULL),
+(2, 'Mang Juan', 'mangjuan@gmail.com', '$2y$10$mbQd/yeOWp3qy90mTAiUnOCnVnl5o33rYSnDtGXRPx4kxf1ZE7m0.', 1, '382013', '2025-02-12 16:31:55', '2025-02-12 15:29:55', '2025-02-12 16:47:42', NULL, NULL),
+(3, 'Fammela Nicole Jumig De Guzman', 'fammeladeguzman21@gmail.com', '$2y$10$Ic53xTZkXkmyqtCTpdq.Y.uauCDKuC48etMP4ojLRFK8JLz6ZzRRi', 1, '484717', '2025-02-13 09:51:10', '2025-02-13 08:49:10', '2025-02-13 08:49:44', NULL, NULL),
+(4, 'Kenjo M. Marimon', 'aizzyvillanueva43@gmail.com', '$2y$10$7tm0ztu9lKpjfwTWO2Cc8.9yp/ATXCDTv6UzJB3piqf6ebL7Kcsfq', 1, '188543', '2025-02-17 13:10:04', '2025-02-17 12:08:04', '2025-02-17 12:09:01', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userss`
+--
+
+CREATE TABLE `userss` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `user_type` enum('admin','frontdesk','cashier') NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `userss`
+--
+
+INSERT INTO `userss` (`id`, `email`, `password`, `user_type`) VALUES
+(1, 'admin@example.com', '$2y$10$efqc04ABmXuKUBzj1BRlmuytMLjir6CJ.LrTm2qw81/rS94GcA54u', 'admin'),
+(2, 'frontdesk@example.com', '$2y$10$gKCFBo96Q51u5PeLc3ZT6OnrMg47XQpYTKECADPF6skWy5ipIgdgG', 'frontdesk'),
+(3, 'cashier@example.com', '$2y$10$kwMXcUy2XFwfJ1IyAKXHCe.MLTdIGUwJrZSOSF5gw2vJ6gzE6oO86', 'cashier');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `advance_orders`
+--
+ALTER TABLE `advance_orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `booking_id` (`booking_id`),
+  ADD KEY `menu_item_id` (`menu_item_id`);
+
+--
+-- Indexes for table `advance_order_addons`
+--
+ALTER TABLE `advance_order_addons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `advance_order_id` (`advance_order_id`),
+  ADD KEY `addon_id` (`addon_id`);
+
+--
+-- Indexes for table `amenities`
+--
+ALTER TABLE `amenities`
+  ADD PRIMARY KEY (`amenity_id`);
+
+--
+-- Indexes for table `announcements`
+--
+ALTER TABLE `announcements`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `booking`
+--
+ALTER TABLE `booking`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `customer_id` (`customer_id`),
+  ADD KEY `room_id` (`room_id`);
+
+--
+-- Indexes for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD PRIMARY KEY (`booking_id`),
+  ADD KEY `fk_user` (`user_id`);
+
+--
+-- Indexes for table `booking_cancellations`
+--
+ALTER TABLE `booking_cancellations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `booking_id` (`booking_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `booking_display_settings`
+--
+ALTER TABLE `booking_display_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer`
+--
+ALTER TABLE `customer`
+  ADD PRIMARY KEY (`customer_id`),
+  ADD KEY `customer_id_type` (`id_card_type_id`);
+
+--
+-- Indexes for table `dining_tables`
+--
+ALTER TABLE `dining_tables`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `emp_history`
+--
+ALTER TABLE `emp_history`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `emp_id` (`emp_id`),
+  ADD KEY `shift_id` (`shift_id`);
+
+--
+-- Indexes for table `event_bookings`
+--
+ALTER TABLE `event_bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `event_images`
+--
+ALTER TABLE `event_images`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `package_id` (`package_id`);
+
+--
+-- Indexes for table `event_packages`
+--
+ALTER TABLE `event_packages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `guest_names`
+--
+ALTER TABLE `guest_names`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `booking_id` (`booking_id`);
+
+--
+-- Indexes for table `id_card_type`
+--
+ALTER TABLE `id_card_type`
+  ADD PRIMARY KEY (`id_card_type_id`);
+
+--
+-- Indexes for table `inquiries`
+--
+ALTER TABLE `inquiries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menu_categories`
+--
+ALTER TABLE `menu_categories`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `menu_items`
+--
+ALTER TABLE `menu_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `category_id` (`category_id`);
+
+--
+-- Indexes for table `menu_item_addons`
+--
+ALTER TABLE `menu_item_addons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `menu_item_id` (`menu_item_id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `order_item_addons`
+--
+ALTER TABLE `order_item_addons`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_item_id` (`order_item_id`);
+
+--
+-- Indexes for table `rooms`
+--
+ALTER TABLE `rooms`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `room_type_id` (`room_type_id`);
+
+--
+-- Indexes for table `room_bookings`
+--
+ALTER TABLE `room_bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `booking_id` (`booking_id`),
+  ADD KEY `room_type_id` (`room_type_id`);
+
+--
+-- Indexes for table `room_types`
+--
+ALTER TABLE `room_types`
+  ADD PRIMARY KEY (`room_type_id`);
+
+--
+-- Indexes for table `room_type_amenities`
+--
+ALTER TABLE `room_type_amenities`
+  ADD PRIMARY KEY (`room_type_id`,`amenity_id`),
+  ADD KEY `amenity_id` (`amenity_id`);
+
+--
+-- Indexes for table `sales`
+--
+ALTER TABLE `sales`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_id` (`order_id`);
+
+--
+-- Indexes for table `shift`
+--
+ALTER TABLE `shift`
+  ADD PRIMARY KEY (`shift_id`);
+
+--
+-- Indexes for table `staff`
+--
+ALTER TABLE `staff`
+  ADD PRIMARY KEY (`emp_id`),
+  ADD KEY `id_card_type` (`id_card_type`),
+  ADD KEY `shift_id` (`shift_id`),
+  ADD KEY `staff_type_id` (`staff_type_id`);
+
+--
+-- Indexes for table `staff_type`
+--
+ALTER TABLE `staff_type`
+  ADD PRIMARY KEY (`staff_type_id`);
+
+--
+-- Indexes for table `tables`
+--
+ALTER TABLE `tables`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `table_number` (`table_number`);
+
+--
+-- Indexes for table `table_bookings`
+--
+ALTER TABLE `table_bookings`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `booking_id` (`booking_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `table_cancellations`
+--
+ALTER TABLE `table_cancellations`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `booking_id` (`booking_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
+-- Indexes for table `table_packages`
+--
+ALTER TABLE `table_packages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- Indexes for table `userss`
+--
+ALTER TABLE `userss`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `advance_orders`
+--
+ALTER TABLE `advance_orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `advance_order_addons`
+--
+ALTER TABLE `advance_order_addons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `amenities`
+--
+ALTER TABLE `amenities`
+  MODIFY `amenity_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `announcements`
+--
+ALTER TABLE `announcements`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `booking`
+--
+ALTER TABLE `booking`
+  MODIFY `booking_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `bookings`
+--
+ALTER TABLE `bookings`
+  MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+
+--
+-- AUTO_INCREMENT for table `booking_cancellations`
+--
+ALTER TABLE `booking_cancellations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `booking_display_settings`
+--
+ALTER TABLE `booking_display_settings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `customer`
+--
+ALTER TABLE `customer`
+  MODIFY `customer_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `dining_tables`
+--
+ALTER TABLE `dining_tables`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `emp_history`
+--
+ALTER TABLE `emp_history`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `event_images`
+--
+ALTER TABLE `event_images`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `event_packages`
+--
+ALTER TABLE `event_packages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `guest_names`
+--
+ALTER TABLE `guest_names`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+
+--
+-- AUTO_INCREMENT for table `id_card_type`
+--
+ALTER TABLE `id_card_type`
+  MODIFY `id_card_type_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `inquiries`
+--
+ALTER TABLE `inquiries`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `menu_categories`
+--
+ALTER TABLE `menu_categories`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `menu_items`
+--
+ALTER TABLE `menu_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `menu_item_addons`
+--
+ALTER TABLE `menu_item_addons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+
+--
+-- AUTO_INCREMENT for table `order_items`
+--
+ALTER TABLE `order_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+
+--
+-- AUTO_INCREMENT for table `order_item_addons`
+--
+ALTER TABLE `order_item_addons`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `rooms`
+--
+ALTER TABLE `rooms`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `room_bookings`
+--
+ALTER TABLE `room_bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+
+--
+-- AUTO_INCREMENT for table `room_types`
+--
+ALTER TABLE `room_types`
+  MODIFY `room_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `sales`
+--
+ALTER TABLE `sales`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `shift`
+--
+ALTER TABLE `shift`
+  MODIFY `shift_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `staff`
+--
+ALTER TABLE `staff`
+  MODIFY `emp_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `staff_type`
+--
+ALTER TABLE `staff_type`
+  MODIFY `staff_type_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+
+--
+-- AUTO_INCREMENT for table `tables`
+--
+ALTER TABLE `tables`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `table_bookings`
+--
+ALTER TABLE `table_bookings`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `table_cancellations`
+--
+ALTER TABLE `table_cancellations`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `table_packages`
+--
+ALTER TABLE `table_packages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `userss`
+--
+ALTER TABLE `userss`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `advance_orders`
+--
+ALTER TABLE `advance_orders`
+  ADD CONSTRAINT `advance_orders_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `table_bookings` (`id`),
+  ADD CONSTRAINT `advance_orders_ibfk_2` FOREIGN KEY (`menu_item_id`) REFERENCES `menu_items` (`id`);
+
+--
+-- Constraints for table `advance_order_addons`
+--
+ALTER TABLE `advance_order_addons`
+  ADD CONSTRAINT `advance_order_addons_ibfk_1` FOREIGN KEY (`advance_order_id`) REFERENCES `advance_orders` (`id`),
+  ADD CONSTRAINT `advance_order_addons_ibfk_2` FOREIGN KEY (`addon_id`) REFERENCES `menu_item_addons` (`id`);
+
+--
+-- Constraints for table `bookings`
+--
+ALTER TABLE `bookings`
+  ADD CONSTRAINT `fk_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `booking_cancellations`
+--
+ALTER TABLE `booking_cancellations`
+  ADD CONSTRAINT `booking_cancellations_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`),
+  ADD CONSTRAINT `booking_cancellations_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `menu_items`
+--
+ALTER TABLE `menu_items`
+  ADD CONSTRAINT `menu_items_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `menu_categories` (`id`);
+
+--
+-- Constraints for table `menu_item_addons`
+--
+ALTER TABLE `menu_item_addons`
+  ADD CONSTRAINT `menu_item_addons_ibfk_1` FOREIGN KEY (`menu_item_id`) REFERENCES `menu_items` (`id`);
+
+--
+-- Constraints for table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+
+--
+-- Constraints for table `order_item_addons`
+--
+ALTER TABLE `order_item_addons`
+  ADD CONSTRAINT `order_item_addons_ibfk_1` FOREIGN KEY (`order_item_id`) REFERENCES `order_items` (`id`);
+
+--
+-- Constraints for table `sales`
+--
+ALTER TABLE `sales`
+  ADD CONSTRAINT `sales_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
+
+--
+-- Constraints for table `table_bookings`
+--
+ALTER TABLE `table_bookings`
+  ADD CONSTRAINT `table_bookings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+--
+-- Constraints for table `table_cancellations`
+--
+ALTER TABLE `table_cancellations`
+  ADD CONSTRAINT `table_cancellations_ibfk_1` FOREIGN KEY (`booking_id`) REFERENCES `table_bookings` (`id`),
+  ADD CONSTRAINT `table_cancellations_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

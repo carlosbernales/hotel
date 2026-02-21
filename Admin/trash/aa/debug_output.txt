@@ -1,0 +1,95 @@
+[2025-05-16 07:59:14] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 07:59:19] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 07:59:20] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 07:59:26] Request received
+Array
+(
+    [action] => send
+    [guest_id] => guest_aggk5n6
+    [message] => add
+    [guest_name] => christian
+    [guest_email] => chano@gmail.com
+)
+
+
+[2025-05-16 07:59:44] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 07:59:50] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:00:15] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:00:20] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:00:45] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:00:50] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:01:17] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:01:20] Request received
+Array
+(
+    [action] => check_unread
+)
+
+
+[2025-05-16 08:01:51] Request received
+Array
+(
+    [action] => check_unread
+)
+
+

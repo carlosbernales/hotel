@@ -1,4 +1,10 @@
 <?php
+// Load security helper
+require_once 'includes/security_helper.php';
+
+// Validate user is logged in and is a customer
+requireCustomer();
+
 session_start();
 include 'includes/database.php';
 include 'nav.php';

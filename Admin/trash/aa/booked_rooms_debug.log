@@ -1,0 +1,4 @@
+[2025-06-25 11:13:02] New request: []
+[2025-06-25 11:13:02] ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id' in 'field list'
+[2025-06-25 11:13:09] New request: []
+[2025-06-25 11:13:09] ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'id' in 'field list'

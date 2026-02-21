@@ -297,7 +297,7 @@ if (isset($_GET['booking_id'])) {
                     while ($room = $rooms_result->fetch_assoc()) {
                         echo "<tr>
                                 <td>" . htmlspecialchars($room['room_type_name']) . "</td>
-                                <td style='text-align: right;'>₱" . number_format($room['price'], 2) . "</td>
+                                <td style='text-align: right;'>₱" . number_format($room['price'], 2) . " per night/s</td>
                               </tr>";
                     }
                     echo "</table>";
@@ -378,7 +378,7 @@ if (isset($_GET['booking_id'])) {
                         echo "<tr>
                                 <td>" . htmlspecialchars($guest['first_name']) . "</td>
                                 <td>" . htmlspecialchars($guest['last_name']) . "</td>
-                                <td>" . htmlspecialchars($guest['guest_type']) . "</td>
+                                <td>" . htmlspecialchars(ucfirst($guest['guest_type'])) . "</td>
                               </tr>";
                     }
                     echo "</table>";
@@ -440,14 +440,21 @@ if (isset($_GET['booking_id'])) {
                         <span>TOTAL AMOUNT:</span>
                         <span>₱<?= number_format($booking['total_amount'], 2) ?></span>
                     </div>
+                  
+                    <div class="total-row" style="font-weight: bold;">
+                        <span>Payment Amount:</span>
+                        <span>₱<?= number_format($booking['downpayment_amount'], 2) ?></span>
+                    </div>
                     <div class="total-row" style="font-weight: bold;">
                         <span>Remaining Balance:</span>
                         <span>₱<?= number_format($booking['remaining_balance'], 2) ?></span>
                     </div>
-                    <div class="detail-row" style="margin-top: 15px;">
-                        <span class="detail-label">Payment Method:</span>
-                        <span><?= htmlspecialchars($booking['payment_method']) ?></span>
+                   <div class="total-row" style="font-weight: bold;">
+                        <span>Payment Method:</span>
+                        <span><?= htmlspecialchars(ucfirst($booking['payment_method'])) ?></span>
                     </div>
+
+                   
                 </div>
 
                 <div class="footer">
