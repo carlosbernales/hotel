@@ -3,7 +3,6 @@ include '../adminBackend/mydb.php';
 
 header("Content-Type: application/json");
 
-// Decode JSON safely
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (!$data) {
@@ -11,9 +10,7 @@ if (!$data) {
     exit;
 }
 
-/* ===============================
-   SANITIZE & CAST VALUES
-=================================*/
+
 $booking_id = (int) $data['booking_id'];
 $checkin = $data['check_in'];
 $checkout = $data['check_out'];
@@ -29,9 +26,6 @@ $resched_reason = isset($data['resched_reason']) ? $data['resched_reason'] : nul
 
 $payment_amount = $down_payment + $payment_input;
 
-/* ===============================
-   GET CURRENT BOOKING DATA
-=================================*/
 $getBooking = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
 $getBooking->bind_param("i", $booking_id);
 $getBooking->execute();
@@ -39,9 +33,6 @@ $getBooking->bind_result($currentDownpayment);
 $getBooking->fetch();
 $getBooking->close();
 
-/* ===============================
-   COMPUTE PAYMENT LOGIC
-=================================*/
 if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $downpayment_amount = $total_amount;
     $remaining_balance = 0;
@@ -50,16 +41,12 @@ if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $remaining_balance = $total_amount - $downpayment_amount;
 }
 
-/* ===============================
-   CALCULATE NIGHTS
-=================================*/
+
 $checkInDate = new DateTime($checkin);
 $checkOutDate = new DateTime($checkout);
 $nights = (int) $checkInDate->diff($checkOutDate)->format('%a');
 
-/* ===============================
-   UPDATE BOOKING
-=================================*/
+
 $sql = "
     UPDATE bookings
     SET 
@@ -100,9 +87,7 @@ if (!$stmt->execute()) {
     exit;
 }
 
-/* ===============================
-   ROOM TRANSFER (IF CHECKIN)
-=================================*/
+
 if ($status === "checkin") {
 
     date_default_timezone_set('Asia/Manila');
@@ -159,9 +144,6 @@ if ($status === "checkin") {
     }
 }
 
-/* ===============================
-   UPDATE BOOKED ROOMS
-=================================*/
 foreach ($rooms as $r) {
 
     $room_type_id = (int) $r['room_type_id'];

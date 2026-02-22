@@ -80,7 +80,7 @@ if ($amenitiesResult->num_rows > 0) {
         </h3>
 
         <div class="d-flex gap-2">
-            <a href="#" id="backProcess" class="btn btn-secondary btn-sm">
+            <a href="../Admin/index.php?room_booking_list" class="btn btn-secondary btn-sm">
                 <i class="fas fa-arrow-left"></i> Back to List
             </a>
 
@@ -214,7 +214,7 @@ if ($amenitiesResult->num_rows > 0) {
                 </div>
                 <div class="info-item">
                     <label><i class="fas fa-moon"></i> Number of Nights</label>
-                    <input class="form-control" value="<?= $booking['nights'] ?>" readonly>
+                    <input class="form-control" id="numNightsInput" value="<?= $booking['nights'] ?>" readonly>
                 </div>
 
                 <div class="info-item">
@@ -260,6 +260,7 @@ if ($amenitiesResult->num_rows > 0) {
                 <div class="amenities-section mt-3">
                     <label><i class="fas fa-concierge-bell"></i> Booked Amenities</label>
                     <textarea class="form-control" rows="4" readonly><?= htmlspecialchars($amenitiesDisplay) ?></textarea>
+                    <input type="hidden" id="extraBedTotal" value="<?= $extraBedTotal ?>">
                 </div>
             <?php endif; ?>
 
@@ -438,7 +439,8 @@ if ($amenitiesResult->num_rows > 0) {
                                     <select class="form-select roomTypeSelect">
                                         <?php foreach ($roomTypes as $rtid => $rt): ?>
                                             <option value="<?= $rtid ?>" data-price="<?= $rt['price'] ?>"
-                                                data-capacity="<?= $rt['capacity'] ?>" <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
+                                                data-original-price="<?= $r['price'] ?>" data-capacity="<?= $rt['capacity'] ?>"
+                                                <?= ($rtid == $bookedRoomTypeId) ? 'selected' : '' ?>>
                                                 <?= $rt['room_type'] ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -690,6 +692,10 @@ if ($amenitiesResult->num_rows > 0) {
 </div>
 
 <script>
+    const originalTotalFromDB = <?= (float) $booking['total_amount'] ?>;
+</script>
+
+<script>
     function disableSelectedRoomNumbers() {
         const rows = document.querySelectorAll('#roomsTable tbody tr');
         const selectedRoomNumbers = new Set();
@@ -859,83 +865,100 @@ if ($amenitiesResult->num_rows > 0) {
     });
 
     document.getElementById('check_in').addEventListener('change', () => {
-        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
-            updateRoomNumbers(row, true);
-        });
+        updateNumberOfNights();
+        calculateTotalAmount(); // recalc total
     });
 
     document.getElementById('check_out').addEventListener('change', () => {
-        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
-            updateRoomNumbers(row, true);
-        });
+        updateNumberOfNights();
+        calculateTotalAmount(); // recalc total
     });
 
-    function calculateTotalAmount() {
+    function updateNumberOfNights() {
+        const checkInEl = document.getElementById('check_in');
+        const checkOutEl = document.getElementById('check_out');
+        const numNightsInput = document.getElementById('numNightsInput');
+        const numNightsBadge = document.getElementById('numNights');
 
-        const originalCheckIn = new Date('<?= $booking['check_in'] ?>');
-        const originalCheckOut = new Date('<?= $booking['check_out'] ?>');
+        const checkInDate = new Date(checkInEl.value);
+        const checkOutDate = new Date(checkOutEl.value);
 
-        const newCheckIn = new Date(document.getElementById('check_in').value);
-        const newCheckOut = new Date(document.getElementById('check_out').value);
-
-        if (isNaN(newCheckIn) || isNaN(newCheckOut) || newCheckOut <= newCheckIn) return;
-
-        const originalNights = Math.ceil((originalCheckOut - originalCheckIn) / (1000 * 60 * 60 * 24));
-        const newNights = Math.ceil((newCheckOut - newCheckIn) / (1000 * 60 * 60 * 24));
-
-        let originalTotal = parseFloat('<?= $booking['total_amount'] ?>') || 0;
-        let extensionNights = newNights - originalNights;
-
-        let extensionTotal = 0;
-
-        if (extensionNights > 0) {
-            document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
-                const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
-                if (!selectedOption) return;
-                const newPrice = parseFloat(selectedOption.dataset.price) || 0;
-                extensionTotal += newPrice * extensionNights;
-            });
+        if (!checkInEl.value || !checkOutEl.value || checkOutDate <= checkInDate) {
+            numNightsInput.value = 0;
+            numNightsBadge.textContent = 0;
+            return;
         }
 
-        // extraBedTotal fallback to 0 if not defined
-        let extraBedTotal = parseFloat(document.getElementById('extraBedTotal')?.value) || 0;
-        let extraBedPrice = extraBedTotal * newNights;
+        const timeDiff = checkOutDate - checkInDate;
+        const nights = Math.ceil(timeDiff / (1000 * 60 * 60 * 24)); // milliseconds → days
 
-        let totalBeforeDiscount = originalTotal + extensionTotal + extraBedPrice;
+        numNightsInput.value = nights;
+        numNightsBadge.textContent = nights;
+    }
+
+    function calculateTotalAmount() {
+        const checkIn = new Date(document.getElementById('check_in').value);
+        const checkOut = new Date(document.getElementById('check_out').value);
+        const originalCheckOut = new Date('<?= date("Y-m-d", strtotime($booking['check_out'])) ?>');
+
+        let totalNights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+        if (totalNights < 0) totalNights = 0;
+
+        let originalNights = Math.ceil((originalCheckOut - checkIn) / (1000 * 60 * 60 * 24));
+        if (originalNights < 0) originalNights = 0;
+
+        let extendedNights = totalNights - originalNights;
+        if (extendedNights < 0) extendedNights = 0;
+
+        let roomsTotal = 0;
+        document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
+            const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
+            const originalPrice = parseFloat(selectedOption.dataset.originalPrice) || 0;
+            const newPrice = parseFloat(selectedOption.dataset.price) || 0;
+
+            roomsTotal += (originalNights * originalPrice) + (extendedNights * newPrice);
+        });
+
+        let originalAmenitiesTotal = parseFloat(document.getElementById('extraBedTotal')?.value) || 0;
+        let totalAmenities = originalAmenitiesTotal * totalNights;
+
+        let totalBeforeDiscount = roomsTotal + totalAmenities;
 
         const discountPercentage = parseFloat(
             document.getElementById('discountPercentage')?.value.replace('%', '')
         ) || 0;
 
-        const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
+        const discountAmountCalc = (discountPercentage / 100) * totalBeforeDiscount;
 
-        const finalTotal = totalBeforeDiscount - discountAmount;
+        const totalAmountFromDB = parseFloat(originalTotalFromDB);
 
-        const downPayment = parseFloat(
-            document.getElementById('downPayment')?.value.replace(/,/g, '')
-        ) || 0;
+        let finalTotal = totalBeforeDiscount - discountAmountCalc;
+        if (finalTotal < totalAmountFromDB) {
+            finalTotal = totalAmountFromDB;
 
+            const discountAmountFromDB = parseFloat(document.getElementById('discount_amount').value) || 0;
+            document.getElementById('discountAmount').value = (totalAmountFromDB + discountAmountFromDB - totalAmountFromDB).toFixed(2);
+        } else {
+            document.getElementById('discountAmount').value = discountAmountCalc.toFixed(2);
+        }
+
+        const downPayment = parseFloat(document.getElementById('downPayment')?.value.replace(/,/g, '')) || 0;
         let remainingBalance = finalTotal - downPayment;
         if (remainingBalance < 0) remainingBalance = 0;
 
         document.getElementById('totalAmountNew').value = finalTotal.toFixed(2);
         document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
-        document.getElementById('discountAmount').value = discountAmount.toFixed(2);
 
-        // DEBUG: check computed values in console
         console.log({
-            originalTotal,
-            extensionTotal,
-            extraBedPrice,
-            totalBeforeDiscount,
-            discountPercentage,
-            discountAmount,
-            finalTotal,
-            downPayment,
-            remainingBalance,
+            totalNights,
             originalNights,
-            newNights,
-            extensionNights
+            extendedNights,
+            roomsTotal,
+            totalAmenities,
+            totalBeforeDiscount,
+            discountAmount: document.getElementById('discountAmount').value,
+            finalTotal,
+            remainingBalance
         });
     }
 
@@ -1214,13 +1237,6 @@ if ($amenitiesResult->num_rows > 0) {
 
     document.getElementById('processCheckOut')
         .addEventListener('click', () => processBooking('finished'));
-
-    document.getElementById('backProcess')
-        .addEventListener('click', (e) => {
-            e.preventDefault();
-            processBooking('checkin', null, true);
-        });
-
 
 </script>
 
