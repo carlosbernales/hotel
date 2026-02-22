@@ -12441,3 +12441,131 @@ Stack trace:
 [21-Feb-2026 02:57:56 UTC] Database connected successfully to: hotelms
 [21-Feb-2026 02:58:25 UTC] Database connected successfully to: hotelms
 [21-Feb-2026 02:58:36 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:07:22 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:07:23 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:07:31 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:08:43 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:08:44 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:08:45 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:08:45 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:08:51 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:14:10 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:14:11 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:14:19 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:14:54 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:15:10 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:15:16 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:15:18 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:15:50 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:15:51 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:20:09 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:49:05 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:50:05 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:54:33 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:19 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 10:59:19 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[22-Feb-2026 10:59:19 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[22-Feb-2026 10:59:19 Asia/Manila] Index idx_messages_status already exists on table messages
+[22-Feb-2026 10:59:19 Asia/Manila] Index idx_activities_type already exists on table activities
+[22-Feb-2026 10:59:19 Asia/Manila] Index idx_customers_vip already exists on table customers
+[22-Feb-2026 10:59:19 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[22-Feb-2026 10:59:19 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[22-Feb-2026 10:59:19 Asia/Manila] Current date: 2026-02-22
+[22-Feb-2026 10:59:19 Asia/Manila] Week start: 2026-02-16
+[22-Feb-2026 10:59:19 Asia/Manila] Week end: 2026-02-22
+[22-Feb-2026 10:59:19 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[22-Feb-2026 10:59:19 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[22-Feb-2026 10:59:19 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1012
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1012): mysqli_query(Object(mysqli), '\n    (SELECT \n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(237): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1012
+[22-Feb-2026 02:59:23 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:29 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:31 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:33 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:35 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:36 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:37 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:43 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:46 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 02:59:49 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 10:59:49 Asia/Manila] Index idx_bookings_dates already exists on table bookings
+[22-Feb-2026 10:59:49 Asia/Manila] Index idx_bookings_status already exists on table bookings
+[22-Feb-2026 10:59:49 Asia/Manila] Index idx_messages_status already exists on table messages
+[22-Feb-2026 10:59:49 Asia/Manila] Index idx_activities_type already exists on table activities
+[22-Feb-2026 10:59:49 Asia/Manila] Index idx_customers_vip already exists on table customers
+[22-Feb-2026 10:59:49 Asia/Manila] Error checking for trigger: Unknown column 'Trigger_Name' in 'where clause'
+[22-Feb-2026 10:59:49 Asia/Manila] Exception creating trigger: Unknown column 'room_id' in 'NEW'
+[22-Feb-2026 10:59:49 Asia/Manila] Current date: 2026-02-22
+[22-Feb-2026 10:59:49 Asia/Manila] Week start: 2026-02-16
+[22-Feb-2026 10:59:49 Asia/Manila] Week end: 2026-02-22
+[22-Feb-2026 10:59:49 Asia/Manila] Using room types query: SELECT 
+    r.room_type,
+    COUNT(b.booking_id) as booking_count
+    FROM rooms r
+        LEFT JOIN bookings b ON r.room_type_id = b.room_type_id
+    WHERE b.status NOT IN ('Cancelled', 'Rejected') OR b.status IS NULL
+    GROUP BY r.room_type
+    ORDER BY booking_count DESC
+[22-Feb-2026 10:59:49 Asia/Manila] Room type data: Array
+(
+    [Standard] => 5
+    [Deluxe] => 3
+    [Suite] => 2
+    [Family] => 1
+)
+
+[22-Feb-2026 10:59:49 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Unknown column 'created_at' in 'field list' in C:\laragon\www\hotel\Admin\dashboard.php:1012
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\dashboard.php(1012): mysqli_query(Object(mysqli), '\n    (SELECT \n ...')
+#1 C:\laragon\www\hotel\Admin\index.php(237): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\dashboard.php on line 1012
+[22-Feb-2026 03:01:15 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:01:15 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:01:52 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 11:01:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 38
+[22-Feb-2026 11:01:52 Asia/Manila] PHP Warning:  Trying to access array offset on value of type null in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 38
+[22-Feb-2026 11:01:52 Asia/Manila] PHP Fatal error:  Uncaught mysqli_sql_exception: Incorrect DATETIME value: '' in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php:41
+Stack trace:
+#0 C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php(41): mysqli->query('\r\n    SELECT br...')
+#1 C:\laragon\www\hotel\Admin\index.php(237): include_once('C:\\laragon\\www\\...')
+#2 {main}
+  thrown in C:\laragon\www\hotel\Admin\adminFrontend\checkInDetails_room_booking.php on line 41
+[22-Feb-2026 03:01:54 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:01:57 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:02:02 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:02:06 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:02:24 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:02:37 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:02:42 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:02:43 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:03:06 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:03:28 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:03:29 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:03:39 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:04:48 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:07:24 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:07:26 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:51:42 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:51:59 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:54:13 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:54:15 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:54:26 UTC] Database connected successfully to: hotelms
+[22-Feb-2026 03:54:28 UTC] Database connected successfully to: hotelms

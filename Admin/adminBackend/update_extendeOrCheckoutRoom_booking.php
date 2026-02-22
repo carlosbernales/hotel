@@ -1,32 +1,47 @@
 <?php
 include '../adminBackend/mydb.php';
 
+header("Content-Type: application/json");
+
+// Decode JSON safely
 $data = json_decode(file_get_contents("php://input"), true);
 
-$booking_id = $data['booking_id'];
+if (!$data) {
+    echo json_encode(["error" => "Invalid JSON input"]);
+    exit;
+}
+
+/* ===============================
+   SANITIZE & CAST VALUES
+=================================*/
+$booking_id = (int) $data['booking_id'];
 $checkin = $data['check_in'];
 $checkout = $data['check_out'];
-$total_amount = $data['total_amount'];
-$down_payment = $data['down_payment'];
-$payment_input = $data['payment_input'];
-$payment_amount = $down_payment + $payment_input;
-$change_amount = floatval($data['change_amount'] ?? 0);
-
-
-
+$total_amount = (float) $data['total_amount'];
+$down_payment = (float) $data['down_payment'];
+$payment_input = (float) $data['payment_input'];
+$change_amount = isset($data['change_amount']) ? (float) $data['change_amount'] : 0;
 $rooms = $data['rooms'];
 $payment_method = $data['payment_method'];
 $status = $data['status'];
+$discount_amount = isset($data['discount_amount']) ? (float) $data['discount_amount'] : 0;
 $resched_reason = isset($data['resched_reason']) ? $data['resched_reason'] : null;
-$discount_amount = $data['discount_amount'];
 
-$bookingQry = $conn->prepare("SELECT check_in, check_out, downpayment_amount FROM bookings WHERE booking_id = ?");
-$bookingQry->bind_param("i", $booking_id);
-$bookingQry->execute();
-$bookingQry->bind_result($oldCheckIn, $oldCheckOut, $currentDownpayment);
-$bookingQry->fetch();
-$bookingQry->close();
+$payment_amount = $down_payment + $payment_input;
 
+/* ===============================
+   GET CURRENT BOOKING DATA
+=================================*/
+$getBooking = $conn->prepare("SELECT downpayment_amount FROM bookings WHERE booking_id = ?");
+$getBooking->bind_param("i", $booking_id);
+$getBooking->execute();
+$getBooking->bind_result($currentDownpayment);
+$getBooking->fetch();
+$getBooking->close();
+
+/* ===============================
+   COMPUTE PAYMENT LOGIC
+=================================*/
 if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $downpayment_amount = $total_amount;
     $remaining_balance = 0;
@@ -35,11 +50,16 @@ if ($payment_input >= ($total_amount - $currentDownpayment)) {
     $remaining_balance = $total_amount - $downpayment_amount;
 }
 
+/* ===============================
+   CALCULATE NIGHTS
+=================================*/
 $checkInDate = new DateTime($checkin);
 $checkOutDate = new DateTime($checkout);
-$interval = $checkInDate->diff($checkOutDate);
-$nights = (int) $interval->format('%a');
+$nights = (int) $checkInDate->diff($checkOutDate)->format('%a');
 
+/* ===============================
+   UPDATE BOOKING
+=================================*/
 $sql = "
     UPDATE bookings
     SET 
@@ -52,79 +72,55 @@ $sql = "
         payment_method = ?,  
         status = ?,
         discount_amount = ?,
-        payment_amount = ?
+        payment_amount = ?,
+        payment_change = ?
+    WHERE booking_id = ?
 ";
 
-if (!empty($change_amount) && $change_amount > 0) {
-    $sql .= ", payment_change = ?";
+$stmt = $conn->prepare($sql);
+
+$stmt->bind_param(
+    "ssidddssdddi",
+    $checkin,
+    $checkout,
+    $nights,
+    $total_amount,
+    $downpayment_amount,
+    $remaining_balance,
+    $payment_method,
+    $status,
+    $discount_amount,
+    $payment_amount,
+    $change_amount,
+    $booking_id
+);
+
+if (!$stmt->execute()) {
+    echo json_encode(["error" => $stmt->error]);
+    exit;
 }
 
-$sql .= " WHERE booking_id = ?";
-
-$updateBooking = $conn->prepare($sql);
-
-if (!empty($change_amount) && $change_amount > 0) {
-
-    $updateBooking->bind_param(
-        "ssidddssddddi",
-        $checkin,
-        $checkout,
-        $nights,
-        $total_amount,
-        $downpayment_amount,
-        $remaining_balance,
-        $payment_method,
-        $status,
-        $discount_amount,
-        $payment_amount,
-        $change_amount,
-        $booking_id
-    );
-
-} else {
-
-    $updateBooking->bind_param(
-        "ssidddssdddi",
-        $checkin,
-        $checkout,
-        $nights,
-        $total_amount,
-        $downpayment_amount,
-        $remaining_balance,
-        $payment_method,
-        $status,
-        $discount_amount,
-        $payment_amount,
-        $booking_id
-    );
-}
-
-$updateBooking->execute();
-
+/* ===============================
+   ROOM TRANSFER (IF CHECKIN)
+=================================*/
 if ($status === "checkin") {
 
-    $changedRooms = [];
+    date_default_timezone_set('Asia/Manila');
+    $transfer_date = date("Y-m-d H:i:s");
+
     foreach ($rooms as $r) {
+
         if (
             isset($r['original_room_number_fk_id'], $r['original_room_type_id']) &&
-            ($r['original_room_number_fk_id'] != $r['room_number_fk_id'] ||
-                $r['original_room_type_id'] != $r['room_type_id'])
+            (
+                $r['original_room_number_fk_id'] != $r['room_number_fk_id'] ||
+                $r['original_room_type_id'] != $r['room_type_id']
+            )
         ) {
-            $changedRooms[] = $r;
-        }
-    }
 
-    if (!empty($changedRooms)) {
-        date_default_timezone_set('Asia/Manila');
-        $transfer_date = date("Y-m-d H:i:s");
-        $reason = $resched_reason;
-
-        foreach ($changedRooms as $oldRoom) {
-
-            $booked_room_fk_id = $oldRoom['id'];
-            $bookings_fk_id = $booking_id;
-            $room_number_fk_id = $oldRoom['original_room_number_fk_id'];
-            $room_type_id = $oldRoom['original_room_type_id'];
+            $booked_room_fk_id = (int) $r['id'];
+            $room_number_fk_id = (int) $r['original_room_number_fk_id'];
+            $room_type_id = (int) $r['original_room_type_id'];
 
             $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
             $typeQry->bind_param("i", $room_type_id);
@@ -133,39 +129,47 @@ if ($status === "checkin") {
             $typeQry->fetch();
             $typeQry->close();
 
-            $insert_transfer = "
+            $insert = $conn->prepare("
                 INSERT INTO room_transfers (
-                    booked_room_fk_id, 
-                    bookings_fk_id, 
-                    room_number_fk_id, 
-                    room_type_id, 
-                    room_type_name, 
-                    price, 
-                    transfer_date, 
+                    booked_room_fk_id,
+                    bookings_fk_id,
+                    room_number_fk_id,
+                    room_type_id,
+                    room_type_name,
+                    price,
+                    transfer_date,
                     reason
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            ";
+            ");
 
-            $stmt = $conn->prepare($insert_transfer);
-            $stmt->bind_param(
-                "iiiissss",
+            $insert->bind_param(
+                "iiiisdss",
                 $booked_room_fk_id,
-                $bookings_fk_id,
+                $booking_id,
                 $room_number_fk_id,
                 $room_type_id,
                 $room_type_name,
                 $price,
                 $transfer_date,
-                $reason
+                $resched_reason
             );
-            $stmt->execute();
+
+            $insert->execute();
         }
     }
 }
 
+/* ===============================
+   UPDATE BOOKED ROOMS
+=================================*/
 foreach ($rooms as $r) {
+
+    $room_type_id = (int) $r['room_type_id'];
+    $room_number = (int) $r['room_number_fk_id'];
+    $booked_id = (int) $r['id'];
+
     $typeQry = $conn->prepare("SELECT room_type, price FROM room_types WHERE room_type_id = ?");
-    $typeQry->bind_param("i", $r['room_type_id']);
+    $typeQry->bind_param("i", $room_type_id);
     $typeQry->execute();
     $typeQry->bind_result($roomTypeName, $roomPrice);
     $typeQry->fetch();
@@ -180,9 +184,21 @@ foreach ($rooms as $r) {
             price = ?
         WHERE id = ?
     ");
-    $updateRoom->bind_param("iisdi", $r['room_type_id'], $r['room_number_fk_id'], $roomTypeName, $roomPrice, $r['id']);
-    $updateRoom->execute();
+
+    $updateRoom->bind_param(
+        "iisdi",
+        $room_type_id,
+        $room_number,
+        $roomTypeName,
+        $roomPrice,
+        $booked_id
+    );
+
+    if (!$updateRoom->execute()) {
+        echo json_encode(["error" => $updateRoom->error]);
+        exit;
+    }
 }
 
-echo "success";
+echo json_encode(["success" => true]);
 ?>

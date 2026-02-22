@@ -1052,9 +1052,13 @@ if ($amenitiesResult->num_rows > 0) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(bookingData)
         })
-            .then(res => res.text())
+            .then(res => res.json())   // ✅ parse JSON properly
             .then(res => {
-                if (res === "success") {
+
+                console.log("Server response:", res);
+
+                if (res.success) {
+
                     if (!silent) {
                         alert(`Booking ${status === 'finished' ? 'checked out' : 'updated'} successfully!`);
                     }
@@ -1065,11 +1069,16 @@ if ($amenitiesResult->num_rows > 0) {
                     } else {
                         window.location.href = "../Admin/index.php?room_booking_list";
                     }
+
                 } else {
                     alert('Something went wrong. Please try again.');
+                    console.log(res.error);
                 }
             })
-            .catch(err => console.error(err));
+            .catch(err => {
+                console.error("Fetch error:", err);
+                alert("Something went wrong. Please try again.");
+            });
     }
 
     //////   PROCESS EXTEND STAY → EXTEND MODAL ONLY
