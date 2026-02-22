@@ -81,6 +81,11 @@ if ($result) {
                                             class="<?= $offer['is_active'] ? 'fas fa-toggle-on' : 'fas fa-toggle-off' ?>"></i>
                                     </button>
 
+                                    <button class="contact-action-btn contact-btn-delete offer-delete" title="Delete"
+                                        data-id="<?= $offer['id'] ?>">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+
                                 </div>
                             </td>
                         </tr>
@@ -290,6 +295,37 @@ if ($result) {
         });
     });
 
+
+    document.querySelectorAll('.offer-delete').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.dataset.id;
+            const row = this.closest('tr');
+
+            CasaEstelaModal.confirm(
+                'Delete Rule',
+                'Are you sure you want to delete this rule? This action cannot be undone.',
+                () => {
+                    fetch('../Admin/adminBackend/delete_rule.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: 'id=' + id
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                row.remove();
+                                CasaEstelaAlert.show('success', 'Deleted', data.message, 4000);
+                            } else {
+                                CasaEstelaAlert.show('error', 'Error', data.message, 5000);
+                            }
+                        })
+                        .catch(err => {
+                            CasaEstelaAlert.show('error', 'Error', err, 5000);
+                        });
+                }
+            );
+        });
+    });
 </script>
 
 
