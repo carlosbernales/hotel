@@ -1,20 +1,21 @@
 <?php
 include '../adminBackend/mydb.php';
 
+header('Content-Type: application/json');
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-        header("Location: ../Admin/index.php?event-acp-list&error=invalid_id");
+        echo json_encode(["status" => "error", "message" => "Invalid order ID"]);
         exit;
     }
 
     $orderId = (int) $_GET['id'];
-
     $extraGuests = isset($_POST['extra_guests']) ? (int) $_POST['extra_guests'] : 0;
     $extraGuestCharge = isset($_POST['extra_guest_charge']) ? (float) $_POST['extra_guest_charge'] : 0.0;
 
     if ($extraGuests < 1 || $extraGuestCharge < 0) {
-        header("Location: ../Admin/index.php?event-acp-list&error=invalid_input");
+        echo json_encode(["status" => "error", "message" => "Invalid input values"]);
         exit;
     }
 
@@ -28,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $order = $result->fetch_assoc();
 
     if (!$order) {
-        header("Location: ../Admin/index.php?event-acp-list&error=not_found");
+        echo json_encode(["status" => "error", "message" => "Booking not found"]);
         exit;
     }
 
@@ -48,10 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $updateStmt->execute();
 
     if ($updateStmt->affected_rows > 0) {
-        header("Location: ../index.php?event-acp-list");
-        exit;
+        echo json_encode(["status" => "success"]);
     } else {
-        header("Location: ../index.php?event-acp-list");
-        exit;
+        echo json_encode(["status" => "error", "message" => "No changes were made"]);
     }
 }

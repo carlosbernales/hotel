@@ -300,83 +300,152 @@ if ($result) {
 
 <?php include 'adminFrontend/footer.php'; ?>
 
-
 <script>
-    function setOngoing(bookingId) {
+    document.addEventListener("DOMContentLoaded", function () {
+
+        <?php foreach ($orders as $order): ?>
+                (function () {
+
+                    const id = <?php echo $order['id']; ?>;
+
+                    const guestInput = document.getElementById("guestCount_" + id);
+                    const priceInput = document.getElementById("pricePerGuest_" + id);
+
+                    const paidAmount = parseFloat("<?php echo $order['paid_amount']; ?>") || 0;
+                    const currentTotal = parseFloat("<?php echo $order['total_amount']; ?>") || 0;
+
+                    const extraAmountField = document.getElementById("extraAmount_" + id);
+                    const newTotalField = document.getElementById("newTotal_" + id);
+                    const remainingField = document.getElementById("remainingBalance_" + id);
+
+                    function updateComputation() {
+                        const guests = parseFloat(guestInput?.value) || 0;
+                        const price = parseFloat(priceInput?.value) || 0;
+
+                        const extraAmount = guests * price;
+                        const newTotal = currentTotal + extraAmount;
+                        const remaining = newTotal - paidAmount;
+
+                        if (extraAmountField)
+                            extraAmountField.value = extraAmount.toLocaleString(undefined, { minimumFractionDigits: 2 });
+
+                        if (newTotalField)
+                            newTotalField.value = newTotal.toLocaleString(undefined, { minimumFractionDigits: 2 });
+
+                        if (remainingField)
+                            remainingField.value = remaining.toLocaleString(undefined, { minimumFractionDigits: 2 });
+                    }
+
+                    if (guestInput && priceInput) {
+                        guestInput.addEventListener("input", updateComputation);
+                        priceInput.addEventListener("input", updateComputation);
+                    }
+
+                    const form = document.getElementById("addGuestForm_" + id);
+
+                    if (form) {
+
+                        form.addEventListener("submit", function (e) {
+                            e.preventDefault();
+
+                            CasaEstelaModal.confirm(
+                                "Confirm Guest Update",
+                                "Are you sure you want to apply these guest changes?",
+                                function () {
+                                    const formData = new FormData(form);
+
+                                    fetch("adminBackend/event_add_guest.php?id=" + id, {
+                                        method: "POST",
+                                        body: formData
+                                    })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.status === "success") {
+                                                CasaEstelaModal.show(
+                                                    "success",
+                                                    "Guest Added",
+                                                    "The guest(s) have been successfully added.",
+                                                    function () {
+                                                        const addGuestModal = document.getElementById("addGuestModal_" + id);
+                                                        if (addGuestModal) {
+                                                            const modalInstance = bootstrap.Modal.getInstance(addGuestModal);
+                                                            if (modalInstance) modalInstance.hide();
+                                                        }
+                                                        location.reload();
+                                                    }
+                                                );
+                                            } else {
+                                                CasaEstelaModal.show(
+                                                    "error",
+                                                    "Update Failed",
+                                                    data.message || "Something went wrong."
+                                                );
+                                            }
+                                        })
+                                }
+                            );
+                        });
+
+                    }
+
+                })();
+        <?php endforeach; ?>
+
+    });
+
+    function setOngoing(id) {
+
         CasaEstelaModal.confirm(
-            'Mark as Ongoing',
-            'Are you sure you want to mark this booking as Ongoing?',
+            "Set Event to Ongoing",
+            "Are you sure you want to set this booking as Ongoing?",
             function () {
-                fetch('../Admin/adminBackend/event_set_to_ongoing.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'id=' + bookingId + '&status=Ongoing'
+
+                fetch("adminBackend/event_set_to_ongoing.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "id=" + id + "&status=Ongoing"
                 })
                     .then(response => response.text())
                     .then(data => {
-                        if (data === 'success') {
+
+                        if (data.trim() === "success") {
+
                             CasaEstelaModal.show(
-                                'success',
-                                'Status Updated',
-                                'Booking status has been updated to Ongoing.',
+                                "success",
+                                "Success",
+                                "Booking has been successfully set to Ongoing.",
                                 function () {
                                     location.reload();
                                 }
                             );
+
                         } else {
-                            // Show Casa Estela error modal
+
                             CasaEstelaModal.show(
-                                'error',
-                                'Update Failed',
-                                'Failed to update status: ' + data
+                                "error",
+                                "Update Failed",
+                                data
                             );
+
                         }
+
                     })
-                    .catch(err => {
+                    .catch(() => {
+
                         CasaEstelaModal.show(
-                            'error',
-                            'Error',
-                            'An error occurred: ' + err
+                            "error",
+                            "Server Error",
+                            "Something went wrong."
                         );
+
                     });
+
             }
         );
     }
 </script>
-
-
-
-<script>
-    (function () {
-        const guestInput = document.getElementById("guestCount_<?php echo $order['id']; ?>");
-        const priceInput = document.getElementById("pricePerGuest_<?php echo $order['id']; ?>");
-        const extraAmountInput = document.getElementById("extraAmount_<?php echo $order['id']; ?>");
-        const newTotalInput = document.getElementById("newTotal_<?php echo $order['id']; ?>");
-        const remainingBalanceInput = document.getElementById("remainingBalance_<?php echo $order['id']; ?>");
-        const paidAmount = parseFloat(<?php echo $order['paid_amount']; ?>);
-        const originalTotal = parseFloat(<?php echo $order['total_amount']; ?>);
-
-        function updateAmounts() {
-            let guests = parseInt(guestInput.value) || 0;
-            let price = parseFloat(priceInput.value) || 0;
-            if (guests < 0) guests = 0;
-            if (price < 0) price = 0;
-
-            const extraAmount = guests * price;
-            extraAmountInput.value = extraAmount.toFixed(2);
-
-            const newTotal = originalTotal + extraAmount;
-            newTotalInput.value = newTotal.toFixed(2);
-
-            const remainingBalance = newTotal - paidAmount;
-            remainingBalanceInput.value = remainingBalance.toFixed(2);
-        }
-
-        guestInput.addEventListener('input', updateAmounts);
-        priceInput.addEventListener('input', updateAmounts);
-    })();
-</script>
-
 
 <script>
     // ----- Casa Estela Inline Alerts -----

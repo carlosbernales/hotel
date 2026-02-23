@@ -448,165 +448,186 @@ if ($result) {
 
 <?php include 'adminFrontend/footer.php'; ?>
 <script>
-    (function () {
-        const guestInput = document.getElementById("guestCount_<?php echo $order['id']; ?>");
-        const priceInput = document.getElementById("pricePerGuest_<?php echo $order['id']; ?>");
-        const extraAmountInput = document.getElementById("extraAmount_<?php echo $order['id']; ?>");
-        const newTotalInput = document.getElementById("newTotal_<?php echo $order['id']; ?>");
-        const paymentInput = document.getElementById("paymentInput_<?php echo $order['id']; ?>");
-        const changeDisplay = document.getElementById("changeDisplay_<?php echo $order['id']; ?>");
-        const totalAmountDisplay = document.getElementById("totalAmount_<?php echo $order['id']; ?>");
-        const balanceDueDisplay = document.querySelector("#viewModal_<?php echo $order['id']; ?> .payment-stat.due h5");
+    <?php foreach ($orders as $order): ?>
+            (function () {
+                const id = <?php echo $order['id']; ?>;
 
-        const overtimeHoursInput = document.getElementById("overtimeHours_<?php echo $order['id']; ?>");
-        const overtimeChargeInput = document.getElementById("overtimeCharge_<?php echo $order['id']; ?>");
-        const overtimeAmountInput = document.getElementById("overtimeAmount_<?php echo $order['id']; ?>");
+                const overtimeHoursInput = document.getElementById("overtimeHours_" + id);
+                const overtimeChargeInput = document.getElementById("overtimeCharge_" + id);
+                const overtimeAmountDisplay = document.getElementById("overtimeAmount_" + id);
 
-        const originalTotal = parseFloat(<?php echo $order['total_amount']; ?>);
-        const paidAmount = parseFloat(<?php echo $order['paid_amount']; ?>); // initial paid amount
+                const totalAmountDisplay = document.getElementById("totalAmount_" + id);
+                const paymentInput = document.getElementById("paymentInput_" + id);
+                const changeDisplay = document.getElementById("changeDisplay_" + id);
+                const completeBtn = document.querySelector("#viewModal_" + id + " .btn-gold-action");
 
-        const completeBtn = document.querySelector("#viewModal_<?php echo $order['id']; ?> .btn-gold-action");
+                const balanceDueDisplay = document.querySelector("#viewModal_" + id + " .payment-stat.due h5");
+                const paidAmountDisplayMain = parseFloat("<?php echo $order['paid_amount']; ?>") || 0;
+                const baseTotalMain = parseFloat("<?php echo $order['total_amount']; ?>") || 0;
 
-        function updateAmounts() {
-            let guests = parseInt(guestInput?.value) || 0;
-            let price = parseFloat(priceInput?.value) || 0;
-            const extraAmount = Math.max(0, guests * price);
-            extraAmountInput.value = extraAmount.toFixed(2);
+                let dynamicTotalMain = baseTotalMain;
 
-            let overtimeHours = parseFloat(overtimeHoursInput?.value) || 0;
-            let overtimeCharge = parseFloat(overtimeChargeInput?.value) || 0;
-            const overtimeAmount = Math.max(0, overtimeHours * overtimeCharge);
-            overtimeAmountInput.value = overtimeAmount.toFixed(2);
+                const addGuestForm = document.getElementById("addGuestForm_" + id);
+                const guestInput = document.getElementById("guestCount_" + id);
+                const priceInput = document.getElementById("pricePerGuest_" + id);
+                const extraAmountDisplay = document.getElementById("extraAmount_" + id);
+                const newTotalDisplay = document.getElementById("newTotal_" + id);
+                const remainingBalanceDisplay = document.getElementById("remainingBalance_" + id);
 
-            const newTotal = originalTotal + extraAmount + overtimeAmount;
-            newTotalInput.value = newTotal.toFixed(2);
-            totalAmountDisplay.textContent = `₱${newTotal.toFixed(2)}`;
+                function updateAddGuestTotals() {
+                    const extraGuests = parseInt(guestInput.value) || 0;
+                    const pricePerGuest = parseFloat(priceInput.value) || 0;
+                    const extraAmount = extraGuests * pricePerGuest;
 
-            const balanceDue = newTotal - paidAmount;
-            if (balanceDueDisplay) balanceDueDisplay.textContent = `₱${balanceDue.toFixed(2)}`;
+                    extraAmountDisplay.value = extraAmount.toFixed(2);
 
-            const paymentAmount = parseFloat(paymentInput?.value) || 0;
-            if (paymentAmount >= balanceDue) {
-                completeBtn.disabled = false;
-                completeBtn.classList.remove('disabled');
-            } else {
-                completeBtn.disabled = true;
-                completeBtn.classList.add('disabled');
-            }
+                    const newTotal = baseTotalMain + extraAmount;
+                    newTotalDisplay.value = newTotal.toFixed(2);
 
-            updateChange();
-        }
-
-        function updateChange() {
-            const newTotal = parseFloat(newTotalInput.value) || originalTotal;
-            const paymentAmount = parseFloat(paymentInput?.value) || 0;
-            const change = paymentAmount - newTotal;
-            changeDisplay.textContent = `₱${change >= 0 ? change.toFixed(2) : '0.00'}`;
-        }
-
-        completeBtn.addEventListener('click', function () {
-            const newTotal = parseFloat(newTotalInput.value) || originalTotal;
-            const paymentAmount = parseFloat(paymentInput?.value) || 0;
-            const balanceDue = newTotal - paidAmount;
-
-            if (paymentAmount < balanceDue) {
-                CasaEstelaModal.show('error', 'Payment Not Enough', 'Payment is not enough to complete this booking!');
-                return;
-            }
-
-            CasaEstelaModal.confirm(
-                'Confirm Completion',
-                'Are you sure you want to mark this booking as completed?',
-                () => {
-                    fetch('../Admin/adminBackend/event_mark_completed.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            id: <?php echo $order['id']; ?>,
-                            paid_amount: newTotal,
-                            remaining_balance: 0,
-                            booking_status: 'Finished',
-                            overtime_hours: parseFloat(document.getElementById('overtimeHours_<?php echo $order['id']; ?>').value) || 0,
-                            overtime_charge: parseFloat(document.getElementById('overtimeCharge_<?php echo $order['id']; ?>').value) || 0,
-                            total_amount: newTotal
-                        })
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                CasaEstelaModal.show('success', 'Booking Completed', 'The booking has been successfully marked as completed!', () => {
-                                    location.reload();
-                                });
-                            } else {
-                                CasaEstelaModal.show('error', 'Update Failed', 'Failed to update booking. Try again.');
-                            }
-                        })
-                        .catch(err => {
-                            CasaEstelaModal.show('error', 'Error', 'Something went wrong. Please try again.');
-                            console.error(err);
-                        });
+                    const remaining = newTotal - paidAmountDisplayMain;
+                    remainingBalanceDisplay.value = remaining.toFixed(2);
                 }
-            );
-        });
-        guestInput?.addEventListener('input', updateAmounts);
-        priceInput?.addEventListener('input', updateAmounts);
-        overtimeHoursInput?.addEventListener('input', updateAmounts);
-        overtimeChargeInput?.addEventListener('input', updateAmounts);
-        paymentInput?.addEventListener('input', updateAmounts);
 
-        updateAmounts();
-    })();
+                function updateMainModalTotals() {
+                    const hours = parseFloat(overtimeHoursInput.value) || 0;
+                    const rate = parseFloat(overtimeChargeInput.value) || 0;
+                    const overtimeTotal = hours * rate;
+                    overtimeAmountDisplay.value = overtimeTotal.toFixed(2);
 
-    // Add Guest Form with confirmation + AJAX + success modal
-    document.querySelectorAll('form[id^="addGuestForm_"]').forEach(form => {
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+                    const extraGuests = parseInt(guestInput.value) || 0;
+                    const pricePerGuest = parseFloat(priceInput.value) || 0;
+                    const extraAmount = extraGuests * pricePerGuest;
 
-            CasaEstelaModal.confirm(
-                'Confirm Submission',
-                'Are you sure you want to update this booking?',
-                () => {
-                    const formData = new FormData(form);
-                    const actionUrl = form.getAttribute('action');
+                    dynamicTotalMain = baseTotalMain + overtimeTotal + extraAmount;
+                    totalAmountDisplay.textContent = "₱" + dynamicTotalMain.toFixed(2);
 
-                    fetch(actionUrl, {
-                        method: 'POST',
-                        body: formData
-                    })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                CasaEstelaModal.show(
-                                    'success',
-                                    'Update Successful',
-                                    'Guests have been successfully added!',
-                                    () => {
-                                        window.location.href = 'index.php?event-ongoing';
+                    const remaining = dynamicTotalMain - paidAmountDisplayMain;
+                    balanceDueDisplay.textContent = "₱" + remaining.toFixed(2);
+
+                    const payment = parseFloat(paymentInput.value) || 0;
+                    const change = payment - remaining;
+                    changeDisplay.textContent = "₱" + (change > 0 ? change.toFixed(2) : "0.00");
+
+                    if (payment >= remaining) {
+                        completeBtn.disabled = false;
+                        completeBtn.classList.remove('disabled');
+                    } else {
+                        completeBtn.disabled = true;
+                        completeBtn.classList.add('disabled');
+                    }
+                }
+
+                guestInput.addEventListener("input", function () {
+                    updateAddGuestTotals();
+                    updateMainModalTotals();
+                });
+                priceInput.addEventListener("input", function () {
+                    updateAddGuestTotals();
+                    updateMainModalTotals();
+                });
+
+                overtimeHoursInput.addEventListener("input", updateMainModalTotals);
+                overtimeChargeInput.addEventListener("input", updateMainModalTotals);
+                paymentInput.addEventListener("input", updateMainModalTotals);
+
+                updateAddGuestTotals();
+                updateMainModalTotals();
+
+                completeBtn.addEventListener("click", function () {
+                    const payment = parseFloat(paymentInput.value) || 0;
+                    const remaining = dynamicTotalMain - paidAmountDisplayMain;
+
+                    if (payment < remaining) {
+                        CasaEstelaAlert.show('warning', 'Insufficient Payment', 'Payment is less than the remaining balance.');
+                        return;
+                    }
+
+                    const changeAmount = parseFloat(changeDisplay.textContent.replace(/[₱,]/g, '')) || 0; // get numeric value
+
+                    CasaEstelaModal.confirm(
+                        'Confirm Completion',
+                        'Are you sure you want to mark this booking as completed?',
+                        function () {
+                            const data = {
+                                id: id,
+                                paid_amount: paidAmountDisplayMain + payment,
+                                remaining_balance: Math.max(0, dynamicTotalMain - (paidAmountDisplayMain + payment)),
+                                change_amount: changeAmount, // <-- send it here
+                                booking_status: 'Finished',
+                                overtime_hours: parseFloat(overtimeHoursInput.value) || 0,
+                                overtime_charge: parseFloat(overtimeChargeInput.value) || 0,
+                                extra_guests: parseInt(guestInput.value) || 0,
+                                extra_guest_charge: parseFloat(priceInput.value) || 0,
+                                total_amount: dynamicTotalMain
+                            };
+
+                            fetch('../Admin/adminBackend/event_mark_completed.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify(data)
+                            })
+                                .then(res => res.json())
+                                .then(res => {
+                                    if (res.success) {
+                                        CasaEstelaModal.show('success', 'Success', 'Booking marked as completed!', function () {
+                                            window.location.href = 'index.php?event-ongoing';
+                                        });
+                                    } else {
+                                        CasaEstelaAlert.show('error', 'Error', res.error || 'Something went wrong!');
                                     }
-                                );
-                            } else {
-                                CasaEstelaModal.show(
-                                    'error',
-                                    'Update Failed',
-                                    data.message || 'Failed to add guests. Please try again.'
-                                );
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            CasaEstelaModal.show(
-                                'error',
-                                'Error',
-                                'Something went wrong. Please try again.'
-                            );
-                        });
-                }
-            );
-        });
-    });
+                                })
+                                .catch(err => {
+                                    CasaEstelaAlert.show('error', 'Error', err.message || 'Something went wrong!');
+                                });
+                        }
+                    );
+                });
+
+                addGuestForm.addEventListener("submit", function (e) {
+                    e.preventDefault();
+
+                    const extraGuests = parseInt(guestInput.value) || 0;
+                    const pricePerGuest = parseFloat(priceInput.value) || 0;
+
+                    if (extraGuests < 1 || pricePerGuest < 0) {
+                        CasaEstelaAlert.show('warning', 'Invalid Input', 'Please enter valid guest count and price.');
+                        return;
+                    }
+
+                    CasaEstelaModal.confirm(
+                        'Confirm Add Guests',
+                        `Are you sure you want to add ${extraGuests} guest(s) at ₱${pricePerGuest.toFixed(2)} each?`,
+                        function () {
+                            const formData = new FormData();
+                            formData.append('extra_guests', extraGuests);
+                            formData.append('extra_guest_charge', pricePerGuest);
+
+                            fetch(addGuestForm.action, { method: 'POST', body: formData })
+                                .then(res => res.json())
+                                .then(res => {
+                                    if (res.status === "success") {
+                                        CasaEstelaModal.show(
+                                            'success',
+                                            'Guests Added',
+                                            'Extra guests have been successfully added.',
+                                            function () {
+                                                window.location.href = 'index.php?event-ongoing';
+                                            }
+                                        );
+                                    } else {
+                                        CasaEstelaAlert.show('error', 'Error', res.message || 'Something went wrong!');
+                                    }
+                                })
+                                .catch(err => {
+                                    CasaEstelaAlert.show('error', 'Error', err.message || 'Something went wrong!');
+                                });
+                        }
+                    );
+                });
+
+            })();
+    <?php endforeach; ?>
 </script>
-
-
 
 
 <script>

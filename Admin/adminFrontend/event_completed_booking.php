@@ -1,6 +1,8 @@
 <?php
-if (!isset($_SESSION['user_type']) || 
-    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')) {
+if (
+    !isset($_SESSION['user_type']) ||
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')
+) {
     header("Location: /Admin/Customer/aa/login.php");
     exit;
 }
@@ -183,10 +185,8 @@ if ($result) {
                                     data-bs-target="#viewModal_<?php echo $order['id']; ?>">
                                     <i class="fas fa-eye"></i> View
                                 </button>
-                                
-                                 <button type="button"
-                                    class="btn btn-sm btn-warning"
-                                    data-bs-toggle="modal"
+
+                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                     data-bs-target="#receiptModal<?= $order['id'] ?>">
                                     <i class="bi bi-receipt"></i> Receipt
                                 </button>
@@ -449,158 +449,179 @@ if ($result) {
     }
 </style>
 
-
 <?php foreach ($orders as $order): ?>
-<div class="modal fade" id="receiptModal<?= $order['id'] ?>" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
-        <div class="modal-content receipt-modal">
+    <div class="modal fade" id="receiptModal<?= $order['id'] ?>" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" style="max-width:800px;">
+            <div class="modal-content receipt-modal">
 
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">
-                    <i class="bi bi-receipt"></i> Event Receipt – <?= htmlspecialchars($order['booking_refId']) ?>
-                </h5>
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="bi bi-receipt"></i> Event Receipt – <?= htmlspecialchars($order['booking_refId']) ?>
+                    </h5>
 
-                <div class="ms-auto">
-                    <button type="button"
-                        class="btn btn-light btn-sm"
-                        onclick="printReceipt('receipt-content-<?= $order['id'] ?>')">
-                        <i class="bi bi-printer"></i> Print
-                    </button>
-
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-            </div>
-
-            <div class="modal-body p-0">
-
-                <div class="receipt-container"
-                     id="receipt-content-<?= $order['id'] ?>">
-
-                    <!-- HEADER -->
-                    <div class="header">
-                        <h1>Casa Estela Boutique Hotel & Cafe</h1>
-                        <p>Gov B Marasigan St, Calapan City</p>
-                        <p>Phone: 0908 747 4892</p>
-
-                        <p><strong>EVENT BOOKING RECEIPT</strong></p>
-
-                        <p>Reference: <?= htmlspecialchars($order['booking_refId']) ?></p>
-
-                        <p>Date Issued:
-                            <?= date("F j, Y", strtotime($order['created_at'] ?? 'now')) ?>
-                        </p>
+                    <div class="ms-auto">
+                        <button type="button" class="btn btn-light btn-sm"
+                            onclick="printReceipt('receipt-content-<?= $order['id'] ?>')">
+                            <i class="bi bi-printer"></i> Print
+                        </button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
-
-
-                    <!-- CUSTOMER INFO -->
-                    <div class="section-title">Customer Information</div>
-
-                    <div class="detail-row">
-                        <span class="detail-label">Customer Name:</span>
-                        <span><?= htmlspecialchars($order['customer_name']) ?></span>
-                    </div>
-
-
-                    <!-- EVENT INFO -->
-                    <div class="section-title">Event Information</div>
-
-                    <div class="detail-row">
-                        <span class="detail-label">Package:</span>
-                        <span><?= htmlspecialchars($order['package_name']) ?></span>
-                    </div>
-
-                    <div class="detail-row">
-                        <span class="detail-label">Event Type:</span>
-                        <span><?= htmlspecialchars($order['event_type']) ?></span>
-                    </div>
-
-                    <div class="detail-row">
-                        <span class="detail-label">Schedule:</span>
-                        <span>
-                            <?= date("F j, Y h:i A", strtotime($order['date_time_start'])) ?>
-                            -
-                            <?= date("h:i A", strtotime($order['date_time_end'])) ?>
-                        </span>
-                    </div>
-
-                    <div class="detail-row">
-                        <span class="detail-label">Reserve Type:</span>
-                        <span><?= htmlspecialchars($order['reserve_type']) ?></span>
-                    </div>
-
-                    <div class="detail-row">
-                        <span class="detail-label">Guests:</span>
-                        <span><?= htmlspecialchars($order['number_of_guests']) ?></span>
-                    </div>
-
-
-                    <!-- PAYMENT SUMMARY -->
-                    <div class="total-section">
-
-                        <div class="section-title">Payment Summary</div>
-
-                        <div class="total-row">
-                            <span>Package Price:</span>
-                            <span>₱<?= number_format($order['package_price'], 2) ?></span>
-                        </div>
-
-                        <?php if ($order['extra_guests'] > 0): ?>
-                        <div class="total-row">
-                            <span>Extra Guests Charge:</span>
-                            <span>₱<?= number_format($order['extra_guest_charge'], 2) ?></span>
-                        </div>
-                        <?php endif; ?>
-
-                        <?php if ($order['overtime_hours'] > 0): ?>
-                        <div class="total-row">
-                            <span>Overtime Charge:</span>
-                            <span>₱<?= number_format($order['overtime_charge'], 2) ?></span>
-                        </div>
-                        <?php endif; ?>
-
-                        <div class="total-row grand-total">
-                            <span>Total Amount:</span>
-                            <span>₱<?= number_format($order['total_amount'], 2) ?></span>
-                        </div>
-
-                        <div class="detail-row">
-                            <span class="detail-label">Payment Method:</span>
-                            <span><?= htmlspecialchars($order['payment_method']) ?></span>
-                        </div>
-
-                        <div class="detail-row">
-                            <span class="detail-label">Status:</span>
-                            <span><?= htmlspecialchars($order['booking_status']) ?></span>
-                        </div>
-
-                    </div>
-
-
-                    <!-- FOOTER -->
-                    <div class="footer">
-                        <p>Thank you for booking with us!</p>
-                    </div>
-
                 </div>
 
+                <div class="modal-body p-0">
+
+                    <div class="receipt-container" id="receipt-content-<?= $order['id'] ?>">
+
+                        <!-- HEADER -->
+                        <div class="header">
+                            <h1>Casa Estela Boutique Hotel & Cafe</h1>
+                            <p>Gov B Marasigan St, Calapan City</p>
+                            <p>Phone: 0908 747 4892</p>
+
+                            <p><strong>EVENT BOOKING RECEIPT</strong></p>
+                            <p>Reference: <?= htmlspecialchars($order['booking_refId']) ?></p>
+                            <p>Date Issued: <?= date("F j, Y", strtotime($order['created_at'] ?? 'now')) ?></p>
+                        </div>
+
+                        <!-- CUSTOMER INFO -->
+                        <div class="section-title">Customer Information</div>
+                        <div class="detail-row">
+                            <span class="detail-label">Customer Name:</span>
+                            <span><?= htmlspecialchars($order['customer_name']) ?></span>
+                        </div>
+                        <?php if (!empty($order['email'])): ?>
+                            <div class="detail-row">
+                                <span class="detail-label">Email:</span>
+                                <span><?= htmlspecialchars($order['email']) ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- EVENT INFO -->
+                        <div class="section-title">Event Information</div>
+                        <div class="detail-row">
+                            <span class="detail-label">Package:</span>
+                            <span><?= htmlspecialchars($order['package_name']) ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Event Type:</span>
+                            <span><?= htmlspecialchars($order['event_type']) ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Schedule:</span>
+                            <span><?= date("F j, Y h:i A", strtotime($order['date_time_start'])) ?> -
+                                <?= date("h:i A", strtotime($order['date_time_end'])) ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Reserve Type:</span>
+                            <span><?= htmlspecialchars($order['reserve_type']) ?></span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Guests:</span>
+                            <span><?= htmlspecialchars($order['number_of_guests']) ?> /
+                                <?= htmlspecialchars($order['max_guest']) ?></span>
+                        </div>
+                        <?php if (!empty($order['place'])): ?>
+                            <div class="detail-row">
+                                <span class="detail-label">Place:</span>
+                                <span><?= htmlspecialchars($order['place']) ?></span>
+                            </div>
+                        <?php endif; ?>
+
+                        <!-- PAYMENT SUMMARY -->
+                        <div class="total-section">
+                            <div class="section-title">Payment Summary</div>
+
+                            <div class="total-row">
+                                <span>Package Price:</span>
+                                <span>₱<?= number_format($order['package_price'], 2) ?></span>
+                            </div>
+
+                            <?php if ($order['extra_guests'] > 0): ?>
+                                <div class="total-row">
+                                    <span>Extra Guests Charge (<?= $order['extra_guests'] ?>):</span>
+                                    <span>₱<?= number_format($order['extra_guest_charge'], 2) ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if ($order['overtime_hours'] > 0): ?>
+                                <div class="total-row">
+                                    <span>Overtime Charge (<?= $order['overtime_hours'] ?> hrs):</span>
+                                    <span>₱<?= number_format($order['overtime_charge'], 2) ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <?php if (!empty($order['change_amount'])): ?>
+                                <div class="total-row">
+                                    <span>Change Amount:</span>
+                                    <span>₱<?= number_format($order['change_amount'], 2) ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="total-row">
+                                <span>Paid Amount:</span>
+                                <span>₱<?= number_format($order['paid_amount'] ?? 0, 2) ?></span>
+                            </div>
+
+                            <div class="total-row">
+                                <span>Remaining Balance:</span>
+                                <span>₱<?= number_format($order['remaining_balance'] ?? 0, 2) ?></span>
+                            </div>
+
+                            <div class="total-row grand-total">
+                                <span>Total Amount:</span>
+                                <span>₱<?= number_format($order['total_amount'], 2) ?></span>
+                            </div>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Payment Method:</span>
+                                <span><?= htmlspecialchars($order['payment_method']) ?></span>
+                            </div>
+
+                            <?php if (!empty($order['payment_type'])): ?>
+                                <div class="detail-row">
+                                    <span class="detail-label">Payment Type:</span>
+                                    <span><?= htmlspecialchars($order['payment_type']) ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="detail-row">
+                                <span class="detail-label">Status:</span>
+                                <span><?= htmlspecialchars($order['booking_status']) ?></span>
+                            </div>
+
+                            <?php if (!empty($order['rejection_reason'])): ?>
+                                <div class="detail-row">
+                                    <span class="detail-label">Notes:</span>
+                                    <span><?= htmlspecialchars($order['rejection_reason']) ?></span>
+                                </div>
+                            <?php endif; ?>
+
+                        </div>
+
+                        <!-- FOOTER -->
+                        <div class="footer">
+                            <p>Thank you for booking with us!</p>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
-</div>
 <?php endforeach; ?>
 
 
 
 <script>
-    function printReceipt(elementId)
-{
-    const content =
-        document.getElementById(elementId).innerHTML;
+    function printReceipt(elementId) {
+        const content =
+            document.getElementById(elementId).innerHTML;
 
-    const printWindow =
-        window.open('', '', 'width=900,height=700');
+        const printWindow =
+            window.open('', '', 'width=900,height=700');
 
-    printWindow.document.write(`
+        printWindow.document.write(`
         <html>
         <head>
             <title>Event Receipt</title>
@@ -645,16 +666,15 @@ if ($result) {
         </html>
     `);
 
-    printWindow.document.close();
+        printWindow.document.close();
 
-    printWindow.focus();
+        printWindow.focus();
 
-    printWindow.print();
+        printWindow.print();
 
-    printWindow.close();
-}
+        printWindow.close();
+    }
 
 </script>
 
 <?php include 'adminFrontend/footer.php'; ?>
-
