@@ -26,7 +26,7 @@ SELECT br.room_number_fk_id, b.check_in, b.check_out, b.status
 FROM booked_rooms br
 JOIN bookings b ON br.booking_id = b.booking_id
 WHERE b.booking_id != $booking_id
-AND b.status NOT IN ('rejected', 'cancelled', 'uncounted')
+AND b.status NOT IN ('rejected', 'cancelled', 'uncounted' , 'finished')
 ";
 
 $res = $conn->query($sql);

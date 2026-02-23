@@ -1,6 +1,8 @@
 <?php
-if (!isset($_SESSION['user_type']) || 
-    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')) {
+if (
+    !isset($_SESSION['user_type']) ||
+    ($_SESSION['user_type'] !== 'admin' && $_SESSION['user_type'] !== 'frontdesk')
+) {
     header("Location: /Admin/Customer/aa/login.php");
     exit;
 }
@@ -792,40 +794,40 @@ while ($b = $bed_res->fetch_assoc()) {
     function calculateTotalAmount() {
         const checkIn = new Date(document.getElementById('check_in').value);
         const checkOut = new Date(document.getElementById('check_out').value);
-    
+
         if (isNaN(checkIn) || isNaN(checkOut)) return;
-    
+
         const timeDiff = checkOut - checkIn;
         const nights = Math.max(0, Math.ceil(timeDiff / (1000 * 60 * 60 * 24)));
-    
+
         // ✅ ALWAYS update nights field
         document.getElementById('numberOfNights').value = nights;
-    
+
         if (checkOut <= checkIn) return;
-    
+
         let roomsTotal = 0;
         document.querySelectorAll('#roomsTable tbody tr').forEach(row => {
             const selectedOption = row.querySelector('.roomTypeSelect').selectedOptions[0];
             roomsTotal += parseFloat(selectedOption.dataset.price) * nights;
         });
-    
+
         let extraBedPrice = extraBedTotal * nights;
         const totalBeforeDiscount = roomsTotal + extraBedPrice;
-    
+
         const discountPercentage = parseFloat(
             document.getElementById('discountPercentage').value.replace('%', '')
         ) || 0;
-    
+
         const discountAmount = (discountPercentage / 100) * totalBeforeDiscount;
         const totalAmountNew = totalBeforeDiscount - discountAmount;
-    
+
         const downPayment = parseFloat(
             document.getElementById('downPayment').value.replace(/,/g, '')
         ) || 0;
-    
+
         let remainingBalance = totalAmountNew - downPayment;
         if (remainingBalance < 0) remainingBalance = 0;
-    
+
         document.getElementById('totalAmountNew').value = totalAmountNew.toFixed(2);
         document.getElementById('remainingBal').value = remainingBalance.toFixed(2);
         document.getElementById('discountAmount').value = discountAmount.toFixed(2);
@@ -923,10 +925,10 @@ while ($b = $bed_res->fetch_assoc()) {
 
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
-            check_in: status === 'checkin'
-                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
-                : document.getElementById('check_in').value,
-            // check_in: document.getElementById('check_in').value,
+            // check_in: status === 'checkin'
+            //     ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+            //     : document.getElementById('check_in').value,
+            check_in: document.getElementById('check_in').value,
             check_out: document.getElementById('check_out').value,
 
             discount_type: document.getElementById('discountType').value,
@@ -1113,9 +1115,10 @@ while ($b = $bed_res->fetch_assoc()) {
 
         const bookingData = {
             booking_id: <?= $booking['booking_id'] ?>,
-            check_in: status === 'checkin'
-                ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
-                : document.getElementById('check_in').value,
+            // check_in: status === 'checkin'
+            //     ? new Date().toLocaleString("sv-SE", { timeZone: "Asia/Manila" }).replace('T', ' ')
+            //     : document.getElementById('check_in').value,
+            check_in: document.getElementById('check_in').value,
             check_out: document.getElementById('check_out').value,
             discount_type: document.getElementById('discountType').value,
             discount_percentage: document.getElementById('discountPercentage').value,

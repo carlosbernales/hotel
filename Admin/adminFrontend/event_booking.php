@@ -16,7 +16,7 @@
     <nav class="top-navbar">
         <div class="d-flex justify-content-between align-items-center">
             <span class="navbar-brand">CASA ESTELA BOUTIQUE HOTEL & CAFE</span>
-            
+
         </div>
     </nav>
 
@@ -84,15 +84,15 @@
                             <div class="image-thumbnails">
                                 <?php if ($img1): ?>
                                     <img src="<?= $img1 ?>" class="thumbnail-img active">
-                                                                <?php endif; ?>
+                                <?php endif; ?>
 
-                                                                <?php if ($img2): ?>
+                                <?php if ($img2): ?>
                                     <img src="<?= $img2 ?>" class="thumbnail-img">
-                                                                <?php endif; ?>
+                                <?php endif; ?>
 
-                                                                <?php if ($img3): ?>
+                                <?php if ($img3): ?>
                                     <img src="<?= $img3 ?>" class="thumbnail-img">
-                                                                <?php endif; ?>
+                                <?php endif; ?>
 
                             </div>
                         </div>

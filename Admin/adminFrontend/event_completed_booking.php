@@ -517,8 +517,10 @@ if ($result) {
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Guests:</span>
-                            <span><?= htmlspecialchars($order['number_of_guests']) ?> /
-                                <?= htmlspecialchars($order['max_guest']) ?></span>
+                            <span>
+                                <?= htmlspecialchars($order['number_of_guests'] ?? '0') ?> /
+                                <?= htmlspecialchars($order['max_guest'] ?? '0') ?>
+                            </span>
                         </div>
                         <?php if (!empty($order['place'])): ?>
                             <div class="detail-row">
